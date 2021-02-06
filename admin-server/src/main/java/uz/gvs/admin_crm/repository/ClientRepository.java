@@ -8,4 +8,7 @@ import java.util.UUID;
 
 public interface ClientRepository extends JpaRepository<Client, UUID> {
 
+    boolean existsByFullNameEqualsIgnoreCaseAndIdNot(String fullName, UUID id);
+
+
 }
