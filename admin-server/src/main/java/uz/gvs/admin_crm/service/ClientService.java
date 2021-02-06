@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Client;
+import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.ClientDto;
 import uz.gvs.admin_crm.repository.ClientRepository;
@@ -31,9 +32,8 @@ public class ClientService {
                             clientDto.getPhoneNumber(),
                             clientDto.getDescription(),
                             clientDto.getAge(),
-                            regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Get region")),
-                            clientDto.getGender()
-
+                            (clientDto.getRegionId() != null ? regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Get region")) : null),
+                            Gender.valueOf(clientDto.getGender())
                     );
                     clientRepository.save(client);
                     return apiResponseService.saveResponse();
@@ -61,10 +61,10 @@ public class ClientService {
             client.setAge(clientDto.getAge());
             client.setDescription(clientDto.getDescription());
             client.setRegion(regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get Region")));
-            client.setGender(clientDto.getGender());
+            client.setGender(Gender.valueOf(clientDto.getGender()));
             clientRepository.save(client);
             return apiResponseService.updatedResponse();
-        }catch (Exception a){
+        } catch (Exception a) {
             return apiResponseService.tryErrorResponse();
         }
     }
