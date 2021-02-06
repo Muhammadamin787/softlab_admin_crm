@@ -1,0 +1,41 @@
+HELP.md
+/admin-server/target
+/admin-server/idea
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+*.iws
+*.log
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+'.idea' 
+/admin-server/.idea
+'*.mvn'
+admin-server/.mvn
+admin-server/mvnw
+admin-server/mvnw.cmd
+admin-client/node_modules
+admin-client/.eslintcache
+.idea
