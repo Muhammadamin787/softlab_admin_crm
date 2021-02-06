@@ -21,4 +21,5 @@ import javax.persistence.*;
 @Data
 @Entity
 public class Room extends AbsNameEntity2 {
+
 }
