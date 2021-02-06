@@ -23,6 +23,13 @@ public class RoomController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
+    @PutMapping("/{id}")
+    public HttpEntity<?> save(@PathVariable Integer id, @RequestBody RoomDto roomDto) {
+        roomDto.setId(id);
+        ApiResponse apiResponse = roomService.save(roomDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
     @GetMapping
     public HttpEntity<?> getList() {
         ApiResponse apiResponse = roomService.getRoomList();
