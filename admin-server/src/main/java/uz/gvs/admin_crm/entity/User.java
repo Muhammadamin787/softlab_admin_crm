@@ -31,7 +31,6 @@ public class User extends AbsEntity implements UserDetails {//test
     private Region region;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
     private String password;
     @OneToOne
     private Attachment avatar;
