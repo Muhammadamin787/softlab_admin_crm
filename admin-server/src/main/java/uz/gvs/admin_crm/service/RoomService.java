@@ -8,6 +8,9 @@ import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.RoomDto;
 import uz.gvs.admin_crm.repository.RoomRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class RoomService {
     @Autowired
@@ -17,7 +20,7 @@ public class RoomService {
 
     public ApiResponse save(RoomDto roomDto) {
         try {
-            if (!(roomDto.getName().replaceAll(" ","").length()>1))
+            if (!(roomDto.getName().replaceAll(" ", "").length() > 1))
                 return apiResponseService.notEnoughErrorResponse();
             Room room = new Room();
             // edit bo'lsa
@@ -27,7 +30,6 @@ public class RoomService {
                 room = roomRepository.findById(roomDto.getId()).orElseThrow(() -> new ResourceNotFoundException("get room"));
             } else {
                 // yangi qo'shilsa bo'lsa
-
                 if (roomRepository.existsByNameEqualsIgnoreCase(roomDto.getName()))
                     return apiResponseService.existResponse();
             }
@@ -42,6 +44,33 @@ public class RoomService {
     }
 
     public ApiResponse getRoomList() {
-        return apiResponseService.getResponse(roomRepository.findAll());
+        try {
+            List<Room> allRooms = roomRepository.findAll();
+            if (allRooms.isEmpty()) return apiResponseService.notFoundResponse();
+            return apiResponseService.getResponse(allRooms);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
+
+    public ApiResponse getRoom(Integer id) {
+        try {
+            Optional<Room> room = roomRepository.findById(id);
+            if (room.isEmpty()) return apiResponseService.notFoundResponse();
+            return apiResponseService.getResponse(room);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse deleteRoom(Integer id) {
+        try{
+            if (roomRepository.findById(id).isEmpty()) return apiResponseService.notFoundResponse();
+            roomRepository.deleteById(id);
+            return apiResponseService.deleteResponse();
+        }catch (Exception e){
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
 }

@@ -36,6 +36,16 @@ public class RoomController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/{id}")
+    public HttpEntity<?> getRoom(@PathVariable Integer id){
+        ApiResponse apiResponse = roomService.getRoom(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
+    @DeleteMapping("/{id}")
+    public HttpEntity<?> deleteRoom(@PathVariable Integer id){
+        ApiResponse apiResponse = roomService.deleteRoom(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
+    }
 
 }
