@@ -19,10 +19,9 @@ public class ClientDto{
     private String description;
     private int age;
     private Integer regionId;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
 
-    public ClientDto(String fullName, String phoneNumber, String description, int age, Integer regionId, Gender gender) {
+    public ClientDto(String fullName, String phoneNumber, String description, int age, Integer regionId, String gender) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.description = description;

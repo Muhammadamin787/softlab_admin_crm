@@ -25,7 +25,7 @@ public class ClientController {
     @PostMapping
     public HttpEntity<?> addClient(@RequestBody ClientDto clientDto) {
         ApiResponse apiResponse = clientService.addClient(clientDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
     @PutMapping("/{id}")
