@@ -5,5 +5,5 @@ import uz.gvs.admin_crm.entity.PayType;
 import uz.gvs.admin_crm.entity.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Integer> {
-
+    boolean existsByNameEqualsIgnoreCase(String name);
 }
