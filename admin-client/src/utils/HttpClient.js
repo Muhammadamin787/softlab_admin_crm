@@ -3,9 +3,7 @@ import axios from 'axios'
 import {config} from "./config";
 
 export default class HttpClient {
-
     static headers = {'Access-Control-Allow-Origin': '*'};
-
     static doRequest() {
         const token = localStorage.getItem(TOKEN);
         if (token) {
@@ -14,7 +12,6 @@ export default class HttpClient {
                 Authorization: token
             };
         }
-
         return axios.create({
             baseURL: config.BASE_URL,
             headers: {...HttpClient.headers}
