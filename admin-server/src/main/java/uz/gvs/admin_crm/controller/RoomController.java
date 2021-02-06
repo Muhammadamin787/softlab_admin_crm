@@ -35,4 +35,7 @@ public class RoomController {
         ApiResponse apiResponse = roomService.getRoomList();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+
+
 }

@@ -17,6 +17,8 @@ public class RoomService {
 
     public ApiResponse save(RoomDto roomDto) {
         try {
+            if (!(roomDto.getName().replaceAll(" ","").length()>1))
+                return apiResponseService.notEnoughErrorResponse();
             Room room = new Room();
             // edit bo'lsa
             if (roomDto.getId() != null) {
@@ -25,11 +27,13 @@ public class RoomService {
                 room = roomRepository.findById(roomDto.getId()).orElseThrow(() -> new ResourceNotFoundException("get room"));
             } else {
                 // yangi qo'shilsa bo'lsa
+
                 if (roomRepository.existsByNameEqualsIgnoreCase(roomDto.getName()))
                     return apiResponseService.existResponse();
             }
             room.setName(roomDto.getName());
             room.setActive(roomDto.isActive());
+            roomRepository.save(room);
             return apiResponseService.saveResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
