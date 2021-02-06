@@ -1,0 +1,94 @@
+package uz.gvs.admin_crm.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
+import uz.gvs.admin_crm.entity.Course;
+import uz.gvs.admin_crm.entity.CourseCategory;
+import uz.gvs.admin_crm.entity.Region;
+import uz.gvs.admin_crm.entity.User;
+import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.CourseCategoryDto;
+import uz.gvs.admin_crm.repository.CourseCategoryRepository;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class CourseCategoryService {
+    @Autowired
+    ApiResponseService apiResponseService;
+    @Autowired
+    CourseCategoryRepository courseCategoryRepository;
+
+
+    public ApiResponse saveCourseCategory(CourseCategoryDto courseCategoryDto) {
+        if (courseCategoryDto.getCourseCategoryId() != null) {
+            CourseCategory parentCategory = courseCategoryRepository.findById(courseCategoryDto.getCourseCategoryId()).orElseThrow(() -> new ResourceNotFoundException("get courseCategor"));
+            boolean exists = courseCategoryRepository.existsByNameEqualsIgnoreCaseAndCourseCategoryId(courseCategoryDto.getName(), parentCategory.getId());
+            if (exists) {
+                return apiResponseService.existResponse();
+            }
+            makeCourseCategory(courseCategoryDto, parentCategory);
+            return apiResponseService.saveResponse();
+        }
+        if (courseCategoryRepository.existsByNameEqualsIgnoreCaseAndCourseCategory(courseCategoryDto.getName(), null)) {
+            return apiResponseService.existResponse();
+        }
+        makeCourseCategory(courseCategoryDto, null);
+        return apiResponseService.saveResponse();
+    }
+
+    public ApiResponse getOneCourseCategory(Integer id) {
+        try {
+            Optional<CourseCategory> byId = courseCategoryRepository.findById(id);
+            if (!byId.isPresent()) {
+                return apiResponseService.notFoundResponse();
+            }
+            return apiResponseService.getResponse(makeRegionForGet(byId.get()));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    private CourseCategoryDto makeRegionForGet(CourseCategory courseCategory) {
+        return new CourseCategoryDto(
+                courseCategory.getId(),
+                courseCategory.getName(),
+                courseCategory.getDescription(),
+                courseCategory.isActive(),
+                courseCategory.getCourseCategory() != null ? courseCategory.getCourseCategory().getId() : null,
+                courseCategory.getCourseCategory()
+        );
+    }
+
+    public CourseCategory makeCourseCategory(CourseCategoryDto courseCategoryDto, CourseCategory parent) {
+        return courseCategoryRepository.save(
+                new CourseCategory(
+                        courseCategoryDto.getName(),
+                        courseCategoryDto.getDescription(),
+                        courseCategoryDto.isActive(),
+                        parent
+                ));
+    }
+
+    public ApiResponse getCourseCategoryList(int page, int size, User user) {
+        try {
+            Page<CourseCategory> all = null;
+            all = courseCategoryRepository.findAll(PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeRegionForGet).collect(Collectors.toList())
+                    ));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+}
