@@ -1,6 +1,7 @@
 package uz.gvs.admin_crm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Room;
 import uz.gvs.admin_crm.payload.ApiResponse;
@@ -15,11 +16,28 @@ public class RoomService {
     ApiResponseService apiResponseService;
 
     public ApiResponse save(RoomDto roomDto) {
-        if (roomRepository.existsByNameEqualsIgnoreCase(roomDto.getName()))
-            return apiResponseService.existResponse();
-        Room room = new Room();
-        room.setName(roomDto.getName());
-        room.setActive(roomDto.isActive());
-        return apiResponseService.saveResponse();
+        try {
+            Room room = new Room();
+            // edit bo'lsa
+            if (roomDto.getId() != null) {
+                if (roomRepository.existsByNameEqualsIgnoreCaseAndIdNot(roomDto.getName(), roomDto.getId()))
+                    return apiResponseService.existResponse();
+                room = roomRepository.findById(roomDto.getId()).orElseThrow(() -> new ResourceNotFoundException("get room"));
+            } else {
+                // yangi qo'shilsa bo'lsa
+                if (roomRepository.existsByNameEqualsIgnoreCase(roomDto.getName()))
+                    return apiResponseService.existResponse();
+            }
+            room.setName(roomDto.getName());
+            room.setActive(roomDto.isActive());
+            return apiResponseService.saveResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
+    }
+
+    public ApiResponse getRoomList() {
+        return apiResponseService.getResponse(roomRepository.findAll());
     }
 }

@@ -6,4 +6,5 @@ import uz.gvs.admin_crm.entity.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Integer> {
     boolean existsByNameEqualsIgnoreCase(String name);
+    boolean existsByNameEqualsIgnoreCaseAndIdNot(String name, Integer id);
 }
