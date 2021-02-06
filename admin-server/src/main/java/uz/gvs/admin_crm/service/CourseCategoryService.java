@@ -11,6 +11,7 @@ import uz.gvs.admin_crm.entity.Region;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.CourseCategoryDto;
+import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 
 import java.util.Optional;
@@ -47,14 +48,13 @@ public class CourseCategoryService {
             if (!byId.isPresent()) {
                 return apiResponseService.notFoundResponse();
             }
-            return apiResponseService.getResponse(makeRegionForGet(byId.get()));
+            return apiResponseService.getResponse(makeCourseForGet(byId.get()));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }
 
-
-    private CourseCategoryDto makeRegionForGet(CourseCategory courseCategory) {
+    private CourseCategoryDto makeCourseForGet(CourseCategory courseCategory) {
         return new CourseCategoryDto(
                 courseCategory.getId(),
                 courseCategory.getName(),
@@ -85,8 +85,39 @@ public class CourseCategoryService {
                             all.getTotalElements(),
                             all.getNumber(),
                             all.getSize(),
-                            all.get().map(this::makeRegionForGet).collect(Collectors.toList())
+                            all.get().map(this::makeCourseForGet).collect(Collectors.toList())
                     ));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse editCourseCategory(CourseCategoryDto courseCategoryDto, Integer id) {
+        try {
+            Optional<CourseCategory> optional = courseCategoryRepository.findById(id);
+            if (optional.isPresent()) {
+                CourseCategory courseCategory = optional.get();
+                if (courseCategoryDto.getCourseCategoryId() != null) {
+                    if (courseCategory.getCourseCategory() != null && !courseCategoryDto.getCourseCategoryId().equals(courseCategory.getCourseCategory().getId())) {
+                        if (courseCategoryRepository.existsByNameEqualsIgnoreCaseAndIdNotAndCourseCategoryId(courseCategoryDto.getName(), id, courseCategoryDto.getCourseCategoryId()))
+                            return apiResponseService.existResponse();
+                    }
+                    courseCategory.setCourseCategory(courseCategoryRepository.findById(courseCategoryDto.getCourseCategoryId()).orElseThrow(() -> new ResourceNotFoundException("get CourseCategory")));
+                    if (id.equals(courseCategoryDto.getCourseCategoryId())) {
+                        return apiResponseService.errorResponse();
+                    }
+                } else {
+                    if (courseCategoryRepository.existsByNameEqualsIgnoreCaseAndCourseCategoryAndIdNot(courseCategoryDto.getName(), null, id))
+                        return apiResponseService.existResponse();
+                    courseCategory.setCourseCategory(null);
+                }
+                courseCategory.setName(courseCategoryDto.getName());
+                courseCategory.setDescription(courseCategoryDto.getDescription());
+                courseCategory.setActive(courseCategoryDto.isActive());
+                courseCategoryRepository.save(courseCategory);
+                return apiResponseService.updatedResponse();
+            }
+            return apiResponseService.notFoundResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

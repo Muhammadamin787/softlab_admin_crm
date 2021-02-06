@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.CourseCategoryDto;
+import uz.gvs.admin_crm.payload.RegionDto;
+import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 import uz.gvs.admin_crm.security.CurrentUser;
 import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.CourseCategoryService;
@@ -19,6 +21,8 @@ public class CourseCategoryController {
     ApiResponseService apiResponseService;
     @Autowired
     CourseCategoryService courseCategoryService;
+    @Autowired
+    CourseCategoryRepository courseCategoryRepository;
 
     @PostMapping
     public HttpEntity<?> saveCourseCategory(@RequestBody CourseCategoryDto courseCategoryDto){
@@ -38,5 +42,21 @@ public class CourseCategoryController {
                                        @CurrentUser User user) {
         ApiResponse apiResponse = courseCategoryService.getCourseCategoryList(page, size, user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PutMapping("/{id}")
+    public HttpEntity<?> editCourseCategory(@PathVariable Integer id, @RequestBody CourseCategoryDto courseCategoryDto) {
+        ApiResponse apiResponse = courseCategoryService.editCourseCategory(courseCategoryDto, id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteRegion(@PathVariable Integer id) {
+        try {
+            courseCategoryRepository.deleteById(id);
+            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
+        }
     }
 }
