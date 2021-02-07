@@ -78,7 +78,7 @@ class Region extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Hudud</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
+                    <Button color={"success"} onClick={openModal} className={"mb-2 rounded"}>Yangi qo'shish</Button>
                     <Table className={"table-style"}>
                         <thead className={""}>
                         <tr className={"text-center"}>
@@ -159,8 +159,8 @@ class Region extends Component {
                             Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                            <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
                 </div>

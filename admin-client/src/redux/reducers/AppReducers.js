@@ -24,9 +24,9 @@ const initState = {
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
-    teachers:[],
-    teacherDto:[],
-    userDto:[],
+    teachers: [],
+    teacherDto: [],
+    userDto: [],
     specialization: [],
     specializationDto: [],
 
@@ -184,9 +184,11 @@ const reducers = {
         state.showModal = false
     },
     [types.REQUEST_GET_COURSE_CATEGORY_SUCCESS](state, payload) {
-        state.courseCategories = payload.payload.object.object.sort((a, b) =>
-            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-        );
+        if (payload && payload.payload && payload.payload.object) {
+            state.courseCategories = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+        }
     },
 
 
@@ -214,7 +216,7 @@ const reducers = {
 
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
-        state.attachmentId  = payload
+        state.attachmentId = payload
     },
     updateState(state, {payload}) {
         return {
