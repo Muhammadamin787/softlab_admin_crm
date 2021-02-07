@@ -5,5 +5,5 @@ import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.Payment;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-
+    boolean existsByNameEqualsIgnoreCaseAndCourseCategoryId(String name, Integer courseCategory_id);
 }
