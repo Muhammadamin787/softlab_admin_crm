@@ -27,6 +27,11 @@
     -webkit-mask-image: url("icons/teacher2.svg");
   }
 
+  &.icon-globus {
+    mask-image: url("icons/address.svg");
+    -webkit-mask-image: url("icons/address.svg");
+  }
+
   &.icon-address {
     //mask-image: url("../../public/assets/icons/address.svg");
     //-webkit-mask-image: url("../../public/assets/icons/address.svg");

@@ -43,20 +43,11 @@ class AdminLayout extends Component {
                                 this.props.pathname === "/admin/region" ?
                                     "active-link" : "default-link"
                             }>
-                                <span className="icon icon-main"/>
+                                <span className="icon icon-globus"/>
                                 <Link to="/admin/region"
                                       className="main-link">
                                     Hududlar
                                 </Link>
-                            </Link>
-                            <Link to="/admin/durationType" className={
-                                this.props.pathname === "/admin/durationType" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-time"/>
-                                <div className="main-link">
-                                    Vaqt turlari
-                                </div>
                             </Link>
                             <Link to="/admin/course" className={
                                 this.props.pathname === "/admin/course" ?

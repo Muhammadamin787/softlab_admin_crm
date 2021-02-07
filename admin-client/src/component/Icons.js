@@ -109,6 +109,21 @@ function EditIcon(props) {
     );
 }
 
+function GlobusIcon(props) {
+    return (<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M7.00033 12.8333C10.222 12.8333 12.8337 10.2216 12.8337 6.99996C12.8337 3.7783 10.222 1.16663 7.00033 1.16663C3.77866 1.16663 1.16699 3.7783 1.16699 6.99996C1.16699 10.2216 3.77866 12.8333 7.00033 12.8333Z"
+                  stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M1.16699 7H12.8337" stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M7.00033 1.16663C8.45941 2.764 9.2886 4.83698 9.33366 6.99996C9.2886 9.16294 8.45941 11.2359 7.00033 12.8333C5.54125 11.2359 4.71205 9.16294 4.66699 6.99996C4.71205 4.83698 5.54125 2.764 7.00033 1.16663V1.16663Z"
+                  stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+    );
+}
+
 function DeleteIcon(props) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -272,6 +287,7 @@ function BgIcon() {
 
 
 export {
+    GlobusIcon,
     LogoMiniIcon,
     ToggleIcon,
     LogoIcon,
