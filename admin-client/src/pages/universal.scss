@@ -22,3 +22,19 @@
 
   }
 }
+
+.course-category {
+  cursor: pointer;
+
+  &:hover {
+    color: #04A6FB;
+  }
+
+  p {
+    color: #969191;
+  }
+}
+
+.add-button {
+  border-radius: 20px;
+}

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table} from "reactstrap";
-import {AvForm, AvField} from "availity-reactstrap-validation";
+import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table, ModalFooter} from "reactstrap";
+import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction,
     getCourseCategoriesAction,
@@ -51,7 +51,7 @@ class Teacher extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    secondPage: !secondPage
+                    showModal: !showModal
                 }
             })
         }
@@ -86,22 +86,11 @@ class Teacher extends Component {
                 fullName: v.fullName,
                 gender: v.gender,
                 phoneNumber: v.phoneNumber,
-                password: v.password,
-                photoId: attachmentId,
-                contactDto: {
-                    regionId: v.regionId,
-                    address: v.address,
-                    isTransport: v.isTransport,
-                    passportDto: {
-                        passportSerial: v.passportSerial,
-                        passportNumber: v.passportNumber,
-                        birthDate: v.birthDate,
-                        photoId: attachmentId,
-
-                    }
-                }
+                avatarId: attachmentId,
+                regionId: v.regionId,
+                description: v.description,
+                birthDate: v.birthDate
             }
-            teacherDto.specializationId = this.state.specs
 
             dispatch(saveTeacherAction(teacherDto))
         }
@@ -115,48 +104,83 @@ class Teacher extends Component {
                     <h1>O'qituvchilar</h1>
                     <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
 
-                    <Table>
-                        <thead className={"bg-dark text-white"}>
-                        <tr>
+                    <Table className={"table-style"}>
+                        <thead className={""}>
+                        <tr className={"text-center"}>
                             <th>No</th>
                             <th>FISH</th>
                             <th>Telefon raqami</th>
-                            <th>Mutaxassiligi</th>
-                            <th>mutahasislik</th>
-                            <th>Batafsil</th>
-                            <th>Tahrirlash</th>
-                            <th colSpan="3">Amal</th>
+                            <th colSpan="2">Amal</th>
                         </tr>
                         </thead>
                         <tbody>
                         {teachers ? teachers.map((item, i) =>
-                            <tr key={i}>
+                            <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>{item.userDto.fullName}</td>
                                 <td>{item.userDto.phoneNumber}</td>
-                                {console.log(item)}
-                                <td>{item.specialization ? item.specialization.map(item2 => item2.name + ', ') : ''}</td>
                                 <td>
-                                    <Button
-                                        // onClick={() => readMoreModal(item)}
-                                        color={"info"}><ShowIcon/></Button>
-                                </td>
-                                <td>
-                                    <Button
-                                        // onClick={() => openModal(item)}
-                                        color={"warning"}><EditIcon/></Button>
-                                </td>
-                                <td>
-                                    <Button
-                                        // onClick={() => openDeleteModal(item)}
-                                        color={"danger"}><DeleteIcon/> </Button>
+                                    <Button className="table-icon" onClick={() => openModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
+                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                        <DeleteIcon/>
+                                    </Button>
                                 </td>
                             </tr>
                         ) : ''}
                         </tbody>
                     </Table>
 
-
+                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
+                            <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                                {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={"w-100"}>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        type={"text"}
+                                        label={"FISH"} name={"fullName"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        type={"text"}
+                                        label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField
+                                        type={"date"}
+                                        label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
+                                        required/>
+                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                             name="regionId"
+                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                        {regions ? regions.map((item, i) =>
+                                            <option key={i} value={item.id}>{item.name}</option>
+                                        ) : ""}
+                                    </AvField>
+                                    <AvRadioGroup name="gender"
+                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  label="Jins" required
+                                                  errorMessage="Birini tanlang!">
+                                        <AvRadio label="Erkak" value="MALE"/>
+                                        <AvRadio label="Ayol" value="FEMALE"/>
+                                    </AvRadioGroup>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        type={"textarea"}
+                                        label={"Izoh"} name={"description"} className={"form-control"}
+                                        required/>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                                <Button color="primary">Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
                 </div>
             </AdminLayout>
         );

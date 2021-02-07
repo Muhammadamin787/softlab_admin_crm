@@ -27,7 +27,7 @@ public class CourseCategoryService {
 
     public ApiResponse saveCourseCategory(CourseCategoryDto courseCategoryDto) {
         if (courseCategoryDto.getCourseCategoryId() != null) {
-            CourseCategory parentCategory = courseCategoryRepository.findById(courseCategoryDto.getCourseCategoryId()).orElseThrow(() -> new ResourceNotFoundException("get courseCategor"));
+            CourseCategory parentCategory = courseCategoryRepository.findById(courseCategoryDto.getCourseCategoryId()).orElseThrow(() -> new ResourceNotFoundException("get courseCategory"));
             boolean exists = courseCategoryRepository.existsByNameEqualsIgnoreCaseAndCourseCategoryId(courseCategoryDto.getName(), parentCategory.getId());
             if (exists) {
                 return apiResponseService.existResponse();

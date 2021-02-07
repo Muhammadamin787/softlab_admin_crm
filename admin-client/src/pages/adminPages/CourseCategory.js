@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseCategoryAction,
@@ -10,6 +10,7 @@ import {
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
+import {Link} from "react-router-dom";
 
 class CourseCategory extends Component {
     componentDidMount() {
@@ -51,45 +52,28 @@ class CourseCategory extends Component {
                 console.clear();
                 console.log(v);
             }
+            if (v.courseCategoryId === "0") {
+                v.courseCategoryId = null
+            }
             dispatch(saveCourseCategoryAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Kurs kategoriyalar</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-                    <Table>
-                        <thead className={"bg-dark text-white"}>
-                        <tr>
-                            <th>No</th>
-                            <th>Nomi</th>
-                            <th>Ota Course Category</th>
-                            <th>Izoh</th>
-                            <th>Holati</th>
-                            <th>Amal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <Button color={"success"} onClick={openModal} className={"mb-2 add-button"}>Yangi qo'shish</Button>
+                    <Row>
                         {
                             courseCategories ? courseCategories.map((item, i) =>
-                                <tr key={i}>
-                                    <td>{i + 1}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.courseCategory ? item.courseCategory.name : "---"}</td>
-                                    <td>{item.description}</td>
-                                    <td>
-                                        <input type="checkbox" checked={item.active}/>
-                                    </td>
-                                    <td>
-                                        <Button color={"warning"} onClick={() => openModal(item)}
-                                                className={"mx-1"}>Tahrirlash</Button>
-                                        <Button color={"danger"}
-                                                onClick={() => openDeleteModal(item)}>O'chirish</Button>
-                                    </td>
-                                </tr>
-                            ) : ""}
-                        </tbody>
-                    </Table>
+                                    <Col className={"m-2 p-3 bg-white rounded course-category"} md={"4"}>
+                                        <h4>{item.name}</h4>
+                                        <p>{item.description}</p>
+                                    </Col>
+                                )
+                                : ""
+                        }
+                    </Row>
+
 
                     <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -140,11 +124,17 @@ class CourseCategory extends Component {
     }
 }
 
-CourseCategory.propTypes = {};
+CourseCategory
+    .propTypes = {};
 
-export default connect(({
-                            app: {loading, courseCategories, showModal, deleteModal},
-                        }) => ({
-        loading, courseCategories, showModal, deleteModal
-    })
-)(CourseCategory);
+export default connect(
+    ({
+         app: {loading, courseCategories, showModal, deleteModal}
+         ,
+     }
+    ) =>
+        ({
+            loading, courseCategories, showModal, deleteModal
+        })
+)
+(CourseCategory);
