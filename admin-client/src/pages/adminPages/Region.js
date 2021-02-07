@@ -78,7 +78,7 @@ class Region extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Hudud</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
+                    <Button color={"success"} onClick={openModal} className={"mb-2 rounded"}>Yangi qo'shish</Button>
                     <Table className={"table-style"}>
                         <thead className={""}>
                         <tr className={"text-center"}>

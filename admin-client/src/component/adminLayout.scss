@@ -119,8 +119,8 @@
   }
 
   &.icon-setting {
-    //mask-image: url("../../public/assets/icons/setting.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/setting.svg");
+    mask-image: url("icons/setting.svg");
+    -webkit-mask-image: url("icons/setting.svg");
   }
 
   &.icon-time {
