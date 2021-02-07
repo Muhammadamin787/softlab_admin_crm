@@ -61,6 +61,8 @@ class CourseCategory extends Component {
                     <tr>
                         <th>No</th>
                         <th>Nomi</th>
+                        <th>Ota Course Category</th>
+                        <th>Izoh</th>
                         <th>Holati</th>
                         <th>Amal</th>
                     </tr>
@@ -71,6 +73,8 @@ class CourseCategory extends Component {
                             <tr key={i}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
+                                <td>{item.courseCategory ?  item.courseCategory.name : "---"}</td>
+                                <td>{item.description}</td>
                                 <td>
                                     <input type="checkbox" checked={item.active}/>
                                 </td>
@@ -94,6 +98,16 @@ class CourseCategory extends Component {
                                 <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                          label={"Nomi"} name={"name"} className={"form-control"}
                                          placeholer={"nomi"} required/>
+                                <AvField className={'form-control'} label={'Ota Course Category:'} type="select"
+                                         name="courseCategoryId"
+                                         defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>
+                                    <option key={0} value={"0"}>Ota Course Category</option>
+                                    {courseCategories ? courseCategories.map((item, i) =>
+                                        <option key={i} value={item.id}>{item.name}</option>
+                                    ) : ""}
+                                </AvField>
+                                <AvField type="text" defaultValue={currentObject ? currentObject.description : false}
+                                         label={"Description"} name={"description"} placeholder={"izoh"}/>
                                 <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
                                          label={"Active"} name={"active"}/>
                             </div>
