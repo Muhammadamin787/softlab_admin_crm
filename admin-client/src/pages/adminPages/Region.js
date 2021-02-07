@@ -9,11 +9,14 @@ import {
 import {connect} from "react-redux";
 import './adminPages.scss';
 import {toast} from "react-toastify";
+import AdminLayout from "../../component/AdminLayout";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 
 class Region extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
     }
+
     state = {
         showModal: false,
         currentObject: "",
@@ -72,89 +75,96 @@ class Region extends Component {
             }
         }
         return (
-            <div className={"container "}>
-                <h1>Hudud</h1>
-                <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-                <Table>
-                    <thead className={"bg-dark text-white"}>
-                    <tr>
-                        <th>No</th>
-                        <th>Nomi</th>
-                        <th>Ota hudud</th>
-                        <th>Holati</th>
-                        <th>Amal</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {regions.map((item, i) =>
-                        <tr key={i}>
-                            <td>{i + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.region ? item.region.name : "-------"}</td>
-                            <td>
-                                <input type="checkbox" checked={item.active}/>
-                            </td>
-                            <td>
-                                <Button color={"warning"} onClick={() => openModal(item)}
-                                        className={"mx-1"}>Tahrirlash</Button>
-                                <Button color={"danger"} onClick={() => openDeleteModal(item)}>O'chirish</Button>
-                            </td>
+            <AdminLayout className="" pathname={this.props.location.pathname}>
+                <div className={"flex-column container"}>
+                    <h1>Hudud</h1>
+                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
+                    <Table className={"table-style"}>
+                        <thead className={""}>
+                        <tr className={"text-center"}>
+                            <th>No</th>
+                            <th>Nomi</th>
+                            <th>Ota hudud</th>
+                            <th>Holati</th>
+                            <th>Amal</th>
                         </tr>
-                    )}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                        {regions.map((item, i) =>
+                            <tr key={i} className={"table-tr"}>
+                                <td>{i + 1}</td>
+                                <td>{item.name}</td>
+                                <td>{item.region ? item.region.name : "-------"}</td>
+                                <td>
+                                    <input type="checkbox" checked={item.active}/>
+                                </td>
+                                <td>
+                                    <Button className="table-icon" onClick={() => openModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
+                                    {/*</td>*/}
+                                    {/*<td>*/}
+                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                        <DeleteIcon/>
+                                    </Button>
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </Table>
 
-                <Modal isOpen={showModal} toggle={openModal} className={""}>
-                    <AvForm className={""} onValidSubmit={saveItem}>
-                        <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
-                        </ModalHeader>
+                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
+                            <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                                {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={"w-100"}>
+                                    <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
+                                             label={"Nomi"} name={"name"} className={"form-control"}
+                                             placeholer={"nomi"} required/>
+                                    <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
+                                             label={"Active"} name={"active"}/>
+                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                             name="regionId"
+                                             defaultValue={currentObject && currentObject.regionId ? currentObject.regionId : "0"}>
+                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                        {regions ? regions.map((item, i) =>
+                                            <option key={i} value={item.id}>{item.name}</option>
+                                        ) : ""}
+                                    </AvField>
+                                    {/*<Select*/}
+                                    {/*    defaultValue={currentObject && currentObject.region && currentObject.region.id}*/}
+                                    {/*    placeholder="Hududni tanlang..."*/}
+                                    {/*    name="regionId"*/}
+                                    {/*    isSearchable={true}*/}
+                                    {/*    options={selectItems}*/}
+                                    {/*    onChange={parentRegion}*/}
+                                    {/*    className="basic-multi-select"*/}
+                                    {/*    classNamePrefix="select"*/}
+                                    {/*/>*/}
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                                <Button color="primary">Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
+
+                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                        <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                     charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            <div className={"w-100"}>
-                                <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
-                                         label={"Nomi"} name={"name"} className={"form-control"}
-                                         placeholer={"nomi"} required/>
-                                <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
-                                         label={"Active"} name={"active"}/>
-                                <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                         name="regionId"
-                                         defaultValue={currentObject && currentObject.regionId ? currentObject.regionId : "0"}>
-                                    <option key={0} value={"0"}>Ota hududni tanlang</option>
-                                    {regions ? regions.map((item, i) =>
-                                        <option key={i} value={item.id}>{item.name}</option>
-                                    ) : ""}
-                                </AvField>
-                                {/*<Select*/}
-                                {/*    defaultValue={currentObject && currentObject.region && currentObject.region.id}*/}
-                                {/*    placeholder="Hududni tanlang..."*/}
-                                {/*    name="regionId"*/}
-                                {/*    isSearchable={true}*/}
-                                {/*    options={selectItems}*/}
-                                {/*    onChange={parentRegion}*/}
-                                {/*    className="basic-multi-select"*/}
-                                {/*    classNamePrefix="select"*/}
-                                {/*/>*/}
-                            </div>
+                            Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                            <Button color="primary">Saqlash</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
+                            <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
                         </ModalFooter>
-                    </AvForm>
-                </Modal>
-
-                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
-                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
-                                 charCode="X">O'chirish</ModalHeader>
-                    <ModalBody>
-                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                        <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
-                    </ModalFooter>
-                </Modal>
-            </div>
+                    </Modal>
+                </div>
+            </AdminLayout>
         );
     }
 }
