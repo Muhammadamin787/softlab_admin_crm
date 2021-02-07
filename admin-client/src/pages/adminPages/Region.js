@@ -159,8 +159,8 @@ class Region extends Component {
                             Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                            <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
