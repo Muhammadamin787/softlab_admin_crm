@@ -7,4 +7,5 @@ import uz.gvs.admin_crm.entity.Teacher;
 import java.util.UUID;
 
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
+
 }
