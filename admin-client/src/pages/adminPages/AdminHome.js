@@ -15,7 +15,7 @@ class AdminHome extends Component {
                         <Link to={"/admin/dashboard"}>Dashboard</Link>
                     </div>
                     <div className={"m-1"}>
-                        <Link to={"/admin/profession"}>Profession</Link>
+                        <Link to={"/admin/room"}>Room</Link>
                     </div>
                     <div className={"m-1"}>
                         <Link to={"/admin/testCategory"}>TestCategory</Link>
@@ -36,7 +36,7 @@ class AdminHome extends Component {
                         <Link to={"/admin/trialContactType"}>Trial Contact Type</Link>
                     </div>
                     <div className={"m-1"}>
-                        <Link to={"/admin/specialization"}>Specialization</Link>
+                        <Link to={"/admin/profession"}>Profession</Link>
                     </div>
                     <div className={"m-1"}>
                         <Link to={"/admin/test"}>Test</Link>

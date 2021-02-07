@@ -2,6 +2,26 @@ import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
 
+
+// Room Start
+export const saveRoomApi = (data) => {
+    return HttpClient.doPost(api.room, data)
+}
+export const getRoomList = () => {
+    return HttpClient.doGet(api.room)
+}
+export const editRoomApi = (data) => {
+    return HttpClient.doPut(api.room+"/"+data.id, data)
+}
+export const deleteRoomApi = (data) => {
+    return HttpClient.doDelete(api.room + "/" + data)
+}
+// Room End
+
+
+
+
+
 //Reklama
 
 export const saveReklamaApi = (data) => {
@@ -109,21 +129,6 @@ export const getCourseCategoriesApi = () => {
 export const deleteCourseCategoryApi = (data) => {
     return HttpClient.doDelete(api.courseCategory + "/" + data.id)
 }
-
-// Spec Start
-export const saveSpecApi = (data) => {
-    return HttpClient.doPost(api.spec, data)
-}
-export const getSpecList = () => {
-    return HttpClient.doGet(api.spec)
-}
-export const editSpecApi = (data) => {
-    return HttpClient.doPut(api.spec+"/"+data.id, data)
-}
-export const deleteSpecApi = (data) => {
-    return HttpClient.doDelete(api.spec + "/" + data)
-}
-// Spec End
 
 // Start Trial Contact Type
 export const saveTrialContactTypeApi = (data) => {

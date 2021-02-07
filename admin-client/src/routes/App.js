@@ -15,6 +15,7 @@ import Region from "../pages/adminPages/Region";
 import Course from "../pages/adminPages/Course";
 import CourseCategory from "../pages/adminPages/CourseCategory";
 import AddTeacher from "../pages/adminPages/Teacher";
+import Room from "../pages/adminPages/Room";
 
 
 const App = () => {
@@ -25,6 +26,8 @@ const App = () => {
                 <PublicRoute exact path="/login" component={Login}/>
                 <PrivateRoute exact path="/admin/dashboard" component={Dashboard}/>
                 <PrivateRoute exact path="/admin/" component={AdminHome}/>
+                <PrivateRoute exact path="/admin/room" component={Room}/>
+
                 <PrivateRoute exact path="/admin/durationType" component={DurationType}/>
                 <PrivateRoute exact path="/admin/region" component={Region}/>
                 <PrivateRoute exact path="/admin/course" component={Course}/>
