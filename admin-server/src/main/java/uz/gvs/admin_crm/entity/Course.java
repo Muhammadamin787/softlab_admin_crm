@@ -18,4 +18,6 @@ public class Course extends AbsNameEntity {
     private double price;
     @ManyToOne
     private CourseCategory courseCategory;
+
+
 }
