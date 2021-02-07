@@ -2,7 +2,15 @@ import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
 import {config} from "../../utils/config";
 import {
-//reklama
+
+    //Room
+    getRoomList,
+    editRoomApi,
+    saveRoomApi,
+    deleteRoomApi,
+
+    //reklama
+
     getReklamaApi,
     editReklamaApi,
     saveReklamaApi,
@@ -37,11 +45,7 @@ import {
     getCourseCategoriesApi,
     editCourseCategoryApi,
     deleteCourseCategoryApi,
-    //specialized
-    getSpecList,
-    editSpecApi,
-    saveSpecApi,
-    deleteSpecApi,
+
     //trialContact
     getTrialContactTypesApi,
     editTrialContactTypeApi,
@@ -54,6 +58,75 @@ import {
     saveTeacherApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+
+
+
+// Start Room
+
+export const getRoomListAction = () => (dispatch) => {
+    dispatch({
+        api: getRoomList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_ROOM_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+
+export const  saveRoomAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editRoomApi : saveRoomApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_ROOM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getRoomListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+export const deleteRoomAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteRoomApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_ROOM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type : "updateState",
+            payload : {
+                room : null
+            }
+        })
+        toast.success("Malumot ochirildi")
+        dispatch(getRoomListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+};
+
+// End Room
+
+
+
+
+
+
+
+
+
+
+
+
 //Reklmaa
 export const getReklamaAction = () => (dispatch) => {
     dispatch({
@@ -415,59 +488,6 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
-// START SPECIALIZATION
-
-export const getSpecListAction = () => (dispatch) => {
-    dispatch({
-        api: getSpecList,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GET_SPEC_SUCCESS,
-            types.REQUEST_ERROR,
-        ]
-    })
-}
-export const  saveSpecAction = (data) => (dispatch) => {
-    dispatch({
-        api: (data.id ? editSpecApi : saveSpecApi),
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_SAVE_SPEC_SUCCESS,
-            types.REQUEST_ERROR
-        ],
-        data: data
-    }).then((res) => {
-        toast.success(res.payload.message)
-        dispatch(getSpecListAction())
-    }).catch((err) => {
-        toast.error("Xatolik")
-    })
-}
-export const deleteSpecAction = (data) => (dispatch) => {
-    dispatch({
-        api: deleteSpecApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_SAVE_SPEC_SUCCESS,
-            types.REQUEST_ERROR
-        ],
-        data: data
-    }).then((res) => {
-        dispatch({
-            type : "updateState",
-            payload : {
-                spec : null
-            }
-        })
-        toast.success("Malumot ochirildi")
-        dispatch(getSpecListAction())
-    }).catch((err) => {
-        toast.error("Xatolik")
-    })
-};
-
-// END SPECIALIZATION
 
 // START TRIAL CONTACT TYPE
 export const getTrialContactTypesAction = () => (dispatch) => {

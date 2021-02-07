@@ -1,20 +1,17 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
-    deleteDurationTypeAction,
-    getSpecListAction,
-    saveDurationTypeAction,
-    saveSpecAction,
-    deleteSpecAction
+    getRoomListAction,
+    saveRoomAction,
+    deleteRoomAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
-import {Col, Row, Table, Container, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm} from "availity-reactstrap-validation";
 
-class Specialization extends Component {
+class Room extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getSpecListAction())
+        this.props.dispatch(getRoomListAction())
     }
 
     state = {
@@ -26,7 +23,7 @@ class Specialization extends Component {
     render() {
 
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, loading, spec} = this.props;
+        const {dispatch, showModal, deleteModal, rooms} = this.props;
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -41,42 +38,40 @@ class Specialization extends Component {
             this.setState({currentObject: item, showDeleteModal: !this.state.showDeleteModal})
         }
         const deleteItem = () => {
-            dispatch(deleteSpecAction(currentObject))
+            dispatch(deleteRoomAction(currentObject))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
         const saveItem = (e, v) => {
-            if (currentObject) {
+            if (currentObject && currentObject.id) {
                 v.id = currentObject.id
             }
-            dispatch(saveSpecAction(v))
+            dispatch(saveRoomAction(v))
         }
 
         return (
             <div className={"container"}>
-                <h1>Specialization</h1>
+                <h1>Room</h1>
                 <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
                 <Table>
                     <thead className={"bg-dark text-white"}>
                     <tr>
                         <th>№</th>
                         <th>Name</th>
-                        <th>Description</th>
                         <th>Active</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {spec ? spec.map((item, i) =>
+                    {rooms ? rooms.map((item, i) =>
                         <tr key={i}>
-                            <td>{i + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.description}</td>
-                            <td><input type="checkbox" id={item.name} checked={item.active}/></td>
-                            <td>
-                                <Button color={"warning"} onClick={() => openModal(item)}
-                                        className={"mx-1"}>Tahrirlash</Button>
-                                <Button color={"danger"} onClick={() => openDeleteModal(item.id)}>O'chirish</Button>
-                            </td>
+                             <td>{i + 1}</td>
+                             <td>{item.name}</td>
+                             <td><input type="checkbox" id={item.name} checked={item.active}/></td>
+                             <td>
+                                 <Button color={"warning"} onClick={() => openModal(item)}
+                                         className={"mx-1"}>Tahrirlash</Button>
+                                 <Button color={"danger"} onClick={() => openDeleteModal(item.id)}>O'chirish</Button>
+                             </td>
                         </tr>
                     ) : ''}
                     </tbody>
@@ -92,12 +87,7 @@ class Specialization extends Component {
                                 <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                          label={"Nomi"} name={"name"} className={"form-control"}
                                          placeholer={"nomi"} required/>
-
-                                <AvField defaultValue={currentObject ? currentObject.desription : ""} type={"text"}
-                                         label={"Izoh"} name={"description"} className={"form-control"}
-                                         placeholer={"nomi"} required/>
-
-                                         <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
+                                <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
                                          label={"Active"} name={"active"}/>
                             </div>
                         </ModalBody>
@@ -124,15 +114,10 @@ class Specialization extends Component {
     }
 }
 
-export default connect(
-    ({
-         app: {showModal, spec, deleteModal},
-         auth: {isAdmin, isSuperAdmin, currentUser}
-     }) => ({
-        showModal,
-        isAdmin,
-        isSuperAdmin,
-        currentUser,
-        spec
+Room.propTypes = {}
+export default connect(({
+                            app: {loading, rooms, showModal, deleteModal, selectItems},
+                        }) => ({
+        loading, rooms, showModal, deleteModal, selectItems
     })
-)(Specialization);
+)(Room);

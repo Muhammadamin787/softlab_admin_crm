@@ -29,7 +29,6 @@ const initState = {
     userDto:[],
     specialization: [],
     specializationDto: [],
-    secondPage: false,
 
 };
 
@@ -42,6 +41,16 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+    },
+
+    // Room
+    [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
+        state.rooms = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    [types.REQUEST_SAVE_ROOM_SUCCESS](state, payload) {
+        state.showModal = false
     },
 
 
@@ -94,6 +103,7 @@ const reducers = {
             state.selectItems = ketmon
         }
     },
+
     // //teacher
     // [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
     //     if (payload && payload.payload && payload.payload.object) {
@@ -179,22 +189,6 @@ const reducers = {
         );
     },
 
-    // Specialization
-    [types.REQUEST_GET_SPEC_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object) {
-            state.spec = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            let ketmon = []
-            for (let i = 0; i < state.spec.length; i++) {
-                ketmon.push({value: state.spec[i].id, label: state.spec[i].name})
-            }
-            state.selectItemsFromSpec = ketmon
-        }
-    },
-    [types.REQUEST_SAVE_SPEC_SUCCESS](state, payload) {
-        state.showModal = false
-    },
 
     // Trail Contact Type
     [types.REQUEST_SAVE_TRIAL_CONTACT_TYPE_SUCCESS](state, payload) {
