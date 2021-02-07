@@ -1,0 +1,24 @@
+.table-style {
+  width: auto;
+
+  tbody {
+
+    .table-tr {
+      position: relative !important;
+      width: 100%;
+      background-color: white;
+      color: #313E47;
+      border-bottom: 10px solid #F9FAFB;
+      border-top: 10px solid #F9FAFB;
+      border-radius: 10px;
+
+      .table-icon {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+
+  }
+}
