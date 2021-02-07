@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import './adminPages.scss';
 import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 
 class Region extends Component {
     componentDidMount() {
@@ -78,9 +79,9 @@ class Region extends Component {
                 <div className={"flex-column container"}>
                     <h1>Hudud</h1>
                     <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-                    <Table>
-                        <thead className={"bg-dark text-white"}>
-                        <tr>
+                    <Table className={"table-style"}>
+                        <thead className={""}>
+                        <tr className={"text-center"}>
                             <th>No</th>
                             <th>Nomi</th>
                             <th>Ota hudud</th>
@@ -90,7 +91,7 @@ class Region extends Component {
                         </thead>
                         <tbody>
                         {regions.map((item, i) =>
-                            <tr key={i}>
+                            <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
                                 <td>{item.region ? item.region.name : "-------"}</td>
@@ -98,9 +99,14 @@ class Region extends Component {
                                     <input type="checkbox" checked={item.active}/>
                                 </td>
                                 <td>
-                                    <Button color={"warning"} onClick={() => openModal(item)}
-                                            className={"mx-1"}>Tahrirlash</Button>
-                                    <Button color={"danger"} onClick={() => openDeleteModal(item)}>O'chirish</Button>
+                                    <Button className="table-icon" onClick={() => openModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
+                                    {/*</td>*/}
+                                    {/*<td>*/}
+                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                        <DeleteIcon/>
+                                    </Button>
                                 </td>
                             </tr>
                         )}

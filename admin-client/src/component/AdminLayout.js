@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import './adminLayout.scss'
+import '../pages/universal.scss'
 import {LogoIcon, LogoMiniIcon, ToggleIcon} from "./Icons";
 import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
