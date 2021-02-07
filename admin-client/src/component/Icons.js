@@ -38,6 +38,49 @@ function ToggleIcon(props) {
     )
 }
 
+function LogoMiniIcon(props) {
+    return (
+        <svg className={"container mx-auto"} width="44" height="37" viewBox="0 0 44 37" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="30.3051" cy="5.60635" rx="5.0688" ry="4.60635" fill="url(#paint0_linear)"/>
+            <ellipse cx="38.9301" cy="18.9355" rx="5.0688" ry="4.60635" fill="url(#paint1_linear)"/>
+            <ellipse cx="30.7368" cy="32.2646" rx="5.0688" ry="4.60635" fill="url(#paint2_linear)"/>
+            <ellipse cx="5.0688" cy="18.9355" rx="5.0688" ry="4.60635" fill="url(#paint3_linear)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M17.8474 16.8246C17.7897 17.1089 17.7595 17.402 17.7595 17.7015C17.7595 17.8396 17.7659 17.9764 17.7785 18.1116C17.815 18.5437 17.9154 18.9705 18.077 19.3794C17.5972 22.5145 15.7104 25.2406 13.015 27.0139C11.4715 27.8035 10.429 29.3065 10.429 31.0308C10.429 33.5748 12.6984 35.6371 15.4978 35.6371C18.2752 35.6371 20.5308 33.6072 20.5662 31.0909L20.6092 31.0188C20.5814 30.732 20.5672 30.4416 20.5672 30.1482C20.5672 26.9304 22.2736 24.0748 24.909 22.2879C25.9055 21.9542 26.7987 21.3438 27.4365 20.4829C28.0813 19.6127 28.3681 18.6173 28.3281 17.6398C28.2966 15.3676 26.5286 13.4755 24.1746 13.0093C21.6408 10.8879 20.2378 7.97036 20.1236 4.98431C20.2538 3.38604 19.4605 1.76543 17.8905 0.79878C15.5653 -0.632747 12.4171 -0.0880226 10.8587 2.01546C9.31095 4.10454 9.91343 6.94543 12.1995 8.38656L12.2393 8.45576C12.5165 8.59612 12.7894 8.74865 13.0572 8.9135C16.0747 10.7713 17.7436 13.7643 17.8341 16.8322L17.8474 16.8246Z"
+                  fill="url(#paint4_linear)"/>
+            <defs>
+                <linearGradient id="paint0_linear" x1="30.3051" y1="1" x2="30.3051" y2="10.2127"
+                                gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#1455B5"/>
+                    <stop offset="1" stop-color="#2ECFFF"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear" x1="38.9301" y1="14.3291" x2="38.9301"
+                                y2="23.5418" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#1455B5"/>
+                    <stop offset="1" stop-color="#2ECFFF"/>
+                </linearGradient>
+                <linearGradient id="paint2_linear" x1="30.7368" y1="27.6582" x2="30.7368"
+                                y2="36.8709" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#1455B5"/>
+                    <stop offset="1" stop-color="#2ECFFF"/>
+                </linearGradient>
+                <linearGradient id="paint3_linear" x1="5.0688" y1="14.3291" x2="5.0688" y2="23.5418"
+                                gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#1455B5"/>
+                    <stop offset="1" stop-color="#2ECFFF"/>
+                </linearGradient>
+                <linearGradient id="paint4_linear" x1="19.1659" y1="0" x2="19.1659" y2="35.6371"
+                                gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#1455B5"/>
+                    <stop offset="1" stop-color="#2ECFFF"/>
+                </linearGradient>
+            </defs>
+        </svg>
+
+    )
+}
+
 function DashboardIcon(props) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -229,6 +272,7 @@ function BgIcon() {
 
 
 export {
+    LogoMiniIcon,
     ToggleIcon,
     LogoIcon,
     RegionIcon,
