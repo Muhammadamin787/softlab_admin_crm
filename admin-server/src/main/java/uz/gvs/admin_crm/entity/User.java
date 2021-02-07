@@ -52,7 +52,7 @@ public class User extends AbsEntity implements UserDetails {//test
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
     private boolean isCredentialsNonExpired = true;
-    private boolean enabled = false;
+    private boolean enabled = true;
 
 
     @Override
