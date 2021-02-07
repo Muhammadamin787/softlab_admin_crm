@@ -15,6 +15,7 @@ import Course from "../pages/adminPages/Course";
 import CourseCategory from "../pages/adminPages/CourseCategory";
 import AddTeacher from "../pages/adminPages/Teacher";
 import GeneralSetting from "../pages/adminPages/GeneralSetting";
+import Room from "../pages/adminPages/Room";
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/courseCategory" component={CourseCategory}/>
                 <PrivateRoute exact path="/admin/teacher" component={AddTeacher}/>
                 <PrivateRoute exact path="/admin/reklama" component={Reklama}/>
+                <PrivateRoute exact path="/admin/room" component={Room}/>
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
                 <Route component={NotFound}/>
             </Switch>

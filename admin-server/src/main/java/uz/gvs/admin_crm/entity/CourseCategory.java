@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @Entity
 public class CourseCategory extends AbsNameEntity {
+
     @ManyToOne
     private CourseCategory courseCategory;
 
