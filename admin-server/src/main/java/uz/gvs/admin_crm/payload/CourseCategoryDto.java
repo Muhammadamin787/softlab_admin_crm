@@ -14,6 +14,16 @@ public class CourseCategoryDto {
     private String description;
     private boolean active;
     private Integer courseCategoryId;
+    private boolean isParent;
+
+    public CourseCategoryDto(Integer id, String name, String description, boolean active, Integer courseCategoryId, CourseCategory courseCategory) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.active = active;
+        this.courseCategoryId = courseCategoryId;
+        this.courseCategory = courseCategory;
+    }
 
     public CourseCategoryDto(Integer id, String name, String description, boolean active) {
         this.id = id;

@@ -102,8 +102,6 @@ class Region extends Component {
                                     <Button className="table-icon" onClick={() => openModal(item)}>
                                         <EditIcon/>
                                     </Button>
-                                    {/*</td>*/}
-                                    {/*<td>*/}
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>

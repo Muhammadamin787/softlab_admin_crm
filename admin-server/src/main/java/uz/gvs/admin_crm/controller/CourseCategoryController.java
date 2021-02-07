@@ -15,7 +15,7 @@ import uz.gvs.admin_crm.service.CourseCategoryService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
 @RestController
-@RequestMapping("api/courseCategory")
+@RequestMapping("/api/courseCategory")
 public class CourseCategoryController {
     @Autowired
     ApiResponseService apiResponseService;
