@@ -16,5 +16,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class CourseCategory extends AbsNameEntity {
     @ManyToOne
-    private CourseCategory region;
+    private CourseCategory courseCategory;
+
+    public CourseCategory(Integer id, String name, String description, boolean active, CourseCategory courseCategory) {
+        super(id, name, description, active);
+        this.courseCategory = courseCategory;
+    }
+
+    public CourseCategory(String name, String description, boolean active, CourseCategory courseCategory) {
+        super(name, description, active);
+        this.courseCategory = courseCategory;
+    }
 }
