@@ -16,6 +16,7 @@ import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +71,18 @@ public class StudentService {
         }
     }
 
+    public ApiResponse getStudent(UUID id) {
+        try {
+            Optional<Student> byId = studentRepository.findById(id);
+            if (byId.isPresent()) {
+                return apiResponseService.getResponse(makeStudentDto(byId.get()));
+            } else {
+                return apiResponseService.notFoundResponse();
+            }
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
     public StudentDto makeStudentDto(Student student) {
         return new StudentDto(
