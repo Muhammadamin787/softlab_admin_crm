@@ -17,6 +17,21 @@ export const deleteRoomApi = (data) => {
 }
 // Room End
 
+// PayType
+export const savePayTypeApi = (data) => {
+    return HttpClient.doPost(api.payType, data)
+}
+export const getPayTypeList = () => {
+    return HttpClient.doGet(api.payType)
+}
+export const editPayTypeApi = (data) => {
+    return HttpClient.doPut(api.payType+"/"+data.id, data)
+}
+export const deletePayTypeApi = (data) => {
+    return HttpClient.doDelete(api.payType + "/" + data)
+}
+// PayType End
+
 
 //Reklama
 

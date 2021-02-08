@@ -18,7 +18,8 @@ import uz.gvs.admin_crm.utils.AppConstants;
 
 @RestController
 @RequestMapping("/api/student")
-public class StudentController {
+public class
+StudentController {
 
     @Autowired
     StudentService studentService;
