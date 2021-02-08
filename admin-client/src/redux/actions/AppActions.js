@@ -61,7 +61,7 @@ import {
     getTeacherApi,
     editTeacherApi,
     deleteTeacherApi,
-    saveTeacherApi, getCourseApi, getCourseCategoryApi, getStudentsApi, editStudentApi, saveStudentApi,
+    saveTeacherApi, getCourseApi, getCourseCategoryApi, getStudentsApi, editStudentApi, saveStudentApi, getStudentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -159,9 +159,9 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         dispatch({
-            type : "updateState",
-            payload : {
-                room : null
+            type: "updateState",
+            payload: {
+                room: null
             }
         })
         toast.success("Malumot ochirildi")
@@ -665,6 +665,17 @@ export const saveStudentAction = (data) => (dispatch) => {
         dispatch(getStudentsAction())
     }).catch((err) => {
         toast.error("Xatolik!")
+    })
+}
+export const getStudentAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
     })
 }
 // FINISH STUDENT ACTION
