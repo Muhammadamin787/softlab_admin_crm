@@ -166,7 +166,14 @@ class Student extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                        type={"text"}
+                                        type={"number"}
+                                        errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
