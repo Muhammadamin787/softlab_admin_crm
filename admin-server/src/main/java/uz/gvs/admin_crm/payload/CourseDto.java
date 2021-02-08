@@ -17,12 +17,12 @@ public class CourseDto {
     private Integer courseCategoryId;
     private CourseCategory courseCategory;
 
-//    public CourseDto(Integer id, String name, String description, boolean active, double price, CourseCategory courseCategory){
-//        this.id = id;
-//        this.name = name;
-//        this.description = description;
-//        this.active = active;
-//        this.price = price;
-//        this.courseCategory = courseCategory;
-//    }
+    public CourseDto(Integer id, String name, String description, boolean active, double price, CourseCategory courseCategory){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.active = active;
+        this.price = price;
+        this.courseCategory = courseCategory;
+    }
 }
