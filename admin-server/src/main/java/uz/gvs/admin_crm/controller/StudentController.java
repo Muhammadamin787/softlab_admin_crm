@@ -23,9 +23,6 @@ public class StudentController {
     @Autowired
     StudentService studentService;
     @Autowired
-    RegionRepository regionRepository;
-
-    @Autowired
     ApiResponseService apiResponseService;
 
     @PostMapping
@@ -33,7 +30,8 @@ public class StudentController {
         ApiResponse apiResponse = studentService.saveStudent(studentDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
-//
+
+    //
 //
 //    @PutMapping("/{id}")
 //    public HttpEntity<?> editProfession(@PathVariable Integer id, @RequestBody RegionDto regionDto) {
@@ -56,13 +54,13 @@ public class StudentController {
 //    }
 //
 //
-//    @GetMapping
-//    public HttpEntity<?> getRegionList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-//                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-//                                       @CurrentUser User user) {
-//        ApiResponse apiResponse = regionService.getListRegion(page, size, user);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
+    @GetMapping
+    public HttpEntity<?> getStudentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                        @CurrentUser User user) {
+        ApiResponse apiResponse = studentService.getStudents(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 //
 //
 //    //Delete

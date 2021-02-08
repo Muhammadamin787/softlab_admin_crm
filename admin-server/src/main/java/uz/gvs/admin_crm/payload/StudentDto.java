@@ -27,7 +27,21 @@ public class StudentDto {
     private Set<Role> roles;
     private Set<Permission> permissions;
     private double balans;
-    private List<StudentGroup> groupList;
+    private Set<StudentGroup> groupList;
     private List<UUID> groupIds;
 
+    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {
+        this.id = id;
+        this.userId = userId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
+        this.region = region;
+        this.regionId = regionId;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.roles = roles;
+        this.balans = balans;
+        this.groupList = groupList;
+    }
 }
