@@ -37,9 +37,9 @@
     //-webkit-mask-image: url("../../public/assets/icons/address.svg");
   }
 
-  &.icon-orderInfo {
-    //mask-image: url("../../public/assets/icons/orderInfo.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/orderInfo.svg");
+  &.icon-customer {
+    mask-image: url("icons/customer.svg");
+    -webkit-mask-image: url("icons/customer.svg");
   }
 
   &.icon-payment {
@@ -151,11 +151,6 @@
   &.icon-discount {
     //mask-image: url("../../public/assets/icons/discount.svg");
     //-webkit-mask-image: url("../../public/assets/icons/discount.svg");
-  }
-
-  &.icon-customer {
-    //mask-image: url("../../public/assets/icons/customer.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/customer.svg");
   }
 
   &.icon-blog {
@@ -274,6 +269,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     transition: all .3s ease;
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.3);
 
     .logo-duo {
       display: flex;
@@ -293,6 +289,7 @@
       .active-link, .default-link {
         border-radius: 6px;
         margin: 10px 10px 0px 10px;
+        border: 1px solid #f2f2f2;
         display: flex;
         height: 65px;
         align-items: center;
@@ -300,7 +297,16 @@
 
         &:hover {
           cursor: pointer;
+
+          .main-link {
+            color: #04A6FB;
+          }
+
+          .icon {
+            background-color: #04A6FB;
+          }
         }
+
 
         .icon {
           margin-left: 20px;
@@ -314,10 +320,23 @@
           text-decoration: none;
           padding-left: 10px;
           margin-left: 10px;
+
         }
       }
 
       .active-link {
+        &:hover {
+          cursor: pointer;
+
+          .main-link {
+            color: white;
+          }
+
+          .icon {
+            background-color: white;
+          }
+        }
+
         background: #04A6FB;
 
         .icon {
@@ -363,7 +382,7 @@
     position: relative;
     overflow-y: scroll;
     transition: all 0.3s ease;
-    padding-top: 80px;
+    padding-top: 100px;
 
     .menu-toggle {
       transition: all 0.3s ease;

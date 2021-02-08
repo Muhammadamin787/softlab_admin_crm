@@ -2,42 +2,37 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, getCourseCategoriesAction, getCourseCategoryAction,
+    deleteCourseAction, getCourseAction, getCourseCategoriesAction,
     getCoursesAction,
-    saveCourseAction,
+    getDurationTypesAction, saveCourseAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
+import {DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 
-class Course extends Component {
+class SelectCourse extends Component {
     componentDidMount() {
         let id = 0
-        console.log(this.props);
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
-            this.props.dispatch(getCoursesAction({id: id}))
-            this.props.dispatch(getCourseCategoriesAction())
-            this.props.dispatch(getCourseCategoryAction({id: id}))
+            this.props.dispatch(getCourseAction({id: id}))
         }
     }
 
     state = {
         showModal: false,
-        currentObject: "",
-        currentItem: []
+        currentObject: ""
     }
 
     render() {
         const {currentObject} = this.state;
         const {
-            history,
-            currentItem,
             dispatch,
             showModal,
             deleteModal,
-            getItems,
+            currentItem,
             courseCategories,
         } = this.props;
         const openModal = (item) => {
@@ -73,42 +68,51 @@ class Course extends Component {
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.name} </h3>
                         <Link
-                            to={"/admin/courses/list"}
+                            to={"/admin/course/" + (currentItem && currentItem.courseCategory && currentItem.courseCategory.id)}
                             className={"text-decoration-none"}>
-                            <span className={""}>Kurslar</span>
+                        <span
+                            className={""}> {currentItem && currentItem.courseCategory && currentItem.courseCategory.name} kurslari</span>
                         </Link>
                     </hgroup>
-
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
-
-                    <div className="row border-top py-3">
-                        {
-                            getItems && getItems.length > 0 ? getItems.map((item, i) =>
-                                    <div className={"m-2 p-3 bg-white rounded courses-style"}>
-                                        <Link to={"/admin/course/select/" + item.id}
-                                              className={"w-100 text-decoration-none "}>
-                                            <h5>{item.name}</h5>
-                                            <p>{item.price} UZS</p>
-                                        </Link>
+                    <div className="row">
+                        {currentItem && currentItem.id ?
+                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                                <div className="row">
+                                    <div className="col-8">
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Nomi</small>
+                                            <h5>{currentItem.name}</h5>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Kategoriyasi</small>
+                                            <h6>{currentItem.courseCategory ? currentItem.courseCategory.name : ""} </h6>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Tavsif</small>
+                                            <h6>{currentItem.description} </h6>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Narx</small>
+                                            <h6>{currentItem.price} UZS</h6>
+                                        </hgroup>
                                     </div>
-                                )
-                                :
-                                <Col>
-                                    <h5 className={"text-center"}>
-                                        Kurs topilmadi
-                                    </h5>
-                                </Col>
-                        }
+                                    <div className="col-4">
+                                        <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                            <EditIcon/>
+                                        </Button>
+                                        <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
+                                            <DeleteIcon/>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                            : ""}
                     </div>
                 </div>
                 <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject ? "Tahrirlash" : "Yangi kurs qo'shish"}
+                            {currentObject ? "Kursni tahrirlash" : "Yangi kurs qo'shish"}
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100"}>
@@ -141,14 +145,24 @@ class Course extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
 
             </AdminLayout>
-        )
-            ;
+        );
     }
 }
 
-Course.propTypes = {};
+SelectCourse.propTypes = {};
 
 export default connect(({
                             app: {
@@ -166,4 +180,4 @@ export default connect(({
         currentItem,
         loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, getItems, readModal
     })
-)(Course);
+)(SelectCourse);

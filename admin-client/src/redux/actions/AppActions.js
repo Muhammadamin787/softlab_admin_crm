@@ -23,7 +23,7 @@ import {
     //durationType
     editDurationTypeApi,
     getDurationTypesApi,
-    saveDurationTypeApi,deleteDurationTypeApi,
+    saveDurationTypeApi, deleteDurationTypeApi,
     //Profession
     editProfessionApi,
     saveProfessionApi,
@@ -55,10 +55,9 @@ import {
     getTeacherApi,
     editTeacherApi,
     deleteTeacherApi,
-    saveTeacherApi,
+    saveTeacherApi, getCourseApi, getCourseCategoryApi, getStudentsApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
-
 
 
 // Start Room
@@ -74,7 +73,7 @@ export const getRoomListAction = () => (dispatch) => {
     })
 }
 
-export const  saveRoomAction = (data) => (dispatch) => {
+export const saveRoomAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editRoomApi : saveRoomApi),
         types: [
@@ -102,9 +101,9 @@ export const deleteRoomAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         dispatch({
-            type : "updateState",
-            payload : {
-                room : null
+            type: "updateState",
+            payload: {
+                room: null
             }
         })
         toast.success("Malumot ochirildi")
@@ -117,20 +116,10 @@ export const deleteRoomAction = (data) => (dispatch) => {
 // End Room
 
 
-
-
-
-
-
-
-
-
-
-
 //Reklmaa
 export const getReklamaAction = () => (dispatch) => {
     dispatch({
-        api : getReklamaApi,
+        api: getReklamaApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_REKLAMA_SUCCESS,
@@ -138,14 +127,14 @@ export const getReklamaAction = () => (dispatch) => {
         ]
     })
 }
-export const saveReklamaAction = (data) => (dispatch) =>{
+export const saveReklamaAction = (data) => (dispatch) => {
     dispatch({
-        api:(data.id ? editReklamaApi : saveReklamaApi),
-        types:[
+        api: (data.id ? editReklamaApi : saveReklamaApi),
+        types: [
             types.REQUEST_SAVE_REKLAMA_SUCCESS,
             types.REQUEST_ERROR,
         ],
-        data : data
+        data: data
     }).then((res) => {
         toast.success(res.payload.message)
         dispatch(getReklamaAction())
@@ -153,7 +142,7 @@ export const saveReklamaAction = (data) => (dispatch) =>{
         toast.error("Xatolik")
     })
 }
-export const deleteReklamaAction = (data) => (dispatch) =>  {
+export const deleteReklamaAction = (data) => (dispatch) => {
     dispatch({
         types: [
             types.REQUEST_START,
@@ -163,14 +152,14 @@ export const deleteReklamaAction = (data) => (dispatch) =>  {
         data
     }).then((res) => {
         dispatch({
-            type:"updateState",
-            payload:{
-                deleteModal :false
+            type: "updateState",
+            payload: {
+                deleteModal: false
             }
         })
         toast.success(res.payload.message)
         dispatch(getReklamaAction())
-    }).catch((err) =>{
+    }).catch((err) => {
         toast.error("O`chirishda xatolik")
     })
 }
@@ -227,14 +216,26 @@ export const saveDurationTypeAction = (data) => (dispatch) => {
 }
 // END DURATION TYPE
 // START COURSE
-export const getCoursesAction = () => (dispatch) => {
+export const getCoursesAction = (data) => (dispatch) => {
     dispatch({
         api: getCoursesApi,
         types: [
             types.REQUEST_START,
+            types.REQUEST_GET_COURSES_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const getCourseAction = (data) => (dispatch) => {
+    dispatch({
+        api: getCourseApi,
+        types: [
+            types.REQUEST_START,
             types.REQUEST_GET_COURSE_SUCCESS,
             types.REQUEST_ERROR,
-        ]
+        ],
+        data: data
     })
 }
 export const deleteCourseAction = (data) => (dispatch) => {
@@ -440,14 +441,26 @@ export const deleteProfessionAction = (data) => (dispatch) => {
 }
 
 //  Course Category
-export const getCourseCategoriesAction = () => (dispatch) => {
+export const getCourseCategoryAction = (data) => (dispatch) => {
     dispatch({
-        api: getCourseCategoriesApi,
+        api: getCourseCategoryApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_COURSE_CATEGORY_SUCCESS,
             types.REQUEST_ERROR,
-        ]
+        ],
+        data: data
+    })
+}
+export const getCourseCategoriesAction = (data) => (dispatch) => {
+    dispatch({
+        api: getCourseCategoriesApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_COURSE_CATEGORIES_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
     })
 }
 export const deleteCourseCategoryAction = (data) => (dispatch) => {
@@ -514,7 +527,7 @@ export const deleteTrialContactTypeAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 deleteModal: false,
-                trialContactType : ''
+                trialContactType: ''
             }
         })
         toast.success("Ma'lumot o'chirildi!")
@@ -542,22 +555,22 @@ export const saveTrialContactTypeAction = (data) => (dispatch) => {
 // END TRIAL CONTACT TYPE
 
 // Attachment Action Start
-export const uploadFileAction = (payload) => async(dispatch) => {
+export const uploadFileAction = (payload) => async (dispatch) => {
     if (!payload || !(payload.type.substring(0, payload.type.indexOf("/")) === "image")) {
         toast.error("File must be img")
         return "";
     }
     let obj = new FormData();
-    obj.append("file",payload)
+    obj.append("file", payload)
 
     dispatch({
-        api : app.uploadFileAppApi,
+        api: app.uploadFileAppApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data : obj
+        data: obj
 
     }).then(res => {
         dispatch({
@@ -570,7 +583,20 @@ export const uploadFileAction = (payload) => async(dispatch) => {
 }
 // Attachment Action End
 
-//// teacher
+// START STUDENT ACTION
+export const getStudentsAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentsApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// FINISH STUDENT ACTION
+// START TEACHER ACTION
 export const getTeacherAction = () => (dispatch) => {
     dispatch({
         api: getTeacherApi,
@@ -611,7 +637,7 @@ export const deleteTeacherAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 deleteModal: false,
-                trialContactType : ''
+                trialContactType: ''
             }
         })
         toast.success("Ma'lumot o'chirildi!")

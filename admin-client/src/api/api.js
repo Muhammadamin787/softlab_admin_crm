@@ -7,5 +7,6 @@ export const api = {
     courseCategory: '/courseCategory',
     addAttachment: '/attachment/upload',
     getAttachment: '/attachment',
-    teacher: '/teacher'
+    teacher: '/teacher',
+    student: '/student'
 };
