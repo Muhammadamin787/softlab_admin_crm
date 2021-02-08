@@ -10,12 +10,20 @@ import {config} from "../utils/config";
 
 class AdminLayout extends Component {
     render() {
-        const {currentUser, menuHidden, dispatch} = this.props;
+        const {currentUser, addMenu, menuHidden, dispatch} = this.props;
         const changeMenu = () => {
             dispatch({
                 type: "updateState",
                 payload: {
                     menuHidden: !menuHidden
+                }
+            })
+        }
+        const secondMenu = () => {
+            dispatch({
+                type: "updateState",
+                payload: {
+                    addMenu: !addMenu
                 }
             })
         }
@@ -61,6 +69,30 @@ class AdminLayout extends Component {
                                     Guruhlar
                                 </div>
                             </Link>
+                            <Link to="/admin/teacher" className={
+                                this.props.pathname === "/admin/teacher" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    O'qituvchilar
+                                </div>
+                            </Link>
+                            <Link to="#" onClick={secondMenu} className={
+                                this.props.pathname === "/admin/general" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-setting"/>
+                                <div className="main-link">
+                                    Sozlamalar
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div
+                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                        <div className="main-link-div">
                             <Link to="/admin/room" className={
                                 this.props.pathname === "/admin/room" ?
                                     "active-link" : "default-link"
@@ -79,15 +111,6 @@ class AdminLayout extends Component {
                                     To'lov turlari
                                 </div>
                             </Link>
-                            <Link to="/admin/teacher" className={
-                                this.props.pathname === "/admin/teacher" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <div className="main-link">
-                                    O'qituvchilar
-                                </div>
-                            </Link>
                             <Link to="/admin/region" className={
                                 this.props.pathname === "/admin/region" ?
                                     "active-link" : "default-link"
@@ -98,17 +121,9 @@ class AdminLayout extends Component {
                                     Hududlar
                                 </Link>
                             </Link>
-                            <Link to="/admin/general" className={
-                                this.props.pathname === "/admin/general" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-setting"/>
-                                <div className="main-link">
-                                    Sozlamalar
-                                </div>
-                            </Link>
                         </div>
                     </div>
+
                     <div className="main-layout-right">
                         {this.props.children}
                     </div>
@@ -159,10 +174,11 @@ export default connect(
              notifications
          }
          ,
-         auth: {menuHidden, isAdmin, isSuperAdmin, currentUser}
+         auth: {addMenu, menuHidden, isAdmin, isSuperAdmin, currentUser}
      }
     ) =>
         ({
+            addMenu,
             menuHidden,
             isOpenGeneral,
             isOpenPages,

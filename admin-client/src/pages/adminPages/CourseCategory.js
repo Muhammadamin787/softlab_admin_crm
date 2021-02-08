@@ -81,13 +81,13 @@ class CourseCategory extends Component {
                     </div>
 
 
-                    <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Kategoriyani tahrirlash" : "Yangi kategoriya qo'shish"}
                             </ModalHeader>
                             <ModalBody>
-                                <div className={"w-100"}>
+                                <div className={"w-100 modal-form"}>
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} required/>
