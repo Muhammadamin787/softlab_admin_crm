@@ -13,6 +13,7 @@ import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.repository.RoleRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 
 @Service
@@ -29,16 +30,22 @@ public class UserService {
     RegionRepository regionRepository;
 
     public User makeUser(UserDto userDto, RoleName roleName) {
-        User user = new User();
-        user.setFullName(userDto.getFullName());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setDescription(userDto.getDescription());
-//        user.setAge(userDto.getAge() > 0 ? userDto.getAge() : null);
-        user.setRegion(userDto.getRegionId() != null ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
-        user.setGender(Gender.valueOf(userDto.getGender()));
-//        user.setBirthDate(userDto.getBirthDate() != null ? DateuserDto.getBirthDate() : null);
-        user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
-        return userRepository.save(user);
+        try {
+
+            User user = new User();
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            user.setFullName(userDto.getFullName());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setDescription(userDto.getDescription());
+            user.setRegion(userDto.getRegionId() != null ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
+            user.setGender(Gender.valueOf(userDto.getGender()));
+            user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
+            user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
+            return userRepository.save(user);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
 

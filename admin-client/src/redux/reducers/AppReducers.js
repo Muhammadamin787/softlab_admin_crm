@@ -221,6 +221,15 @@ const reducers = {
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
+    // START STUDENTS REDUCERS
+    [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
+        state.students = payload.payload.object.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
 
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {

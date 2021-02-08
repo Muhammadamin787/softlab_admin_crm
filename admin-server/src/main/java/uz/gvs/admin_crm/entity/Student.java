@@ -9,6 +9,9 @@ import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,5 +22,6 @@ public class Student extends AbsEntity {
     @ManyToOne
     private User user;
     private double balans;
-
+    @OneToMany
+    private Set<StudentGroup> studentGroup;
 }
