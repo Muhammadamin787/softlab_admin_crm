@@ -15,7 +15,7 @@ import uz.gvs.admin_crm.service.CourseCategoryService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
 @RestController
-@RequestMapping("api/courseCategory")
+@RequestMapping("/api/courseCategory")
 public class CourseCategoryController {
     @Autowired
     ApiResponseService apiResponseService;
@@ -25,22 +25,23 @@ public class CourseCategoryController {
     CourseCategoryRepository courseCategoryRepository;
 
     @PostMapping
-    public HttpEntity<?> saveCourseCategory(@RequestBody CourseCategoryDto courseCategoryDto){
-        ApiResponse apiResponse =  courseCategoryService.saveCourseCategory(courseCategoryDto);
+    public HttpEntity<?> saveCourseCategory(@RequestBody CourseCategoryDto courseCategoryDto) {
+        ApiResponse apiResponse = courseCategoryService.saveCourseCategory(courseCategoryDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
     @GetMapping("/{id}")
-    HttpEntity<?> getOneCourseCategory( @PathVariable Integer id){
+    HttpEntity<?> getOneCourseCategory(@PathVariable Integer id) {
         ApiResponse apiResponse = courseCategoryService.getOneCourseCategory(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping
-    public HttpEntity<?> getCourseCategoryList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                       @CurrentUser User user) {
-        ApiResponse apiResponse = courseCategoryService.getCourseCategoryList(page, size, user);
+    public HttpEntity<?> getCourseCategoryList(
+            @RequestParam(value = "id", defaultValue = "0") int id,
+            @CurrentUser User user
+    ) {
+        ApiResponse apiResponse = courseCategoryService.getCourseCategoryList(id, user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 

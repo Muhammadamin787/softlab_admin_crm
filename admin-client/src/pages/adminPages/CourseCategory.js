@@ -1,18 +1,24 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseCategoryAction,
-    getCourseCategoriesAction,
+    getCourseCategoriesAction, getCoursesAction,
     saveCourseCategoryAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
+import {Link} from "react-router-dom";
 
 class CourseCategory extends Component {
     componentDidMount() {
+        let id = 0
+        if (this.props.match.path === "/admin/courses")
+            this.props.history.push("/admin/courses/list")
+        // if (this.props.match && this.props.match.params && this.props.match.params.id)
+        //     id = this.props.match.params.id;
         this.props.dispatch(getCourseCategoriesAction())
     }
 
@@ -23,7 +29,7 @@ class CourseCategory extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, loading, courseCategories} = this.props;
+        const {history, dispatch, showModal, deleteModal, loading, courseCategories} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -51,45 +57,31 @@ class CourseCategory extends Component {
                 console.clear();
                 console.log(v);
             }
+            if (v.courseCategoryId === "0") {
+                v.courseCategoryId = null
+            }
             dispatch(saveCourseCategoryAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Kurs kategoriyalar</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-                    <Table>
-                        <thead className={"bg-dark text-white"}>
-                        <tr>
-                            <th>No</th>
-                            <th>Nomi</th>
-                            <th>Ota Course Category</th>
-                            <th>Izoh</th>
-                            <th>Holati</th>
-                            <th>Amal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <Button color={"success"} onClick={openModal} className={"mb-2 add-button"}>Yangi qo'shish</Button>
+                    <div className={"row"}>
                         {
                             courseCategories ? courseCategories.map((item, i) =>
-                                <tr key={i}>
-                                    <td>{i + 1}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.courseCategory ? item.courseCategory.name : "---"}</td>
-                                    <td>{item.description}</td>
-                                    <td>
-                                        <input type="checkbox" checked={item.active}/>
-                                    </td>
-                                    <td>
-                                        <Button color={"warning"} onClick={() => openModal(item)}
-                                                className={"mx-1"}>Tahrirlash</Button>
-                                        <Button color={"danger"}
-                                                onClick={() => openDeleteModal(item)}>O'chirish</Button>
-                                    </td>
-                                </tr>
-                            ) : ""}
-                        </tbody>
-                    </Table>
+                                    <div key={i} className={"m-2 p-3 bg-white course-category"}>
+                                        <Link to={"/admin/course/" + item.id}
+                                              className={"w-100 text-decoration-none "}>
+                                            <h5>{item.name}</h5>
+                                            <p>{item.description}</p>
+                                        </Link>
+                                    </div>
+                                )
+                                : ""
+                        }
+                    </div>
+
 
                     <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -101,14 +93,15 @@ class CourseCategory extends Component {
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} required/>
-                                    <AvField className={'form-control'} label={'Ota Course Category:'} type="select"
-                                             name="courseCategoryId"
-                                             defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>
-                                        <option key={0} value={"0"}>Ota Course Category</option>
-                                        {courseCategories ? courseCategories.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
+                                    {/*<AvField className={'form-control'} label={'Ota Course Category:'} type="select"*/}
+                                    {/*         name="courseCategoryId"*/}
+                                    {/*         defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>*/}
+                                    {/*    <option key={0} value={"0"}>Ota Course Category</option>*/}
+                                    {/*    {courseCategories ? courseCategories.map((item, i) =>*/}
+                                    {/*        item.category ? "" :*/}
+                                    {/*            <option key={i} value={item.id}>{item.name}</option>*/}
+                                    {/*    ) : ""}*/}
+                                    {/*</AvField>*/}
                                     <AvField type="text"
                                              defaultValue={currentObject ? currentObject.description : false}
                                              label={"Description"} name={"description"} placeholder={"izoh"}/>
@@ -130,8 +123,8 @@ class CourseCategory extends Component {
                             Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                            <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
@@ -140,11 +133,17 @@ class CourseCategory extends Component {
     }
 }
 
-CourseCategory.propTypes = {};
+CourseCategory
+    .propTypes = {};
 
-export default connect(({
-                            app: {loading, courseCategories, showModal, deleteModal},
-                        }) => ({
-        loading, courseCategories, showModal, deleteModal
-    })
-)(CourseCategory);
+export default connect(
+    ({
+         app: {loading, courseCategories, showModal, deleteModal}
+         ,
+     }
+    ) =>
+        ({
+            loading, courseCategories, showModal, deleteModal
+        })
+)
+(CourseCategory);

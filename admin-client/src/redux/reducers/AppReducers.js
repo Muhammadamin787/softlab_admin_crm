@@ -10,6 +10,7 @@ const initState = {
     deleteModal: false,
     profession: [],
     regions: [],
+    students: [],
     testCategory: [],
     reklamas: [],
     courseCategories: [],
@@ -24,12 +25,12 @@ const initState = {
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
-    teachers:[],
-    teacherDto:[],
-    userDto:[],
+    teachers: [],
+    teacherDto: [],
+    userDto: [],
     specialization: [],
     specializationDto: [],
-    secondPage: false,
+    currentItem: []
 
 };
 
@@ -42,6 +43,16 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+    },
+
+    // Room
+    [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
+        state.rooms = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    [types.REQUEST_SAVE_ROOM_SUCCESS](state, payload) {
+        state.showModal = false
     },
 
 
@@ -94,6 +105,7 @@ const reducers = {
             state.selectItems = ketmon
         }
     },
+
     // //teacher
     // [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
     //     if (payload && payload.payload && payload.payload.object) {
@@ -155,16 +167,17 @@ const reducers = {
     [types.REQUEST_SAVE_COURSE_SUCCESS](state, payload) {
         state.showModal = false;
     },
-    [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
-        console.log(payload)
+    [types.REQUEST_GET_COURSES_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
-            state.getItems = payload.payload.object.object.sort((a, b) =>
+            state.getItems = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-            state.page = payload.payload.object.number;
-            state.size = payload.payload.object.size;
-            state.totalElements = payload.payload.object.totalElements;
-            state.totalPages = payload.payload.object.totalPages;
+        }
+
+    },
+    [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.currentItem = payload.payload.object
         }
 
     },
@@ -173,28 +186,19 @@ const reducers = {
     [types.REQUEST_SAVE_COURSE_CATEGORY_SUCCESS](state, payload) {
         state.showModal = false
     },
-    [types.REQUEST_GET_COURSE_CATEGORY_SUCCESS](state, payload) {
-        state.courseCategories = payload.payload.object.object.sort((a, b) =>
-            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-        );
-    },
-
-    // Specialization
-    [types.REQUEST_GET_SPEC_SUCCESS](state, payload) {
+    [types.REQUEST_GET_COURSE_CATEGORIES_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
-            state.spec = payload.payload.object.object.sort((a, b) =>
+            state.courseCategories = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-            let ketmon = []
-            for (let i = 0; i < state.spec.length; i++) {
-                ketmon.push({value: state.spec[i].id, label: state.spec[i].name})
-            }
-            state.selectItemsFromSpec = ketmon
         }
     },
-    [types.REQUEST_SAVE_SPEC_SUCCESS](state, payload) {
-        state.showModal = false
+    [types.REQUEST_GET_COURSE_CATEGORY_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.currentItem = payload.payload.object
+        }
     },
+
 
     // Trail Contact Type
     [types.REQUEST_SAVE_TRIAL_CONTACT_TYPE_SUCCESS](state, payload) {
@@ -217,10 +221,19 @@ const reducers = {
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
+    // START STUDENTS REDUCERS
+    [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
+        state.students = payload.payload.object.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
 
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
-        state.attachmentId  = payload
+        state.attachmentId = payload
     },
     updateState(state, {payload}) {
         return {

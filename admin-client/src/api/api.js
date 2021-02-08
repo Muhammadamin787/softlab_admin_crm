@@ -1,16 +1,12 @@
 export const api = {
     login: '/auth/login',
     userMe: '/auth/me',
-    reklama:'/reklama',
-    durationType: '/durationType',
+    room: '/room',
     region: '/region',
-    profession: '/profession',
-    testCategory: '/testCategory',
     course: '/course',
-    courseCategory:'/courseCategory',
-    spec : '/specialization',
-    trialContactType: '/trialContactType',
-    addAttachment : '/attachment/upload',
-    getAttachment : '/attachment',
-    teacher:'/teacher'
+    courseCategory: '/courseCategory',
+    addAttachment: '/attachment/upload',
+    getAttachment: '/attachment',
+    teacher: '/teacher',
+    student: '/student'
 };

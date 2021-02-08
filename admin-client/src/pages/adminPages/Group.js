@@ -12,7 +12,7 @@ import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 
-class Region extends Component {
+class Group extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
     }
@@ -167,11 +167,11 @@ class Region extends Component {
     }
 }
 
-Region.propTypes = {};
+Group.propTypes = {};
 
 export default connect(({
                             app: {loading, regions, showModal, deleteModal, selectItems},
                         }) => ({
         loading, regions, showModal, deleteModal, selectItems
     })
-)(Region);
+)(Group);

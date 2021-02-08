@@ -22,3 +22,72 @@
 
   }
 }
+
+.table-icon {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+}
+
+.course-select-header {
+  h3 {
+    font-weight: lighter;
+    display: inline-block;
+  }
+
+  span {
+    font-size: 16px;
+    color: #313E47;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: lighter;
+    font-family: "Liberation Mono", sans-serif;
+  }
+
+}
+
+.course-category {
+  width: 23%;
+
+  h4 {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+
+    }
+
+
+  }
+
+  &:hover {
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    color: #969191;
+  }
+}
+
+.courses-style {
+  width: 23%;
+
+  &:hover {
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    color: #969191;
+    font-size: 14px;
+  }
+}
+
+.add-button {
+  border-radius: 20px;
+  font-weight: lighter;
+}

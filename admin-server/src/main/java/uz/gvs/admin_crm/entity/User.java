@@ -26,7 +26,6 @@ public class User extends AbsEntity implements UserDetails {//test
     private String phoneNumber;
     @Column(columnDefinition = "text")
     private String description;
-    private int age;
     @ManyToOne
     private Region region;
     @Enumerated(EnumType.STRING)
