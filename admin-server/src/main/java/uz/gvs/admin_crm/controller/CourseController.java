@@ -32,33 +32,33 @@ public class CourseController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
-//    @GetMapping("/{id}")
-//    HttpEntity<?> getOneCourseCategory( @PathVariable Integer id){
-//        ApiResponse apiResponse = courseCategoryService.getOneCourseCategory(id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
-//    @GetMapping
-//    public HttpEntity<?> getCourseCategoryList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-//                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-//                                       @CurrentUser User user) {
-//        ApiResponse apiResponse = courseCategoryService.getCourseCategoryList(page, size, user);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public HttpEntity<?> editCourseCategory(@PathVariable Integer id, @RequestBody CourseCategoryDto courseCategoryDto) {
-//        ApiResponse apiResponse = courseCategoryService.editCourseCategory(courseCategoryDto, id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ApiResponse> deleteRegion(@PathVariable Integer id) {
-//        try {
-//            courseCategoryRepository.deleteById(id);
-//            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
-//        }
-//    }
+    @GetMapping("/{id}")
+    HttpEntity<?> getOneCourse( @PathVariable Integer id){
+        ApiResponse apiResponse = courseService.getOneCourse(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping
+    public HttpEntity<?> getCourseList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                       @CurrentUser User user) {
+        ApiResponse apiResponse = courseService.getCourseList(page, size, user);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PutMapping("/{id}")
+    public HttpEntity<?> editCourse(@PathVariable Integer id, @RequestBody CourseDto courseDto) {
+        ApiResponse apiResponse = courseService.editCourse(courseDto, id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteCourse(@PathVariable Integer id) {
+        try {
+            courseRepository.deleteById(id);
+            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
+        }
+    }
 }
