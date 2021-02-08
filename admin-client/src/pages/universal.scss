@@ -91,3 +91,12 @@
   border-radius: 20px;
   font-weight: lighter;
 }
+
+.select-student-style {
+  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
+
+  hgroup {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}

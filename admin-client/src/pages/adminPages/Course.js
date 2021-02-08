@@ -65,6 +65,9 @@ class Course extends Component {
             if (currentObject) {
                 v.id = currentObject.id
             }
+            if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                v.currentCategoryId = this.props.match.params.id;
+            }
             dispatch(saveCourseAction(v))
         }
         return (
@@ -108,7 +111,7 @@ class Course extends Component {
                 <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject ? "Tahrirlash" : "Yangi kurs qo'shish"}
+                            {currentObject && currentObject.id ? "Kursni tahrirlash" : "Yangi kurs qo'shish"}
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100"}>

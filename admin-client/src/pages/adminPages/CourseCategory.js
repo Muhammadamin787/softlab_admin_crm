@@ -54,13 +54,11 @@ class CourseCategory extends Component {
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
-                console.clear();
-                console.log(v);
             }
             if (v.courseCategoryId === "0") {
                 v.courseCategoryId = null
             }
-            dispatch(saveCourseCategoryAction(v))
+            dispatch(saveCourseCategoryAction())
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -86,22 +84,13 @@ class CourseCategory extends Component {
                     <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                {currentObject ? "Tahrirlash" : "Qo'shish"}
+                                {currentObject && currentObject.id ? "Kategoriyani tahrirlash" : "Yangi kategoriya qo'shish"}
                             </ModalHeader>
                             <ModalBody>
                                 <div className={"w-100"}>
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} required/>
-                                    {/*<AvField className={'form-control'} label={'Ota Course Category:'} type="select"*/}
-                                    {/*         name="courseCategoryId"*/}
-                                    {/*         defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>*/}
-                                    {/*    <option key={0} value={"0"}>Ota Course Category</option>*/}
-                                    {/*    {courseCategories ? courseCategories.map((item, i) =>*/}
-                                    {/*        item.category ? "" :*/}
-                                    {/*            <option key={i} value={item.id}>{item.name}</option>*/}
-                                    {/*    ) : ""}*/}
-                                    {/*</AvField>*/}
                                     <AvField type="text"
                                              defaultValue={currentObject ? currentObject.description : false}
                                              label={"Description"} name={"description"} placeholder={"izoh"}/>

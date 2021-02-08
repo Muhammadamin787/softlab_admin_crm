@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
-import {AvForm, AvField} from "availity-reactstrap-validation";
+import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, getCourseAction, getCourseCategoriesAction,
-    getCoursesAction,
-    getDurationTypesAction, getStudentAction, saveCourseAction,
+    deleteCourseAction, getRegionsAction, getStudentAction, saveCourseAction, saveStudentAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
-import {DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
+import moment from "moment";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class SelectStudent extends Component {
     componentDidMount() {
@@ -19,6 +19,7 @@ class SelectStudent extends Component {
             id = this.props.match.params.id;
             this.props.dispatch(getStudentAction({id: id}))
         }
+        this.props.dispatch(getRegionsAction())
     }
 
     state = {
@@ -33,7 +34,7 @@ class SelectStudent extends Component {
             showModal,
             deleteModal,
             currentItem,
-            courseCategories,
+            regions,
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -57,43 +58,52 @@ class SelectStudent extends Component {
             dispatch(deleteCourseAction(item))
         }
         const saveItem = (e, v) => {
-            if (currentObject) {
+            if (currentObject && currentObject.id) {
                 v.id = currentObject.id
+                v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                dispatch(saveStudentAction(v))
             }
-            dispatch(saveCourseAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>{currentItem && currentItem.name} </h3>
+                        <h3>{currentItem && currentItem.fullName} </h3>
                         <Link
-                            to={"/admin/course/" + (currentItem && currentItem.courseCategory && currentItem.courseCategory.id)}
+                            to={"/admin/students"}
                             className={"text-decoration-none"}>
                         <span
-                            className={""}> {currentItem && currentItem.courseCategory && currentItem.courseCategory.name} kurslari</span>
+                            className={""}> Talabalar</span>
                         </Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                 <div className="row">
                                     <div className="col-8">
                                         <hgroup>
-                                            <small className={"text-secondary"}>Nomi</small>
-                                            <h5>{currentItem.name}</h5>
+                                            <small className={"text-secondary"}>FISH: </small>
+                                            <p className={"d-inline"}> {currentItem.fullName}</p>
                                         </hgroup>
                                         <hgroup>
-                                            <small className={"text-secondary"}>Kategoriyasi</small>
-                                            <h6>{currentItem.courseCategory ? currentItem.courseCategory.name : ""} </h6>
+                                            <small className={"text-secondary"}>Telefon raqam: </small>
+                                            <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
                                         </hgroup>
                                         <hgroup>
-                                            <small className={"text-secondary"}>Tavsif</small>
-                                            <h6>{currentItem.description} </h6>
+                                            <small className={"text-secondary"}>Balans: </small>
+                                            <p className={"d-inline"}> {currentItem.balans} UZS</p>
                                         </hgroup>
                                         <hgroup>
-                                            <small className={"text-secondary"}>Narx</small>
-                                            <h6>{currentItem.price} UZS</h6>
+                                            <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                            <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Manzil: </small>
+                                            <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Tavsif: </small>
+                                            <p className={"d-inline"}> {currentItem.description}</p>
                                         </hgroup>
                                     </div>
                                     <div className="col-4">
@@ -109,34 +119,48 @@ class SelectStudent extends Component {
                             : ""}
                     </div>
                 </div>
-                <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
+                <Modal isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject ? "Kursni tahrirlash" : "Yangi kurs qo'shish"}
+                            Talabani tahrirlash
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100"}>
-                                <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
-                                         label={"Nomi"} name={"name"} className={"form-control"}
-                                         placeholer={"nomi"} required/>
-                                <AvField className={'form-control'} label={"Kurs bo'limi:"} type="select"
-                                         name="courseCategoryId"
-                                         defaultValue={this.props.match && this.props.match.params && this.props.match.params.id ?
-                                             this.props.match.params.id : "0"}>
-                                    <option key={0} value={"0"}>Kurs bo'limi</option>
-                                    {courseCategories ? courseCategories.map((item, i) =>
-                                        item.category ? "" :
-                                            <option key={i} value={item.id}>{item.name}</option>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.fullName : ""}
+                                    type={"text"}
+                                    label={"FISH"} name={"fullName"} className={"form-control"}
+                                    placeholer={"nomi"} required/>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                    type={"text"}
+                                    label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                    placeholer={"nomi"} required/>
+                                <AvField
+                                    type={"date"}
+                                    defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                        : ""}
+                                    label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
+                                    required/>
+                                <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                         name="regionId"
+                                         defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
+                                    <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                    {regions ? regions.map((item, i) =>
+                                        <option key={i} value={item.id}>{item.name}</option>
                                     ) : ""}
                                 </AvField>
-                                <AvField defaultValue={currentObject ? currentObject.price : ""} type={"number"}
-                                         label={"Narxi"} name={"price"} className={"form-control"}
-                                         placeholer={""} required/>
-                                <AvField type="text"
-                                         defaultValue={currentObject ? currentObject.description : false}
-                                         label={"Description"} name={"description"} placeholder={"izoh"}/>
-                                <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
-                                         label={"Active"} name={"active"}/>
+                                <AvRadioGroup name="gender"
+                                              defaultValue={currentObject ? currentObject.gender : ""}
+                                              label="Jins" required
+                                              errorMessage="Birini tanlang!">
+                                    <AvRadio label="Erkak" value="MALE"/>
+                                    <AvRadio label="Ayol" value="FEMALE"/>
+                                </AvRadioGroup>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.description : ""}
+                                    type={"textarea"}
+                                    label={"Izoh"} name={"description"} className={"form-control"}/>
                             </div>
                         </ModalBody>
                         <ModalFooter>
@@ -171,13 +195,13 @@ export default connect(({
                                 showModal,
                                 deleteModal,
                                 parentItems,
-                                courseCategories,
+                                regions,
                                 durationTypes,
                                 getItems,
                                 readModal
                             },
                         }) => ({
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, getItems, readModal
+        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal
     })
 )(SelectStudent);

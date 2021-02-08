@@ -180,11 +180,14 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_COURSES_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.length > 0) {
             state.getItems = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
+        } else {
+            state.getItems = ""
         }
+
 
     },
     [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
@@ -237,7 +240,7 @@ const reducers = {
         state.showModal = false
     },
     [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
-        console.log(payload);
+        state.currentItem = payload.payload.object
     },
     [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {

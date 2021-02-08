@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.User;
+import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
@@ -15,6 +16,7 @@ import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,6 +51,34 @@ public class StudentService {
             student.setUser(user);
             studentRepository.save(student);
             return apiResponseService.saveResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse editStudent(UUID id, StudentDto studentDto) {
+        try {
+            Optional<Student> byId = studentRepository.findById(id);
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            if (byId.isPresent()) {
+                Student student = byId.get();
+                User user = student.getUser();
+                boolean b = userRepository.existsByPhoneNumberAndIdNot(studentDto.getPhoneNumber(), user.getId());
+                if (b) {
+                    return apiResponseService.existResponse();
+                }
+                user.setPhoneNumber(studentDto.getPhoneNumber());
+                user.setFullName(studentDto.getFullName());
+                user.setDescription(studentDto.getDescription());
+                user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(studentDto.getBirthDate()) : null);
+                user.setGender(Gender.valueOf(studentDto.getGender()));
+                user.setRegion(studentDto.getRegionId() != null && studentDto.getRegionId() > 0 ? regionRepository.findById(studentDto.getRegionId()).get() : null);
+                student.setUser(userRepository.save(user));
+                student.setBalans(studentDto.getBalans());
+                studentRepository.save(student);
+                return apiResponseService.saveResponse();
+            }
+            return apiResponseService.notFoundResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

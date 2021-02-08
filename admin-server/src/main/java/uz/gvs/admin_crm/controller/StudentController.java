@@ -34,15 +34,14 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
-    //
-//
-//    @PutMapping("/{id}")
-//    public HttpEntity<?> editProfession(@PathVariable Integer id, @RequestBody RegionDto regionDto) {
-//        ApiResponse apiResponse = regionService.editRegion(regionDto, id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
-//    }
-//
-//    //  GETOne
+
+    @PutMapping("/{id}")
+    public HttpEntity<?> editProfession(@PathVariable UUID id, @RequestBody StudentDto studentDto, @CurrentUser User user) {
+        ApiResponse apiResponse = studentService.editStudent(id, studentDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    //    //  GETOne
     @GetMapping("/{id}")
     public HttpEntity<?> getStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.getStudent(id);
