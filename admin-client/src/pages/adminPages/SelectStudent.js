@@ -119,13 +119,13 @@ class SelectStudent extends Component {
                             : ""}
                     </div>
                 </div>
-                <Modal isOpen={showModal} toggle={openModal} className={""}>
+                <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                             Talabani tahrirlash
                         </ModalHeader>
                         <ModalBody>
-                            <div className={"w-100"}>
+                            <div className={"w-100 modal-form"}>
                                 <AvField
                                     defaultValue={currentObject ? currentObject.fullName : ""}
                                     type={"text"}
@@ -152,10 +152,10 @@ class SelectStudent extends Component {
                                 </AvField>
                                 <AvRadioGroup name="gender"
                                               defaultValue={currentObject ? currentObject.gender : ""}
-                                              label="Jins" required
+                                              label="Jins" required className=""
                                               errorMessage="Birini tanlang!">
-                                    <AvRadio label="Erkak" value="MALE"/>
-                                    <AvRadio label="Ayol" value="FEMALE"/>
+                                    <AvRadio className="" label="Erkak" value="MALE"/>
+                                    <AvRadio className="" label="Ayol" value="FEMALE"/>
                                 </AvRadioGroup>
                                 <AvField
                                     defaultValue={currentObject ? currentObject.description : ""}

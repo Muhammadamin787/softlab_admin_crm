@@ -24,7 +24,8 @@ const initState = {
     alert_mes: "",
     sentUserMe: false,
     permissions: [],
-    menuHidde: false
+    menuHidden: false,
+    addMenu: false
 };
 
 const reducers = {

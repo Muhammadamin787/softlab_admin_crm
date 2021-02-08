@@ -134,9 +134,9 @@ class Student extends Component {
                                     {/*</Link>*/}
                                 </td>
                                 <td>
-                                    <Button className="table-icon" onClick={() => openModal(item)}>
-                                        <EditIcon/>
-                                    </Button>
+                                    {/*<Button className="table-icon" onClick={() => openModal(item)}>*/}
+                                    {/*    <EditIcon/>*/}
+                                    {/*</Button>*/}
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>
@@ -154,13 +154,13 @@ class Student extends Component {
                         linkClass="page-link"
                     />
 
-                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
                             </ModalHeader>
                             <ModalBody>
-                                <div className={"w-100"}>
+                                <div className={"w-100 modal-form"}>
                                     <AvField
                                         defaultValue={currentObject ? currentObject.fullName : ""}
                                         type={"text"}
