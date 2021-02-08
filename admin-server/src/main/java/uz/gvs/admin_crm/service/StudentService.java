@@ -67,6 +67,7 @@ public class StudentService {
                 if (b) {
                     return apiResponseService.existResponse();
                 }
+
                 user.setPhoneNumber(studentDto.getPhoneNumber());
                 user.setFullName(studentDto.getFullName());
                 user.setDescription(studentDto.getDescription());
