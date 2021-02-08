@@ -131,7 +131,6 @@ class Teacher extends Component {
                         ) : ''}
                         </tbody>
                     </Table>
-//
                     <Modal isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
