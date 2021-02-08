@@ -15,12 +15,12 @@ import {CloseIcon, DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
+import Pagination from "react-js-pagination";
 
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getStudentsAction())
-        console.clear()
+        this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
     }
 
     state = {
@@ -30,6 +30,9 @@ class Student extends Component {
         specs: '',
     }
 
+    handlePageChange(pageNumber) {
+        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+    }
 
     render() {
         const {currentObject} = this.state;
@@ -131,6 +134,14 @@ class Student extends Component {
                         ) : ''}
                         </tbody>
                     </Table>
+                    <Pagination
+                        activePage={page + 1}
+                        itemsCountPerPage={size}
+                        totalItemsCount={totalElements}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                        linkClass="page-link"
+                    />
 
                     <Modal isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>

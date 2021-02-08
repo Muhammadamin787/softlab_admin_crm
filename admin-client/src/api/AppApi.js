@@ -25,7 +25,7 @@ export const getPayTypeList = () => {
     return HttpClient.doGet(api.payType)
 }
 export const editPayTypeApi = (data) => {
-    return HttpClient.doPut(api.payType+"/"+data.id, data)
+    return HttpClient.doPut(api.payType + "/" + data.id, data)
 }
 export const deletePayTypeApi = (data) => {
     return HttpClient.doDelete(api.payType + "/" + data)
@@ -182,7 +182,8 @@ export const editStudentApi = (data) => {
     return HttpClient.doPut(api.student + "/" + data.id, data)
 }
 export const getStudentsApi = (data) => {
-    return HttpClient.doGet(api.student + (data && data.page && data.size ? "?page=" + data.page
+    console.log(data);
+    return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
 export const getStudentApi = () => {
