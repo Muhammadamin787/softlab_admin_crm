@@ -27,7 +27,6 @@ public class TeacherController {
 
     @PutMapping("/{id}")
     public HttpEntity<?> save(@PathVariable UUID id, @RequestBody TeacherDto teacherDto) {
-        teacherDto.setId(id);
         ApiResponse apiResponse = teacherService.editTeacher(teacherDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
