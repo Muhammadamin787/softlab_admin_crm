@@ -5,7 +5,7 @@ import {
     deleteTeacherAction,
     getCourseCategoriesAction,
     getRegionsAction, getStudentsAction,
-    getTeacherAction,
+    getTeacherAction, saveStudentAction,
     saveTeacherAction,
     uploadFileAction
 } from "../../redux/actions/AppActions";
@@ -14,6 +14,7 @@ import './adminPages.scss';
 import {CloseIcon, DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
+import moment from 'moment';
 
 class Student extends Component {
     componentDidMount() {
@@ -33,6 +34,11 @@ class Student extends Component {
     render() {
         const {currentObject} = this.state;
         const {
+            page,
+            size,
+            totalElements,
+            totalPages,
+            students,
             dispatch,
             attachmentId,
             showModal,
@@ -72,21 +78,18 @@ class Student extends Component {
             if (currentObject) {
                 v.id = currentObject.id
                 console.clear();
-                console.log(v);
             }
-            let teacherDto;
-            teacherDto = {userDto: ""}
-            teacherDto.userDto = {
+            let studentDto;
+            studentDto = {
                 fullName: v.fullName,
                 gender: v.gender,
                 phoneNumber: v.phoneNumber,
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: v.birthDate
+                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
             }
-
-            dispatch(saveTeacherAction(teacherDto))
+            dispatch(saveStudentAction(studentDto))
         }
         const uploadImg = (e) => {
             this.props.dispatch(uploadFileAction(e.target.files[0]))
@@ -111,11 +114,11 @@ class Student extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {teachers ? teachers.map((item, i) =>
+                        {students ? students.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
-                                <td>{item.userDto.fullName}</td>
-                                <td>{item.userDto.phoneNumber}</td>
+                                <td>{item.fullName}</td>
+                                <td>{item.phoneNumber}</td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openModal(item)}>
                                         <EditIcon/>
@@ -132,41 +135,43 @@ class Student extends Component {
                     <Modal isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
+                                {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
                             </ModalHeader>
                             <ModalBody>
                                 <div className={"w-100"}>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        defaultValue={currentObject ? currentObject.fullName : ""}
                                         type={"text"}
                                         label={"FISH"} name={"fullName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
+                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
-                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
                                         <option key={0} value={"0"}>Ota hududni tanlang</option>
                                         {regions ? regions.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  defaultValue={currentObject ? currentObject.gender : ""}
                                                   label="Jins" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Erkak" value="MALE"/>
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}
                                         required/>
