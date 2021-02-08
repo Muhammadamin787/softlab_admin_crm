@@ -30,6 +30,15 @@ public class UserDto {
     private Set<Role> roles;
     private Set<Permission> permissions;
 
+    public UserDto(String fullName, String phoneNumber, String description, int regionId, String gender, String birthDate) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
+        this.regionId = regionId;
+        this.gender = gender;
+        this.birthDate = birthDate;
+    }
+
     public UserDto(UUID uuid, String fullName, String phoneNumber, String description, Region region, String gender, String birthDate, Set<Role> roles) {
         this.uuid = uuid;
         this.fullName = fullName;

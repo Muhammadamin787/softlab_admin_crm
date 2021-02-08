@@ -10,6 +10,7 @@ const initState = {
     deleteModal: false,
     profession: [],
     regions: [],
+    students: [],
     testCategory: [],
     reklamas: [],
     courseCategories: [],
@@ -29,6 +30,7 @@ const initState = {
     userDto: [],
     specialization: [],
     specializationDto: [],
+    currentItem: []
 
 };
 
@@ -165,16 +167,17 @@ const reducers = {
     [types.REQUEST_SAVE_COURSE_SUCCESS](state, payload) {
         state.showModal = false;
     },
-    [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
-        console.log(payload)
+    [types.REQUEST_GET_COURSES_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
-            state.getItems = payload.payload.object.object.sort((a, b) =>
+            state.getItems = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-            state.page = payload.payload.object.number;
-            state.size = payload.payload.object.size;
-            state.totalElements = payload.payload.object.totalElements;
-            state.totalPages = payload.payload.object.totalPages;
+        }
+
+    },
+    [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.currentItem = payload.payload.object
         }
 
     },
@@ -183,11 +186,16 @@ const reducers = {
     [types.REQUEST_SAVE_COURSE_CATEGORY_SUCCESS](state, payload) {
         state.showModal = false
     },
-    [types.REQUEST_GET_COURSE_CATEGORY_SUCCESS](state, payload) {
+    [types.REQUEST_GET_COURSE_CATEGORIES_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
-            state.courseCategories = payload.payload.object.object.sort((a, b) =>
+            state.courseCategories = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
+        }
+    },
+    [types.REQUEST_GET_COURSE_CATEGORY_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.currentItem = payload.payload.object
         }
     },
 
@@ -210,6 +218,15 @@ const reducers = {
     [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
         console.log(payload)
         state.teachers = payload.payload.object.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    // START STUDENTS REDUCERS
+    [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
+        state.students = payload.payload.object.object.sort((a, b) =>
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },

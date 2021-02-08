@@ -2,7 +2,6 @@ import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
 
-
 // Room Start
 export const saveRoomApi = (data) => {
     return HttpClient.doPost(api.room, data)
@@ -11,7 +10,7 @@ export const getRoomList = () => {
     return HttpClient.doGet(api.room)
 }
 export const editRoomApi = (data) => {
-    return HttpClient.doPut(api.room+"/"+data.id, data)
+    return HttpClient.doPut(api.room + "/" + data.id, data)
 }
 export const deleteRoomApi = (data) => {
     return HttpClient.doDelete(api.room + "/" + data)
@@ -19,16 +18,13 @@ export const deleteRoomApi = (data) => {
 // Room End
 
 
-
-
-
 //Reklama
 
 export const saveReklamaApi = (data) => {
-    return HttpClient.doPost(api.reklama,data)
+    return HttpClient.doPost(api.reklama, data)
 }
 export const editReklamaApi = (data) => {
-    return HttpClient.doPut(api.reklama +"/" +data.id,data)
+    return HttpClient.doPut(api.reklama + "/" + data.id, data)
 }
 export const deleteReklamaApi = (data) => {
     return HttpClient.doDelete(api.reklama + "/" + data.id)
@@ -59,8 +55,11 @@ export const saveCourseApi = (data) => {
 export const editCourseApi = (data) => {
     return HttpClient.doPut(api.course + "/" + data.id, data)
 }
-export const getCoursesApi = () => {
-    return HttpClient.doGet(api.course)
+export const getCoursesApi = (data) => {
+    return HttpClient.doGet(api.course + (data && data.id ? "?categoryId=" + data.id : ""))
+}
+export const getCourseApi = (data) => {
+    return HttpClient.doGet(api.course + (data && data.id ? "/" + data.id : ""))
 }
 export const deleteCourseApi = (data) => {
     return HttpClient.doDelete(api.course + "/" + data.id)
@@ -123,8 +122,11 @@ export const saveCourseCategoryApi = (data) => {
 export const editCourseCategoryApi = (data) => {
     return HttpClient.doPut(api.courseCategory + "/" + data.id, data)
 }
-export const getCourseCategoriesApi = () => {
-    return HttpClient.doGet(api.courseCategory)
+export const getCourseCategoriesApi = (data) => {
+    return HttpClient.doGet(api.courseCategory + (data && data.id ? "?id=" + data.id : ""))
+}
+export const getCourseCategoryApi = (data) => {
+    return HttpClient.doGet(api.courseCategory + (data && data.id ? "/" + data.id : ""))
 }
 export const deleteCourseCategoryApi = (data) => {
     return HttpClient.doDelete(api.courseCategory + "/" + data.id)
@@ -152,22 +154,41 @@ export const uploadFileAppApi = (data) => {
 };
 
 export const getFileAppApi = (data) => {
-    return HttpClient.doGet(api.getAttachment+"/"+data);
+    return HttpClient.doGet(api.getAttachment + "/" + data);
 };
 // Attachment CRUD End
 
 
-// Teacher Crud
+// START STUDENT API
+export const saveStudentApi = (data) => {
+    return HttpClient.doPost(api.student, data)
+}
+export const editStudentApi = (data) => {
+    return HttpClient.doPut(api.student + "/" + data.id, data)
+}
+export const getStudentsApi = (data) => {
+    return HttpClient.doGet(api.student + (data && data.page && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
+}
+export const getStudentApi = () => {
+    return HttpClient.doGet(api.student)
+}
+export const deleteStudentApi = (data) => {
+    return HttpClient.doDelete(api.student + "/" + data.id)
+}
+// FINISH STUDENT API
 
+// START TEACHER API
 export const saveTeacherApi = (data) => {
-    return HttpClient.doPost(api.teacher,data)
+    return HttpClient.doPost(api.teacher, data)
 }
 export const editTeacherApi = (data) => {
-    return HttpClient.doPut(api.teacher + "/" + data.id,data)
+    return HttpClient.doPut(api.teacher + "/" + data.id, data)
 }
 export const getTeacherApi = () => {
     return HttpClient.doGet(api.teacher)
 }
 export const deleteTeacherApi = (data) => {
-    return HttpClient.doDelete(api.teacher + "/" +data.id)
+    return HttpClient.doDelete(api.teacher + "/" + data.id)
 }
+// FINISH TEACHER API

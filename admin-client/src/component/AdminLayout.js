@@ -24,11 +24,6 @@ class AdminLayout extends Component {
                 <div className={"main-layout"}>
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
-                        {/*<Link to="/">*/}
-                        {/*    <div className="logo-duo py-4">*/}
-                        {/*        <LogoIcon/>*/}
-                        {/*    </div>*/}
-                        {/*</Link>*/}
                         <div className="main-link-div">
                             <Link to="/admin" className={
                                 this.props.pathname === "/admin" ?
@@ -39,23 +34,40 @@ class AdminLayout extends Component {
                                     Dashboard
                                 </div>
                             </Link>
-                            <Link to="/admin/region" className={
-                                this.props.pathname === "/admin/region" ?
+                            <Link to="/admin/students" className={
+                                this.props.pathname === "/admin/students" ?
                                     "active-link" : "default-link"
                             }>
-                                <span className="icon icon-globus"/>
-                                <Link to="/admin/region"
-                                      className="main-link">
-                                    Hududlar
-                                </Link>
+                                <span className="icon icon-customer"/>
+                                <div className="main-link">
+                                    Talabalar
+                                </div>
                             </Link>
-                            <Link to="/admin/course" className={
-                                this.props.pathname === "/admin/course" ?
+                            <Link to="/admin/courses/list" className={
+                                this.props.pathname.startsWith("/admin/course") ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-time"/>
                                 <div className="main-link">
                                     Kurslar
+                                </div>
+                            </Link>
+                            <Link to="/admin/groups" className={
+                                this.props.pathname === "/admin/groups" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Guruhlar
+                                </div>
+                            </Link>
+                            <Link to="/admin/room" className={
+                                this.props.pathname === "/admin/room" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Xonalar
                                 </div>
                             </Link>
                             <Link to="/admin/teacher" className={
@@ -67,14 +79,15 @@ class AdminLayout extends Component {
                                     O'qituvchilar
                                 </div>
                             </Link>
-                            <Link to="/admin/room" className={
-                                this.props.pathname === "/admin/room" ?
+                            <Link to="/admin/region" className={
+                                this.props.pathname === "/admin/region" ?
                                     "active-link" : "default-link"
                             }>
-                                <span className="icon icon-teacher"/>
-                                <div className="main-link">
-                                    Xonalar
-                                </div>
+                                <span className="icon icon-globus"/>
+                                <Link to="/admin/region"
+                                      className="main-link">
+                                    Hududlar
+                                </Link>
                             </Link>
                             <Link to="/admin/general" className={
                                 this.props.pathname === "/admin/general" ?

@@ -4,7 +4,7 @@ import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Ro
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseCategoryAction,
-    getCourseCategoriesAction,
+    getCourseCategoriesAction, getCoursesAction,
     saveCourseCategoryAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -14,6 +14,11 @@ import {Link} from "react-router-dom";
 
 class CourseCategory extends Component {
     componentDidMount() {
+        let id = 0
+        if (this.props.match.path === "/admin/courses")
+            this.props.history.push("/admin/courses/list")
+        // if (this.props.match && this.props.match.params && this.props.match.params.id)
+        //     id = this.props.match.params.id;
         this.props.dispatch(getCourseCategoriesAction())
     }
 
@@ -24,7 +29,7 @@ class CourseCategory extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, loading, courseCategories} = this.props;
+        const {history, dispatch, showModal, deleteModal, loading, courseCategories} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -62,17 +67,20 @@ class CourseCategory extends Component {
                 <div className={"flex-column container"}>
                     <h1>Kurs kategoriyalar</h1>
                     <Button color={"success"} onClick={openModal} className={"mb-2 add-button"}>Yangi qo'shish</Button>
-                    <Row>
+                    <div className={"row"}>
                         {
                             courseCategories ? courseCategories.map((item, i) =>
-                                    <Col className={"m-2 p-3 bg-white rounded course-category"} md={"4"}>
-                                        <h4>{item.name}</h4>
-                                        <p>{item.description}</p>
-                                    </Col>
+                                    <div key={i} className={"m-2 p-3 bg-white course-category"}>
+                                        <Link to={"/admin/course/" + item.id}
+                                              className={"w-100 text-decoration-none "}>
+                                            <h5>{item.name}</h5>
+                                            <p>{item.description}</p>
+                                        </Link>
+                                    </div>
                                 )
                                 : ""
                         }
-                    </Row>
+                    </div>
 
 
                     <Modal isOpen={showModal} toggle={() => openModal("")} className={""}>
@@ -85,14 +93,15 @@ class CourseCategory extends Component {
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} required/>
-                                    <AvField className={'form-control'} label={'Ota Course Category:'} type="select"
-                                             name="courseCategoryId"
-                                             defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>
-                                        <option key={0} value={"0"}>Ota Course Category</option>
-                                        {courseCategories ? courseCategories.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
+                                    {/*<AvField className={'form-control'} label={'Ota Course Category:'} type="select"*/}
+                                    {/*         name="courseCategoryId"*/}
+                                    {/*         defaultValue={currentObject && currentObject.courseCategoryId ? currentObject.courseCategoryId : "0"}>*/}
+                                    {/*    <option key={0} value={"0"}>Ota Course Category</option>*/}
+                                    {/*    {courseCategories ? courseCategories.map((item, i) =>*/}
+                                    {/*        item.category ? "" :*/}
+                                    {/*            <option key={i} value={item.id}>{item.name}</option>*/}
+                                    {/*    ) : ""}*/}
+                                    {/*</AvField>*/}
                                     <AvField type="text"
                                              defaultValue={currentObject ? currentObject.description : false}
                                              label={"Description"} name={"description"} placeholder={"izoh"}/>
@@ -114,8 +123,8 @@ class CourseCategory extends Component {
                             Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                            <Button color="danger" onClick={() => deleteItem(currentObject)}>O'chirish</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
