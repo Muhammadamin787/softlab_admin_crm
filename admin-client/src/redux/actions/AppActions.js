@@ -327,7 +327,7 @@ export const saveCourseAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getCoursesAction())
+        dispatch(getCoursesAction({id: data.currentCategoryId}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -663,6 +663,7 @@ export const saveStudentAction = (data) => (dispatch) => {
     }).then((res) => {
         toast.success(res.payload.message)
         dispatch(getStudentsAction())
+        dispatch(getStudentAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })

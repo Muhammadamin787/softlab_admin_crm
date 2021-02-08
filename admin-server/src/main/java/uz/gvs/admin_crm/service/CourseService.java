@@ -14,6 +14,7 @@ import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 import uz.gvs.admin_crm.repository.CourseRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -81,18 +82,13 @@ public class CourseService {
         }
     }
 
-    public ApiResponse getCourseList(int page, int size, User user) {
+    public ApiResponse getCourseList(int categoryId, User user) {
         try {
-            Page<Course> all = null;
-            all = courseRepository.findAll(PageRequest.of(page, size));
-            return apiResponseService.getResponse(
-                    new PageableDto(
-                            all.getTotalPages(),
-                            all.getTotalElements(),
-                            all.getNumber(),
-                            all.getSize(),
-                            all.get().map(this::makeCourseDto).collect(Collectors.toList())
-                    ));
+            if (categoryId > 0) {
+                List<Course> all = courseRepository.findAllByCourseCategory_id(categoryId);
+                return apiResponseService.getResponse(all.stream().map(this::makeCourseDto).collect(Collectors.toList()));
+            }
+            return apiResponseService.getResponse("");
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
@@ -114,7 +110,7 @@ public class CourseService {
                 return apiResponseService.updatedResponse();
             }
             return apiResponseService.notFoundResponse();
-        }catch (Exception e){
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }

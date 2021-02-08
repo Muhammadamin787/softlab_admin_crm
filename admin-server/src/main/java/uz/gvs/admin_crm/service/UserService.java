@@ -31,7 +31,9 @@ public class UserService {
 
     public User makeUser(UserDto userDto, RoleName roleName) {
         try {
-
+            if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
+                return null;
+            }
             User user = new User();
             SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
             user.setFullName(userDto.getFullName());

@@ -200,8 +200,7 @@ class Student extends Component {
                                     <AvField
                                         defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
-                                        label={"Izoh"} name={"description"} className={"form-control"}
-                                        required/>
+                                        label={"Izoh"} name={"description"} className={"form-control"}/>
                                 </div>
                             </ModalBody>
                             <ModalFooter>

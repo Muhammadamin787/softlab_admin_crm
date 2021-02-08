@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, getRegionsAction, getStudentAction, saveCourseAction,
+    deleteCourseAction, getRegionsAction, getStudentAction, saveCourseAction, saveStudentAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -58,10 +58,11 @@ class SelectStudent extends Component {
             dispatch(deleteCourseAction(item))
         }
         const saveItem = (e, v) => {
-            if (currentObject) {
+            if (currentObject && currentObject.id) {
                 v.id = currentObject.id
+                v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                dispatch(saveStudentAction(v))
             }
-            dispatch(saveCourseAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -159,8 +160,7 @@ class SelectStudent extends Component {
                                 <AvField
                                     defaultValue={currentObject ? currentObject.description : ""}
                                     type={"textarea"}
-                                    label={"Izoh"} name={"description"} className={"form-control"}
-                                    required/>
+                                    label={"Izoh"} name={"description"} className={"form-control"}/>
                             </div>
                         </ModalBody>
                         <ModalFooter>

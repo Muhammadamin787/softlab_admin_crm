@@ -27,22 +27,22 @@ public class CourseController {
     CourseRepository courseRepository;
 
     @PostMapping
-    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto){
-        ApiResponse apiResponse =  courseService.saveCourse(courseDto);
+    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto) {
+        ApiResponse apiResponse = courseService.saveCourse(courseDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
     @GetMapping("/{id}")
-    HttpEntity<?> getOneCourse( @PathVariable Integer id){
+    HttpEntity<?> getOneCourse(@PathVariable Integer id) {
         ApiResponse apiResponse = courseService.getOneCourse(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping
-    public HttpEntity<?> getCourseList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                       @CurrentUser User user) {
-        ApiResponse apiResponse = courseService.getCourseList(page, size, user);
+    public HttpEntity<?> getCourseList(
+            @RequestParam(value = "categoryId", defaultValue = "0") int categoryId,
+            @CurrentUser User user) {
+        ApiResponse apiResponse = courseService.getCourseList(categoryId, user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
