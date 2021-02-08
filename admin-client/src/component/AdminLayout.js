@@ -30,8 +30,8 @@ class AdminLayout extends Component {
                         {/*    </div>*/}
                         {/*</Link>*/}
                         <div className="main-link-div">
-                            <Link to="/admin/dashboard" className={
-                                this.props.pathname === "/admin/dashboard" ?
+                            <Link to="/admin" className={
+                                this.props.pathname === "/admin" ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-dashboard"/>
@@ -65,6 +65,24 @@ class AdminLayout extends Component {
                                 <span className="icon icon-teacher"/>
                                 <div className="main-link">
                                     O'qituvchilar
+                                </div>
+                            </Link>
+                            <Link to="/admin/room" className={
+                                this.props.pathname === "/admin/room" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Xonalar
+                                </div>
+                            </Link>
+                            <Link to="/admin/general" className={
+                                this.props.pathname === "/admin/general" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-setting"/>
+                                <div className="main-link">
+                                    Sozlamalar
                                 </div>
                             </Link>
                         </div>

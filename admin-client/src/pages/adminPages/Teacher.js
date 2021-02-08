@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table} from "reactstrap";
-import {AvForm, AvField} from "availity-reactstrap-validation";
+import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table, ModalFooter} from "reactstrap";
+import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction,
     getCourseCategoriesAction,
     getRegionsAction,
-    getSpecListAction,
     getTeacherAction,
     saveTeacherAction,
     uploadFileAction
@@ -18,9 +17,7 @@ import AdminLayout from "../../component/AdminLayout";
 
 class Teacher extends Component {
     componentDidMount() {
-        this.props.dispatch(getSpecListAction())
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getCourseCategoriesAction())
         this.props.dispatch(getTeacherAction())
         console.clear()
     }
@@ -54,7 +51,7 @@ class Teacher extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    secondPage: !secondPage
+                    showModal: !showModal
                 }
             })
         }
@@ -89,22 +86,11 @@ class Teacher extends Component {
                 fullName: v.fullName,
                 gender: v.gender,
                 phoneNumber: v.phoneNumber,
-                password: v.password,
-                photoId: attachmentId,
-                contactDto: {
-                    regionId: v.regionId,
-                    address: v.address,
-                    isTransport: v.isTransport,
-                    passportDto: {
-                        passportSerial: v.passportSerial,
-                        passportNumber: v.passportNumber,
-                        birthDate: v.birthDate,
-                        photoId: attachmentId,
-
-                    }
-                }
+                avatarId: attachmentId,
+                regionId: v.regionId,
+                description: v.description,
+                birthDate: v.birthDate
             }
-            teacherDto.specializationId = this.state.specs
 
             dispatch(saveTeacherAction(teacherDto))
         }
@@ -116,181 +102,85 @@ class Teacher extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>O'qituvchilar</h1>
-                    {secondPage ?
-                        <div className={""}>
-                            <div className={"my-3"}>
-                                <span onClick={openModal} className={"p-2 rounded bg-white"}><CloseIcon/></span>
-                            </div>
-                            <AvForm onValidSubmit={saveItem} className={"p-5 bg-white"}>
-                                <section>
-                                    <h3 className={"my-2"}>Asosiy ma'lumotlar</h3>
-                                    <div className={"w-100 border p-2 rounded"}>
-                                        <Row>
-                                            <Col>
-                                                <AvField defaultValue={currentObject ? currentObject.fullName : ""}
-                                                         type={"text"}
-                                                         label={"FISH"} name={"fullName"} className={"form-control"}
-                                                         placeholder={"name"} required/>
-                                                <AvField className={'form-control'} label={"Telefon raqam"}
-                                                         type="number"
-                                                         name="phoneNumber"
-                                                         defaultValue={currentObject && currentObject.phoneNumber
-                                                             ? currentObject.phoneNumber : ""}/>
-                                            </Col>
-                                            <Col className="mt-3">
-                                                <span>Mutahasisligi</span>
-                                                <Select
-                                                    defaultValue={currentObject && currentObject.spec ? currentObject.spec.id : "0"}
-                                                    isMulti
-                                                    placeholder=" Mutaxasisligini tanlang"
-                                                    name="specializationId"
-                                                    isSearchable={true}
-                                                    options={selectItemsFromSpec}
-                                                    onChange={multiChange}
-                                                    className="basic-multi-select"
-                                                    classNamePrefix="select"
-                                                    label="Specialization"
-                                                />
-                                                <AvField
-                                                    defaultValue={currentObject && currentObject.gender ? currentObject.gender : "0"}
-                                                    type={"select"}
-                                                    label={"Jinsni tanlang"} name={"gender"} className={"form-control"}>
-                                                    <option value="0">Jins tanlang</option>
-                                                    <option value="MALE">Erkak</option>
-                                                    <option value="FEMALE">Ayol</option>
-                                                </AvField>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </section>
-                                <section>
-                                    <h3 className={"my-2"}>Bog'lanish ma'lumotlari</h3>
-                                    <div className={"w-100 border p-2 rounded"}>
-                                        <Row>
-                                            <Col>
-                                                <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                                         name="regionId"
-                                                         defaultValue={currentObject && currentObject.regionId ? currentObject.regionId : "0"}>
-                                                    <option disabled key={0} value={"0"}>hududni tanlang</option>
-                                                    {regions ? regions.map((item, i) =>
-                                                        <option key={i} value={item.id}>{item.name}</option>
-                                                    ) : ""}
-                                                </AvField>
+                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
 
-                                                <AvField type="checkbox"
-                                                         defaultValue={currentObject ? currentObject.active : false}
-                                                         label={"Transport kelasizmi?"} name={"isTransport"}/>
-                                            </Col>
-                                            <Col>
-                                                <AvField className={'form-control'} label={"Uy manzil"}
-                                                         type="textarea"
-                                                         name="address"
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </section>
-                                <section>
-                                    <h3 className={"my-2"}>Passport ma'lumotlari</h3>
-                                    <div className={"w-100 border p-2 rounded"}>
-                                        <Row>
-                                            <Col>
-                                                <AvField
-                                                    defaultValue={currentObject ? currentObject.birthDate : "0"}
-                                                    type={"date"}
-                                                    label={"Tug'ilgan vaqti"} name={"birthDate"}
-                                                    className={"form-control"}/>
+                    <Table className={"table-style"}>
+                        <thead className={""}>
+                        <tr className={"text-center"}>
+                            <th>No</th>
+                            <th>FISH</th>
+                            <th>Telefon raqami</th>
+                            <th colSpan="2">Amal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {teachers ? teachers.map((item, i) =>
+                            <tr key={i} className={"table-tr"}>
+                                <td>{i + 1}</td>
+                                <td>{item.userDto.fullName}</td>
+                                <td>{item.userDto.phoneNumber}</td>
+                                <td>
+                                    <Button className="table-icon" onClick={() => openModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
+                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                        <DeleteIcon/>
+                                    </Button>
+                                </td>
+                            </tr>
+                        ) : ''}
+                        </tbody>
+                    </Table>
 
-                                                Passport seria
-                                                <Row>
-                                                    <Col md={3}>
-                                                        <AvField
-                                                            defaultValue={currentObject ? currentObject.duration : ""}
-                                                            type={"text"}
-                                                            label={""} name={"passportSerial"}
-                                                            className={"form-control"}
-                                                            placeholer={"e.g, AB"} required/>
-                                                    </Col>
-                                                    <Col md={9}>
-                                                        <AvField
-                                                            defaultValue={currentObject ? currentObject.duration : ""}
-                                                            type={"number"}
-                                                            label={""} name={"passportNumber"}
-                                                            className={"form-control"}
-                                                            placeholer={""} required/>
-                                                    </Col>
-                                                </Row>
-                                                <AvField type="textarea"
-                                                         defaultValue={currentObject ? currentObject.description : false}
-                                                         label={"Rasmiy manzil"} name={"officialAddress"}
-                                                         placeholder={"izoh"}/>
-                                            </Col>
-                                            <Col>
-                                                {/*<AvField name={"attachmentId"} type={"file"}/>*/}
-                                                {/*<div className={"photoUpload"}>*/}
-
-                                                {/*</div>*/}
-                                                <AvField type={"file"} name={"attachmentId"} onChange={uploadImg}/>
-                                                <div className={"photoUpload"}>
-                                                    {attachmentId ?
-                                                        <img className={"img-thumbnail"}
-                                                             src={`http://localhost/api/attachment/` + attachmentId}/>
-                                                        :
-                                                        ""}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </section>
-                                <Button className={"my-3"} color="primary">Saqlash</Button>
-                            </AvForm>
-                        </div>
-                        :
-                        <>
-                            <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-
-                            <Table>
-                                <thead className={"bg-dark text-white"}>
-                                <tr>
-                                    <th>No</th>
-                                    <th>FISH</th>
-                                    <th>Telefon raqami</th>
-                                    <th>Mutaxassiligi</th>
-                                    <th>mutahasislik</th>
-                                    <th>Batafsil</th>
-                                    <th>Tahrirlash</th>
-                                    <th colSpan="3">Amal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {teachers ? teachers.map((item, i) =>
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.userDto.fullName}</td>
-                                        <td>{item.userDto.phoneNumber}</td>
-                                        {console.log(item)}
-                                        <td>{item.specialization ? item.specialization.map(item2 => item2.name + ', ') : ''}</td>
-                                        <td>
-                                            <Button
-                                                // onClick={() => readMoreModal(item)}
-                                                color={"info"}><ShowIcon/></Button>
-                                        </td>
-                                        <td>
-                                            <Button
-                                                // onClick={() => openModal(item)}
-                                                color={"warning"}><EditIcon/></Button>
-                                        </td>
-                                        <td>
-                                            <Button
-                                                // onClick={() => openDeleteModal(item)}
-                                                color={"danger"}><DeleteIcon/> </Button>
-                                        </td>
-                                    </tr>
-                                ) : ''}
-                                </tbody>
-                            </Table>
-                        </>
-                    }
+                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
+                            <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                                {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={"w-100"}>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        type={"text"}
+                                        label={"FISH"} name={"fullName"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        type={"text"}
+                                        label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField
+                                        type={"date"}
+                                        label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
+                                        required/>
+                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                             name="regionId"
+                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                        {regions ? regions.map((item, i) =>
+                                            <option key={i} value={item.id}>{item.name}</option>
+                                        ) : ""}
+                                    </AvField>
+                                    <AvRadioGroup name="gender"
+                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  label="Jins" required
+                                                  errorMessage="Birini tanlang!">
+                                        <AvRadio label="Erkak" value="MALE"/>
+                                        <AvRadio label="Ayol" value="FEMALE"/>
+                                    </AvRadioGroup>
+                                    <AvField
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        type={"textarea"}
+                                        label={"Izoh"} name={"description"} className={"form-control"}
+                                        required/>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                                <Button color="primary">Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
                 </div>
             </AdminLayout>
         );

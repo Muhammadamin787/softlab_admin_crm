@@ -16,7 +16,6 @@ class Course extends Component {
         this.props.dispatch(getCoursesAction())
         //to do course bo'limlarini hammasini olib kelish, pageablesiz
         this.props.dispatch(getCourseCategoriesAction())
-        this.props.dispatch(getDurationTypesAction())
 
     }
 
