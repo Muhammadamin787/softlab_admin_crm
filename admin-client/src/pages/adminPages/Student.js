@@ -16,6 +16,7 @@ import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
 import Pagination from "react-js-pagination";
+import {Link} from "react-router-dom";
 
 class Student extends Component {
     componentDidMount() {
@@ -120,8 +121,16 @@ class Student extends Component {
                         {students ? students.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
-                                <td>{item.fullName}</td>
-                                <td>{item.phoneNumber}</td>
+                                <td>
+                                    <Link className={"text-dark"} to={"/admin/student/" + (item.id)}>
+                                        {item.fullName}
+                                    </Link>
+                                </td>
+                                <td>
+                                    {/*<Link to={"/admin/student/" + (item.id)}>*/}
+                                    {item.phoneNumber}
+                                    {/*</Link>*/}
+                                </td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openModal(item)}>
                                         <EditIcon/>

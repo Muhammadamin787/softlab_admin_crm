@@ -14,6 +14,7 @@ import './adminPages.scss';
 import {CloseIcon, DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
+import moment from "moment";
 
 class Teacher extends Component {
     componentDidMount() {
@@ -89,7 +90,7 @@ class Teacher extends Component {
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: v.birthDate
+                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
             }
 
             dispatch(saveTeacherAction(teacherDto))
@@ -151,6 +152,8 @@ class Teacher extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
+                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"

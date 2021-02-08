@@ -182,12 +182,11 @@ export const editStudentApi = (data) => {
     return HttpClient.doPut(api.student + "/" + data.id, data)
 }
 export const getStudentsApi = (data) => {
-    console.log(data);
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
-export const getStudentApi = () => {
-    return HttpClient.doGet(api.student)
+export const getStudentApi = (data) => {
+    return HttpClient.doGet(api.student + "/" + data.id)
 }
 export const deleteStudentApi = (data) => {
     return HttpClient.doDelete(api.student + "/" + data.id)

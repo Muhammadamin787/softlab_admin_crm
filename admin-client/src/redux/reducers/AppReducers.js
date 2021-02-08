@@ -236,6 +236,9 @@ const reducers = {
     [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
         state.showModal = false
     },
+    [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
+        console.log(payload);
+    },
     [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.students = payload.payload.object.object.sort((a, b) =>

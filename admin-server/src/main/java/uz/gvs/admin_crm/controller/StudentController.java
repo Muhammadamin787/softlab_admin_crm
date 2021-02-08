@@ -15,6 +15,8 @@ import uz.gvs.admin_crm.service.RegionService;
 import uz.gvs.admin_crm.service.StudentService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/student")
@@ -41,12 +43,13 @@ StudentController {
 //    }
 //
 //    //  GETOne
-//    @GetMapping("/{id}")
-//    public HttpEntity<?> getOneRegion(@PathVariable Integer id) {
-//        ApiResponse apiResponse = regionService.getOneRegion(id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
+    @GetMapping("/{id}")
+    public HttpEntity<?> getStudent(@PathVariable UUID id) {
+        ApiResponse apiResponse = studentService.getStudent(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    //
 //    //  get search
 //    @GetMapping("/search")
 //    public HttpEntity<?> getSearchRegion(@RequestParam(value = "key", defaultValue = "") String key) {
