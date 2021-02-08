@@ -53,6 +53,7 @@ public class StudentService {
         }
     }
 
+
     public ApiResponse getStudents(int page, int size) {
         try {
             Page<Student> all = studentRepository.findAll(PageRequest.of(page, size));
