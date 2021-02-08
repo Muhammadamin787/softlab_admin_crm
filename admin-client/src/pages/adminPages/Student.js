@@ -18,6 +18,8 @@ import moment from 'moment';
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
 
+
+
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())

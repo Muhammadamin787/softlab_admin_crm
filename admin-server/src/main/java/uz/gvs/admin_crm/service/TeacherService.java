@@ -21,6 +21,8 @@ import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,7 +88,25 @@ public class TeacherService {
         );
     }
 
-    public ApiResponse editTeacher(TeacherDto teacherDto) {
-        return null;
+
+    public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
+       try{
+           Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+           if (optional.isEmpty()){
+               return apiResponseService.notFoundResponse();
+           }
+//           if (userRepository.existsByFullNameIgnoreCaseAndIdNot(teacherDto.getUserDto().getFullName(),id)){
+//               return apiResponseService.existResponse();
+//           }
+           Teacher teacher = optional.get();
+           User user = userservice.editUser(teacherDto.getUserDto(),teacher.getUser(),RoleName.TEACHER);
+           teacher.setUser(user);
+           teacherRepository.save(teacher);
+           return apiResponseService.updatedResponse();
+       }catch (Exception e){
+           return apiResponseService.tryErrorResponse();
+       }
     }
 }
+/////
+

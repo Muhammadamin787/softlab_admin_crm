@@ -228,7 +228,7 @@ const reducers = {
     //// Teacher
 
     [types.REQUEST_SAVE_TEACHER_SUCCESS](state, payload) {
-        state.secondPage = false
+        state.showModal= false
     },
     [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
         state.teachers = payload.payload.object.object.sort((a, b) =>
