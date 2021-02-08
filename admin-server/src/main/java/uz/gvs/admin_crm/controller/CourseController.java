@@ -27,38 +27,40 @@ public class CourseController {
     CourseRepository courseRepository;
 
     @PostMapping
-    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto) {
-        ApiResponse apiResponse = courseService.saveCourse(courseDto);
+    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto){
+        ApiResponse apiResponse =  courseService.saveCourse(courseDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
     @GetMapping("/{id}")
-    HttpEntity<?> getOneCourseCategory(@PathVariable Integer id) {
-        ApiResponse apiResponse = courseService.getCourse(id);
+    HttpEntity<?> getOneCourse( @PathVariable Integer id){
+        ApiResponse apiResponse = courseService.getOneCourse(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping
-    public HttpEntity<?> getCoursesList(
-            @RequestParam(value = "categoryId", defaultValue = "0") int categoryId,
-            @CurrentUser User user) {
-        ApiResponse apiResponse = courseService.getCoursesList(categoryId);
+    public HttpEntity<?> getCourseList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                       @CurrentUser User user) {
+        ApiResponse apiResponse = courseService.getCourseList(page, size, user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-//
-//    @PutMapping("/{id}")
-//    public HttpEntity<?> editCourseCategory(@PathVariable Integer id, @RequestBody CourseCategoryDto courseCategoryDto) {
-//        ApiResponse apiResponse = courseCategoryService.editCourseCategory(courseCategoryDto, id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ApiResponse> deleteRegion(@PathVariable Integer id) {
-//        try {
-//            courseCategoryRepository.deleteById(id);
-//            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
-//        }
-//    }
+
+    @PutMapping("/{id}")
+    public HttpEntity<?> editCourse(@PathVariable Integer id, @RequestBody CourseDto courseDto) {
+        ApiResponse apiResponse = courseService.editCourse(courseDto, id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteCourse(@PathVariable Integer id) {
+        try {
+            courseRepository.deleteById(id);
+            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
+        }
+    }
 }
+//
+//
