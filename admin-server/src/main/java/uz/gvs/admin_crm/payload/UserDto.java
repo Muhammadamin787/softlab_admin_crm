@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class UserDto {
-    private UUID uuid;
+    private UUID id;
     private String fullName;
     private String phoneNumber;
     private String description;
@@ -39,8 +39,8 @@ public class UserDto {
         this.birthDate = birthDate;
     }
 
-    public UserDto(UUID uuid, String fullName, String phoneNumber, String description, Region region, String gender, String birthDate, Set<Role> roles) {
-        this.uuid = uuid;
+    public UserDto(UUID id, String fullName, String phoneNumber, String description, Region region, String gender, String birthDate, Set<Role> roles) {
+        this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.description = description;
@@ -50,8 +50,8 @@ public class UserDto {
         this.roles = roles;
     }
 
-    public UserDto(UUID uuid, String fullName, String phoneNumber, int age, Region region, String gender, Attachment avatar, String birthDate) {
-        this.uuid = uuid;
+    public UserDto(UUID id, String fullName, String phoneNumber, int age, Region region, String gender, Attachment avatar, String birthDate) {
+        this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.age = age;

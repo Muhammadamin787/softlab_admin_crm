@@ -30,7 +30,7 @@ public class TeacherController {
 
     @PutMapping("/{id}")
     public HttpEntity<?> save(@PathVariable UUID id, @RequestBody TeacherDto teacherDto) {
-        ApiResponse apiResponse = teacherService.editTeacher(teacherDto);
+        ApiResponse apiResponse = teacherService.editTeacher(id, teacherDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
@@ -41,4 +41,5 @@ public class TeacherController {
         ApiResponse apiResponse = teacherService.getTeacherList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
 }

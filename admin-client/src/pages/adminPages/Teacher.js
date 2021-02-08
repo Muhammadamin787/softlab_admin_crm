@@ -15,6 +15,7 @@ import {CloseIcon, DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
 import moment from "moment";
+import Pagination from "react-js-pagination";
 
 class Teacher extends Component {
     componentDidMount() {
@@ -84,6 +85,7 @@ class Teacher extends Component {
             let teacherDto;
             teacherDto = {userDto: ""}
             teacherDto.userDto = {
+                id: v.id,
                 fullName: v.fullName,
                 gender: v.gender,
                 phoneNumber: v.phoneNumber,
@@ -92,7 +94,7 @@ class Teacher extends Component {
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
             }
-
+            teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
         }
         const uploadImg = (e) => {
@@ -151,7 +153,7 @@ class Teacher extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>
