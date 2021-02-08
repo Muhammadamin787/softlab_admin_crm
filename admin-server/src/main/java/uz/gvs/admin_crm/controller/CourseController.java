@@ -27,24 +27,24 @@ public class CourseController {
     CourseRepository courseRepository;
 
     @PostMapping
-    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto){
-        ApiResponse apiResponse =  courseService.saveCourse(courseDto);
+    public HttpEntity<?> saveCourse(@RequestBody CourseDto courseDto) {
+        ApiResponse apiResponse = courseService.saveCourse(courseDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
-//    @GetMapping("/{id}")
-//    HttpEntity<?> getOneCourseCategory( @PathVariable Integer id){
-//        ApiResponse apiResponse = courseCategoryService.getOneCourseCategory(id);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
-//    @GetMapping
-//    public HttpEntity<?> getCourseCategoryList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-//                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-//                                       @CurrentUser User user) {
-//        ApiResponse apiResponse = courseCategoryService.getCourseCategoryList(page, size, user);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
+    @GetMapping("/{id}")
+    HttpEntity<?> getOneCourseCategory(@PathVariable Integer id) {
+        ApiResponse apiResponse = courseService.getCourse(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping
+    public HttpEntity<?> getCoursesList(
+            @RequestParam(value = "categoryId", defaultValue = "0") int categoryId,
+            @CurrentUser User user) {
+        ApiResponse apiResponse = courseService.getCoursesList(categoryId);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 //
 //    @PutMapping("/{id}")
 //    public HttpEntity<?> editCourseCategory(@PathVariable Integer id, @RequestBody CourseCategoryDto courseCategoryDto) {

@@ -10,6 +10,7 @@ import uz.gvs.admin_crm.payload.CourseDto;
 import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 import uz.gvs.admin_crm.repository.CourseRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,18 +25,62 @@ public class CourseService {
     public ApiResponse saveCourse(CourseDto courseDto) {
         try {
             Optional<CourseCategory> optional = courseCategoryRepository.findById(courseDto.getCourseCategoryId());
-        if (optional.isPresent()) {
-            if (!courseRepository.existsByNameEqualsIgnoreCaseAndCourseCategoryId(courseDto.getName(), courseDto.getCourseCategoryId())) {
-                if (makeCourse(courseDto) != null) {
-                    return apiResponseService.saveResponse();
+            if (optional.isPresent()) {
+                if (!courseRepository.existsByNameEqualsIgnoreCaseAndCourseCategoryId(courseDto.getName(), courseDto.getCourseCategoryId())) {
+                    if (makeCourse(courseDto) != null) {
+                        return apiResponseService.saveResponse();
+                    }
+                    return apiResponseService.tryErrorResponse();
                 }
-                return apiResponseService.tryErrorResponse();
+                return apiResponseService.existResponse();
             }
             return apiResponseService.existResponse();
-        }
-        return apiResponseService.existResponse();
-    }catch (Exception e){
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getCourse(int id) {
+        try {
+            Optional<Course> optionalCourse = courseRepository.findById(id);
+            if (optionalCourse.isPresent()) {
+                Course course = optionalCourse.get();
+                return apiResponseService.getResponse(makeCourse(course));
+            }
+            return apiResponseService.errorResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
+
+    }
+
+    public ApiResponse getCoursesList(int id) {
+        try {
+            List<Course> courseList = null;
+            if (id > 0)
+                courseList = courseRepository.findAllByCourseCategory_id(id);
+            else
+                courseList = courseRepository.findAll();
+            return apiResponseService.getResponse(courseList);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public CourseDto makeCourse(Course course) {
+        try {
+            return new CourseDto(
+                    course.getId(),
+                    course.getName(),
+                    course.getDescription(),
+                    course.isActive(),
+                    course.getPrice(),
+                    course.getCourseCategory().getId(),
+                    course.getCourseCategory()
+            );
+        } catch (Exception e) {
+            return null;
         }
     }
 
