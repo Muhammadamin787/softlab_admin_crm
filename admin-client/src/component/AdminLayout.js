@@ -70,6 +70,15 @@ class AdminLayout extends Component {
                                     Xonalar
                                 </div>
                             </Link>
+                            <Link to="/admin/payType" className={
+                                this.props.pathname === "/admin/payType" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-payment"/>
+                                <div className="main-link">
+                                    To'lov turlari
+                                </div>
+                            </Link>
                             <Link to="/admin/teacher" className={
                                 this.props.pathname === "/admin/teacher" ?
                                     "active-link" : "default-link"

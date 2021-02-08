@@ -8,5 +8,6 @@ export const api = {
     addAttachment: '/attachment/upload',
     getAttachment: '/attachment',
     teacher: '/teacher',
+    payType: '/payType',
     student: '/student'
 };

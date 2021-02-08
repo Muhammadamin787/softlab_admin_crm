@@ -43,8 +43,8 @@
   }
 
   &.icon-payment {
-    //mask-image: url("../../public/assets/icons/payment.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/payment.svg");
+    mask-image: url("icons/payment.svg");
+    -webkit-mask-image: url("icons/payment.svg");
   }
 
   &.icon-time {

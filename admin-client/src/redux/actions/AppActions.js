@@ -9,6 +9,12 @@ import {
     saveRoomApi,
     deleteRoomApi,
 
+    //PayType
+    getPayTypeList,
+    editPayTypeApi,
+    savePayTypeApi,
+    deletePayTypeApi,
+
     //reklama
 
     getReklamaApi,
@@ -115,6 +121,56 @@ export const deleteRoomAction = (data) => (dispatch) => {
 
 // End Room
 
+// PayType
+export const getPayTypeListAction = () => (dispatch) => {
+    dispatch({
+        api: getPayTypeList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_PAYTYPE_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+export const savePayTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editPayTypeApi : savePayTypeApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_PAYTYPE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getPayTypeListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+export const deletePayTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: deletePayTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_PAYTYPE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type : "updateState",
+            payload : {
+                room : null
+            }
+        })
+        toast.success("Malumot ochirildi")
+        dispatch(getPayTypeListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+};
+// PayType End
 
 //Reklmaa
 export const getReklamaAction = () => (dispatch) => {

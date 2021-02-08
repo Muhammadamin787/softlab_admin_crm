@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {
-    getRoomListAction,
-    saveRoomAction,
-    deleteRoomAction
+    getPayTypeListAction,
+    savePayTypeAction,
+    deletePayTypeAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
@@ -10,10 +10,10 @@ import {AvField, AvForm} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 
-class Room extends Component {
+class PayType extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getRoomListAction())
+        this.props.dispatch(getPayTypeListAction())
     }
 
     state = {
@@ -22,11 +22,9 @@ class Room extends Component {
         currentObject: ''
     }
 
-
     render() {
-
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, rooms} = this.props;
+        const {dispatch, showModal, deleteModal, payTypes} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -35,29 +33,28 @@ class Room extends Component {
                     showModal: !showModal
                 }
             })
-
         }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item.id, showDeleteModal: !this.state.showDeleteModal})
         }
         const deleteItem = () => {
-            dispatch(deleteRoomAction(currentObject))
+            dispatch(deletePayTypeAction(currentObject))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
                 v.id = currentObject.id
             }
-            dispatch(saveRoomAction(v))
+            dispatch(savePayTypeAction(v))
         }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Room</h1>
-                    <Button color={"success"} onClick={() => openModal('add')} className={"mb-2"}>Qo'shish</Button>
+                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Yangi to'lov turi qo'shish</Button>
                     <Table className={"table-style"}>
-                        <thead className={""}>
+                        <thead>
                         <tr className={"text-center"}>
                             <th>№</th>
                             <th>Name</th>
@@ -66,7 +63,7 @@ class Room extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {rooms ? rooms.map((item, i) =>
+                        {payTypes ? payTypes.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
@@ -92,8 +89,8 @@ class Room extends Component {
                             <ModalBody>
                                 <div className={"w-100"}>
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
-                                             label={"Nomi"} id={'name'} name={"name"} className={"form-control"}
-                                             placeholer={"nomi"} autofocus required/>
+                                             label={"Nomi"} name={"name"} className={"form-control"}
+                                             placeholer={"nomi"} required/>
                                     <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
                                              label={"Active"} name={"active"}/>
                                 </div>
@@ -122,10 +119,10 @@ class Room extends Component {
     }
 }
 
-Room.propTypes = {}
+PayType.propTypes = {}
 export default connect(({
-                            app: {loading, rooms, showModal, deleteModal, selectItems},
+                            app: {loading, payTypes, showModal, deleteModal, selectItems},
                         }) => ({
-        loading, rooms, showModal, deleteModal, selectItems
+        loading, payTypes, showModal, deleteModal, selectItems
     })
-)(Room);
+)(PayType);

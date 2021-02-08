@@ -55,6 +55,18 @@ const reducers = {
         state.showModal = false
     },
 
+    // PayType
+    [types.REQUEST_GET_PAYTYPE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.payTypes = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+        }
+    },
+    [types.REQUEST_SAVE_PAYTYPE_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    // PayType End
 
     // Duration Type
     [types.REQUEST_SAVE_DURATION_TYPE_SUCCESS](state, payload) {
