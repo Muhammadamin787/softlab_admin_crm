@@ -48,12 +48,7 @@ class Teacher extends Component {
             secondPage,
             showModal,
             deleteModal,
-            loading,
-            courseCategories,
             teachers,
-            selectItems,
-            spec,
-            selectItemsFromSpec,
             regions
         } = this.props;
         const openModal = (item) => {
@@ -134,10 +129,10 @@ class Teacher extends Component {
                                 <td>{i + 1}</td>
                                 <td>
                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                        {item.userDto.fullName}
+                                        {item.userDto && item.userDto.fullName}
                                     </Link>
                                 </td>
-                                <td>{item.userDto.phoneNumber}</td>
+                                <td>{item.userDto && item.userDto.phoneNumber}</td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openModal(item)}>
                                         <EditIcon/>
