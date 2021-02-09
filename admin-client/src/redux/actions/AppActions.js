@@ -740,7 +740,12 @@ export const saveTeacherAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getTeacherAction())
+        if (data && data.id) {
+            dispatch(getTeacherAction({id: data.id}))
+            dispatch(getRegionsAction())
+            dispatch(getPayTypeListAction())
+        }
+        dispatch(getTeachersAction({page: 0, size: 20}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })

@@ -4,7 +4,7 @@ import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-valida
 import {
     deleteTeacherAction,
     getCourseCategoriesAction,
-    getRegionsAction,
+    getRegionsAction, getStudentsAction,
     getTeacherAction, getTeachersAction,
     saveTeacherAction,
     uploadFileAction
@@ -16,12 +16,13 @@ import Select from "react-select";
 import AdminLayout from "../../component/AdminLayout";
 import moment from "moment";
 import Pagination from "react-js-pagination";
+import {Link} from "react-router-dom";
 
 class Teacher extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getTeachersAction({page: 0, size: this.props.size}))
-        console.clear()
+
     }
 
     state = {
@@ -31,10 +32,17 @@ class Teacher extends Component {
         specs: '',
     }
 
+    handlePageChange(pageNumber) {
+        this.props.dispatch(getTeachersAction({page: (pageNumber - 1), size: this.props.size}))
+    }
 
     render() {
         const {currentObject} = this.state;
         const {
+            page,
+            size,
+            totalElements,
+            totalPages,
             dispatch,
             attachmentId,
             secondPage,
@@ -124,7 +132,11 @@ class Teacher extends Component {
                         {teachers ? teachers.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
-                                <td>{item.userDto.fullName}</td>
+                                <td>
+                                    <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
+                                        {item.userDto.fullName}
+                                    </Link>
+                                </td>
                                 <td>{item.userDto.phoneNumber}</td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openModal(item)}>
@@ -138,6 +150,14 @@ class Teacher extends Component {
                         ) : ''}
                         </tbody>
                     </Table>
+                    <Pagination
+                        activePage={page + 1}
+                        itemsCountPerPage={size}
+                        totalItemsCount={totalElements}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                        linkClass="page-link"
+                    />
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -211,6 +231,10 @@ Teacher.propTypes = {};
 export default connect((
     {
         app: {
+            page,
+            size,
+            totalElements,
+            totalPages,
             loading,
             courseCategories,
             showModal,
@@ -227,6 +251,10 @@ export default connect((
             teacherDto
         },
     }) => ({
+        page,
+        size,
+        totalElements,
+        totalPages,
         secondPage,
         specializationDto,
         loading,

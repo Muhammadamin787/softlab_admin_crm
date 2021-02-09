@@ -85,7 +85,7 @@ class SelectStudent extends Component {
                             to={"/admin/students"}
                             className={"text-decoration-none"}>
                         <span
-                            className={""}> Talabalar</span>
+                            className={""}> Oqituvchilar</span>
                         </Link>
                     </hgroup>
                     <div className="row">
