@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, getCourseCategoriesAction, getCourseCategoryAction,
+    deleteCourseAction, deleteCourseCategoryAction, getCourseCategoriesAction, getCourseCategoryAction,
     getCoursesAction,
     saveCourseAction, saveCourseCategoryAction,
 } from "../../redux/actions/AppActions";
@@ -60,7 +60,7 @@ class Course extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteCourseAction(item))
+            dispatch(deleteCourseCategoryAction(item))
         }
         const saveItem = (e, v) => {
             if (currentObject) {
