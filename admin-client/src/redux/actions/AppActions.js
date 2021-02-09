@@ -29,7 +29,8 @@ import {
     //durationType
     editDurationTypeApi,
     getDurationTypesApi,
-    saveDurationTypeApi, deleteDurationTypeApi,
+    saveDurationTypeApi,
+    deleteDurationTypeApi,
     //Profession
     editProfessionApi,
     saveProfessionApi,
@@ -61,7 +62,14 @@ import {
     getTeacherApi,
     editTeacherApi,
     deleteTeacherApi,
-    saveTeacherApi, getCourseApi, getCourseCategoryApi, getStudentsApi, editStudentApi, saveStudentApi, getStudentApi,
+    saveTeacherApi,
+    getCourseApi,
+    getCourseCategoryApi,
+    getStudentsApi,
+    editStudentApi,
+    saveStudentApi,
+    getStudentApi,
+    getTeachersApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -651,6 +659,17 @@ export const getStudentsAction = (data) => (dispatch) => {
         data
     })
 }
+export const getStudentAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
 export const saveStudentAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editStudentApi : saveStudentApi),
@@ -668,27 +687,29 @@ export const saveStudentAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-export const getStudentAction = (data) => (dispatch) => {
-    dispatch({
-        api: getStudentApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GET_STUDENT_SUCCESS,
-            types.REQUEST_ERROR,
-        ],
-        data: data
-    })
-}
 // FINISH STUDENT ACTION
 // START TEACHER ACTION
-export const getTeacherAction = () => (dispatch) => {
+
+export const getTeachersAction = (data) => (dispatch) => {
+    dispatch({
+        api: getTeachersApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHERS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getTeacherAction = (data) => (dispatch) => {
     dispatch({
         api: getTeacherApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_TEACHER_SUCCESS,
             types.REQUEST_ERROR,
-        ]
+        ],
+        data: data
     })
 }
 export const saveTeacherAction = (data) => (dispatch) => {

@@ -5,7 +5,7 @@ import {
     deleteTeacherAction,
     getCourseCategoriesAction,
     getRegionsAction,
-    getTeacherAction,
+    getTeacherAction, getTeachersAction,
     saveTeacherAction,
     uploadFileAction
 } from "../../redux/actions/AppActions";
@@ -20,7 +20,7 @@ import Pagination from "react-js-pagination";
 class Teacher extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getTeacherAction())
+        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size}))
         console.clear()
     }
 
@@ -68,6 +68,7 @@ class Teacher extends Component {
         }
         const deleteItem = (item) => {
             dispatch(deleteTeacherAction(item))
+            this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
         const multiChange = (e, v) => {
             let specList = []
@@ -187,6 +188,18 @@ class Teacher extends Component {
                             </ModalFooter>
                         </AvForm>
                     </Modal>
+                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                        <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
+
                 </div>
             </AdminLayout>
         );

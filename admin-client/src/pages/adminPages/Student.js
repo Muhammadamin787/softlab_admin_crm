@@ -23,8 +23,8 @@ import {Link} from "react-router-dom";
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
-    }
+    this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
+}
 
     state = {
         showModal: false,

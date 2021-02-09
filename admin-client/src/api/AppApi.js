@@ -200,10 +200,19 @@ export const saveTeacherApi = (data) => {
 export const editTeacherApi = (data) => {
     return HttpClient.doPut(api.teacher + "/" + data.id, data)
 }
-export const getTeacherApi = () => {
-    return HttpClient.doGet(api.teacher)
+
+export const getTeachersApi = (data) => {
+    return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
 }
+export const getTeacherApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doGet(api.teacher + "/" + data.id)
+    return null;
+}
+
 export const deleteTeacherApi = (data) => {
     return HttpClient.doDelete(api.teacher + "/" + data.id)
 }
+
 // FINISH TEACHER API
