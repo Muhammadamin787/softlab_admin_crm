@@ -78,7 +78,11 @@ class Region extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Hudud</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2 rounded"}>Yangi qo'shish</Button>
+                    <div align={"right"}>
+                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                            qo'shish
+                        </Button>
+                    </div>
                     <Table className={"table-style"}>
                         <thead className={""}>
                         <tr className={"text-center"}>
@@ -111,18 +115,18 @@ class Region extends Component {
                         </tbody>
                     </Table>
 
-                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
                             </ModalHeader>
                             <ModalBody>
-                                <div className={"w-100"}>
+                                <div className={"w-100 modal-form"}>
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} required/>
                                     <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
-                                             label={"Active"} name={"active"}/>
+                                             label={"Holati"} name={"active"}/>
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.regionId ? currentObject.regionId : "0"}>

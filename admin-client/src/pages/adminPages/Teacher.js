@@ -105,8 +105,11 @@ class Teacher extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>O'qituvchilar</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2"}>Qo'shish</Button>
-
+                    <div align={"right"}>
+                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                            qo'shish
+                        </Button>
+                    </div>
                     <Table className={"table-style"}>
                         <thead className={""}>
                         <tr className={"text-center"}>
@@ -134,13 +137,13 @@ class Teacher extends Component {
                         ) : ''}
                         </tbody>
                     </Table>
-                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
                             </ModalHeader>
                             <ModalBody>
-                                <div className={"w-100"}>
+                                <div className={"w-100 modal-form"}>
                                     <AvField
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
                                         type={"text"}
@@ -175,8 +178,7 @@ class Teacher extends Component {
                                     <AvField
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
                                         type={"textarea"}
-                                        label={"Izoh"} name={"description"} className={"form-control"}
-                                        required/>
+                                        label={"Izoh"} name={"description"} className={"form-control"}/>
                                 </div>
                             </ModalBody>
                             <ModalFooter>

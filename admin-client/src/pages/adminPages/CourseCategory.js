@@ -58,7 +58,7 @@ class CourseCategory extends Component {
             if (v.courseCategoryId === "0") {
                 v.courseCategoryId = null
             }
-            dispatch(saveCourseCategoryAction())
+            dispatch(saveCourseCategoryAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
