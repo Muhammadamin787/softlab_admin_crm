@@ -46,6 +46,15 @@ class SelectCourse extends Component {
                         showModal: !showModal
                     }
                 })
+            } else {
+                if (showModal) {
+                    dispatch({
+                        type: "updateState",
+                        payload: {
+                            showModal: false
+                        }
+                    })
+                }
             }
         }
         const openDeleteModal = (item) => {
