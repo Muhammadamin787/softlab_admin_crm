@@ -552,6 +552,8 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
+        dispatch(getCoursesAction({id: data.id}))
+        dispatch(getCourseCategoryAction({id: data.id}))
         dispatch(getCourseCategoriesAction())
     }).catch((err) => {
         toast.error("Xatolik!")

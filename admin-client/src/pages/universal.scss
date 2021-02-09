@@ -80,6 +80,7 @@
 
 .courses-style {
   width: 23%;
+  font-family: Nunito, sans-serif !important;
 
   &:hover {
     box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
@@ -88,6 +89,24 @@
   p {
     color: #969191;
     font-size: 14px;
+  }
+}
+
+.category-courses {
+  width: 35%;
+  box-shadow: 0.5px .5px 2px 1px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    box-shadow: 1px 1px 3px 1.5px rgba(0, 0, 0, 0.1);
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
+  p {
+    color: #969191;
+    font-size: 13px;
   }
 }
 
