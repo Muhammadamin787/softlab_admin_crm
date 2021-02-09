@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 public class ResGroupDto {
     private Integer id;
+
     private String name;
     private String courseName;
     private String teacherName;
