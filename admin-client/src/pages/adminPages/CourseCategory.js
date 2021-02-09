@@ -64,8 +64,12 @@ class CourseCategory extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Kurs kategoriyalar</h1>
-                    <Button color={"success"} onClick={openModal} className={"mb-2 add-button"}>Yangi qo'shish</Button>
-                    <div className={"row"}>
+                    <div align={"right"}>
+                        <Button color={"success"} onClick={openModal} className={"mb-3 add-button px-4"}>Yangisini
+                            qo'shish
+                        </Button>
+                    </div>
+                    <div className={"row border-top py-3"}>
                         {
                             courseCategories ? courseCategories.map((item, i) =>
                                     <div key={i} className={"m-2 p-3 bg-white course-category"}>

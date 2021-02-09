@@ -77,7 +77,7 @@ class Group extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Hudud</h1>
+                    <h1>Guruhlar</h1>
                     <Button color={"success"} onClick={openModal} className={"mb-2 rounded"}>Yangi qo'shish</Button>
                     <Table className={"table-style"}>
                         <thead className={""}>
