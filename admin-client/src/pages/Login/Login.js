@@ -12,7 +12,6 @@ class Login extends Component {
     }
 
     handleSignIn = async (e, v) => {
-        console.log(v);
         this.props.dispatch(authActions.login({v, history: this.props.history}))
     };
 

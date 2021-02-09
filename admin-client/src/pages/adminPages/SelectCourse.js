@@ -19,6 +19,7 @@ class SelectCourse extends Component {
             id = this.props.match.params.id;
             this.props.dispatch(getCourseAction({id: id}))
         }
+        this.props.dispatch(getCourseCategoriesAction())
     }
 
     state = {
@@ -29,6 +30,7 @@ class SelectCourse extends Component {
     render() {
         const {currentObject} = this.state;
         const {
+            history,
             dispatch,
             showModal,
             deleteModal,
@@ -36,13 +38,15 @@ class SelectCourse extends Component {
             courseCategories,
         } = this.props;
         const openModal = (item) => {
-            this.setState({currentObject: item})
-            dispatch({
-                type: "updateState",
-                payload: {
-                    showModal: !showModal
-                }
-            })
+            if (item && item.id) {
+                this.setState({currentObject: item})
+                dispatch({
+                    type: "updateState",
+                    payload: {
+                        showModal: !showModal
+                    }
+                })
+            }
         }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
@@ -54,13 +58,16 @@ class SelectCourse extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteCourseAction(item))
+            if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                let id = this.props.match.params.id;
+                dispatch(deleteCourseAction({...item, history: history, courseCategoryId: id}))
+            }
         }
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
+                dispatch(saveCourseAction(v))
             }
-            dispatch(saveCourseAction(v))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -121,8 +128,7 @@ class SelectCourse extends Component {
                                          placeholer={"nomi"} required/>
                                 <AvField className={'form-control'} label={"Kurs bo'limi:"} type="select"
                                          name="courseCategoryId"
-                                         defaultValue={this.props.match && this.props.match.params && this.props.match.params.id ?
-                                             this.props.match.params.id : "0"}>
+                                         defaultValue={currentObject && currentObject.courseCategory ? currentObject.courseCategory.id : "0"}>
                                     <option key={0} value={"0"}>Kurs bo'limi</option>
                                     {courseCategories ? courseCategories.map((item, i) =>
                                         item.category ? "" :

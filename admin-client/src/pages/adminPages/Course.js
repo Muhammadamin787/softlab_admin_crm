@@ -105,12 +105,12 @@ class Course extends Component {
                                                 <p className={"d-inline"}> {currentItem.name}</p>
                                             </hgroup>
                                             <hgroup>
-                                                <small className={"text-secondary"}>Tavsif: </small>
-                                                <p className={"d-inline"}> {currentItem.description}</p>
-                                            </hgroup>
-                                            <hgroup>
                                                 <small className={"text-secondary"}>Holati: </small>
                                                 <p className={"d-inline"}> {currentItem.active ? "Faol" : "Yopiq"}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                <p className={"d-inline"}> {currentItem.description}</p>
                                             </hgroup>
                                         </div>
                                         <div className="col-4 button-block">

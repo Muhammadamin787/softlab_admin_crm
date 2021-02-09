@@ -311,9 +311,20 @@ export const deleteCourseAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        dispatch(getCoursesAction())
+        data.history.go(-1)
+        if (data && data.courseCategoryId) {
+            dispatch(getCourseCategoriesAction())
+            dispatch(getCoursesAction({id: data.courseCategoryId}))
+            dispatch(getCourseCategoryAction({id: data.courseCategoryId}))
+        }
     }).catch((err) => {
         toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
     })
 }
 export const saveCourseAction = (data) => (dispatch) => {
@@ -327,6 +338,8 @@ export const saveCourseAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
+        if (data && data.id)
+            dispatch(getCourseAction({id: data.id}))
         dispatch(getCoursesAction({id: data.currentCategoryId}))
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -552,8 +565,10 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getCoursesAction({id: data.id}))
-        dispatch(getCourseCategoryAction({id: data.id}))
+        if (data && data.id) {
+            dispatch(getCoursesAction({id: data.id}))
+            dispatch(getCourseCategoryAction({id: data.id}))
+        }
         dispatch(getCourseCategoriesAction())
     }).catch((err) => {
         toast.error("Xatolik!")
