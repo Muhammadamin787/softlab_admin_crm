@@ -16,6 +16,7 @@ import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.TeacherDto;
 import uz.gvs.admin_crm.payload.UserDto;
+import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.RoleRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
@@ -37,6 +38,9 @@ public class TeacherService {
     UserRepository userRepository;
     @Autowired
     TeacherRepository teacherRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
 
     public ApiResponse saveTeacher(TeacherDto teacherDto) {
         try {
@@ -90,23 +94,55 @@ public class TeacherService {
 
 
     public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
-       try{
-           Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
-           if (optional.isEmpty()){
-               return apiResponseService.notFoundResponse();
-           }
-//           if (userRepository.existsByFullNameIgnoreCaseAndIdNot(teacherDto.getUserDto().getFullName(),id)){
-//               return apiResponseService.existResponse();
-//           }
-           Teacher teacher = optional.get();
-           User user = userservice.editUser(teacherDto.getUserDto(),teacher.getUser(),RoleName.TEACHER);
-           teacher.setUser(user);
-           teacherRepository.save(teacher);
-           return apiResponseService.updatedResponse();
-       }catch (Exception e){
-           return apiResponseService.tryErrorResponse();
-       }
+        try {
+            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+            if (optional.isEmpty()) {
+                return apiResponseService.notFoundResponse();
+            }
+            Teacher teacher = optional.get();
+            User user = userservice.editUser(teacherDto.getUserDto(), teacher.getUser(), RoleName.TEACHER);
+            teacher.setUser(user);
+            teacherRepository.save(teacher);
+            return apiResponseService.updatedResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse deleteTeacher(UUID id) {
+        try {
+            Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
+            if (optionalTeacher.isPresent()) {
+                boolean teacher_id = groupRepository.existsByTeacher_Id(id);
+                if (!teacher_id) {
+                    Teacher teacher = optionalTeacher.get();
+                    teacherRepository.deleteById(teacher.getId());
+                    userRepository.deleteById(teacher.getUser().getId());
+                    return apiResponseService.deleteResponse();
+                }
+                return apiResponseService.errorResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
+    }
+
+
+    public ApiResponse getTeacher(UUID id) {
+        try {
+            Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
+            if (optionalTeacher.isPresent()) {
+                return apiResponseService.getResponse(makeTeacherDto(optionalTeacher.get()));
+            } else {
+                return apiResponseService.notFoundResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+
     }
 }
-/////
+
 

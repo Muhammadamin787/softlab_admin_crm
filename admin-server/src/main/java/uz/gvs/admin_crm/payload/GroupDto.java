@@ -3,9 +3,13 @@ package uz.gvs.admin_crm.payload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.CourseCategory;
+import uz.gvs.admin_crm.entity.Room;
+import uz.gvs.admin_crm.entity.Teacher;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -17,11 +21,16 @@ public class GroupDto {
     private String description;
     private boolean active;
     private UUID teacherId;
-    private int courseId;
-
-    private TeacherDto teacherDto;
-    private List<String> weekdays;
-    private CourseDto courseDto;
+    private String startTime;
+    private String finishTime;
+    private Integer courseId;
+    private Integer roomId;
+    private String startDate;
+    private String finishDate;
+    private Set<String> weekdays;
+    private Teacher teacher;
+    private Course course;
+    private Room room;
 
 //    public CourseDto(Integer id, String name, String description, boolean active, double price, CourseCategory courseCategory){
 //        this.id = id;
