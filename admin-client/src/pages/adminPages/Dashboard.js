@@ -7,7 +7,40 @@ class Dashboard extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Salom admin dashboard</h1>
+                    <div className={"row dashboard-style"}>
+                        <div className="col-md-3">
+                            <div className="card">
+                                <hgroup>
+                                    <h4>Faol talabalar</h4>
+                                    <h2 className="text-warning">5</h2>
+                                </hgroup>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card">
+                                <hgroup>
+                                    <h4>Faol talabalar</h4>
+                                    <h2 className="text-warning">5</h2>
+                                </hgroup>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card">
+                                <hgroup>
+                                    <h4>Faol talabalar</h4>
+                                    <h2 className="text-warning">5</h2>
+                                </hgroup>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card">
+                                <hgroup>
+                                    <h4>Faol talabalar</h4>
+                                    <h2 className="text-warning">5</h2>
+                                </hgroup>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </AdminLayout>
         );

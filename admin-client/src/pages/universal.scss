@@ -1,3 +1,7 @@
+.body {
+  font-family: Nunito, sans-serif;
+}
+
 .table-style {
   width: auto;
 
@@ -98,5 +102,108 @@
   hgroup {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+}
+
+#allModalStyle {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  right: 0 !important;
+  position: absolute;
+  border: none !important;
+
+  .modal-content {
+    border: none !important;
+    background: #ffffff;
+    border-radius: 0;
+    top: 0;
+    right: 0;
+    min-height: 100vh !important;
+    max-width: 25vw !important;
+    width: 25vw;
+    font-family: Nunito, sans-serif;
+
+    .modal-header {
+      border: none;
+      border-bottom: 1px solid #cccccc;
+
+      .modal-title {
+        text-align: left;
+        padding-left: 16px;
+        font-size: 24px;
+      }
+
+      .close {
+        display: none;
+      }
+    }
+
+    .modal-form {
+      min-height: 20vh;
+      font-size: 14px !important;
+
+      .form-control {
+        border-radius: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 40px;
+      }
+
+      .form-check {
+        display: inline;
+        margin-right: 20px;
+      }
+
+      .form-group {
+        padding: 0px 20px 0px 15px;
+
+        //input,
+        //select {
+        //  background-color: white;
+        //  height: 50px;
+        //  width: 100%;
+        //}
+      }
+
+      .basic-multi-select {
+        padding: 0 45px 20px 30px;
+        margin-top: 10px;
+
+        .select__control {
+          background-color: transparent;
+        }
+
+        .select__value-container {
+          height: 50px;
+        }
+      }
+    }
+
+    .modal-footer {
+      border: none;
+      margin-right: 14px;
+      padding: 20px 30px 20px 30px;
+    }
+  }
+}
+
+.dashboard-style {
+  font-family: Nunito, sans-serif;
+
+  .col-md-3 {
+    padding: 5px;
+
+    .card {
+      width: 100% !important;
+      background-color: white;
+      height: 200px;
+      border: 2.5px solid transparent;
+      padding-top: 40px;
+      padding-bottom: 40px;
+
+      hgroup {
+        text-align: center;
+      }
+    }
   }
 }

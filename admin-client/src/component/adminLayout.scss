@@ -190,6 +190,7 @@
     position: fixed;
     width: 100%;
     height: 70px;
+    z-index: 5;
 
     .top-menu-left-hidden {
       width: 100px;
@@ -259,6 +260,111 @@
     }
   }
 
+  .additional-menu {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    border-left: 1px solid #f2f2f2;
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 4px 1px 3px 2px rgba(0, 0, 0, 0.1);
+    transition: all .3s ease;
+    z-index: 3;
+
+    .main-link-div {
+      margin-top: 100px;
+      font-family: Nunito, sans-serif;
+
+      .active-link, .default-link {
+        border-radius: 6px;
+        margin: 10px 10px 0 10px;
+        display: flex;
+        height: 40px;
+        font-size: 15px;
+        align-items: center;
+        text-decoration: none;
+
+        &:hover {
+          cursor: pointer;
+
+          .main-link {
+            color: #04A6FB;
+          }
+
+          .icon {
+            background-color: #04A6FB;
+          }
+        }
+
+
+        .icon {
+          margin-left: 20px;
+        }
+
+        .main-link {
+          font-style: normal;
+          font-weight: 400;
+          font-size: 15px;
+          color: #313E47;
+          text-decoration: none;
+          padding-left: 10px;
+          margin-left: 10px;
+
+        }
+      }
+
+      .active-link {
+        &:hover {
+          cursor: pointer;
+
+          .main-link {
+            color: white;
+          }
+
+          .icon {
+            background-color: white;
+          }
+        }
+
+        background: #04A6FB;
+
+        .icon {
+          background-color: white;
+        }
+
+        .main-link {
+          color: white;
+        }
+      }
+
+      //Grey like default-links
+      //.default-link {
+      //  opacity: 0.3;
+      //}
+
+    }
+  }
+
+  .open-add-menu {
+    left: 250px;
+  }
+
+  .additional-menu-small {
+    left: 100px;
+  }
+
+  .additional-menu-hidden {
+    .main-link-div {
+      display: none;
+    }
+
+    left: 250px;
+    width: 0;
+    box-shadow: none;
+    border: none;
+  }
+
   .main-layout-left {
     position: relative;
     width: 250px;
@@ -270,6 +376,8 @@
     overflow-x: hidden;
     transition: all .3s ease;
     box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    font-family: Nunito, sans-serif;
 
     .logo-duo {
       display: flex;
@@ -314,7 +422,7 @@
 
         .main-link {
           font-style: normal;
-          font-weight: 600;
+          font-weight: 500;
           font-size: 18px;
           color: #313E47;
           text-decoration: none;
@@ -383,6 +491,7 @@
     overflow-y: scroll;
     transition: all 0.3s ease;
     padding-top: 100px;
+    z-index: 1;
 
     .menu-toggle {
       transition: all 0.3s ease;
