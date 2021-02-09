@@ -95,9 +95,6 @@ public class TeacherService {
            if (optional.isEmpty()){
                return apiResponseService.notFoundResponse();
            }
-//           if (userRepository.existsByFullNameIgnoreCaseAndIdNot(teacherDto.getUserDto().getFullName(),id)){
-//               return apiResponseService.existResponse();
-//           }
            Teacher teacher = optional.get();
            User user = userservice.editUser(teacherDto.getUserDto(),teacher.getUser(),RoleName.TEACHER);
            teacher.setUser(user);
