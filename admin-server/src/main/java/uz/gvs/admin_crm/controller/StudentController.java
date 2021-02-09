@@ -64,17 +64,16 @@ StudentController {
         ApiResponse apiResponse = studentService.getStudents(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-//
-//
 //    //Delete
 //
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ApiResponse> deleteRegion(@PathVariable Integer id) {
-//        try {
-//            regionRepository.deleteById(id);
-//            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
-//        }
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable Integer id) {
+        try {
+            
+//            .deleteById(id);
+            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
+        }
+    }
 }

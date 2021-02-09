@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.CourseCategory;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +16,9 @@ public class GroupDto {
     private String name;
     private String description;
     private boolean active;
+    private UUID teacherId;
+    private int courseId;
+
     private TeacherDto teacherDto;
     private List<String> weekdays;
     private CourseDto courseDto;

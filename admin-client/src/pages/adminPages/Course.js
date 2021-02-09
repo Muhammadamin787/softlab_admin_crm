@@ -4,17 +4,19 @@ import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseAction, getCourseCategoriesAction, getCourseCategoryAction,
     getCoursesAction,
-    saveCourseAction,
+    saveCourseAction, saveCourseCategoryAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
+import {formatPhoneNumber} from "../../utils/addFunctions";
+import moment from "moment";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 
 class Course extends Component {
     componentDidMount() {
         let id = 0
-        console.log(this.props);
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getCoursesAction({id: id}))
@@ -26,13 +28,12 @@ class Course extends Component {
     state = {
         showModal: false,
         currentObject: "",
-        currentItem: []
+        currentItem: [],
     }
 
     render() {
         const {currentObject} = this.state;
         const {
-            history,
             currentItem,
             dispatch,
             showModal,
@@ -68,7 +69,11 @@ class Course extends Component {
             if (this.props.match && this.props.match.params && this.props.match.params.id) {
                 v.currentCategoryId = this.props.match.params.id;
             }
-            dispatch(saveCourseAction(v))
+            if (v.id) {
+                dispatch(saveCourseCategoryAction(v))
+            } else {
+                dispatch(saveCourseAction(v))
+            }
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -88,49 +93,89 @@ class Course extends Component {
                         </Button>
                     </div>
 
-                    <div className="row border-top py-3">
-                        {
-                            getItems && getItems.length > 0 ? getItems.map((item, i) =>
-                                    <div className={"m-2 p-3 bg-white rounded courses-style"}>
-                                        <Link to={"/admin/course/select/" + item.id}
-                                              className={"w-100 text-decoration-none "}>
-                                            <h5>{item.name}</h5>
-                                            <p>{item.price} UZS</p>
-                                        </Link>
+                    <div className={"row border-top py-3"}>
+                        <div className={"col-md-4"}>
+                            {currentItem && currentItem.id ?
+                                <div
+                                    className={"m-2 p-3 bg-white rounded w-100 select-student-style"}>
+                                    <div className="row">
+                                        <div className="col-8">
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Nomi: </small>
+                                                <p className={"d-inline"}> {currentItem.name}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                <p className={"d-inline"}> {currentItem.description}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Holati: </small>
+                                                <p className={"d-inline"}> {currentItem.active ? "Faol" : "Yopiq"}</p>
+                                            </hgroup>
+                                        </div>
+                                        <div className="col-4 button-block">
+                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                                <EditIcon className="button-icon"/>
+                                            </Button>
+                                            <Button className="table-icon"
+                                                    onClick={() => openDeleteModal(currentItem)}>
+                                                <DeleteIcon className="button-icon"/>
+                                            </Button>
+                                        </div>
                                     </div>
-                                )
-                                :
-                                <Col>
-                                    <h5 className={"text-center"}>
-                                        Kurs topilmadi
-                                    </h5>
-                                </Col>
-                        }
+                                </div>
+                                : ""}
+                        </div>
+                        <div className={"col-md-8"}>
+                            <div className="row">
+                                {
+                                    getItems && getItems.length > 0 ? getItems.map((item, i) =>
+                                            <div className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                                <Link to={"/admin/course/select/" + item.id}
+                                                      className={"w-100 text-decoration-none "}>
+                                                    <h5>{item.name}</h5>
+                                                    <p>{item.price} UZS</p>
+                                                </Link>
+                                            </div>
+                                        )
+                                        :
+                                        <Col>
+                                            <h5 className={"text-center"}>
+                                                Kurs topilmadi
+                                            </h5>
+                                        </Col>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject && currentObject.id ? "Kursni tahrirlash" : "Yangi kurs qo'shish"}
+                            {currentObject && currentObject.id ? "Kurs kategoriyani tahrirlash" : "Yangi kurs qo'shish"}
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100 modal-form"}>
                                 <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                          label={"Nomi"} name={"name"} className={"form-control"}
                                          placeholer={"nomi"} required/>
-                                <AvField className={'form-control'} label={"Kurs bo'limi:"} type="select"
-                                         name="courseCategoryId"
-                                         defaultValue={this.props.match && this.props.match.params && this.props.match.params.id ?
-                                             this.props.match.params.id : "0"}>
-                                    <option key={0} value={"0"}>Kurs bo'limi</option>
-                                    {courseCategories ? courseCategories.map((item, i) =>
-                                        item.category ? "" :
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                    ) : ""}
-                                </AvField>
-                                <AvField defaultValue={currentObject ? currentObject.price : ""} type={"number"}
-                                         label={"Narxi"} name={"price"} className={"form-control"}
-                                         placeholer={""} required/>
+                                {currentObject && currentObject.id ? "" :
+                                    <>
+                                        <AvField className={'form-control'} label={"Kurs bo'limi:"} type="select"
+                                                 name="courseCategoryId"
+                                                 defaultValue={this.props.match && this.props.match.params && this.props.match.params.id ?
+                                                     this.props.match.params.id : "0"}>
+                                            <option key={0} value={"0"}>Kurs bo'limi</option>
+                                            {courseCategories ? courseCategories.map((item, i) =>
+                                                item.category ? "" :
+                                                    <option key={i} value={item.id}>{item.name}</option>
+                                            ) : ""}
+                                        </AvField>
+                                        <AvField defaultValue={currentObject ? currentObject.price : ""} type={"number"}
+                                                 label={"Narxi"} name={"price"} className={"form-control"}
+                                                 placeholer={""} required/>
+                                    </>
+                                }
                                 <AvField type="text"
                                          defaultValue={currentObject ? currentObject.description : false}
                                          label={"Description"} name={"description"} placeholder={"izoh"}/>
@@ -143,6 +188,17 @@ class Course extends Component {
                             <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
+                </Modal>
+                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
                 </Modal>
 
             </AdminLayout>
