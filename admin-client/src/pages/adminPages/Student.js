@@ -1,30 +1,26 @@
 import React, {Component} from 'react';
-import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table, ModalFooter} from "reactstrap";
+import {ModalHeader, Modal, Button, ModalBody, Table, ModalFooter} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction,
-    getCourseCategoriesAction,
     getRegionsAction, getStudentsAction,
-    getTeacherAction, saveStudentAction,
-    saveTeacherAction,
+    saveStudentAction,
     uploadFileAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
-import {CloseIcon, DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
-import Select from "react-select";
+import {DeleteIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
 
 
-
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-    this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
-}
+        this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
+    }
 
     state = {
         showModal: false,
@@ -43,13 +39,11 @@ class Student extends Component {
             page,
             size,
             totalElements,
-            totalPages,
             students,
             dispatch,
             attachmentId,
             showModal,
             deleteModal,
-            teachers,
             regions
         } = this.props;
         const openModal = (item) => {
@@ -225,7 +219,6 @@ export default connect((
             page,
             size,
             totalElements,
-            totalPages,
             students,
             loading,
             courseCategories,
@@ -245,7 +238,6 @@ export default connect((
         page,
         size,
         totalElements,
-        totalPages,
         students,
         specializationDto,
         loading,

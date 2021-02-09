@@ -12,18 +12,13 @@ import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.PageableDto;
-import uz.gvs.admin_crm.payload.TeacherDto;
-import uz.gvs.admin_crm.payload.UserDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.RoleRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +56,28 @@ public class TeacherService {
         }
     }
 
+
+    public ApiResponse getTeacherListForSelect() {
+//        List<Object[]> teacherForSelect = teacherRepository.getTeacherForSelect();
+//        List<ResSelect> resSelects = new ArrayList<>();
+//        if (teacherForSelect.size() > 0)
+//            for (Object o : teacherForSelect) {
+//                ResSelect resSelect = new ResSelect();
+//                Object[] count = (Object[]) o;
+//                resSelect.setName(count[0].toString());
+//                resSelect.setUuid(UUID.fromString(count[0].toString()));
+//                resSelects.add(resSelect);
+//            }
+        List<Teacher> all = teacherRepository.findAll();
+        List<ResSelect> resSelects = new ArrayList<>();
+        for (Teacher teacher : all) {
+            ResSelect resSelect = new ResSelect();
+            resSelect.setName(teacher.getUser().getFullName());
+            resSelect.setUuid(teacher.getId());
+            resSelects.add(resSelect);
+        }
+        return apiResponseService.getResponse(resSelects);
+    }
 
     public ApiResponse getTeacherList(int page, int size) {
         Sort sort;

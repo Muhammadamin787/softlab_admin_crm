@@ -22,7 +22,7 @@ public class GroupController {
     GroupRepository groupRepository;
 
     @PostMapping
-    public HttpEntity<?> saveGroup(@RequestBody GroupDto groupDto)  {
+    public HttpEntity<?> saveGroup(@RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = groupService.saveGroup(groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
@@ -35,8 +35,7 @@ public class GroupController {
 
     @GetMapping
     public HttpEntity<?> getGroupList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size)
-    {
+                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         ApiResponse apiResponse = groupService.getGroupList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }

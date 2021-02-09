@@ -8,7 +8,6 @@ import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -29,7 +28,7 @@ public class Group extends AbsNameEntity {
     private Date startDate;
 
     @OneToMany
-    private Set<WeekdayName> weekdayNames;
+    private Set<Weekday> weekdays;
 
 
 }

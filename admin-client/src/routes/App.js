@@ -22,6 +22,7 @@ import Student from "../pages/adminPages/Student";
 import PayType from "../pages/adminPages/PayType";
 import SelectStudent from "../pages/adminPages/SelectStudent";
 import SelectTeacher from "../pages/adminPages/SelectTeacher";
+import SelectGroup from "../pages/adminPages/SelectGroup";
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/courses" component={CourseCategory}/>
                 <PrivateRoute exact path="/admin/course" component={CourseCategory}/>
                 <PrivateRoute exact path="/admin/groups" component={Group}/>
+                <PrivateRoute exact path="/admin/group/:id" component={SelectGroup}/>
                 <PrivateRoute exact path="/admin/students" component={Student}/>
                 <PrivateRoute exact path="/admin/student/:id" component={SelectStudent}/>
                 {/*<PrivateRoute exact path="/admin/courseCategory/:id" component={CourseCategory}/>*/}

@@ -69,7 +69,7 @@ import {
     editStudentApi,
     saveStudentApi,
     getStudentApi,
-    getTeachersApi,
+    getTeachersApi, getGroupsApi, getTeachersForSelectApi, saveGroupApi, getGroupApi, editGroupApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -354,7 +354,7 @@ export const saveCourseAction = (data) => (dispatch) => {
     })
 }
 // END COURSE TYPE
-// START DURATION TYPE
+// START REGION ACTIONS
 export const getRegionsAction = () => (dispatch) => {
     dispatch({
         api: getRegionApi,
@@ -416,7 +416,90 @@ export const searchRegionAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-//TESTCATEGORY
+// FINISH REGION ACTIONS
+
+// START GROUP ACTIONS
+export const getGroupsAction = (data) => (dispatch) => {
+    dispatch({
+        api: getGroupsApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: getGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUP_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const deleteGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteRegionApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
+        toast.success("Ma'lumot o'chirildi!")
+        dispatch(getRegionsAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+export const saveGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editGroupApi : saveGroupApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_GROUP_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        if (data && data.id) {
+            dispatch(getGroupAction({id: data.id}))
+            dispatch(getRoomListAction())
+            dispatch(getCoursesAction())
+            dispatch(getTeachersForSelectAction())
+        } else {
+            dispatch(getGroupsAction())
+        }
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+export const searchGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: getRegionSearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SEARCH_REGION_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+//TEST CATEGORY
 export const getTestCategoryAction = () => (dispatch) => {
     dispatch({
         api: getTestCategoryApi,
@@ -716,6 +799,16 @@ export const getTeachersAction = (data) => (dispatch) => {
             types.REQUEST_ERROR,
         ],
         data
+    })
+}
+export const getTeachersForSelectAction = (data) => (dispatch) => {
+    dispatch({
+        api: getTeachersForSelectApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHERS_FOR_SELECT_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
     })
 }
 export const getTeacherAction = (data) => (dispatch) => {

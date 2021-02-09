@@ -9,4 +9,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     boolean existsByTeacher_Id(UUID teacher_id);
 
     boolean existsByNameEqualsIgnoreCaseAndCourseId(String name, Integer id);
+    boolean existsByNameEqualsIgnoreCaseAndCourseIdAndIdNot(String name, Integer course_id, Integer id);
 }

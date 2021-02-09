@@ -43,6 +43,12 @@ public class TeacherController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/select")
+    public HttpEntity<?> getTeacherListForSelect() {
+        ApiResponse apiResponse = teacherService.getTeacherListForSelect();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @GetMapping("/{id}")
     public HttpEntity<?> getStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = teacherService.getTeacher(id);
@@ -50,7 +56,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteTeacher(@PathVariable UUID id){
+    public HttpEntity<?> deleteTeacher(@PathVariable UUID id) {
         ApiResponse apiResponse = teacherService.deleteTeacher(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }

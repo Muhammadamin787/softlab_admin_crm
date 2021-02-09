@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,7 +22,7 @@ public class Toplam extends AbsEntity {
     private Teacher teacher;
 
     @OneToMany
-    private Set<WeekdayName> weekdayNames;
+    private Set<Weekday> weekdays;
 
     private String time;
     private boolean active;

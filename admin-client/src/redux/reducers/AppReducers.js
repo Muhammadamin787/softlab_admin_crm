@@ -11,6 +11,7 @@ const initState = {
     profession: [],
     regions: [],
     students: [],
+    groups: [],
     testCategory: [],
     reklamas: [],
     courseCategories: [],
@@ -31,7 +32,6 @@ const initState = {
     specialization: [],
     specializationDto: [],
     currentItem: []
-
 };
 
 const reducers = {
@@ -73,21 +73,30 @@ const reducers = {
         state.showModal = false
     },
     [types.REQUEST_GET_DURATION_TYPE_SUCCESS](state, payload) {
-        console.log(payload)
         state.durationTypes = payload.payload.object.object.sort((a, b) =>
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
 
-    // Profession
-    [types.REQUEST_SAVE_PROFESSION_SUCCESS](state, payload) {
+    // START GROUPS REDUCERS
+    [types.REQUEST_SAVE_GROUP_SUCCESS](state, payload) {
         state.showModal = false;
     },
-    [types.REQUEST_GET_PROFESSION_SUCCESS](state, payload) {
-        state.profession = payload.payload.object.object.sort((a, b) =>
-            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-        );
+    [types.REQUEST_GET_GROUP_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
     },
+    [types.REQUEST_GET_GROUPS_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.groups = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    // FINISH GROUPS REDUCERS
     //region
     [types.REQUEST_SAVE_REGION_SUCCESS](state, payload) {
         state.showModal = false
@@ -228,10 +237,13 @@ const reducers = {
     //// Teacher
 
     [types.REQUEST_SAVE_TEACHER_SUCCESS](state, payload) {
-        state.showModal= false
+        state.showModal = false
     },
     [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
+    },
+    [types.REQUEST_GET_TEACHERS_FOR_SELECT_SUCCESS](state, payload) {
+        state.teachers = payload.payload.object
     },
     [types.REQUEST_GET_TEACHERS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {

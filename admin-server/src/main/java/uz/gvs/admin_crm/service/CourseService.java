@@ -87,8 +87,9 @@ public class CourseService {
             if (categoryId > 0) {
                 List<Course> all = courseRepository.findAllByCourseCategory_id(categoryId);
                 return apiResponseService.getResponse(all.stream().map(this::makeCourseDto).collect(Collectors.toList()));
+            } else {
+                return apiResponseService.getResponse(courseRepository.findAll());
             }
-            return apiResponseService.getResponse("");
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

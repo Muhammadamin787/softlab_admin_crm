@@ -6,9 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
-import uz.gvs.admin_crm.entity.enums.Weekday;
+import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.GroupDto;
+import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ResGroupDto;
 import uz.gvs.admin_crm.repository.*;
 
@@ -29,7 +30,7 @@ public class GroupService {
     @Autowired
     RoomRepository roomRepository;
     @Autowired
-    WeekdayNameRepository weekdayNameRepository;
+    WeekdayRepository weekdayRepository;
 
     public Group makeGroup(GroupDto groupDto) {
         try {
@@ -46,11 +47,12 @@ public class GroupService {
             group.setStartDate(groupDto.getStartDate() != null ? formatter.parse(groupDto.getStartDate()) : null);
             group.setFinishDate(groupDto.getFinishDate() != null ? formatter.parse(groupDto.getFinishDate()) : null);
 
-            Set<WeekdayName> weekdayNameSet = new HashSet<>();
+            Set<Weekday> weekdayNameSet = new HashSet<>();
             for (String weekday : groupDto.getWeekdays()) {
-                weekdayNameSet.add(weekdayNameRepository.findByWeekday(Weekday.valueOf(weekday)));
+                Optional<Weekday> byWeekday = weekdayRepository.findByWeekdayName(WeekdayName.valueOf(weekday));
+                weekdayNameSet.add(byWeekday.get());
             }
-            group.setWeekdayNames(weekdayNameSet);
+            group.setWeekdays(weekdayNameSet);
             groupRepository.save(group);
             return group;
         } catch (Exception e) {
@@ -72,18 +74,19 @@ public class GroupService {
         groupDto.setStartDate(group.getStartDate().toString());
         groupDto.setFinishDate(group.getFinishDate().toString());
         Set<String> stringSet = new HashSet<>();
-        for (WeekdayName weekdayName : group.getWeekdayNames()) {
-            stringSet.add(weekdayName.toString());
+
+        for (Weekday weekday : group.getWeekdays()) {
+            stringSet.add(weekday.getWeekdayName().name);
         }
         groupDto.setWeekdays(stringSet);
         return groupDto;
     }
 
-    public Object makeGroupTable(Group group){
+    public Object makeGroupTable(Group group) {
         try {
             List<String> stringSet = new ArrayList<>();
-            for (WeekdayName weekdayName : group.getWeekdayNames()) {
-                stringSet.add(weekdayName.toString());
+            for (Weekday weekday : group.getWeekdays()) {
+                stringSet.add(weekday.getWeekdayName().name);
             }
             return new ResGroupDto(
                     group.getId(),
@@ -96,13 +99,13 @@ public class GroupService {
                     group.getStartDate(),
                     group.getFinishDate()
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }
 
     public ApiResponse saveGroup(GroupDto groupDto) {
-        if (groupRepository.existsByNameEqualsIgnoreCaseAndCourseId(groupDto.getName(), groupDto.getCourseId())) {
+        if (!groupRepository.existsByNameEqualsIgnoreCaseAndCourseId(groupDto.getName(), groupDto.getCourseId())) {
             if (groupDto.getName() != null || groupDto.getCourseId() != null || groupDto.getTeacherId() != null) {
                 if (makeGroup(groupDto) != null) {
                     return apiResponseService.saveResponse();
@@ -130,7 +133,12 @@ public class GroupService {
         try {
             Page<Group> all = null;
             all = groupRepository.findAll(PageRequest.of(page, size));
-            return apiResponseService.getResponse(all.stream().map(this::makeGroupTable).collect(Collectors.toList()));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(), all.stream().map(this::makeGroupTable).collect(Collectors.toList())));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
@@ -138,32 +146,36 @@ public class GroupService {
 
     public ApiResponse editGroup(GroupDto groupDto, Integer id) {
         try {
-        Optional<Group> optional = groupRepository.findById(id);
-        Group group = optional.get();
-        if (groupRepository.existsByNameEqualsIgnoreCaseAndCourseId(groupDto.getName(), groupDto.getCourseId())){
-            if (groupDto.getName() != null || groupDto.getCourseId() != null || groupDto.getTeacherId() != null) {
-                group.setName(groupDto.getName());
-                group.setDescription(groupDto.getDescription());
-                group.setActive(groupDto.isActive());
-                group.setTeacher(teacherRepository.findById(groupDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get teacher")));
-                group.setStartTime(groupDto.getStartTime());
-                group.setFinishTime(groupDto.getFinishTime());
-                group.setCourse(courseRepository.findById(groupDto.getCourseId()).orElseThrow(() -> new ResourceNotFoundException("get course")));
-                group.setRoom(roomRepository.findById(groupDto.getRoomId()).orElseThrow(() -> new ResourceNotFoundException("get room")));
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                group.setStartDate(groupDto.getStartDate() != null ? formatter.parse(groupDto.getStartDate()) : null);
-                group.setFinishDate(groupDto.getFinishDate() != null ? formatter.parse(groupDto.getFinishDate()) : null);
+            Optional<Group> optional = groupRepository.findById(id);
+            Group group = optional.get();
+            if (!groupRepository.existsByNameEqualsIgnoreCaseAndCourseIdAndIdNot(groupDto.getName(), groupDto.getCourseId(), id)) {
+                if (groupDto.getName() != null || groupDto.getCourseId() != null || groupDto.getTeacherId() != null) {
+                    group.setName(groupDto.getName());
+                    group.setDescription(groupDto.getDescription());
+                    group.setActive(groupDto.isActive());
+                    group.setTeacher(teacherRepository.findById(groupDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get teacher")));
+                    group.setStartTime(groupDto.getStartTime());
+                    group.setFinishTime(groupDto.getFinishTime());
+                    group.setCourse(courseRepository.findById(groupDto.getCourseId()).orElseThrow(() -> new ResourceNotFoundException("get course")));
+                    group.setRoom(roomRepository.findById(groupDto.getRoomId()).orElseThrow(() -> new ResourceNotFoundException("get room")));
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    group.setStartDate(groupDto.getStartDate() != null ? formatter.parse(groupDto.getStartDate()) : null);
+                    group.setFinishDate(groupDto.getFinishDate() != null ? formatter.parse(groupDto.getFinishDate()) : null);
 
-                Set<WeekdayName> weekdayNameSet = new HashSet<>();
-                for (String weekday : groupDto.getWeekdays()) {
-                    weekdayNameSet.add(weekdayNameRepository.findByWeekday(Weekday.valueOf(weekday)));
+                    Set<Weekday> weekdayNameSet = new HashSet<>();
+                    for (String weekday : groupDto.getWeekdays()) {
+                        Optional<Weekday> byWeekday = weekdayRepository.findByWeekdayName(WeekdayName.valueOf(weekday));
+                        weekdayNameSet.add(byWeekday.get());
+                    }
+                    group.setWeekdays(weekdayNameSet);
+                    groupRepository.save(group);
+                    return apiResponseService.updatedResponse();
                 }
-                group.setWeekdayNames(weekdayNameSet);
-                groupRepository.save(group);
-            } return apiResponseService.notEnoughErrorResponse();
+                return apiResponseService.notEnoughErrorResponse();
+            }
+            return apiResponseService.existResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
-        return apiResponseService.existResponse();
-    }catch (Exception e){
-        return apiResponseService.tryErrorResponse();
-        }
-}}
+    }
+}

@@ -3,9 +3,6 @@ package uz.gvs.admin_crm.payload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.Set;
-import uz.gvs.admin_crm.entity.WeekdayName;
-import uz.gvs.admin_crm.entity.enums.Weekday;
 
 import java.util.Date;
 import java.util.List;
