@@ -153,9 +153,9 @@
     //-webkit-mask-image: url("../../public/assets/icons/discount.svg");
   }
 
-  &.icon-blog {
-    //mask-image: url("../../public/assets/icons/blog.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/blog.svg");
+  &.icon-wallet {
+    mask-image: url("icons/wallet.svg");
+    -webkit-mask-image: url("icons/wallet.svg");
   }
 }
 
