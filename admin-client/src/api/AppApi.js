@@ -63,7 +63,7 @@ export const deleteDurationTypeApi = (data) => {
 }
 // END DURATION TYPE
 
-// START COURSE
+// START COURSE API
 export const saveCourseApi = (data) => {
     return HttpClient.doPost(api.course, data)
 }
@@ -79,7 +79,7 @@ export const getCourseApi = (data) => {
 export const deleteCourseApi = (data) => {
     return HttpClient.doDelete(api.course + "/" + data.id)
 }
-// END DURATION TYPE
+// END COURSE API
 
 // START REGION TYPE
 export const saveRegionApi = (data) => {
@@ -98,7 +98,23 @@ export const deleteRegionApi = (data) => {
     return HttpClient.doDelete(api.region + "/" + data.id)
 }
 // END REGION
-
+// START GROUP API
+export const getGroupsApi = (data) => {
+    return HttpClient.doGet(api.group + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
+}
+export const getGroupApi = (data) => {
+    return HttpClient.doGet(api.group + (data && data.id ? "/" + data.id : ""))
+}
+export const saveGroupApi = (data) => {
+    return HttpClient.doPost(api.group, data)
+}
+export const editGroupApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doPut(api.group + "/" + data.id, data)
+    else return null
+}
+// FINISH GROUP API
 //// For Profession
 
 export const saveProfessionApi = (data) => {
@@ -204,6 +220,9 @@ export const editTeacherApi = (data) => {
 export const getTeachersApi = (data) => {
     return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
+}
+export const getTeachersForSelectApi = () => {
+    return HttpClient.doGet(api.teacher + "/select")
 }
 export const getTeacherApi = (data) => {
     if (data && data.id)
