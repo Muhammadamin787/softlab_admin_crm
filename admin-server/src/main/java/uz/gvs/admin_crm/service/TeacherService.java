@@ -107,6 +107,11 @@ public class TeacherService {
            return apiResponseService.tryErrorResponse();
        }
     }
+
+    public ApiResponse deleteTeacher(UUID id) {
+
+        return null;
+    }
 }
 /////
 
