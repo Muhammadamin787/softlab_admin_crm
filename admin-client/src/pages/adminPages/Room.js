@@ -54,15 +54,19 @@ class Room extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Room</h1>
-                    <Button color={"success"} onClick={() => openModal('add')} className={"mb-2"}>Qo'shish</Button>
+                    <h1>Xonalar</h1>
+                    <div align={"right"}>
+                        <Button color={"success"} onClick={() => openModal('add')} className={"mb-2 add-button px-4"}>Yangisini
+                            qo'shish
+                        </Button>
+                    </div>
                     <Table className={"table-style"}>
                         <thead className={""}>
                         <tr className={"text-center"}>
                             <th>№</th>
-                            <th>Name</th>
-                            <th>Active</th>
-                            <th>Action</th>
+                            <th>Nomi</th>
+                            <th>Holati</th>
+                            <th>Amal</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -84,18 +88,18 @@ class Room extends Component {
                         </tbody>
                     </Table>
 
-                    <Modal isOpen={showModal} toggle={openModal} className={""}>
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                {currentObject ? "Tahrirlash" : "Qo'shish"}
+                                {currentObject ? "Xonani tahrirlash" : "Yangi xona qo'shish"}
                             </ModalHeader>
                             <ModalBody>
-                                <div className={"w-100"}>
+                                <div className={"w-100 modal-form"}>
                                     <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
                                              label={"Nomi"} id={'name'} name={"name"} className={"form-control"}
                                              placeholer={"nomi"} autofocus required/>
                                     <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
-                                             label={"Active"} name={"active"}/>
+                                             label={"Holati"} name={"active"}/>
                                 </div>
                             </ModalBody>
                             <ModalFooter>
@@ -105,15 +109,15 @@ class Room extends Component {
                         </AvForm>
                     </Modal>
 
-                    <Modal isOpen={this.state.showDeleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                         <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
                             Rostdan ham ushbu elementni o'chirishni istaysizmi?
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => openDeleteModal("")}>Bekor qilish</Button>
-                            <Button color="danger" onClick={deleteItem}>O'chirish</Button>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
