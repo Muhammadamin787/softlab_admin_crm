@@ -69,7 +69,7 @@ class AdminLayout extends Component {
                                     Guruhlar
                                 </div>
                             </Link>
-                            <Link to="/admin/teacher" className={
+                            <Link to="/admin/teachers" className={
                                 this.props.pathname === "/admin/teacher" ?
                                     "active-link" : "default-link"
                             }>

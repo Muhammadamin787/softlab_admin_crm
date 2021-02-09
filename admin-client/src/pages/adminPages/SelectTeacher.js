@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction,
+    deleteCourseAction, deleteTeacherAction,
     getPayTypeListAction,
     getRegionsAction,
     getStudentAction,
@@ -36,17 +36,17 @@ class SelectTeacher extends Component {
     }
 
     render() {
-        const {currentObject, showPaymentModal} = this.state;
+        const {currentObject} = this.state;
         const {
             dispatch,
             showModal,
             deleteModal,
             currentItem,
             regions,
-            payTypes
         } = this.props;
         const openModal = (item) => {
-            this.setState({currentObject: item, showPaymentModal: false})
+            console.log(item);
+            this.setState({currentObject: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -54,15 +54,7 @@ class SelectTeacher extends Component {
                 }
             })
         }
-        const openPaymentModal = (item) => {
-            this.setState({currentObject: item, showPaymentModal: !showPaymentModal})
-            dispatch({
-                type: "updateState",
-                payload: {
-                    showModal: !showModal
-                }
-            })
-        }
+
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -73,28 +65,28 @@ class SelectTeacher extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteCourseAction(item))
+            dispatch(deleteTeacherAction(item))
         }
         const saveItem = (e, v) => {
-            if (currentObject) {
+            if (currentObject && currentObject.id && currentObject.userDto) {
+                console.log(currentObject);
                 v.id = currentObject.id
-                console.clear();
-                console.log(v);
+                let teacherDto;
+                teacherDto = {userDto: ""}
+                teacherDto.userDto = {
+                    id: currentObject.userDto.id,
+                    fullName: v.fullName,
+                    gender: v.gender,
+                    phoneNumber: v.phoneNumber,
+                    // avatarId: attachmentId,
+                    regionId: v.regionId,
+                    description: v.description,
+                    birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                }
+                teacherDto.id = currentObject.id
+                dispatch(saveTeacherAction(teacherDto))
             }
-            let teacherDto;
-            teacherDto = {userDto: ""}
-            teacherDto.userDto = {
-                id: v.id,
-                fullName: v.fullName,
-                gender: v.gender,
-                phoneNumber: v.phoneNumber,
-                // avatarId: attachmentId,
-                regionId: v.regionId,
-                description: v.description,
-                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
-            }
-            teacherDto.id = currentObject.id
-            dispatch(saveTeacherAction(teacherDto))
+
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -108,8 +100,11 @@ class SelectTeacher extends Component {
                             className={""}> O'qituvchilar</span>
                         </Link>
                     </hgroup>
+                    {
+                        console.log(currentItem)
+                    }
                     <div className="row">
-                        {currentItem && currentItem.id ?
+                        {currentItem.id && currentItem.id ?
                             <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                 <div className="row">
                                     <div className="col-8">
@@ -127,7 +122,7 @@ class SelectTeacher extends Component {
                                         </hgroup>
                                         <hgroup>
                                             <small className={"text-secondary"}>Manzil: </small>
-                                            <p className={"d-inline"}>{currentItem.userDto &&currentItem.userDto.region && currentItem.region.name}</p>
+                                            <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
                                         </hgroup>
 
                                         <hgroup>
@@ -138,12 +133,7 @@ class SelectTeacher extends Component {
                                             <small className={"text-secondary"}>Tavsif: </small>
                                             <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
                                         </hgroup>
-                                        <div className="button-block">
-                                            <Button className="table-icon px-2"
-                                                    onClick={() => openPaymentModal(currentItem)}>
-                                                <span className="icon icon-wallet bg-success "/>
-                                            </Button>
-                                        </div>
+
                                     </div>
                                     <div className="col-4 button-block">
                                         <Button className="table-icon" onClick={() => openModal(currentItem)}>
