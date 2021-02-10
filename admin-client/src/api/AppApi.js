@@ -114,6 +114,9 @@ export const editGroupApi = (data) => {
         return HttpClient.doPut(api.group + "/" + data.id, data)
     else return null
 }
+export const deleteGroupApi = (data) => {
+    return HttpClient.doDelete(api.group + "/" + data.id)
+}
 // FINISH GROUP API
 //// For Profession
 

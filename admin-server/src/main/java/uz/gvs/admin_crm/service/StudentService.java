@@ -12,6 +12,7 @@ import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.StudentDto;
 import uz.gvs.admin_crm.payload.UserDto;
+import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
@@ -33,6 +34,8 @@ public class StudentService {
     UserService userService;
     @Autowired
     RegionRepository regionRepository;
+    @Autowired
+    GroupRepository groupRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -130,4 +133,24 @@ public class StudentService {
                 student.getStudentGroup()
         );
     }
+
+    public ApiResponse deleteStudent(UUID id) {
+        try {
+            Optional<Student> byId = studentRepository.findById(id);
+            if (byId.isPresent()) {
+                Student student = byId.get();
+                if (student.getStudentGroup() != null && student.getStudentGroup().size() > 0) {
+                    return apiResponseService.errorResponse();
+                } else {
+                    studentRepository.deleteById(id);
+                    userRepository.deleteById(student.getId());
+                    return apiResponseService.deleteResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
 }

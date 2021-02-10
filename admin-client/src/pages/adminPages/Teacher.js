@@ -84,7 +84,6 @@ class Teacher extends Component {
             if (currentObject) {
                 v.id = currentObject.id
                 console.clear();
-                console.log(v);
             }
             let teacherDto;
             teacherDto = {userDto: ""}
@@ -134,9 +133,6 @@ class Teacher extends Component {
                                 </td>
                                 <td>{item.userDto && item.userDto.phoneNumber}</td>
                                 <td>
-                                    <Button className="table-icon" onClick={() => openModal(item)}>
-                                        <EditIcon/>
-                                    </Button>
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>
