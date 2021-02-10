@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction,
+    deleteCourseAction, deleteGroupAction,
     getCoursesAction,
     getGroupAction,
     getRoomListAction,
@@ -77,7 +77,7 @@ class SelectGroup extends Component {
         const deleteItem = (item) => {
             if (this.props.match && this.props.match.params && this.props.match.params.id) {
                 let id = this.props.match.params.id;
-                // dispatch(deleteCourseAction({...item, history: history, courseCategoryId: id}))
+                dispatch(deleteGroupAction({...item, history: history, courseCategoryId: id}))
             }
         }
         const saveItem = (e, v) => {
@@ -182,16 +182,26 @@ class SelectGroup extends Component {
                                         ) : ""}
                                     </AvField>
 
-                                    <AvCheckboxGroup defaultChecked={["MONDAY", "TUESDAY"]} inline name="weekdays"
+                                    <AvCheckboxGroup inline name="weekdays"
                                                      label="Dars kunlari" required>
                                         <AvCheckbox label="Dush"
-                                                    value="MONDAY"/>
-                                        <AvCheckbox label="Sesh" value="TUESDAY"/>
-                                        <AvCheckbox label="Chor" value="WEDNESDAY"/>
-                                        <AvCheckbox label="Pay" value="THURSDAY"/>
-                                        <AvCheckbox label="Ju" value="FRIDAY"/>
-                                        <AvCheckbox label="Shan" value="SATURDAY"/>
-                                        <AvCheckbox label="Yak" value="SUNDAY"/>
+                                                    value="MONDAY"
+                                            // defaultChecked={true}
+                                                    defaultValue={true}
+                                            // checked={currentObject && currentObject.weekdays.some(item => "MONDAY")}
+                                        />
+                                        <AvCheckbox label="Sesh" value="TUESDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "TUESDAY")}/>
+                                        <AvCheckbox label="Chor" value="WEDNESDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "WEDNESDAY")}/>
+                                        <AvCheckbox label="Pay" value="THURSDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "THURSDAY")}/>
+                                        <AvCheckbox label="Ju" value="FRIDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "FRIDAY")}/>
+                                        <AvCheckbox label="Shan" value="SATURDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "SATURYDAY")}/>
+                                        <AvCheckbox label="Yak" value="SUNDAY"
+                                                    checked={currentObject && currentObject.weekdays.some(item => "SUNDAY")}/>
                                     </AvCheckboxGroup>
 
                                     <AvField className={'form-control'} label={"Xona:"} type="select"

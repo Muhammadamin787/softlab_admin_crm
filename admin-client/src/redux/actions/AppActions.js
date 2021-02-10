@@ -69,7 +69,14 @@ import {
     editStudentApi,
     saveStudentApi,
     getStudentApi,
-    getTeachersApi, getGroupsApi, getTeachersForSelectApi, saveGroupApi, getGroupApi, editGroupApi,
+    getTeachersApi,
+    getGroupsApi,
+    getTeachersForSelectApi,
+    saveGroupApi,
+    getGroupApi,
+    editGroupApi,
+    deleteGroupApi,
+    deleteStudentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -443,7 +450,7 @@ export const getGroupAction = (data) => (dispatch) => {
 }
 export const deleteGroupAction = (data) => (dispatch) => {
     dispatch({
-        api: deleteRegionApi,
+        api: deleteGroupApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
@@ -458,9 +465,19 @@ export const deleteGroupAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        dispatch(getRegionsAction())
+        data.history.go(-1)
+        this.props.dispatch(getGroupsAction({page: 0, size: 20}))
+        this.props.dispatch(getRoomListAction())
+        this.props.dispatch(getCoursesAction())
+        this.props.dispatch(getTeachersForSelectAction())
     }).catch((err) => {
         toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
     })
 }
 export const saveGroupAction = (data) => (dispatch) => {
@@ -787,6 +804,39 @@ export const saveStudentAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
+export const deleteStudentAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteStudentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
+        toast.success("Ma'lumot o'chirildi!")
+        if (data && data.history) {
+            data.history.go(-1)
+        }
+        dispatch(getStudentsAction())
+        dispatch(getRegionsAction())
+
+    }).catch((err) => {
+        toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
+    })
+}
 // FINISH STUDENT ACTION
 // START TEACHER ACTION
 
@@ -857,12 +907,20 @@ export const deleteTeacherAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 deleteModal: false,
-                trialContactType: ''
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        dispatch(getTeacherAction())
+        if (data && data.history) {
+            data.history.go(-1)
+        }
+        dispatch(getTeachersAction())
     }).catch((err) => {
         toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
     })
 }

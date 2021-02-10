@@ -2,7 +2,13 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, getPayTypeListAction, getRegionsAction, getStudentAction, saveCourseAction, saveStudentAction,
+    deleteCourseAction,
+    deleteStudentAction,
+    getPayTypeListAction,
+    getRegionsAction,
+    getStudentAction,
+    saveCourseAction,
+    saveStudentAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -32,6 +38,7 @@ class SelectStudent extends Component {
     render() {
         const {currentObject, showPaymentModal} = this.state;
         const {
+            history,
             dispatch,
             showModal,
             deleteModal,
@@ -67,7 +74,7 @@ class SelectStudent extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteCourseAction(item))
+            dispatch(deleteStudentAction({...item, history: history}))
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {

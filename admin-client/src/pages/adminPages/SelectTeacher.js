@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, deleteTeacherAction,
+    deleteCourseAction, deleteGroupAction, deleteTeacherAction,
     getPayTypeListAction,
     getRegionsAction,
     getStudentAction,
@@ -38,6 +38,7 @@ class SelectTeacher extends Component {
     render() {
         const {currentObject} = this.state;
         const {
+            history,
             dispatch,
             showModal,
             deleteModal,
@@ -65,11 +66,10 @@ class SelectTeacher extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteTeacherAction(item))
+                dispatch(deleteTeacherAction({...item, history: history}))
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id && currentObject.userDto) {
-                console.log(currentObject);
                 v.id = currentObject.id
                 let teacherDto;
                 teacherDto = {userDto: ""}

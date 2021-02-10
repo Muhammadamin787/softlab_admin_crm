@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {ModalHeader, Modal, Button, ModalBody, Table, ModalFooter} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
+    deleteStudentAction,
     deleteTeacherAction,
     getRegionsAction, getStudentsAction,
     saveStudentAction,
@@ -65,7 +66,7 @@ class Student extends Component {
             })
         }
         const deleteItem = (item) => {
-            dispatch(deleteTeacherAction(item))
+            dispatch(deleteStudentAction(item))
         }
         const multiChange = (e, v) => {
             let specList = []
@@ -204,6 +205,17 @@ class Student extends Component {
                                 <Button color="primary">Saqlash</Button>
                             </ModalFooter>
                         </AvForm>
+                    </Modal>
+                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                        <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                        </ModalFooter>
                     </Modal>
                 </div>
             </AdminLayout>
