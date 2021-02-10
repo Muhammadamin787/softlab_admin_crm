@@ -101,7 +101,7 @@ class SelectGroup extends Component {
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                            <div className={"m-2 p-3 bg-white rounded col-md-5 col-10"}>
                                 <div className="row">
                                     <div className="col-8">
                                         <hgroup>
@@ -146,6 +146,15 @@ class SelectGroup extends Component {
                                         <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
                                             <DeleteIcon/>
                                         </Button>
+                                    </div>
+                                </div>
+                                <div className={"student-list border-top p-3"}>
+                                    <div className={"row"}>
+                                        <div className="col">Talaba talabyev</div>
+                                        <div className="col">(90) 123-45-67</div>
+                                        <div className="col">
+                                            <Button align="right" color={"warning rounded"} className={""}>...</Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

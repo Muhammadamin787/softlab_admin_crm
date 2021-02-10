@@ -103,6 +103,9 @@ export const getGroupsApi = (data) => {
     return HttpClient.doGet(api.group + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
+export const getGroupsForSelectApi = () => {
+    return HttpClient.doGet(api.group + "/select")
+}
 export const getGroupApi = (data) => {
     return HttpClient.doGet(api.group + (data && data.id ? "/" + data.id : ""))
 }
@@ -209,6 +212,9 @@ export const getStudentApi = (data) => {
 }
 export const deleteStudentApi = (data) => {
     return HttpClient.doDelete(api.student + "/" + data.id)
+}
+export const studentAddGroup = (data) => {
+    return HttpClient.doPost(api.group + "/addStudent", data)
 }
 // FINISH STUDENT API
 
