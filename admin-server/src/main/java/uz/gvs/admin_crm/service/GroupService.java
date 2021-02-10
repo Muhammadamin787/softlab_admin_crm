@@ -6,11 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
+import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.GroupDto;
-import uz.gvs.admin_crm.payload.PageableDto;
-import uz.gvs.admin_crm.payload.ResGroupDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +29,10 @@ public class GroupService {
     RoomRepository roomRepository;
     @Autowired
     WeekdayRepository weekdayRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    StudentGroupRepository studentGroupRepository;
 
     public Group makeGroup(GroupDto groupDto) {
         try {
@@ -127,6 +129,54 @@ public class GroupService {
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
+    }
+
+    public ApiResponse addStudentForGroup(AddGroupDto addGroupDto) {
+        try {
+            Optional<Group> byId = groupRepository.findById(addGroupDto.getGroupId());
+            Optional<Student> byId1 = studentRepository.findById(addGroupDto.getStudentId());
+            if (byId.isPresent() && byId1.isPresent()) {
+                Student student = byId1.get();
+                Group group = byId.get();
+                Set<StudentGroup> studentGroup = student.getStudentGroup();
+                if (studentGroup != null && studentGroup.size() > 0) {
+                    for (StudentGroup studentGroup1 : studentGroup) {
+                        if (studentGroup1.getGroup().getId().equals(group.getId()))
+                            return apiResponseService.existResponse();
+                    }
+                }
+                StudentGroup newStudentGroup = new StudentGroup();
+                newStudentGroup.setGroup(group);
+                newStudentGroup.setStudentGroupStatus(StudentGroupStatus.TEST_LESSON);
+                studentGroupRepository.save(newStudentGroup);
+                studentGroup.add(newStudentGroup);
+                student.setStudentGroup(studentGroup);
+                studentRepository.save(student);
+                return apiResponseService.saveResponse();
+            } else
+                return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getGroupsForSelect() {
+        try {
+
+            List<Group> all = groupRepository.findAll();
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Group group : all) {
+                ResSelect resSelect = new ResSelect();
+                resSelect.setId(group.getId());
+                resSelect.setName("[" + group.getName() + "]" + group.getCourse().getName() + "  (" + group.getTeacher().getUser().getFullName() + " - " +
+                        group.getStartTime() + ") ");
+                resSelects.add(resSelect);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
     }
 
     public ApiResponse getGroupList(int page, int size) {

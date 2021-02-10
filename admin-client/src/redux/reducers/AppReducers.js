@@ -23,6 +23,7 @@ const initState = {
     totalPages: 0,
     parentItems: [],
     readModal: false,
+    showAddGroupModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
@@ -84,6 +85,15 @@ const reducers = {
     },
     [types.REQUEST_GET_GROUP_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
+
+    },
+    [types.REQUEST_GET_GROUPS_FOR_SELECT_SUCCESS](state, payload) {
+        let groupsForSelect = payload.payload.object
+        let ketmon = []
+        for (let i = 0; i < groupsForSelect.length; i++) {
+            ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
+        }
+        state.getItems = ketmon
     },
     [types.REQUEST_GET_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {

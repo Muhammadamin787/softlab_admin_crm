@@ -76,7 +76,7 @@ import {
     getGroupApi,
     editGroupApi,
     deleteGroupApi,
-    deleteStudentApi,
+    deleteStudentApi, getGroupsForAddApi, getGroupsForSelectApi, studentAddGroup,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -437,6 +437,17 @@ export const getGroupsAction = (data) => (dispatch) => {
         data
     })
 }
+export const getGroupsForSelectAction = (data) => (dispatch) => {
+    dispatch({
+        api: getGroupsForSelectApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_FOR_SELECT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
 export const getGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupApi,
@@ -465,7 +476,9 @@ export const deleteGroupAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        data.history.go(-1)
+        if (data && data.id) {
+            data.history.go(-1)
+        }
         this.props.dispatch(getGroupsAction({page: 0, size: 20}))
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getCoursesAction())
@@ -833,6 +846,34 @@ export const deleteStudentAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 deleteModal: false,
+            }
+        })
+    })
+}
+export const studentAddGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: studentAddGroup,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                showAddGroupModal: false,
+            }
+        })
+        toast.success("Talaba guruhga qo'shildi!")
+        dispatch(getStudentAction(data.student))
+    }).catch((err) => {
+        toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                showAddGroupModal: false,
             }
         })
     })

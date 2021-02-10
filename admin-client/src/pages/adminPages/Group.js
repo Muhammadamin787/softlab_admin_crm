@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
+    deleteGroupAction,
     deleteRegionAction, getCoursesAction, getGroupsAction,
     getRoomListAction, getTeachersForSelectAction, saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon, EditIcon} from "../../component/Icons";
+import {DeleteIcon} from "../../component/Icons";
 import moment from "moment";
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
@@ -67,12 +68,7 @@ class Group extends Component {
             })
         }
         const deleteItem = (item) => {
-            // dispatch(deleteRegionAction(item))
-        }
-        const parentRegion = (e, v) => {
-            if (e && e.value) {
-                this.setState({selectParentRegion: e.value})
-            }
+            dispatch(deleteGroupAction({...item}))
         }
         const saveItem = (e, v) => {
             v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
@@ -119,9 +115,6 @@ class Group extends Component {
                                     moment(item.finishDate).format("DD-mm-yyyy")
                                 }</td>
                                 <td>
-                                    <Button className="table-icon" onClick={() => openModal(item)}>
-                                        <EditIcon/>
-                                    </Button>
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>

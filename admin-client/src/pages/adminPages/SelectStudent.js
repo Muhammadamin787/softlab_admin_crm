@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction,
-    deleteStudentAction,
+    deleteStudentAction, getGroupsForAddAction, getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
     getStudentAction,
-    saveCourseAction,
-    saveStudentAction,
+    saveStudentAction, studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -17,6 +15,7 @@ import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
+import Select from "react-select";
 
 class SelectStudent extends Component {
     componentDidMount() {
@@ -26,18 +25,23 @@ class SelectStudent extends Component {
             this.props.dispatch(getStudentAction({id: id}))
         }
         this.props.dispatch(getRegionsAction())
+        this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
     }
 
     state = {
         showModal: false,
         showPaymentModal: false,
-        currentObject: ""
+        currentObject: "",
+        addGroup: ""
     }
 
     render() {
-        const {currentObject, showPaymentModal} = this.state;
+        const {currentObject, showPaymentModal, addGroup} = this.state;
         const {
+            getItems,
+            selectItems,
+            showAddGroupModal,
             history,
             dispatch,
             showModal,
@@ -64,6 +68,15 @@ class SelectStudent extends Component {
                 }
             })
         }
+        const openAddGroupModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showAddGroupModal: !showAddGroupModal
+                }
+            })
+        }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -75,6 +88,19 @@ class SelectStudent extends Component {
         }
         const deleteItem = (item) => {
             dispatch(deleteStudentAction({...item, history: history}))
+        }
+        const getAddGroup = (e, v) => {
+            if (e && e.value) {
+                this.setState({addGroup: e.value})
+            }
+        }
+        const saveAddGroup = (e, v) => {
+            if (currentObject && currentObject.id && addGroup)
+                dispatch(studentAddGroupAction({
+                    studentId: currentObject.id,
+                    groupId: addGroup,
+                    student: currentObject
+                }))
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
@@ -97,50 +123,74 @@ class SelectStudent extends Component {
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
-                                <div className="row">
-                                    <div className="col-8">
-                                        <hgroup>
-                                            <small className={"text-secondary"}>FISH: </small>
-                                            <p className={"d-inline"}> {currentItem.fullName}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Telefon raqam: </small>
-                                            <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Balans: </small>
-                                            <p className={"d-inline"}> {currentItem.balans} UZS</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Tug'ilgan sana: </small>
-                                            <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Manzil: </small>
-                                            <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Tavsif: </small>
-                                            <p className={"d-inline"}> {currentItem.description}</p>
-                                        </hgroup>
-                                        <div className="button-block">
-                                            <Button className="table-icon px-2"
-                                                    onClick={() => openPaymentModal(currentItem)}>
-                                                <span className="icon icon-wallet bg-success "/>
+                            <>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                    <div className="row">
+                                        <div className="col-8">
+                                            <hgroup>
+                                                <small className={"text-secondary"}>FISH: </small>
+                                                <p className={"d-inline"}> {currentItem.fullName}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Balans: </small>
+                                                <p className={"d-inline"}> {currentItem.balans} UZS</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Manzil: </small>
+                                                <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                <p className={"d-inline"}> {currentItem.description}</p>
+                                            </hgroup>
+                                            <div className="button-block">
+                                                <Button className="table-icon px-2"
+                                                        onClick={() => openAddGroupModal(currentItem)}>
+                                                    <span className="icon icon-wallet bg-primary "/>
+                                                </Button>
+                                                <Button className="table-icon px-2"
+                                                        onClick={() => openPaymentModal(currentItem)}>
+                                                    <span className="icon icon-wallet bg-success "/>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div className="col-4 button-block">
+                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                                <EditIcon className="button-icon"/>
+                                            </Button>
+                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
+                                                <DeleteIcon className="button-icon"/>
                                             </Button>
                                         </div>
                                     </div>
-                                    <div className="col-4 button-block">
-                                        <Button className="table-icon" onClick={() => openModal(currentItem)}>
-                                            <EditIcon className="button-icon"/>
-                                        </Button>
-                                        <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
-                                            <DeleteIcon className="button-icon"/>
-                                        </Button>
+                                </div>
+                                <div className={"col-md-4"}>
+                                    <h4>Guruhlar</h4>
+                                    <div className={"w-100 m-2 mt-0 bg-white"}>
+                                        {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
+                                            <Row key={i} className={"p-2"}>
+                                                <Col>
+                                                    <p className={"d-inline"}> {item.group && item.group.name}</p>
+                                                </Col>
+                                                <Col>
+                                                    <p className={"d-inline"}>{item.group && item.group.course && item.group.course.name}</p>
+                                                </Col>
+                                                <Col>
+                                                    <p className={"d-inline"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                </Col>
+                                            </Row>
+                                        )}
                                     </div>
                                 </div>
-                            </div>
+                            </>
                             : ""}
                     </div>
                 </div>
@@ -225,6 +275,29 @@ class SelectStudent extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+                <Modal isOpen={showAddGroupModal} toggle={openAddGroupModal} className={""}>
+                    <AvForm className={""} onValidSubmit={saveAddGroup}>
+                        <ModalHeader isOpen={showAddGroupModal} toggle={openAddGroupModal} charCode="X">
+                            Talabani guruhga qo'shish
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100"}>
+                                <Select
+                                    placeholder="Guruhni tanlang..."
+                                    name="regionId"
+                                    isSearchable={true}
+                                    options={getItems}
+                                    onChange={getAddGroup}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary add-button">Guruhga qo'shish</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
                 <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>
@@ -246,6 +319,8 @@ SelectStudent.propTypes = {};
 
 export default connect(({
                             app: {
+                                selectItems,
+                                showAddGroupModal,
                                 payTypes,
                                 currentItem,
                                 loading,
@@ -258,6 +333,8 @@ export default connect(({
                                 readModal
                             },
                         }) => ({
+        selectItems,
+        showAddGroupModal,
         payTypes,
         currentItem,
         loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal
