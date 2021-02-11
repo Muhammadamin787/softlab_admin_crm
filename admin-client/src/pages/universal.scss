@@ -258,3 +258,40 @@
     }
   }
 }
+
+//select group page css
+.student-list {
+  font-size: 14px;
+  font-family: Nunito, sans-serif;
+  border-radius: 5px;
+
+  .more-button {
+    background-color: #EE8033;
+    border: none;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+
+//select student page css
+.student-group-block {
+  font-size: 13px;
+  font-family: Nunito, sans-serif;
+  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  .group-name {
+    background-color: #cccccc;
+    border-radius: 3px;
+    padding: 5px;
+  }
+
+}

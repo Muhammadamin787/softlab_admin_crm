@@ -83,6 +83,9 @@ const reducers = {
     [types.REQUEST_SAVE_GROUP_SUCCESS](state, payload) {
         state.showModal = false;
     },
+    [types.REQUEST_GET_GROUP_STUDENTS_SUCCESS](state, payload) {
+        state.students = payload.payload.object
+    },
     [types.REQUEST_GET_GROUP_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
 

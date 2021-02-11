@@ -65,6 +65,12 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/groupStudent/{id}")
+    public HttpEntity<?> getStudentGroupList(@PathVariable Integer id) {
+        ApiResponse apiResponse = studentService.getGroupStudents(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     //    //Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteStudent(@PathVariable UUID id) {
