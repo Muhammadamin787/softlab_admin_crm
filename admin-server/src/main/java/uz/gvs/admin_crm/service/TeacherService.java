@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.entity.enums.Gender;
@@ -146,6 +147,15 @@ public class TeacherService {
 
     }
 
+
+    public ApiResponse getGroupsTeacher(UUID id) {
+        try {
+            List<Group> allByTeacher_id = groupRepository.findAllByTeacher_id(id);
+            return apiResponseService.getResponse(allByTeacher_id);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
     public ApiResponse getTeacher(UUID id) {
         try {

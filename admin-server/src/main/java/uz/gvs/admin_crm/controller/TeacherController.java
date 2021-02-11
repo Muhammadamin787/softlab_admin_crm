@@ -55,6 +55,12 @@ public class TeacherController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/getGroups/{id}")
+    public HttpEntity<?> getGroupsTeacher(@PathVariable UUID id) {
+        ApiResponse apiResponse = teacherService.getGroupsTeacher(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @DeleteMapping("/{id}")
     public HttpEntity<?> deleteTeacher(@PathVariable UUID id) {
         ApiResponse apiResponse = teacherService.deleteTeacher(id);

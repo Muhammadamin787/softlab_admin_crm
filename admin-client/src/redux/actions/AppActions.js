@@ -76,7 +76,12 @@ import {
     getGroupApi,
     editGroupApi,
     deleteGroupApi,
-    deleteStudentApi, getGroupsForAddApi, getGroupsForSelectApi, studentAddGroup, getGroupStudentsApi,
+    deleteStudentApi,
+    getGroupsForAddApi,
+    getGroupsForSelectApi,
+    studentAddGroup,
+    getGroupStudentsApi,
+    getTeacherGroupsApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -919,6 +924,17 @@ export const getTeacherAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_TEACHER_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const getTeacherGroupsAction = (data) => (dispatch) => {
+    dispatch({
+        api: getTeacherGroupsApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHER_GROUPS_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data: data
