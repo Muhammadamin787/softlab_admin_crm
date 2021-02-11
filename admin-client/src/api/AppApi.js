@@ -237,9 +237,10 @@ export const getTeachersForSelectApi = () => {
     return HttpClient.doGet(api.teacher + "/select")
 }
 export const getTeacherApi = (data) => {
-    if (data && data.id)
-        return HttpClient.doGet(api.teacher + "/" + data.id)
-    return null;
+    return HttpClient.doGet(api.teacher + "/" + (data && data.id))
+}
+export const getTeacherGroupsApi = (data) => {
+    return HttpClient.doGet(api.teacher + "/getGroups/" + (data && data.id))
 }
 
 export const deleteTeacherApi = (data) => {

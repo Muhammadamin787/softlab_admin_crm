@@ -6,7 +6,7 @@ import {
     getPayTypeListAction,
     getRegionsAction,
     getStudentAction,
-    getTeacherAction,
+    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction,
     saveCourseAction,
     saveStudentAction, saveTeacherAction,
 } from "../../redux/actions/AppActions";
@@ -24,6 +24,7 @@ class SelectTeacher extends Component {
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getTeacherAction({id: id}))
+            this.props.dispatch(getTeacherGroupsAction({id: id}))
         }
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getPayTypeListAction())
@@ -38,6 +39,7 @@ class SelectTeacher extends Component {
     render() {
         const {currentObject} = this.state;
         const {
+            groups,
             history,
             dispatch,
             showModal,
@@ -66,7 +68,7 @@ class SelectTeacher extends Component {
             })
         }
         const deleteItem = (item) => {
-                dispatch(deleteTeacherAction({...item, history: history}))
+            dispatch(deleteTeacherAction({...item, history: history}))
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id && currentObject.userDto) {
@@ -105,46 +107,74 @@ class SelectTeacher extends Component {
                     }
                     <div className="row">
                         {currentItem.id && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
-                                <div className="row">
-                                    <div className="col-8">
-                                        <hgroup>
-                                            <small className={"text-secondary"}>FISH: </small>
-                                            <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Telefon raqam: </small>
-                                            <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Tug'ilgan sana: </small>
-                                            <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Manzil: </small>
-                                            <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
-                                        </hgroup>
+                            <>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                    <div className="row">
+                                        <div className="col-8">
+                                            <hgroup>
+                                                <small className={"text-secondary"}>FISH: </small>
+                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Manzil: </small>
+                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
+                                            </hgroup>
 
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Manzil: </small>
-                                            <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Tavsif: </small>
-                                            <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
-                                        </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Manzil: </small>
+                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
+                                            </hgroup>
 
-                                    </div>
-                                    <div className="col-4 button-block">
-                                        <Button className="table-icon" onClick={() => openModal(currentItem)}>
-                                            <EditIcon className="button-icon"/>
-                                        </Button>
-                                        <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
-                                            <DeleteIcon className="button-icon"/>
-                                        </Button>
+                                        </div>
+                                        <div className="col-4 button-block">
+                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                                <EditIcon className="button-icon"/>
+                                            </Button>
+                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
+                                                <DeleteIcon className="button-icon"/>
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div className={"col-md-5"}>
+                                    <h4>Guruhlar</h4>
+                                    <div className={" ml-2 bg-white student-group-block"}>
+                                        {groups && groups.length > 0 ? groups.map((item, i) =>
+                                            <Row key={i} className={"p-2"}>
+                                                <Col md={3} className={"text-center"}>
+                                                    <span
+                                                        className={"group-name"}> {item.name}</span>
+                                                </Col>
+                                                <Col md={5}>
+                                                    <span
+                                                        className={"text-left"}>{item.course && item.course.name}</span>
+                                                </Col>
+                                                <Col md={2}>
+                                                    <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
+                                                </Col>
+                                                <Col md={2}>
+                                                    <span
+                                                        className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
+                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+                                        ) : "Guruhlar topilmadi"}
+                                    </div>
+                                </div>
+                            </>
                             : ""}
                     </div>
                 </div>
@@ -219,6 +249,7 @@ SelectTeacher.propTypes = {};
 
 export default connect(({
                             app: {
+                                groups,
                                 payTypes,
                                 currentItem,
                                 loading,
@@ -231,6 +262,7 @@ export default connect(({
                                 readModal
                             },
                         }) => ({
+        groups,
         payTypes,
         currentItem,
         loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal
