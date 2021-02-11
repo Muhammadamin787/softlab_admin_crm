@@ -172,19 +172,27 @@ class SelectStudent extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"col-md-4"}>
+                                <div className={"col-md-5"}>
                                     <h4>Guruhlar</h4>
-                                    <div className={"w-100 m-2 mt-0 bg-white"}>
+                                    <div className={" ml-2 bg-white student-group-block"}>
                                         {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
                                             <Row key={i} className={"p-2"}>
-                                                <Col>
-                                                    <p className={"d-inline"}> {item.group && item.group.name}</p>
+                                                <Col md={3} className={"text-center"}>
+                                                    <span
+                                                        className={"group-name"}> {item.group && item.group.name}</span>
                                                 </Col>
-                                                <Col>
-                                                    <p className={"d-inline"}>{item.group && item.group.course && item.group.course.name}</p>
+                                                <Col md={5}>
+                                                    <span
+                                                        className={"text-left"}>{item.group && item.group.course && item.group.course.name}</span>
                                                 </Col>
-                                                <Col>
-                                                    <p className={"d-inline"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                <Col md={2}>
+                                                    <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                </Col>
+                                                <Col md={2}>
+                                                    <span
+                                                        className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
+                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                    </span>
                                                 </Col>
                                             </Row>
                                         )}

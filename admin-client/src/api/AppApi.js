@@ -109,6 +109,9 @@ export const getGroupsForSelectApi = () => {
 export const getGroupApi = (data) => {
     return HttpClient.doGet(api.group + (data && data.id ? "/" + data.id : ""))
 }
+export const getGroupStudentsApi = (data) => {
+    return HttpClient.doGet(api.student + "/groupStudent/" + (data && data.id))
+}
 export const saveGroupApi = (data) => {
     return HttpClient.doPost(api.group, data)
 }

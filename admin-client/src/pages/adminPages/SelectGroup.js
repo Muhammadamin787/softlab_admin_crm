@@ -1,10 +1,23 @@
 import React, {Component} from 'react';
-import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {
+    Button,
+    Col,
+    CustomInput,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
     deleteCourseAction, deleteGroupAction,
     getCoursesAction,
-    getGroupAction,
+    getGroupAction, getGroupStudentsAction,
     getRoomListAction,
     getTeachersForSelectAction,
     saveGroupAction,
@@ -15,6 +28,7 @@ import {DeleteIcon, EditIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class SelectGroup extends Component {
     componentDidMount() {
@@ -22,6 +36,7 @@ class SelectGroup extends Component {
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getGroupAction({id: id}))
+            this.props.dispatch(getGroupStudentsAction({id: id}))
             this.props.dispatch(getRoomListAction())
             this.props.dispatch(getCoursesAction())
             this.props.dispatch(getTeachersForSelectAction())
@@ -30,12 +45,15 @@ class SelectGroup extends Component {
 
     state = {
         showModal: false,
-        currentObject: ""
+        currentObject: "",
+        dropdownOpen: false,
+        setDropdownOpen: false
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject, dropdownOpen, setDropdownOpen} = this.state;
         const {
+            students,
             history,
             dispatch,
             showModal,
@@ -65,6 +83,9 @@ class SelectGroup extends Component {
                 }
             }
         }
+        const showDropdown = (item) => {
+            this.setState({dropdownOpen: !dropdownOpen})
+        }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -93,15 +114,15 @@ class SelectGroup extends Component {
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.name} </h3>
+
                         <Link
-                            to={"/admin/groups"} className={"text-decoration-none"}>
-                        <span
-                            className={""}>Guruhlar</span>
+                            to={"/admin/groups"} className={"text-decoration-none"}><span
+                            className={""}> Guruhlar</span>
                         </Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-5 col-10"}>
+                            <div className={"m-2 p-3 bg-white box-shadow rounded col-md-4 col-10"}>
                                 <div className="row">
                                     <div className="col-8">
                                         <hgroup>
@@ -149,13 +170,30 @@ class SelectGroup extends Component {
                                     </div>
                                 </div>
                                 <div className={"student-list border-top p-3"}>
-                                    <div className={"row"}>
-                                        <div className="col">Talaba talabyev</div>
-                                        <div className="col">(90) 123-45-67</div>
-                                        <div className="col">
-                                            <Button align="right" color={"warning rounded"} className={""}>...</Button>
+                                    {students && students.length > 0 && students.map((student, i) =>
+                                        <div key={i} className={"row"}>
+                                            <div className="col-5">{student.user && student.user.fullName}</div>
+                                            <div
+                                                className="col-5">{student.user && formatPhoneNumber(student.user.phoneNumber)}</div>
+                                            <div className="col-2">
+                                                <Dropdown id={"id" + i} isOpen={dropdownOpen} toggle={showDropdown}>
+                                                    <DropdownToggle caret>
+                                                        ...
+                                                    </DropdownToggle>
+                                                    <DropdownMenu>
+                                                        <DropdownItem header>Header</DropdownItem>
+                                                        <DropdownItem>Some Action</DropdownItem>
+                                                        <DropdownItem text>Dropdown Item Text</DropdownItem>
+                                                        <DropdownItem disabled>Action (disabled)</DropdownItem>
+                                                        <DropdownItem divider/>
+                                                        <DropdownItem>Foo Action</DropdownItem>
+                                                        <DropdownItem>Bar Action</DropdownItem>
+                                                        <DropdownItem>Quo Action</DropdownItem>
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                             : ""}
@@ -271,6 +309,7 @@ SelectGroup.propTypes = {};
 
 export default connect(({
                             app: {
+                                students,
                                 teachers,
                                 getItems,
                                 rooms,
@@ -285,6 +324,7 @@ export default connect(({
                                 readModal
                             },
                         }) => ({
+        students,
         teachers,
         getItems,
         rooms,

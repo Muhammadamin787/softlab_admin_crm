@@ -18,6 +18,7 @@ import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -87,6 +88,16 @@ public class StudentService {
         }
     }
 
+
+    public ApiResponse getGroupStudents(Integer id) {
+        try {
+            List<Student> allByStudentGroup_group_id = studentRepository.findAllByStudentGroup_Group_id(id);
+            return apiResponseService.getResponse(allByStudentGroup_group_id);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
+    }
 
     public ApiResponse getStudents(int page, int size) {
         try {
