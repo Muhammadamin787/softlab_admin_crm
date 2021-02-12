@@ -5,7 +5,7 @@ insert into role("role_name") values
 ('CLIENT'),
 ('TEACHER'),
 ('SUPER_ADMIN');
-insert into weekday("weekday") values
+insert into weekday("weekday_name") values
 ('MONDAY'),
 ('TUESDAY'),
 ('WEDNESDAY'),
