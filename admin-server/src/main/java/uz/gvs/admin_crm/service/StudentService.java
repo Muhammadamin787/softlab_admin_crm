@@ -197,7 +197,7 @@ public class StudentService {
             Optional<StudentPayment> byId = studentPaymentRepository.findById(id);
             if (byId.isPresent()) {
                 SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                StudentPayment studentPayment = new StudentPayment();
+                StudentPayment studentPayment = byId.get();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
                 studentPayment.setSum(studentPaymentDto.getSum());
