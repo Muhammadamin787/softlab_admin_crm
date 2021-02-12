@@ -204,7 +204,7 @@ public class StudentService {
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
-///
+                ////Balans uchun
                 Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
                 if (byId1.isPresent()) {
                     Student student = byId1.get();
