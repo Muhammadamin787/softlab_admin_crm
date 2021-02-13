@@ -3,19 +3,17 @@ package uz.gvs.admin_crm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Student;
+import uz.gvs.admin_crm.entity.StudentPayment;
+import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.PageableDto;
-import uz.gvs.admin_crm.payload.StudentDto;
-import uz.gvs.admin_crm.payload.UserDto;
-import uz.gvs.admin_crm.repository.GroupRepository;
-import uz.gvs.admin_crm.repository.RegionRepository;
-import uz.gvs.admin_crm.repository.StudentRepository;
-import uz.gvs.admin_crm.repository.UserRepository;
+import uz.gvs.admin_crm.payload.*;
+import uz.gvs.admin_crm.repository.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,6 +35,10 @@ public class StudentService {
     RegionRepository regionRepository;
     @Autowired
     GroupRepository groupRepository;
+    @Autowired
+    StudentPaymentRepository studentPaymentRepository;
+    @Autowired
+    PayTypeRepository payTypeRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -164,4 +166,120 @@ public class StudentService {
         }
     }
 
+    public ApiResponse saveStudentPayment(UUID id, StudentPaymentDto studentPaymentDto) {
+        try {
+            Optional<Student> byId = studentRepository.findById(id);
+            if (byId.isPresent()) {
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                StudentPayment studentPayment = new StudentPayment();
+                studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
+                studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
+                studentPayment.setSum(studentPaymentDto.getSum());
+                studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
+                studentPayment.setComment(studentPaymentDto.getComment());
+                studentPaymentRepository.save(studentPayment);
+
+                Student student = byId.get();
+                student.setBalans(student.getBalans() + studentPaymentDto.getSum());
+                studentRepository.save(student);
+                return apiResponseService.saveResponse();
+            }
+            return apiResponseService.notFoundResponse();
+
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+
+    }
+
+    public ApiResponse editStudentPayment(UUID id, StudentPaymentDto studentPaymentDto) {
+        try {
+            Optional<StudentPayment> byId = studentPaymentRepository.findById(id);
+            if (byId.isPresent()) {
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                StudentPayment studentPayment = byId.get();
+                studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
+                studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
+                studentPayment.setSum(studentPaymentDto.getSum());
+                studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
+                studentPayment.setComment(studentPaymentDto.getComment());
+                studentPaymentRepository.save(studentPayment);
+                ////Balans uchun
+                Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
+                if (byId1.isPresent()) {
+                    Student student = byId1.get();
+                    student.setBalans(student.getBalans() + studentPaymentDto.getSum());
+                    studentRepository.save(student);
+                }
+                return apiResponseService.updatedResponse();
+            }
+            return apiResponseService.notFoundResponse();
+
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
+        return new StudentPaymentDto(
+                studentPayment.getId(),
+                studentPayment.getPayType(),
+                studentPayment.getStudent(),
+                studentPayment.getSum(),
+                studentPayment.getPayDate()!= null ? studentPayment.getPayDate().toString():null,
+                studentPayment.getComment()
+        );
+    }
+
+    public ApiResponse getStudentPaymentList(int page, int size) {
+
+        try {
+            Sort sort;
+            Page<StudentPayment> all = studentPaymentRepository.findAll(PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                    )
+            );
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
+        try {
+            Sort sort;
+            Page<StudentPayment> all = studentPaymentRepository.findAllByStudent_id(id, PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                    )
+            );
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    public ApiResponse getStudentPayment(UUID id) {
+        try {
+            Optional<StudentPayment> optional = studentPaymentRepository.findById(id);
+            if (optional.isPresent()) {
+                return apiResponseService.getResponse(makeStudentPaymentDto(optional.get()));
+            } else {
+                return apiResponseService.notFoundResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }
