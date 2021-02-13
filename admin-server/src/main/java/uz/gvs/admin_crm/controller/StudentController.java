@@ -84,7 +84,6 @@ StudentController {
         }
     }
 
-
     @PostMapping("/studentPayment/{id}")
     public HttpEntity<?> saveStudentPayment(@PathVariable UUID id, @RequestBody StudentPaymentDto studentPaymentDto) {
         ApiResponse apiResponse = studentService.saveStudentPayment(id, studentPaymentDto);
