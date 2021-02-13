@@ -19,6 +19,7 @@ import Select from "react-select";
 
 class SelectStudent extends Component {
     componentDidMount() {
+
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
