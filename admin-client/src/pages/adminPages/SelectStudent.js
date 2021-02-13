@@ -120,6 +120,11 @@ class SelectStudent extends Component {
                         <span
                             className={""}> Oqituvchilar</span>
                         </Link>
+                        <Link
+                            className={"text-decoration-none"}>
+                        <span
+                            className={""}> Payment</span>
+                        </Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
