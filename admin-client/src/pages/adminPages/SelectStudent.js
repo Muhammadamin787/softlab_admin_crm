@@ -253,7 +253,7 @@ class SelectStudent extends Component {
                                             </div>
                                         </TabPane>
                                         <TabPane tabId="2">
-
+                                        {/*    olloyor get paymetn*/}
                                         </TabPane>
                                     </TabContent>
                                 </div>
