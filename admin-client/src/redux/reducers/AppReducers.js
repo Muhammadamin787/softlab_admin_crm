@@ -32,7 +32,8 @@ const initState = {
     userDto: [],
     specialization: [],
     specializationDto: [],
-    currentItem: []
+    currentItem: [],
+    studentPayment : []
 };
 
 const reducers = {
@@ -290,7 +291,18 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-
+    [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        console.log(payload)
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.studentPayment = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
         state.attachmentId = payload

@@ -219,6 +219,10 @@ export const deleteStudentApi = (data) => {
 export const studentAddGroup = (data) => {
     return HttpClient.doPost(api.group + "/addStudent", data)
 }
+export const getStudentPaymentApi = (data) =>{
+    return HttpClient.doGet(api.studentPayment + "/"+ data)
+}
+
 // FINISH STUDENT API
 
 // START TEACHER API
@@ -242,7 +246,6 @@ export const getTeacherApi = (data) => {
 export const getTeacherGroupsApi = (data) => {
     return HttpClient.doGet(api.teacher + "/getGroups/" + (data && data.id))
 }
-
 export const deleteTeacherApi = (data) => {
     return HttpClient.doDelete(api.teacher + "/" + data.id)
 }

@@ -1,25 +1,8 @@
 import React, {Component} from 'react';
-import {
-    TabContent,
-    TabPane,
-    Nav,
-    NavItem,
-    NavLink,
-    Card,
-    Button,
-    CardTitle,
-    CardText,
-    Col,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-    Row
-} from "reactstrap";
+import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction,
-    getGroupsForSelectAction,
+    deleteStudentAction, getGroupsForAddAction, getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
     getStudentAction,
@@ -50,12 +33,11 @@ class SelectStudent extends Component {
         showModal: false,
         showPaymentModal: false,
         currentObject: "",
-        addGroup: "",
-        activeTab: "1",
+        addGroup: ""
     }
 
     render() {
-        const {currentObject, activeTab, showPaymentModal, addGroup} = this.state;
+        const {currentObject, showPaymentModal, addGroup} = this.state;
         const {
             getItems,
             selectItems,
@@ -120,6 +102,7 @@ class SelectStudent extends Component {
                     student: currentObject
                 }))
         }
+
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
                 v.id = currentObject.id
@@ -127,142 +110,106 @@ class SelectStudent extends Component {
                 dispatch(saveStudentAction(v))
             }
         }
-        const toggle = tab => {
-            if (activeTab !== tab)
-                this.setState({activeTab: tab})
-        }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
-                <div className={"flex-column container pl-md-5"}>
+                <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.fullName} </h3>
                         <Link
-                            to={"/admin/students"}
+                            to={"/admin/teachers"}
+                            className={"text-decoration-none"}>
+                        <span
+                            className={""}> O'qituvchilar</span>
+                        </Link>
+
+                        <Link
+                            to={"/admin/studentPayment/"+currentItem.id}
                             className={"text-decoration-none"}>
                         <span
                             className={""}> Talabalar</span>
-                        </Link>
-                        <Link
-                            className={"text-decoration-none"}>
-                        <span
-                            className={""}> Payment</span>
                         </Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
                             <>
-                                <div className="d-block col-12">
-                                    <Nav tabs>
-                                        <NavItem className={""}>
-                                            <NavLink
-                                                onClick={() => {
-                                                    toggle('1');
-                                                }}
-                                            >
-                                                Profil
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                onClick={() => {
-                                                    toggle('2');
-                                                }}
-                                            >
-                                                To'lovlar
-                                            </NavLink>
-                                        </NavItem>
-                                    </Nav>
-                                    <TabContent activeTab={activeTab}>
-                                        <TabPane tabId="1">
-                                            <div className="row">
-                                                <div
-                                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
-                                                    <div className="row">
-                                                        <div className="col-8">
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>FISH: </small>
-                                                                <p className={"d-inline"}> {currentItem.fullName}</p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Telefon
-                                                                    raqam: </small>
-                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Balans: </small>
-                                                                <p className={"d-inline"}> {currentItem.balans} UZS</p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Tug'ilgan
-                                                                    sana: </small>
-                                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Manzil: </small>
-                                                                <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Tavsif: </small>
-                                                                <p className={"d-inline"}> {currentItem.description}</p>
-                                                            </hgroup>
-                                                            <div className="button-block">
-                                                                <Button className="table-icon px-2"
-                                                                        onClick={() => openAddGroupModal(currentItem)}>
-                                                                    <span className="icon icon-wallet bg-primary "/>
-                                                                </Button>
-                                                                <Button className="table-icon px-2"
-                                                                        onClick={() => openPaymentModal(currentItem)}>
-                                                                    <span className="icon icon-wallet bg-success "/>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-4 button-block">
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openModal(currentItem)}>
-                                                                <EditIcon className="button-icon"/>
-                                                            </Button>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(currentItem)}>
-                                                                <DeleteIcon className="button-icon"/>
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className={"col-md-5"}>
-                                                    <h4>Guruhlar</h4>
-                                                    <div className={" ml-2 bg-white student-group-block"}>
-                                                        {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
-                                                            <Row key={i} className={"p-2"}>
-                                                                <Col md={3} className={"text-center"}>
-                                                                    <Link to={"/admin/group/" + item.group.id}>
-                                                                        <span
-                                                                            className={"group-name"}> {item.group && item.group.name}</span>
-                                                                    </Link>
-                                                                </Col>
-                                                                <Col md={5}>
-                                                                        <span
-                                                                            className={"text-left"}>{item.group && item.group.course && item.group.course.name}</span>
-                                                                </Col>
-                                                                <Col md={2}>
-                                                                    <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
-                                                                </Col>
-                                                                <Col md={2}><span
-                                                                    className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
-                                                                    <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
-                                                                        </span>
-                                                                </Col>
-                                                            </Row>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                    <div className="row">
+                                        <div className="col-8">
+                                            <hgroup>
+                                                <small className={"text-secondary"}>ID: </small>
+                                                <p className={"d-inline"}> {currentItem.id}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>FISH: </small>
+                                                <p className={"d-inline"}> {currentItem.fullName}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Balans: </small>
+                                                <p className={"d-inline"}> {currentItem.balans} UZS</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Manzil: </small>
+                                                <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                            </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                <p className={"d-inline"}> {currentItem.description}</p>
+                                            </hgroup>
+                                            <div className="button-block">
+                                                <Button className="table-icon px-2"
+                                                        onClick={() => openAddGroupModal(currentItem)}>
+                                                    <span className="icon icon-wallet bg-primary "/>
+                                                </Button>
+                                                <Button className="table-icon px-2"
+                                                        onClick={() => openPaymentModal(currentItem)}>
+                                                    <span className="icon icon-wallet bg-success "/>
+                                                </Button>
                                             </div>
-                                        </TabPane>
-                                        <TabPane tabId="2">
-
-                                        </TabPane>
-                                    </TabContent>
+                                        </div>
+                                        <div className="col-4 button-block">
+                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                                <EditIcon className="button-icon"/>
+                                            </Button>
+                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
+                                                <DeleteIcon className="button-icon"/>
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </div>
-
+                                <div className={"col-md-5"}>
+                                    <h4>Guruhlar</h4>
+                                    <div className={" ml-2 bg-white student-group-block"}>
+                                        {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
+                                            <Row key={i} className={"p-2"}>
+                                                <Col md={3} className={"text-center"}>
+                                                    <span
+                                                        className={"group-name"}> {item.group && item.group.name}</span>
+                                                </Col>
+                                                <Col md={5}>
+                                                    <span
+                                                        className={"text-left"}>{item.group && item.group.course && item.group.course.name}</span>
+                                                </Col>
+                                                <Col md={2}>
+                                                    <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                </Col>
+                                                <Col md={2}>
+                                                    <span
+                                                        className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
+                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+                                        )}
+                                    </div>
+                                </div>
                             </>
                             : ""}
                     </div>
@@ -382,6 +329,7 @@ class SelectStudent extends Component {
                         <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
+
             </AdminLayout>
         );
     }

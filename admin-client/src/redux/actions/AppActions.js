@@ -81,7 +81,7 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi,
+    getTeacherGroupsApi, getStudentPaymentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -894,6 +894,8 @@ export const studentAddGroupAction = (data) => (dispatch) => {
         })
     })
 }
+
+
 // FINISH STUDENT ACTION
 // START TEACHER ACTION
 
@@ -935,6 +937,17 @@ export const getTeacherGroupsAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_TEACHER_GROUPS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const getStudentPaymentAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data: data
