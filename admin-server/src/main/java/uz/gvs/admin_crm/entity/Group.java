@@ -27,8 +27,10 @@ public class Group extends AbsNameEntity {
     private Date finishDate;
     private Date startDate;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "group_weekdays",
+            joinColumns = {@JoinColumn(name = "group_id")},
+            inverseJoinColumns = {@JoinColumn(name = "weekday_id")})
     private Set<Weekday> weekdays;
-
 
 }
