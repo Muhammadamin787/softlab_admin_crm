@@ -88,7 +88,10 @@ class AdminLayout extends Component {
                                 </div>
                             </Link>
                             <Link to="#" onClick={secondMenu} className={
-                                this.props.pathname === "/admin/general" ?
+                                this.props.pathname === "/admin/room" ||
+                                this.props.pathname === "/admin/payType" ||
+                                this.props.pathname === "/admin/region"
+                                    ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-setting"/>
@@ -128,6 +131,16 @@ class AdminLayout extends Component {
                                 <Link to="/admin/region"
                                       className="main-link">
                                     Hududlar
+                                </Link>
+                            </Link>
+                            <Link to="/admin/staff" className={
+                                this.props.pathname === "/admin/staff" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <Link to="/admin/staff"
+                                      className="main-link">
+                                    Xodimlar
                                 </Link>
                             </Link>
                         </div>
