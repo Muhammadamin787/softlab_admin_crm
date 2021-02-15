@@ -55,8 +55,8 @@ public class GroupService {
                 weekdayNameSet.add(byWeekday.get());
             }
             group.setWeekdays(weekdayNameSet);
-            groupRepository.save(group);
-            return group;
+            return (groupRepository.save(group));
+
         } catch (Exception e) {
             return null;
         }
