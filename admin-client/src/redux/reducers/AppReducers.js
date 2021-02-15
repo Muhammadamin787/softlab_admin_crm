@@ -33,8 +33,7 @@ const initState = {
     specialization: [],
     specializationDto: [],
     currentItem: [],
-    studentPayment : []
-    currentItem: [],
+    studentPayment : [],
     selectClients: []
 };
 
