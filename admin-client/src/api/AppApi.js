@@ -2,6 +2,21 @@ import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
 
+//client
+export const saveClientApi = (data) => {
+    return HttpClient.doPost(api.client,data)
+}
+export const editClientApi = (data) => {
+    return HttpClient.doPut(api.client + "/" +data.id, data)
+}
+export const deleteClientApi = (data) => {
+    return HttpClient.doDelete(api.client + "/" +data.id)
+}
+export const getClientList = () => {
+    return HttpClient.doGet(api.client)
+}
+
+
 // Room Start
 export const saveRoomApi = (data) => {
     return HttpClient.doPost(api.room, data)

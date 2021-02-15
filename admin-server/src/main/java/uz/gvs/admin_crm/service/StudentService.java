@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
+import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
@@ -87,7 +88,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getGroupStudents(Integer id) {
         try {
@@ -278,6 +278,46 @@ public class StudentService {
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
+    }
+
+    public ApiResponse makeSituation(SituationDto situationDto, UUID id) {
+        try {
+            Optional<Student> optional = studentRepository.findById(id);
+            if (optional.isPresent()) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId().equals(situationDto.getGroupId())) {
+                        studentGroup.setStudentGroupStatus(StudentGroupStatus.valueOf(situationDto.getSituation()));
+                        studentRepository.save(student);
+                        return apiResponseService.updatedResponse();
+                    }
+                }
+                return apiResponseService.notFoundResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse moveGroup(SituationDto situationDto) {
+        Optional<Student> optional = studentRepository.findById(situationDto.getStudentId());
+        Optional<Group> groupOptional = groupRepository.findById(situationDto.getGroupId());
+        if (optional.isPresent()) {
+            if (groupOptional.isPresent()) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId().equals(situationDto.getGroupOld())) {
+                        studentGroup.setGroup(groupOptional.get());
+                        studentRepository.save(student);
+                        return apiResponseService.updatedResponse();
+                    }
+                }
+                return apiResponseService.notFoundResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        }
+        return apiResponseService.notFoundResponse();
     }
 ///
 
