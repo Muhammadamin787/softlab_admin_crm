@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -24,5 +25,7 @@ public class StudentPayment extends AbsEntity {
     private Date payDate;
     @Column(columnDefinition = "text")
     private String comment;
+    @ManyToOne
+    private Group group;
 
 }

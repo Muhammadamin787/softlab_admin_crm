@@ -6,16 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Student;
-import uz.gvs.admin_crm.entity.StudentPayment;
-import uz.gvs.admin_crm.entity.Teacher;
-import uz.gvs.admin_crm.entity.User;
+import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -98,7 +96,6 @@ public class StudentService {
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
-
     }
 
     public ApiResponse getStudents(int page, int size) {
@@ -173,6 +170,7 @@ public class StudentService {
                 SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
+                studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
@@ -199,6 +197,7 @@ public class StudentService {
                 SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 StudentPayment studentPayment = byId.get();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
+                studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
@@ -220,14 +219,13 @@ public class StudentService {
         }
     }
 
-////
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
                 studentPayment.getPayType(),
                 studentPayment.getStudent(),
                 studentPayment.getSum(),
-                studentPayment.getPayDate()!= null ? studentPayment.getPayDate().toString():null,
+                studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
                 studentPayment.getComment()
         );
     }
@@ -269,7 +267,6 @@ public class StudentService {
         }
     }
 
-
     public ApiResponse getStudentPayment(UUID id) {
         try {
             Optional<StudentPayment> optional = studentPaymentRepository.findById(id);
@@ -284,5 +281,23 @@ public class StudentService {
     }
 
 
+    /// StudentGroups for studentPayment
+    public ApiResponse getStudentGroups(UUID id) {
+        try {
+            List<Group> studentGroupList = groupRepository.getStudentGroupList(id);
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Group group : studentGroupList) {
+                ResSelect resSelect = new ResSelect();
+                String key = ("["+group.getName()+"] "+group.getCourse().getName()+" "+group.getTeacher().getUser().getFullName()+" "+
+                        group.getStartTime()+" - "+group.getFinishTime());
+                resSelect.setId(group.getId());
+                resSelect.setName(key);
+                resSelects.add(resSelect);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
 }

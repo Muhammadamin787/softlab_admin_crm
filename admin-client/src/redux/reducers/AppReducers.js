@@ -110,8 +110,10 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+
     // FINISH GROUPS REDUCERS
     //region
+
     [types.REQUEST_SAVE_REGION_SUCCESS](state, payload) {
         state.showModal = false
     },
@@ -273,6 +275,7 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+
     // START STUDENTS REDUCERS
     [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
         state.showModal = false
@@ -302,6 +305,23 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+
+
+    // [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
+    //     if (payload && payload.payload && payload.payload.object) {
+    //         state.studentGroups = payload.payload.object.object.sort((a, b) =>
+    //             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+    //         );
+    //         let ketmon = []
+    //         for (let i = 0; i < state.regions.length; i++) {
+    //             ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
+    //         }
+    //         state.selectItems = ketmon
+    //     }
+    // },
+
+
+
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
         state.attachmentId = payload

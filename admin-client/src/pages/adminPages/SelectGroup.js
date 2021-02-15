@@ -233,22 +233,22 @@ class SelectGroup extends Component {
                                                      label="Dars kunlari" required>
                                         <AvCheckbox label="Dush"
                                                     value="MONDAY"
-                                            // defaultChecked={true}
+                                            defaultChecked={true}
                                                     defaultValue={true}
-                                            // checked={currentObject && currentObject.weekdays.some(item => "MONDAY")}
+                                            defaultChecked={currentObject && currentObject.weekdays.some(item => "MONDAY")}
                                         />
                                         <AvCheckbox label="Sesh" value="TUESDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "TUESDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "TUESDAY")}/>
                                         <AvCheckbox label="Chor" value="WEDNESDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "WEDNESDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "WEDNESDAY")}/>
                                         <AvCheckbox label="Pay" value="THURSDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "THURSDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "THURSDAY")}/>
                                         <AvCheckbox label="Ju" value="FRIDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "FRIDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "FRIDAY")}/>
                                         <AvCheckbox label="Shan" value="SATURDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "SATURYDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "SATURYDAY")}/>
                                         <AvCheckbox label="Yak" value="SUNDAY"
-                                                    checked={currentObject && currentObject.weekdays.some(item => "SUNDAY")}/>
+                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "SUNDAY")}/>
                                     </AvCheckboxGroup>
 
                                     <AvField className={'form-control'} label={"Xona:"} type="select"

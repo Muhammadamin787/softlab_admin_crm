@@ -303,15 +303,15 @@ class SelectStudent extends Component {
                                     placeholer={"nomi"} required/>
                                 {showPaymentModal ?
                                     <>
-                                        <AvField className={'form-control'} label={'Guruh:'} type="select"
-                                                 name="groupId"
-                                            // defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}
-                                        >
-                                            <option key={0} value={"0"}>Guruhni tanlang</option>
-                                            {/*{regions ? regions.map((item, i) =>*/}
-                                            {/*    <option key={i} value={item.id}>{item.name}</option>*/}
-                                            {/*) : ""}*/}
-                                        </AvField>
+                                        <Select
+                                            placeholder="Guruhni tanlang..."
+                                            name="regionId"
+                                            isSearchable={true}
+                                            options={getItems}
+                                            onChange={getAddGroup}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
                                             // defaultValue={currentObject ? currentObject.gender : ""}
@@ -324,8 +324,18 @@ class SelectStudent extends Component {
                                         <AvField
                                             // defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
-                                            label={"So'm"} name={"amount"} className={"form-control"}
+                                            label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
+                                        <AvField
+                                            type={"date"}
+                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                                : ""}
+                                            label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
+                                            required/>
+                                        <AvField
+                                            defaultValue={currentObject ? currentObject.comment : ""}
+                                            type={"textarea"}
+                                            label={"Izoh"} name={"comment"} className={"form-control"}/>
                                     </>
                                     :
                                     <>
@@ -355,12 +365,12 @@ class SelectStudent extends Component {
                                             <AvRadio className="" label="Erkak" value="MALE"/>
                                             <AvRadio className="" label="Ayol" value="FEMALE"/>
                                         </AvRadioGroup>
+                                        <AvField
+                                            defaultValue={currentObject ? currentObject.description : ""}
+                                            type={"textarea"}
+                                            label={"Izoh"} name={"description"} className={"form-control"}/>
                                     </>
                                 }
-                                <AvField
-                                    defaultValue={currentObject ? currentObject.description : ""}
-                                    type={"textarea"}
-                                    label={"Izoh"} name={"description"} className={"form-control"}/>
                             </div>
                         </ModalBody>
                         <ModalFooter>

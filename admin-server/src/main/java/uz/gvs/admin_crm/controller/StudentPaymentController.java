@@ -54,6 +54,12 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/studentGroup/{id}")
+    public HttpEntity<?> studentGroup(@PathVariable UUID id) {
+        ApiResponse apiResponse = studentService.getStudentGroups(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
 
 
 }
