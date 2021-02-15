@@ -167,7 +167,7 @@ public class StudentService {
         try {
             Optional<Student> byId = studentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -328,8 +328,8 @@ public class StudentService {
             List<ResSelect> resSelects = new ArrayList<>();
             for (Group group : studentGroupList) {
                 ResSelect resSelect = new ResSelect();
-                String key = ("["+group.getName()+"] "+group.getCourse().getName()+" "+group.getTeacher().getUser().getFullName()+" "+
-                        group.getStartTime()+" - "+group.getFinishTime());
+                String key = ("[" + group.getName() + "] " + group.getCourse().getName() + " " + group.getTeacher().getUser().getFullName() + " " +
+                        group.getStartTime() + " - " + group.getFinishTime());
                 resSelect.setId(group.getId());
                 resSelect.setName(key);
                 resSelects.add(resSelect);
