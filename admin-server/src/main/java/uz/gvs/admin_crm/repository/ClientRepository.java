@@ -10,5 +10,9 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     boolean existsByFullNameEqualsIgnoreCaseAndIdNot(String fullName, UUID id);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    boolean existsById(UUID client_id);
+
 
 }
