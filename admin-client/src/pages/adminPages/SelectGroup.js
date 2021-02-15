@@ -299,7 +299,6 @@ class SelectGroup extends Component {
                         <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
-
             </AdminLayout>
         );
     }
@@ -321,7 +320,7 @@ export default connect(({
                                 parentItems,
                                 courseCategories,
                                 durationTypes,
-                                readModal
+                                readModal,
                             },
                         }) => ({
         students,
