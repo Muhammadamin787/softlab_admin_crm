@@ -14,7 +14,7 @@ import {
     ModalBody,
     ModalFooter,
     ModalHeader,
-    Row
+    Row, Table
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
@@ -22,7 +22,7 @@ import {
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
-    getStudentAction,
+    getStudentAction, getStudentPaymentAction,
     saveStudentAction, studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -44,6 +44,8 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
+        this.props.dispatch(getStudentPaymentAction(this.props.match.params.id))
+
     }
 
     state = {
@@ -66,7 +68,7 @@ class SelectStudent extends Component {
             deleteModal,
             currentItem,
             regions,
-            payTypes
+            payTypes, studentPayment
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: false})
@@ -130,6 +132,8 @@ class SelectStudent extends Component {
         const toggle = tab => {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
+            if (tab === "2") {
+            }
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -253,7 +257,29 @@ class SelectStudent extends Component {
                                             </div>
                                         </TabPane>
                                         <TabPane tabId="2">
-
+                                            <Table>
+                                                <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>summa</td>
+                                                    <td>pay type</td>
+                                                    <td>comment</td>
+                                                    <td>vaqti</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {console.log(studentPayment)}
+                                                {studentPayment ? studentPayment.map((item, i) =>
+                                                    <tr key={i + 1}>
+                                                        <td>{i + 1}</td>
+                                                        <td>{item.sum}</td>
+                                                        <td>{item.payType ? item.payType.name : ''}</td>
+                                                        <td>{item.comment}</td>
+                                                        <td>{item.payDate}</td>
+                                                    </tr>
+                                                ) : 'Malumot topilmadi'}
+                                                </tbody>
+                                            </Table>
                                         </TabPane>
                                     </TabContent>
                                 </div>
@@ -277,15 +303,15 @@ class SelectStudent extends Component {
                                     placeholer={"nomi"} required/>
                                 {showPaymentModal ?
                                     <>
-                                        <AvField className={'form-control'} label={'Guruh:'} type="select"
-                                                 name="groupId"
-                                            // defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}
-                                        >
-                                            <option key={0} value={"0"}>Guruhni tanlang</option>
-                                            {/*{regions ? regions.map((item, i) =>*/}
-                                            {/*    <option key={i} value={item.id}>{item.name}</option>*/}
-                                            {/*) : ""}*/}
-                                        </AvField>
+                                        <Select
+                                            placeholder="Guruhni tanlang..."
+                                            name="regionId"
+                                            isSearchable={true}
+                                            options={getItems}
+                                            onChange={getAddGroup}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
                                             // defaultValue={currentObject ? currentObject.gender : ""}
@@ -298,8 +324,18 @@ class SelectStudent extends Component {
                                         <AvField
                                             // defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
-                                            label={"So'm"} name={"amount"} className={"form-control"}
+                                            label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
+                                        <AvField
+                                            type={"date"}
+                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                                : ""}
+                                            label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
+                                            required/>
+                                        <AvField
+                                            defaultValue={currentObject ? currentObject.comment : ""}
+                                            type={"textarea"}
+                                            label={"Izoh"} name={"comment"} className={"form-control"}/>
                                     </>
                                     :
                                     <>
@@ -329,12 +365,12 @@ class SelectStudent extends Component {
                                             <AvRadio className="" label="Erkak" value="MALE"/>
                                             <AvRadio className="" label="Ayol" value="FEMALE"/>
                                         </AvRadioGroup>
+                                        <AvField
+                                            defaultValue={currentObject ? currentObject.description : ""}
+                                            type={"textarea"}
+                                            label={"Izoh"} name={"description"} className={"form-control"}/>
                                     </>
                                 }
-                                <AvField
-                                    defaultValue={currentObject ? currentObject.description : ""}
-                                    type={"textarea"}
-                                    label={"Izoh"} name={"description"} className={"form-control"}/>
                             </div>
                         </ModalBody>
                         <ModalFooter>
@@ -397,13 +433,14 @@ export default connect(({
                                 regions,
                                 durationTypes,
                                 getItems,
-                                readModal
+                                readModal,
+                                studentPayment
                             },
                         }) => ({
         selectItems,
         showAddGroupModal,
         payTypes,
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal
+        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal, studentPayment
     })
 )(SelectStudent);

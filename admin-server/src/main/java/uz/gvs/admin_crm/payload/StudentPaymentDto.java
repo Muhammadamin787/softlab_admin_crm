@@ -5,9 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.PayType;
 import uz.gvs.admin_crm.entity.Student;
+import uz.gvs.admin_crm.entity.StudentGroup;
 
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -21,17 +23,11 @@ public class StudentPaymentDto {
     private String payDate;
     private String comment;
 
+    private Integer groupId;
     private UUID studentId;
     private Integer payTypeId;
 
-//    public StudentPaymentDto(PayType payType, double sum, String payDate, String comment, UUID studentId, Integer payTypeId) {
-//        this.payType = payType;
-//        this.sum = sum;
-//        this.payDate = payDate;
-//        this.comment = comment;
-//        this.studentId = studentId;
-//        this.payTypeId = payTypeId;
-//    }
+
 
     public StudentPaymentDto(UUID id, PayType payType, Student student, double sum, String payDate, String comment) {
         this.id = id;

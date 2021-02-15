@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.UUID;
 public class ResSelect {
     private int id;
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID uuid;
 
     public ResSelect() {
