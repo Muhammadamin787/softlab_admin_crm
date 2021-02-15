@@ -3,6 +3,11 @@ import * as app from "../../api/AppApi";
 import {config} from "../../utils/config";
 import {
 
+    getClientList,
+    editClientApi,
+    saveClientApi,
+    deleteClientApi,
+
     //Room
     getRoomList,
     editRoomApi,
@@ -84,6 +89,60 @@ import {
     getTeacherGroupsApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+
+
+
+export const getClientAction = (data) => (dispatch) => {
+    console.log(data);
+    dispatch({
+        api:getClientList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CLIENT_SUCCESS,
+            types.REQUEST_ERROR
+        ]
+    })
+
+}
+export const saveClientAction = (data) => (dispatch) => {
+    console.log(data.id);
+    dispatch({
+        api : (data.id ? editClientApi : saveClientApi),
+        types:[
+            types.REQUEST_START,
+            types.REQUEST_SAVE_CLIENT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getClientAction())
+    }).catch((err) => {
+        toast.error("Xatolik!!App actionni qara")
+    })
+}
+export const deleteClientAction = (data) => (dispatch) => {
+    dispatch({
+        api : deleteClientApi,
+        types:[
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type:"updateState",
+            payload : {
+                deleteModal: false
+            }
+        })
+        toast.success("Malumot O`chirildi")
+        dispatch(getClientAction())
+    }).catch((err) => {
+        toast.error("Xatolik.Delete")
+    })
+}
 
 
 // Start Room

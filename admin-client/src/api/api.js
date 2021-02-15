@@ -10,5 +10,6 @@ export const api = {
     teacher: '/teacher',
     payType: '/payType',
     student: '/student',
-    group: '/group'
+    group: '/group',
+    client:'/client'
 };
