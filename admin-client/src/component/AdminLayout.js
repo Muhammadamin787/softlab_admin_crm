@@ -51,8 +51,17 @@ class AdminLayout extends Component {
                                     Talabalar
                                 </div>
                             </Link>
+                            <Link to="/admin/clients" className={
+                                 this.props.pathname === "/admin/clients" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-customer"/>
+                                <div className="main-link">
+                                    Client
+                                </div>
+                            </Link>
                             <Link to="/admin/courses/list" className={
-                                this.props.pathname.startsWith("/admin/course") ?
+                                this.props.pathname && this.props.pathname.startsWith("/admin/course") ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-time"/>

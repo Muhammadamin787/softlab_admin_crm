@@ -59,6 +59,7 @@ class Course extends Component {
                 }
             })
         }
+        //
         const deleteItem = (item) => {
             dispatch(deleteCourseCategoryAction(item))
         }
