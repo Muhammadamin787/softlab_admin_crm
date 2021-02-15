@@ -5,10 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.gvs.admin_crm.entity.User;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.RegionDto;
-import uz.gvs.admin_crm.payload.StudentDto;
-import uz.gvs.admin_crm.payload.StudentPaymentDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.security.CurrentUser;
 import uz.gvs.admin_crm.service.ApiResponseService;
@@ -50,7 +47,7 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //
+
 //    //  get search
 //    @GetMapping("/search")
 //    public HttpEntity<?> getSearchRegion(@RequestParam(value = "key", defaultValue = "") String key) {
@@ -114,6 +111,18 @@ StudentController {
     public HttpEntity<?> getStudentPayment(@PathVariable UUID id, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         ApiResponse apiResponse = studentService.getStudentPaymentListStudent(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PatchMapping("{id}")
+    public HttpEntity<?> makeSituation(@RequestBody SituationDto situationDto, @PathVariable UUID id){
+        ApiResponse apiResponse = studentService.makeSituation(situationDto, id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PatchMapping
+    public HttpEntity<?> moveGroup(@RequestBody SituationDto situationDto){
+        ApiResponse apiResponse = studentService.moveGroup(situationDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }
