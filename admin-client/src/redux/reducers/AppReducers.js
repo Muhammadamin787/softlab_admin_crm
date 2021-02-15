@@ -33,6 +33,7 @@ const initState = {
     specialization: [],
     specializationDto: [],
     currentItem: [],
+    studentPayment : [],
     selectClients: []
 };
 
@@ -306,6 +307,33 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+    [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.studentPayment = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+
+
+    // [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
+    //     if (payload && payload.payload && payload.payload.object) {
+    //         state.studentGroups = payload.payload.object.object.sort((a, b) =>
+    //             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+    //         );
+    //         let ketmon = []
+    //         for (let i = 0; i < state.regions.length; i++) {
+    //             ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
+    //         }
+    //         state.selectItems = ketmon
+    //     }
+    // },
+
+
 
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
