@@ -86,16 +86,15 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi, getStudentPaymentApi,
+    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
-
 
 
 export const getClientAction = (data) => (dispatch) => {
     console.log(data);
     dispatch({
-        api:getClientList,
+        api: getClientList,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_CLIENT_SUCCESS,
@@ -107,8 +106,8 @@ export const getClientAction = (data) => (dispatch) => {
 export const saveClientAction = (data) => (dispatch) => {
     console.log(data.id);
     dispatch({
-        api : (data.id ? editClientApi : saveClientApi),
-        types:[
+        api: (data.id ? editClientApi : saveClientApi),
+        types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_CLIENT_SUCCESS,
             types.REQUEST_ERROR,
@@ -123,8 +122,8 @@ export const saveClientAction = (data) => (dispatch) => {
 }
 export const deleteClientAction = (data) => (dispatch) => {
     dispatch({
-        api : deleteClientApi,
-        types:[
+        api: deleteClientApi,
+        types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
@@ -132,8 +131,8 @@ export const deleteClientAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         dispatch({
-            type:"updateState",
-            payload : {
+            type: "updateState",
+            payload: {
                 deleteModal: false
             }
         })
@@ -1001,17 +1000,6 @@ export const getTeacherGroupsAction = (data) => (dispatch) => {
         data: data
     })
 }
-export const getStudentPaymentAction = (data) => (dispatch) => {
-    dispatch({
-        api: getStudentPaymentApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS,
-            types.REQUEST_ERROR,
-        ],
-        data: data
-    })
-}
 export const saveTeacherAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editTeacherApi : saveTeacherApi),
@@ -1064,3 +1052,46 @@ export const deleteTeacherAction = (data) => (dispatch) => {
         })
     })
 }
+
+
+// START STUDENT PAYMENT ACTIONS
+export const getStudentPaymentAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const getStudentGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentGroupsApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_GROUPS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const saveStudentPaymentAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editStudentApi : saveStudentPaymentApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getStudentAction({id: data.studentId}))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+
+// FINISH STUDENT PAYMENT ACTIONS

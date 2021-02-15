@@ -52,7 +52,7 @@ class AdminLayout extends Component {
                                 </div>
                             </Link>
                             <Link to="/admin/clients" className={
-                                 this.props.pathname === "/admin/clients" ?
+                                this.props.pathname === "/admin/clients" ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-customer"/>
@@ -79,7 +79,7 @@ class AdminLayout extends Component {
                                 </div>
                             </Link>
                             <Link to="/admin/teachers" className={
-                                this.props.pathname === "/admin/teacher" ?
+                                this.props.pathname === "/admin/teachers" ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-teacher"/>
