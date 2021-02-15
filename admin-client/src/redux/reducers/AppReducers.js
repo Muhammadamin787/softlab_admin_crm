@@ -32,7 +32,8 @@ const initState = {
     userDto: [],
     specialization: [],
     specializationDto: [],
-    currentItem: []
+    currentItem: [],
+    selectClients: []
 };
 
 const reducers = {
@@ -44,6 +45,21 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+    },
+    [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
+        console.log(payload)
+        state.currentItem = payload.payload.object
+    },
+    //Client
+    [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.selectClients = payload.payload.object.object.sort((a,b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+        }
+    },
+    [types.REQUEST_SAVE_CLIENT_SUCCESS] (state,payload){
+        state.showModal =false
     },
 
     // Room
