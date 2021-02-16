@@ -24,6 +24,7 @@ const initState = {
     parentItems: [],
     readModal: false,
     showAddGroupModal: false,
+    changeStatusModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],

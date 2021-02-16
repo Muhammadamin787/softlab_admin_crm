@@ -245,28 +245,32 @@ class SelectStudent extends Component {
                                                 <div className={"col-md-5"}>
                                                     <h4>Guruhlar</h4>
                                                     <div className={" ml-2 bg-white student-group-block"}>
-                                                        {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
-                                                            <Row key={i} className={"p-2"}>
-                                                                <Col md={3} className={"text-center"}>
-                                                                    <Link to={"/admin/group/" + item.group.id}>
+                                                        {currentItem && currentItem.id && currentItem.groupList ? currentItem.groupList.map((item, i) =>
+                                                                <Row key={i} className={"p-2"}>
+                                                                    <Col md={3} className={"text-center"}>
+                                                                        <Link to={"/admin/group/" + item.group.id}>
                                                                         <span
                                                                             className={"group-name"}> {item.group && item.group.name}</span>
-                                                                    </Link>
-                                                                </Col>
-                                                                <Col md={5}>
+                                                                        </Link>
+                                                                    </Col>
+                                                                    <Col md={5}>
                                                                         <span
                                                                             className={"text-left"}>{item.group && item.group.course && item.group.course.name}</span>
-                                                                </Col>
-                                                                <Col md={2}>
-                                                                    <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
-                                                                </Col>
-                                                                <Col md={2}><span
-                                                                    className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
-                                                                    <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                                    </Col>
+                                                                    <Col md={2}>
+                                                                        <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                                    </Col>
+                                                                    <Col md={2}><span
+                                                                        className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
+                                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
                                                                         </span>
-                                                                </Col>
-                                                            </Row>
-                                                        )}
+                                                                    </Col>
+                                                                </Row>
+                                                            ) :
+                                                            <h6 className="text-center">
+                                                                Guruh topilmadi
+                                                            </h6>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,21 +14,37 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDto {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID userId;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String fullName;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String description;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int age;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Region region;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer regionId;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String gender;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Attachment avatar;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String birthDate;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Role> roles;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Permission> permissions;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double balans;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<StudentGroup> groupList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<UUID> groupIds;
 
     public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {

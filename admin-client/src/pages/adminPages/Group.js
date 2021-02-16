@@ -86,15 +86,15 @@ class Group extends Component {
                     </div>
                     <Table className={"table-style"}>
                         <thead className={""}>
-                        <tr className={"text-center"}>
-                            <th>No</th>
-                            <th>Nomi</th>
-                            <th>Kurs nomi</th>
-                            <th>O'qituvchi</th>
-                            <th>Dars kunlari</th>
-                            <th>Dars vaqti</th>
-                            <th>Dars sanalari</th>
-                            <th>Amal</th>
+                        <tr className={""}>
+                            <td>T/r</td>
+                            <td>Nomi</td>
+                            <td>Kurs nomi</td>
+                            <td>O'qituvchi</td>
+                            <td>Kunlari</td>
+                            {/*<th>Vaqti</th>*/}
+                            <td>Dars sanalari</td>
+                            <td>Amal</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -108,8 +108,8 @@ class Group extends Component {
                                 </td>
                                 <td>{item.courseName}</td>
                                 <td>{item.teacherName}</td>
-                                <td>{item.weekdays && item.weekdays.map((i) => <span>{i}, </span>)}</td>
-                                <td>{item.startTime + " - " + item.finishTime}</td>
+                                <td>{item.weekdays && item.weekdays.map((i) => <span>{i}, </span>)}
+                                    <br/>{item.startTime + " - " + item.finishTime}</td>
                                 <td>{
                                     moment(item.startDate).format("DD-mm-yyyy") + " -- " +
                                     moment(item.finishDate).format("DD-mm-yyyy")

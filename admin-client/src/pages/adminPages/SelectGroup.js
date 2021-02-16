@@ -53,6 +53,7 @@ class SelectGroup extends Component {
     render() {
         const {currentObject, dropdownOpen, setDropdownOpen} = this.state;
         const {
+            changeStatusModal,
             students,
             history,
             dispatch,
@@ -83,6 +84,15 @@ class SelectGroup extends Component {
                 }
             }
         }
+        const changeStatusOpenModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    changeStatusModal: !changeStatusModal
+                }
+            })
+        }
         const showDropdown = (item) => {
             this.setState({dropdownOpen: !dropdownOpen})
         }
@@ -100,6 +110,9 @@ class SelectGroup extends Component {
                 let id = this.props.match.params.id;
                 dispatch(deleteGroupAction({...item, history: history, courseCategoryId: id}))
             }
+        }
+        const changeStudentStatus = (e, v) => {
+            console.log(v);
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
@@ -176,21 +189,11 @@ class SelectGroup extends Component {
                                             <div
                                                 className="col-5">{student.user && formatPhoneNumber(student.user.phoneNumber)}</div>
                                             <div className="col-2">
-                                                <Dropdown id={"id" + i} isOpen={dropdownOpen} toggle={showDropdown}>
-                                                    <DropdownToggle caret>
-                                                        ...
-                                                    </DropdownToggle>
-                                                    <DropdownMenu>
-                                                        <DropdownItem header>Header</DropdownItem>
-                                                        <DropdownItem>Some Action</DropdownItem>
-                                                        <DropdownItem text>Dropdown Item Text</DropdownItem>
-                                                        <DropdownItem disabled>Action (disabled)</DropdownItem>
-                                                        <DropdownItem divider/>
-                                                        <DropdownItem>Foo Action</DropdownItem>
-                                                        <DropdownItem>Bar Action</DropdownItem>
-                                                        <DropdownItem>Quo Action</DropdownItem>
-                                                    </DropdownMenu>
-                                                </Dropdown>
+                                                <Button className="table-icon"
+                                                        onClick={() => changeStatusOpenModal(currentItem)}>
+                                                    <EditIcon/>
+                                                </Button>
+
                                             </div>
                                         </div>
                                     )}
@@ -231,24 +234,13 @@ class SelectGroup extends Component {
 
                                     <AvCheckboxGroup inline name="weekdays"
                                                      label="Dars kunlari" required>
-                                        <AvCheckbox label="Dush"
-                                                    value="MONDAY"
-                                            defaultChecked={true}
-                                                    defaultValue={true}
-                                            defaultChecked={currentObject && currentObject.weekdays.some(item => "MONDAY")}
-                                        />
-                                        <AvCheckbox label="Sesh" value="TUESDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "TUESDAY")}/>
-                                        <AvCheckbox label="Chor" value="WEDNESDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "WEDNESDAY")}/>
-                                        <AvCheckbox label="Pay" value="THURSDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "THURSDAY")}/>
-                                        <AvCheckbox label="Ju" value="FRIDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "FRIDAY")}/>
-                                        <AvCheckbox label="Shan" value="SATURDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "SATURYDAY")}/>
-                                        <AvCheckbox label="Yak" value="SUNDAY"
-                                                    defaultChecked={currentObject && currentObject.weekdays.some(item => "SUNDAY")}/>
+                                        <AvCheckbox label="Dush" value="MONDAY"/>
+                                        <AvCheckbox label="Sesh" value="TUESDAY"/>
+                                        <AvCheckbox label="Chor" value="WEDNESDAY"/>
+                                        <AvCheckbox label="Pay" value="THURSDAY"/>
+                                        <AvCheckbox label="Ju" value="FRIDAY"/>
+                                        <AvCheckbox label="Shan" value="SATURDAY"/>
+                                        <AvCheckbox label="Yak" value="SUNDAY"/>
                                     </AvCheckboxGroup>
 
                                     <AvField className={'form-control'} label={"Xona:"} type="select"
@@ -299,6 +291,25 @@ class SelectGroup extends Component {
                         <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
+                <Modal isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")} className={""}>
+                    <AvForm onValidSubmit={changeStudentStatus}>
+                        <ModalHeader isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            <AvField className={'form-control'} label={"Status:"} type="select"
+                                     name="status" required>
+                                <option value={"TRANSFER"}>Boshqa guruhga ko'chirish</option>
+                                <option value={"AKTIVE"}>Faollashtirish</option>
+                                <option value={"FROZEN"}>Muzlatish</option>
+                                <option value={"ARCHIVE"}>Arxivlash</option>
+                            </AvField>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={changeStudentStatus}>Saqlash</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
             </AdminLayout>
         );
     }
@@ -308,6 +319,7 @@ SelectGroup.propTypes = {};
 
 export default connect(({
                             app: {
+                                changeStatusModal,
                                 students,
                                 teachers,
                                 getItems,
@@ -323,6 +335,7 @@ export default connect(({
                                 readModal,
                             },
                         }) => ({
+        changeStatusModal,
         students,
         teachers,
         getItems,
