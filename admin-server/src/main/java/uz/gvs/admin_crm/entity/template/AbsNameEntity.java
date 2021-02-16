@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.entity.template;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,12 +25,15 @@ public abstract class AbsNameEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Column
     private String name;
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Column(columnDefinition = "text")
     private String description;
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Column
     private boolean active;
 

@@ -84,7 +84,7 @@ class Course extends Component {
                         <Link
                             to={"/admin/courses/list"}
                             className={"text-decoration-none"}>
-                            <span className={""}>Kurslar</span>
+                            <span className={""}>Kurs bo'limlari</span>
                         </Link>
                     </hgroup>
 

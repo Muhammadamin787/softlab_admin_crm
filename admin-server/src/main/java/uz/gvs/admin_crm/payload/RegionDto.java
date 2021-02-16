@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,15 @@ import uz.gvs.admin_crm.entity.Region;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegionDto {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private Integer id;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String description;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private boolean active;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private Integer regionId;
 
     public RegionDto(Integer id, String name, String description, boolean active) {

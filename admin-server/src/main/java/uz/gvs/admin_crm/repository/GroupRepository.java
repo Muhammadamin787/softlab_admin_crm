@@ -16,6 +16,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     boolean existsByNameEqualsIgnoreCaseAndCourseIdAndIdNot(String name, Integer course_id, Integer id);
 
-    @Query(nativeQuery = true, value = "select * from groups where id=(select group_id from student_group where id=(select student_group_id from student_student_group where student_id=:ketmon))")
+    @Query(nativeQuery = true, value = "select * from groups where id=ANY(select group_id from student_group where id=ANY(select student_group_id from student_student_group where student_id=:ketmon))")
     List<Group> getStudentGroupList(UUID ketmon);
 }

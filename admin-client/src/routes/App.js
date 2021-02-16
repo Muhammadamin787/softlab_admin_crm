@@ -25,6 +25,7 @@ import SelectTeacher from "../pages/adminPages/SelectTeacher";
 import SelectGroup from "../pages/adminPages/SelectGroup";
 import StudentPayment from "../pages/adminPages/StudentPayment";
 import Client from "../pages/adminPages/Client"
+import Staff from "../pages/adminPages/Staff";
 
 
 const App = () => {
@@ -55,6 +56,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
                 <PrivateRoute exact path="/admin/studentPayment/:id" component={StudentPayment}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
+                <PrivateRoute exact path="/admin/staff" component={Staff}/>
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

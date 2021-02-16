@@ -24,6 +24,7 @@ const initState = {
     parentItems: [],
     readModal: false,
     showAddGroupModal: false,
+    changeStatusModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
@@ -33,7 +34,8 @@ const initState = {
     specialization: [],
     specializationDto: [],
     currentItem: [],
-    studentPayment : [],
+    studentPayment: [],
+    selectGroups: [],
     selectClients: []
 };
 
@@ -54,13 +56,13 @@ const reducers = {
     //Client
     [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
-            state.selectClients = payload.payload.object.object.sort((a,b) =>
+            state.selectClients = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
         }
     },
-    [types.REQUEST_SAVE_CLIENT_SUCCESS] (state,payload){
-        state.showModal =false
+    [types.REQUEST_SAVE_CLIENT_SUCCESS](state, payload) {
+        state.showModal = false
     },
 
     // Room
@@ -320,19 +322,22 @@ const reducers = {
     },
 
 
-    // [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
-    //     if (payload && payload.payload && payload.payload.object) {
-    //         state.studentGroups = payload.payload.object.object.sort((a, b) =>
-    //             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-    //         );
-    //         let ketmon = []
-    //         for (let i = 0; i < state.regions.length; i++) {
-    //             ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
-    //         }
-    //         state.selectItems = ketmon
-    //     }
-    // },
-
+    [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        state.showPaymentModal = false;
+        state.showModal = false;
+    },
+    [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object) {
+            state.studentGroups = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            let ketmon = []
+            for (let i = 0; i < state.studentGroups.length; i++) {
+                ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
+            }
+            state.selectGroups = ketmon
+        }
+    },
 
 
     // Attachment

@@ -6,6 +6,9 @@
   width: auto;
 
   tbody {
+    font-size: 15px;
+    font-weight: normal;
+    font-family: Nunito, sans-serif !important;
 
     .table-tr {
       position: relative !important;
@@ -163,8 +166,8 @@
     top: 0;
     right: 0;
     min-height: 100vh !important;
-    max-width: 25vw !important;
-    width: 25vw;
+    max-width: 30vw !important;
+    width: 30vw;
     font-family: Nunito, sans-serif;
 
     .modal-header {

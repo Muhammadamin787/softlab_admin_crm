@@ -4,13 +4,13 @@ import {api} from './api'
 
 //client
 export const saveClientApi = (data) => {
-    return HttpClient.doPost(api.client,data)
+    return HttpClient.doPost(api.client, data)
 }
 export const editClientApi = (data) => {
-    return HttpClient.doPut(api.client + "/" +data.id, data)
+    return HttpClient.doPut(api.client + "/" + data.id, data)
 }
 export const deleteClientApi = (data) => {
-    return HttpClient.doDelete(api.client + "/" +data.id)
+    return HttpClient.doDelete(api.client + "/" + data.id)
 }
 export const getClientList = () => {
     return HttpClient.doGet(api.client)
@@ -234,11 +234,20 @@ export const deleteStudentApi = (data) => {
 export const studentAddGroup = (data) => {
     return HttpClient.doPost(api.group + "/addStudent", data)
 }
-export const getStudentPaymentApi = (data) =>{
-    return HttpClient.doGet(api.studentPayment + "/"+ data)
+export const getStudentPaymentApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/" + data)
+}
+export const getStudentGroupsApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/studentGroup/" + data)
 }
 
 // FINISH STUDENT API
+
+// START STUDENT PAYMENT API
+export const saveStudentPaymentApi = (data) => {
+    return HttpClient.doPost(api.studentPayment + "/" + data.studentId, data)
+}
+// FINISH STUDENT PAYMENT API
 
 // START TEACHER API
 export const saveTeacherApi = (data) => {

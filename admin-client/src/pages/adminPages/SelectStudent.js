@@ -22,8 +22,8 @@ import {
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
-    getStudentAction, getStudentPaymentAction,
-    saveStudentAction, studentAddGroupAction,
+    getStudentAction, getStudentGroupAction, getStudentPaymentAction,
+    saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -44,7 +44,7 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
-        this.props.dispatch(getStudentPaymentAction(this.props.match.params.id))
+        this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
 
     }
 
@@ -68,7 +68,7 @@ class SelectStudent extends Component {
             deleteModal,
             currentItem,
             regions,
-            payTypes, studentPayment
+            payTypes, studentPayment, selectGroups
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: false})
@@ -114,6 +114,11 @@ class SelectStudent extends Component {
                 this.setState({addGroup: e.value})
             }
         }
+        const setPaymentGroup = (e, v) => {
+            if (e && e.value) {
+                this.setState({addGroup: e.value})
+            }
+        }
         const saveAddGroup = (e, v) => {
             if (currentObject && currentObject.id && addGroup)
                 dispatch(studentAddGroupAction({
@@ -124,15 +129,25 @@ class SelectStudent extends Component {
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
-                v.id = currentObject.id
-                v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
-                dispatch(saveStudentAction(v))
+                if (showPaymentModal) {
+                    v.groupId = addGroup;
+                    v.studentId = currentObject.id;
+                    v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    dispatch(saveStudentPaymentAction(v));
+                } else {
+                    v.id = currentObject.id
+                    v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    dispatch(saveStudentAction(v))
+                }
             }
         }
         const toggle = tab => {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
             if (tab === "2") {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    dispatch(getStudentPaymentAction(this.props.match.params.id))
+                }
             }
         }
         return (
@@ -230,28 +245,32 @@ class SelectStudent extends Component {
                                                 <div className={"col-md-5"}>
                                                     <h4>Guruhlar</h4>
                                                     <div className={" ml-2 bg-white student-group-block"}>
-                                                        {currentItem && currentItem.id && currentItem.groupList && currentItem.groupList.map((item, i) =>
-                                                            <Row key={i} className={"p-2"}>
-                                                                <Col md={3} className={"text-center"}>
-                                                                    <Link to={"/admin/group/" + item.group.id}>
+                                                        {currentItem && currentItem.id && currentItem.groupList ? currentItem.groupList.map((item, i) =>
+                                                                <Row key={i} className={"p-2"}>
+                                                                    <Col md={3} className={"text-center"}>
+                                                                        <Link to={"/admin/group/" + item.group.id}>
                                                                         <span
                                                                             className={"group-name"}> {item.group && item.group.name}</span>
-                                                                    </Link>
-                                                                </Col>
-                                                                <Col md={5}>
+                                                                        </Link>
+                                                                    </Col>
+                                                                    <Col md={5}>
                                                                         <span
                                                                             className={"text-left"}>{item.group && item.group.course && item.group.course.name}</span>
-                                                                </Col>
-                                                                <Col md={2}>
-                                                                    <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
-                                                                </Col>
-                                                                <Col md={2}><span
-                                                                    className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
-                                                                    <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                                    </Col>
+                                                                    <Col md={2}>
+                                                                        <p className={"text-secondary"}>{item.group && item.group.startTime + " - " + item.group && item.group.finishTime}</p>
+                                                                    </Col>
+                                                                    <Col md={2}><span
+                                                                        className={"text-secondary"}>{item.group && item.group.weekdays && item.group.weekdays.map(i =>
+                                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
                                                                         </span>
-                                                                </Col>
-                                                            </Row>
-                                                        )}
+                                                                    </Col>
+                                                                </Row>
+                                                            ) :
+                                                            <h6 className="text-center">
+                                                                Guruh topilmadi
+                                                            </h6>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -261,21 +280,20 @@ class SelectStudent extends Component {
                                                 <thead>
                                                 <tr>
                                                     <td>#</td>
-                                                    <td>summa</td>
-                                                    <td>pay type</td>
-                                                    <td>comment</td>
-                                                    <td>vaqti</td>
+                                                    <td>Miqdor</td>
+                                                    <td>To'lov turi</td>
+                                                    <td>Izoh</td>
+                                                    <td>To'langan vaqti</td>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {console.log(studentPayment)}
                                                 {studentPayment ? studentPayment.map((item, i) =>
                                                     <tr key={i + 1}>
                                                         <td>{i + 1}</td>
                                                         <td>{item.sum}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>
                                                         <td>{item.comment}</td>
-                                                        <td>{item.payDate}</td>
+                                                        <td>{moment(item.payDate).format('LLL').toString()}</td>
                                                     </tr>
                                                 ) : 'Malumot topilmadi'}
                                                 </tbody>
@@ -303,12 +321,13 @@ class SelectStudent extends Component {
                                     placeholer={"nomi"} required/>
                                 {showPaymentModal ?
                                     <>
+                                        {console.log(selectGroups)}
                                         <Select
                                             placeholder="Guruhni tanlang..."
-                                            name="regionId"
+                                            name="groupId"
                                             isSearchable={true}
-                                            options={getItems}
-                                            onChange={getAddGroup}
+                                            options={selectGroups}
+                                            onChange={setPaymentGroup}
                                             className="basic-multi-select"
                                             classNamePrefix="select"
                                         />
@@ -327,8 +346,8 @@ class SelectStudent extends Component {
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
                                         <AvField
-                                            type={"date"}
-                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            type={"datetime-local"}
+                                            defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
                                                 : ""}
                                             label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
                                             required/>
@@ -434,13 +453,15 @@ export default connect(({
                                 durationTypes,
                                 getItems,
                                 readModal,
-                                studentPayment
+                                studentPayment,
+                                selectGroups
                             },
                         }) => ({
         selectItems,
         showAddGroupModal,
         payTypes,
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal, studentPayment
+        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal, studentPayment,
+        selectGroups
     })
 )(SelectStudent);

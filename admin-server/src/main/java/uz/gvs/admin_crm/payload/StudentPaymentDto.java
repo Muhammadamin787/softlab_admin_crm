@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,17 +17,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentPaymentDto {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private PayType payType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Student student;
     private double sum;
     private String payDate;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String comment;
 
     private Integer groupId;
     private UUID studentId;
     private Integer payTypeId;
-
 
 
     public StudentPaymentDto(UUID id, PayType payType, Student student, double sum, String payDate, String comment) {
