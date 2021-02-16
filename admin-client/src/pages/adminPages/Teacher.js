@@ -113,12 +113,12 @@ class Teacher extends Component {
                             qo'shish
                         </Button>
                     </div>
-                    <Table className={"table-style"}>
+                    <Table className={"table-style w-75"}>
                         <thead className={""}>
-                        <tr className={"text-center"}>
+                        <tr className={""}>
                             <th>No</th>
-                            <th>FISH</th>
-                            <th>Telefon raqami</th>
+                            <th>Ism</th>
+                            <th>Telefon</th>
                             <th colSpan="2">Amal</th>
                         </tr>
                         </thead>

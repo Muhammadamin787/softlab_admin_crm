@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,9 +18,10 @@ import javax.persistence.UniqueConstraint;
 @NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name","region_id"})
+        @UniqueConstraint(columnNames = {"name", "region_id"})
 })
 public class Region extends AbsNameEntity {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @ManyToOne
     private Region region;
 

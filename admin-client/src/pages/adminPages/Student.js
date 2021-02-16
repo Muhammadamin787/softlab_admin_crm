@@ -15,6 +15,7 @@ import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 
 
 class Student extends Component {
@@ -105,12 +106,12 @@ class Student extends Component {
                             qo'shish
                         </Button>
                     </div>
-                    <Table className={"table-style"}>
+                    <Table className={"table-style w-75"}>
                         <thead className={""}>
-                        <tr className={"text-center"}>
+                        <tr className={""}>
                             <th>No</th>
-                            <th>FISH</th>
-                            <th>Telefon raqami</th>
+                            <th>Ism</th>
+                            <th>Telefon</th>
                             <th colSpan="2">Amal</th>
                         </tr>
                         </thead>
@@ -124,14 +125,9 @@ class Student extends Component {
                                     </Link>
                                 </td>
                                 <td>
-                                    {/*<Link to={"/admin/student/" + (item.id)}>*/}
-                                    {item.phoneNumber}
-                                    {/*</Link>*/}
+                                    {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                 </td>
                                 <td>
-                                    {/*<Button className="table-icon" onClick={() => openModal(item)}>*/}
-                                    {/*    <EditIcon/>*/}
-                                    {/*</Button>*/}
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>

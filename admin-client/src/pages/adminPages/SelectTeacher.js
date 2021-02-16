@@ -148,7 +148,7 @@ class SelectTeacher extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"col-md-5"}>
+                                <div className={"col-md-6"}>
                                     <h4>Guruhlar</h4>
                                     <div className={" ml-2 bg-white student-group-block"}>
                                         {groups && groups.length > 0 ? groups.map((item, i) =>
@@ -157,14 +157,14 @@ class SelectTeacher extends Component {
                                                     <span
                                                         className={"group-name"}> {item.name}</span>
                                                 </Col>
-                                                <Col md={5}>
+                                                <Col md={4}>
                                                     <span
                                                         className={"text-left"}>{item.course && item.course.name}</span>
                                                 </Col>
                                                 <Col md={2}>
                                                     <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
                                                 </Col>
-                                                <Col md={2}>
+                                                <Col md={3}>
                                                     <span
                                                         className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
                                                         <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
