@@ -83,10 +83,4 @@ StudentController {
         ApiResponse apiResponse = studentService.makeSituation(situationDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
-    @PatchMapping
-    public HttpEntity<?> moveGroup(@RequestBody SituationDto situationDto) {
-        ApiResponse apiResponse = studentService.moveGroup(situationDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
 }

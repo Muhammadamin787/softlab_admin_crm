@@ -346,27 +346,6 @@ public class StudentService {
         return true;
     }
 
-    public ApiResponse moveGroup(SituationDto situationDto) {
-        Optional<Student> optional = studentRepository.findById(situationDto.getStudentId());
-        Optional<Group> groupOptional = groupRepository.findById(situationDto.getGroupId());
-        if (optional.isPresent()) {
-            if (groupOptional.isPresent()) {
-                Student student = optional.get();
-                for (StudentGroup studentGroup : student.getStudentGroup()) {
-//                    if (studentGroup.getGroup().getId().equals(situationDto.getGroupOld())) {
-//                        studentGroup.setGroup(groupOptional.get());
-//                        studentRepository.save(student);
-//                        return apiResponseService.updatedResponse();
-//                    }
-                }
-                return apiResponseService.notFoundResponse();
-            }
-            return apiResponseService.notFoundResponse();
-        }
-        return apiResponseService.notFoundResponse();
-    }
-///
-
     /// StudentGroups for studentPayment
     public ApiResponse getStudentGroups(UUID id) {
         try {
