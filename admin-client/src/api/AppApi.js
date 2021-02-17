@@ -130,6 +130,9 @@ export const getGroupStudentsApi = (data) => {
 export const saveGroupApi = (data) => {
     return HttpClient.doPost(api.group, data)
 }
+export const changeStudentGroupStatusApi = (data) => {
+    return HttpClient.doPatch(api.student+"/changeGroupStatus", data)
+}
 export const editGroupApi = (data) => {
     if (data && data.id)
         return HttpClient.doPut(api.group + "/" + data.id, data)

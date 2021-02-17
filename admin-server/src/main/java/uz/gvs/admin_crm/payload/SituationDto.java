@@ -12,6 +12,6 @@ import java.util.UUID;
 public class SituationDto {
     private UUID studentId;
     private Integer groupId;
-    private Integer groupOld;
+    private Integer newGroupId;
     private String situation;
 }

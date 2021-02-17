@@ -46,6 +46,8 @@ public class StudentDto {
     private Set<StudentGroup> groupList;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<UUID> groupIds;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private StudentGroup studentGroup;
 
     public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {
         this.id = id;
@@ -61,4 +63,12 @@ public class StudentDto {
         this.balans = balans;
         this.groupList = groupList;
     }
+
+    public StudentDto(UUID id, String fullName, String phoneNumber, StudentGroup group) {
+        this.id = id;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.studentGroup = group;
+    }
+
 }

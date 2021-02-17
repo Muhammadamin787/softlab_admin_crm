@@ -86,7 +86,7 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi,
+    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi, changeStudentGroupStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -553,10 +553,10 @@ export const deleteGroupAction = (data) => (dispatch) => {
         if (data && data.id) {
             data.history.go(-1)
         }
-        this.props.dispatch(getGroupsAction({page: 0, size: 20}))
-        this.props.dispatch(getRoomListAction())
-        this.props.dispatch(getCoursesAction())
-        this.props.dispatch(getTeachersForSelectAction())
+        dispatch(getGroupsAction({page: 0, size: 20}))
+        dispatch(getRoomListAction())
+        dispatch(getCoursesAction())
+        dispatch(getTeachersForSelectAction())
     }).catch((err) => {
         toast.error("Xatolik")
         dispatch({
@@ -585,6 +585,34 @@ export const saveGroupAction = (data) => (dispatch) => {
             dispatch(getTeachersForSelectAction())
         } else {
             dispatch(getGroupsAction())
+        }
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+export const changeStudentGroupStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeStudentGroupStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                changeStatusModal: false
+            }
+        })
+        toast.success(res.payload.message)
+        if (data && data.groupId) {
+            dispatch(getGroupAction({id: data.groupId}))
+            dispatch(getGroupStudentsAction({id: data.groupId}))
+            dispatch(getRoomListAction())
+            dispatch(getCoursesAction())
+            dispatch(getTeachersForSelectAction())
         }
     }).catch((err) => {
         toast.error("Xatolik!")

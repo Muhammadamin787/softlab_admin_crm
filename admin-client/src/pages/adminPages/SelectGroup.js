@@ -15,9 +15,10 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
+    changeStudentGroupStatusAction,
     deleteCourseAction, deleteGroupAction,
     getCoursesAction,
-    getGroupAction, getGroupStudentsAction,
+    getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
     getRoomListAction,
     getTeachersForSelectAction,
     saveGroupAction,
@@ -29,17 +30,20 @@ import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
+import Select from "react-select";
 
 class SelectGroup extends Component {
     componentDidMount() {
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            const {dispatch} = this.props
             id = this.props.match.params.id;
-            this.props.dispatch(getGroupAction({id: id}))
-            this.props.dispatch(getGroupStudentsAction({id: id}))
-            this.props.dispatch(getRoomListAction())
-            this.props.dispatch(getCoursesAction())
-            this.props.dispatch(getTeachersForSelectAction())
+            dispatch(getGroupAction({id: id}))
+            dispatch(getGroupStudentsAction({id: id}))
+            dispatch(getRoomListAction())
+            dispatch(getCoursesAction())
+            dispatch(getGroupsForSelectAction())
+            dispatch(getTeachersForSelectAction())
         }
     }
 
@@ -47,12 +51,15 @@ class SelectGroup extends Component {
         showModal: false,
         currentObject: "",
         dropdownOpen: false,
-        setDropdownOpen: false
+        setDropdownOpen: false,
+        groupInput: false,
+        newGroup: [],
     }
 
     render() {
         const {currentObject, dropdownOpen, setDropdownOpen} = this.state;
         const {
+            selectItems,
             changeStatusModal,
             students,
             history,
@@ -111,8 +118,24 @@ class SelectGroup extends Component {
                 dispatch(deleteGroupAction({...item, history: history, courseCategoryId: id}))
             }
         }
+        const openGroupSelects = (e, v) => {
+            if (v === "TRANSFER") {
+                this.setState({groupInput: true})
+            } else {
+                this.setState({groupInput: false})
+            }
+        }
         const changeStudentStatus = (e, v) => {
-            console.log(v);
+            if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                v.groupId = this.props.match.params.id;
+                v.studentId = currentObject.id
+                if (v.situation === "TRANSFER")
+                    v.newGroupId = this.state.newGroup
+                dispatch(changeStudentGroupStatusAction(v))
+            }
+        }
+        const getTransferGroup = (e, v) => {
+            this.setState({newGroup: e.value})
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
@@ -182,15 +205,34 @@ class SelectGroup extends Component {
                                         </Button>
                                     </div>
                                 </div>
+                                {/* START GURUHDAGI STUDENTLAR RO'YHATI*/}
                                 <div className={"student-list border-top p-3"}>
                                     {students && students.length > 0 && students.map((student, i) =>
                                         <div key={i} className={"row"}>
-                                            <div className="col-5">{student.user && student.user.fullName}</div>
+                                            {student.studentGroup ?
+                                                <div className="col-5">
+                                                    {student.studentGroup.studentGroupStatus === "ACTIVE" ?
+                                                        <span className={"text-success"}>*</span>
+                                                        : ""}
+                                                    <span
+                                                        className={student.studentGroup.studentGroupStatus === "TRANSFER" ?
+                                                            "bg-light text-secondary p-1" :
+                                                            student.studentGroup.studentGroupStatus === "ACTIVE" ?
+                                                                "text-success p-1" :
+                                                                student.studentGroup.studentGroupStatus === "FROZEN" ?
+                                                                    "bg-info text-white p-1" :
+                                                                    student.studentGroup.studentGroupStatus === "TEST_LESSON" ?
+                                                                        "bg-warning text-dark p-1" :
+                                                                        ""}>
+                                                {student.fullName}
+                                                </span>
+                                                </div>
+                                                : ""}
                                             <div
-                                                className="col-5">{student.user && formatPhoneNumber(student.user.phoneNumber)}</div>
+                                                className="col-5">{formatPhoneNumber(student.phoneNumber)}</div>
                                             <div className="col-2">
                                                 <Button className="table-icon"
-                                                        onClick={() => changeStatusOpenModal(currentItem)}>
+                                                        onClick={() => changeStatusOpenModal(student)}>
                                                     <EditIcon/>
                                                 </Button>
 
@@ -198,6 +240,7 @@ class SelectGroup extends Component {
                                         </div>
                                     )}
                                 </div>
+                                {/* FINISH GURUHDAGI STUDENTLAR RO'YHATI*/}
                             </div>
                             : ""}
                     </div>
@@ -296,17 +339,30 @@ class SelectGroup extends Component {
                         <ModalHeader isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            <AvField className={'form-control'} label={"Status:"} type="select"
-                                     name="status" required>
+                            <AvField className={'form-control'} onChange={openGroupSelects} label={"Status:"}
+                                     type="select"
+                                     name="situation" required>
+                                <option value={"0"}>Statusni tanglang</option>
                                 <option value={"TRANSFER"}>Boshqa guruhga ko'chirish</option>
-                                <option value={"AKTIVE"}>Faollashtirish</option>
+                                <option value={"ACTIVE"}>Faollashtirish</option>
                                 <option value={"FROZEN"}>Muzlatish</option>
                                 <option value={"ARCHIVE"}>Arxivlash</option>
                             </AvField>
+                            {this.state.groupInput ?
+                                <Select
+                                    placeholder="Guruhni tanlang..."
+                                    name="newGroupId"
+                                    isSearchable={true}
+                                    options={selectItems}
+                                    onChange={getTransferGroup}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                                : ""}
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
-                            <Button color="light" onClick={changeStudentStatus}>Saqlash</Button>
+                            <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
                 </Modal>
@@ -319,6 +375,7 @@ SelectGroup.propTypes = {};
 
 export default connect(({
                             app: {
+                                selectItems,
                                 changeStatusModal,
                                 students,
                                 teachers,
@@ -335,6 +392,7 @@ export default connect(({
                                 readModal,
                             },
                         }) => ({
+        selectItems,
         changeStatusModal,
         students,
         teachers,
