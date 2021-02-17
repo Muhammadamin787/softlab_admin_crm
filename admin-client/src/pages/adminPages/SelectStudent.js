@@ -321,7 +321,6 @@ class SelectStudent extends Component {
                                     placeholer={"nomi"} required/>
                                 {showPaymentModal ?
                                     <>
-                                        {console.log(selectGroups)}
                                         <Select
                                             placeholder="Guruhni tanlang..."
                                             name="groupId"
@@ -409,7 +408,7 @@ class SelectStudent extends Component {
                                     placeholder="Guruhni tanlang..."
                                     name="regionId"
                                     isSearchable={true}
-                                    options={getItems}
+                                    options={selectItems}
                                     onChange={getAddGroup}
                                     className="basic-multi-select"
                                     classNamePrefix="select"

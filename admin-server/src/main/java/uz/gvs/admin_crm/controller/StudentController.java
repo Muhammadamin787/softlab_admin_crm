@@ -78,9 +78,9 @@ StudentController {
     }
 
 
-    @PatchMapping("{id}")
-    public HttpEntity<?> makeSituation(@RequestBody SituationDto situationDto, @PathVariable UUID id) {
-        ApiResponse apiResponse = studentService.makeSituation(situationDto, id);
+    @PatchMapping("/changeGroupStatus")
+    public HttpEntity<?> makeSituation(@RequestBody SituationDto situationDto) {
+        ApiResponse apiResponse = studentService.makeSituation(situationDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
