@@ -32,15 +32,15 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getClient(@RequestBody UUID id){
+    public HttpEntity<?> getClient(@RequestBody UUID id) {
         ApiResponse client = clientService.getClient(id);
         return ResponseEntity.status(client.isSuccess() ? 200 : 409).body(client);
     }
 
     @GetMapping
-    public HttpEntity<?> getClientList(@RequestParam(name = "page",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                       @RequestParam(name = "size",defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                       @CurrentUser User user){
+    public HttpEntity<?> getClientList(@RequestParam(name = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                       @RequestParam(name = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                       @CurrentUser User user) {
         ApiResponse apiResponse = clientService.getClientList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
@@ -55,8 +55,8 @@ public class ClientController {
     public HttpEntity<?> deleteClient(@PathVariable UUID id) {
         try {
             clientService.deleteClient(id);
-            return  ResponseEntity.status(204).body(apiResponseService.deleteResponse());
-        }catch (Exception a){
+            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
+        } catch (Exception a) {
             return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
         }
     }

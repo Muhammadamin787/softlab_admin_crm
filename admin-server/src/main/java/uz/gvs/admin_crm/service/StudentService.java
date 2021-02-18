@@ -14,10 +14,7 @@ import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +35,8 @@ public class StudentService {
     StudentPaymentRepository studentPaymentRepository;
     @Autowired
     PayTypeRepository payTypeRepository;
+    @Autowired
+    StudentGroupRepository studentGroupRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -91,11 +90,31 @@ public class StudentService {
 
     public ApiResponse getGroupStudents(Integer id) {
         try {
-            List<Student> allByStudentGroup_group_id = studentRepository.findAllByStudentGroup_Group_id(id);
-            return apiResponseService.getResponse(allByStudentGroup_group_id);
+            List<Student> studentList = studentRepository.findAllByStudentGroup_Group_id(id);
+            List<StudentDto> studentDtos = new ArrayList<>();
+            for (Student student : studentList) {
+                UUID groupId = null;
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId().equals(id)) {
+                        groupId = studentGroup.getId();
+                        break;
+                    }
+                }
+                studentDtos.add(makeGroupStudentDtoList(student, groupId));
+            }
+            return apiResponseService.getResponse(studentDtos);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
+    }
+
+    public StudentDto makeGroupStudentDtoList(Student student, UUID id) {
+        return new StudentDto(
+                student.getId(),
+                student.getUser().getFullName(),
+                student.getUser().getPhoneNumber(),
+                studentGroupRepository.findById(id).get()
+        );
     }
 
     public ApiResponse getStudents(int page, int size) {
@@ -280,14 +299,33 @@ public class StudentService {
         }
     }
 
-    public ApiResponse makeSituation(SituationDto situationDto, UUID id) {
+    public ApiResponse makeSituation(SituationDto situationDto) {
         try {
-            Optional<Student> optional = studentRepository.findById(id);
-            if (optional.isPresent()) {
+            Optional<Student> optional = studentRepository.findById(situationDto.getStudentId());
+            if (optional.isPresent() && situationDto.getSituation() != null && situationDto.getSituation().length() > 3) {
                 Student student = optional.get();
                 for (StudentGroup studentGroup : student.getStudentGroup()) {
                     if (studentGroup.getGroup().getId().equals(situationDto.getGroupId())) {
-                        studentGroup.setStudentGroupStatus(StudentGroupStatus.valueOf(situationDto.getSituation()));
+                        if (situationDto.getSituation().equals("TRANSFER")) {
+                            studentGroup.setStudentGroupStatus(StudentGroupStatus.valueOf(situationDto.getSituation()));
+                            if (isHaveStudentGroup(student.getStudentGroup(), situationDto.getNewGroupId())) {
+
+                                StudentGroup newStudentGroup = studentGroupRepository.save(new StudentGroup(
+                                        groupRepository.findById(situationDto.getNewGroupId()).get(),
+                                        StudentGroupStatus.TEST_LESSON,
+                                        0,
+                                        ""
+                                ));
+                                Set<StudentGroup> studentGroup1 = student.getStudentGroup();
+                                studentGroup1.add(newStudentGroup);
+
+                                student.setStudentGroup(studentGroup1);
+                            } else {
+                                return apiResponseService.existResponse();
+                            }
+                        } else {
+                            studentGroup.setStudentGroupStatus(StudentGroupStatus.valueOf(situationDto.getSituation()));
+                        }
                         studentRepository.save(student);
                         return apiResponseService.updatedResponse();
                     }
@@ -300,26 +338,13 @@ public class StudentService {
         }
     }
 
-    public ApiResponse moveGroup(SituationDto situationDto) {
-        Optional<Student> optional = studentRepository.findById(situationDto.getStudentId());
-        Optional<Group> groupOptional = groupRepository.findById(situationDto.getGroupId());
-        if (optional.isPresent()) {
-            if (groupOptional.isPresent()) {
-                Student student = optional.get();
-                for (StudentGroup studentGroup : student.getStudentGroup()) {
-                    if (studentGroup.getGroup().getId().equals(situationDto.getGroupOld())) {
-                        studentGroup.setGroup(groupOptional.get());
-                        studentRepository.save(student);
-                        return apiResponseService.updatedResponse();
-                    }
-                }
-                return apiResponseService.notFoundResponse();
-            }
-            return apiResponseService.notFoundResponse();
+    public boolean isHaveStudentGroup(Set<StudentGroup> studentGroupList, int groupId) {
+        for (StudentGroup studentGroup : studentGroupList) {
+            if (studentGroup.getGroup().getId() == groupId)
+                return false;
         }
-        return apiResponseService.notFoundResponse();
+        return true;
     }
-///
 
     /// StudentGroups for studentPayment
     public ApiResponse getStudentGroups(UUID id) {

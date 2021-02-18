@@ -50,7 +50,6 @@ const reducers = {
         state.deleteModal = false
     },
     [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
-        console.log(payload)
         state.currentItem = payload.payload.object
     },
     //Client
@@ -115,7 +114,7 @@ const reducers = {
         for (let i = 0; i < groupsForSelect.length; i++) {
             ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
         }
-        state.getItems = ketmon
+        state.selectItems = ketmon
     },
     [types.REQUEST_GET_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
