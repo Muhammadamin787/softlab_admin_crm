@@ -186,7 +186,7 @@ public class StudentService {
         try {
             Optional<Student> byId = studentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -213,21 +213,33 @@ public class StudentService {
         try {
             Optional<StudentPayment> byId = studentPaymentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 StudentPayment studentPayment = byId.get();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
+                double eskiNarx = studentPayment.getSum();
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
                 ////Balans uchun
                 Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
+                double yangiNarx = studentPaymentDto.getSum();
                 if (byId1.isPresent()) {
-                    Student student = byId1.get();
-                    student.setBalans(student.getBalans() + studentPaymentDto.getSum());
-                    studentRepository.save(student);
+                    if (yangiNarx != eskiNarx) {
+                        Student student = byId1.get();
+                        if (eskiNarx > yangiNarx && eskiNarx != 0) {//15>5
+                            //20  5-15+20=-10+20=10
+                            student.setBalans((eskiNarx - yangiNarx) + student.getBalans());
+                        } else {
+                            //5<15
+                            //20  5-15+20=10
+                            student.setBalans((yangiNarx - eskiNarx) + student.getBalans());
+                        }
+
+                        studentRepository.save(student);
+                    }
                 }
                 return apiResponseService.updatedResponse();
             }
@@ -245,7 +257,8 @@ public class StudentService {
                 studentPayment.getStudent(),
                 studentPayment.getSum(),
                 studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
-                studentPayment.getComment()
+                studentPayment.getComment(),
+                studentPayment.getGroup()
         );
     }
 

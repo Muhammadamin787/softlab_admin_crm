@@ -7,6 +7,7 @@ const initState = {
     durationTypes: [],
     secondPage: false,
     showModal: false,
+    showModal1: false,
     deleteModal: false,
     profession: [],
     regions: [],
@@ -114,7 +115,7 @@ const reducers = {
         for (let i = 0; i < groupsForSelect.length; i++) {
             ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
         }
-        state.selectItems = ketmon
+        state.getItems = ketmon
     },
     [types.REQUEST_GET_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
@@ -322,6 +323,8 @@ const reducers = {
 
 
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        state.showModal1 = false;
+        state.showPaymentEditModal = false;
         state.showPaymentModal = false;
         state.showModal = false;
     },
@@ -337,7 +340,6 @@ const reducers = {
             state.selectGroups = ketmon
         }
     },
-
 
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
