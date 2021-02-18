@@ -275,3 +275,7 @@ export const deleteTeacherApi = (data) => {
 }
 
 // FINISH TEACHER API
+
+export const editStudentStatusApi = (data) => {
+    return HttpClient.doDelete(api.student + "/" + data.id, data)
+}

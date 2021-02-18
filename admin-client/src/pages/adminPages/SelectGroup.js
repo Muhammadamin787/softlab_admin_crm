@@ -112,7 +112,11 @@ class SelectGroup extends Component {
             }
         }
         const changeStudentStatus = (e, v) => {
-            console.log(v);
+            // if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            //     v.groupid=id;
+            //     v.studentId= currentObject.id;
+            //     console.log(v);
+            // }
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {

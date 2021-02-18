@@ -86,7 +86,7 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi,
+    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi, editStudentStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -891,6 +891,21 @@ export const saveStudentAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
+
+export const editStudentStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: editStudentStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_STUDENT_STATUS_SUCCESS_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+
 export const deleteStudentAction = (data) => (dispatch) => {
     dispatch({
         api: deleteStudentApi,

@@ -12,5 +12,6 @@ export const api = {
     student: '/student',
     group: '/group',
     client:'/client',
-    studentPayment:'/studentPayment'
+    studentPayment:'/studentPayment',
+
 };
