@@ -38,7 +38,7 @@ const initState = {
     studentPayment: [],
     selectGroups: [],
     selectClients: []
-};
+}
 
 const reducers = {
     [types.REQUEST_START](state) {

@@ -31,7 +31,7 @@ import {DeleteIcon, EditIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
-import {formatPhoneNumber} from "../../utils/addFunctions";
+import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
 
 class SelectStudent extends Component {
@@ -226,6 +226,11 @@ class SelectStudent extends Component {
                                                                 <small className={"text-secondary"}>Telefon
                                                                     raqam: </small>
                                                                 <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Ota-onasining telefon
+                                                                    raqami: </small>
+                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balans: </small>
@@ -512,7 +517,7 @@ class SelectStudent extends Component {
                             <div className={"w-100"}>
                                 <Select
                                     placeholder="Guruhni tanlang..."
-                                    name="regionId"
+                                    name="groupId"
                                     isSearchable={true}
                                     options={getItems}
                                     onChange={getAddGroup}

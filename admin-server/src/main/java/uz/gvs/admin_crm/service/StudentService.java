@@ -53,6 +53,7 @@ public class StudentService {
             if (user == null)
                 return apiResponseService.tryErrorResponse();
             student.setUser(user);
+            student.setParentPhone(studentDto.getParentPhone());
             studentRepository.save(student);
             return apiResponseService.saveResponse();
         } catch (Exception e) {
@@ -78,6 +79,7 @@ public class StudentService {
                 user.setGender(Gender.valueOf(studentDto.getGender()));
                 user.setRegion(studentDto.getRegionId() != null && studentDto.getRegionId() > 0 ? regionRepository.findById(studentDto.getRegionId()).get() : null);
                 student.setUser(userRepository.save(user));
+                student.setParentPhone(studentDto.getParentPhone());
                 student.setBalans(studentDto.getBalans());
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
@@ -152,6 +154,7 @@ public class StudentService {
                 student.getUser().getId(),
                 student.getUser().getFullName(),
                 student.getUser().getPhoneNumber(),
+                student.getParentPhone(),
                 student.getUser().getDescription(),
                 student.getUser().getRegion(),
                 student.getUser().getRegion() != null ? student.getUser().getRegion().getId() : null,
