@@ -38,7 +38,8 @@ const initState = {
     studentPayment: [],
     selectGroups: [],
     selectClients: [],
-    currentPage: ''
+    currentPage: '',
+    getClientStatusList: []
 }
 
 const reducers = {
@@ -65,7 +66,17 @@ const reducers = {
     [types.REQUEST_SAVE_CLIENT_SUCCESS](state, payload) {
         state.showModal = false
     },
+    // START CLIENT STATUS REDUCERS
+    [types.REQUEST_SAVE_CLIENT_STATUS_SUCCESS](state, payload) {
+        state.showModal = false;
+    },
+    [types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS](state, payload) {
+        state.clientStatusList = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
 
+    // FINISH CLIENT STATUS REDUCER
     // Room
     [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
         state.rooms = payload.payload.object.sort((a, b) =>

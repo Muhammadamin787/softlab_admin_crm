@@ -28,6 +28,7 @@ import Client from "../pages/adminPages/Client"
 import Staff from "../pages/adminPages/Staff";
 import Appeal from "../pages/adminPages/Appeal";
 import Card from "../pages/card/Card";
+import ClientStatus from "../pages/adminPages/ClientStatus";
 
 
 const App = () => {
@@ -60,6 +61,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/staff" component={Staff}/>
                 <PrivateRoute exact path="/admin/reklama" component={Reklama}/>
                 <PrivateRoute exact path="/admin/appeals" component={Appeal}/>
+                <PrivateRoute exact path="/admin/clientStatus" component={ClientStatus}/>/>
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

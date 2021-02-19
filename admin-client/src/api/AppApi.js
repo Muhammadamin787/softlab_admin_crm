@@ -64,7 +64,23 @@ export const deleteReklamaApi = (data) => {
 export const getReklamaApi = () => {
     return HttpClient.doGet(api.reklama)
 }
-
+//START CLIENT STATUS
+export const getClientStatusListApi = (data) => {
+    if (data && data.type)
+        return HttpClient.doGet(api.clientStatus + "/list?type=" + data.type)
+}
+export const saveClientStatusApi = (data) => {
+    return HttpClient.doPost(api.clientStatus, data)
+}
+export const editClientStatusApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doPut(api.clientStatus + "/" + data.id, data)
+}
+export const deleteClientStatusApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doDelete(api.clientStatus + "/" + data.id)
+}
+//FINISH CLIENT STATUS
 // START DURATION TYPE
 export const saveDurationTypeApi = (data) => {
     return HttpClient.doPost(api.durationType, data)
@@ -133,7 +149,7 @@ export const saveGroupApi = (data) => {
     return HttpClient.doPost(api.group, data)
 }
 export const changeStudentGroupStatusApi = (data) => {
-    return HttpClient.doPatch(api.student+"/changeGroupStatus", data)
+    return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
 export const editGroupApi = (data) => {
     if (data && data.id)
@@ -252,8 +268,8 @@ export const getStudentGroupsApi = (data) => {
 export const saveStudentPaymentApi = (data) => {
     return HttpClient.doPost(api.studentPayment + "/" + data.studentId, data)
 }
-export const editStudentPaymentApi = (data) =>{
-    return HttpClient.doPut(api.studentPayment +"/" +data.id,data)
+export const editStudentPaymentApi = (data) => {
+    return HttpClient.doPut(api.studentPayment + "/" + data.id, data)
 }
 // FINISH STUDENT PAYMENT API
 

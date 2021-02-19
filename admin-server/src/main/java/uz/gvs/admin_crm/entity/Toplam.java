@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
+import uz.gvs.admin_crm.entity.template.AbsIntEntity;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Toplam extends AbsEntity {
+public class Toplam extends AbsIntEntity {
     @ManyToOne
     private Course course;
 

@@ -18,13 +18,16 @@ import javax.persistence.*;
 public class Client extends AbsEntity {
     private String fullName;
     private String phoneNumber;
-    @Column(columnDefinition = "text")
-    private String description;
+
     private int age;
     @ManyToOne
     private Region region;
+    @ManyToOne
+    private Reklama reklama;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(columnDefinition = "text")
+    private String description;
 
     public Client(String fullName, String phoneNumber) {
         this.fullName = fullName;

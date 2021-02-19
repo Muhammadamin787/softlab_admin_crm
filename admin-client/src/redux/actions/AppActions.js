@@ -91,7 +91,7 @@ import {
     getStudentGroupsApi,
     saveStudentPaymentApi,
     changeStudentGroupStatusApi,
-    editStudentPaymentApi,
+    editStudentPaymentApi, getClientStatusListApi, saveClientStatusApi, editClientStatusApi, deleteClientStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -254,7 +254,52 @@ export const deletePayTypeAction = (data) => (dispatch) => {
     })
 };
 // PayType End
-
+// START CLIENT STATUS
+export const getClientStatusListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getClientStatusListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const saveClientStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editClientStatusApi : saveClientStatusApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_CLIENT_STATUS_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(() => {
+        dispatch(getClientStatusListAction({type: "all"}));
+    })
+}
+export const deleteClientStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteClientStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(() => {
+        toast.success("Ma'lumot o'chirildi!")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
+        dispatch(getClientStatusListAction({type: "all"}));
+    })
+}
+// FINISH CLIENT STATUS
 //Reklmaa
 export const getReklamaAction = () => (dispatch) => {
     dispatch({
@@ -283,7 +328,7 @@ export const saveReklamaAction = (data) => (dispatch) => {
 }
 export const deleteReklamaAction = (data) => (dispatch) => {
     dispatch({
-        api:deleteReklamaApi,
+        api: deleteReklamaApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,

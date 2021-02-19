@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {
-    deleteReklamaAction, getRegionsAction,
-    getReklamaAction,
+    getClientStatusListAction,
+    getRegionsAction,
     getStudentsAction,
-    saveReklamaAction, saveStudentAction
+    saveStudentAction
 } from "../../redux/actions/AppActions";
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {connect} from "react-redux";
@@ -12,13 +12,14 @@ import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
-import {formatPhoneNumber} from "../../utils/addFunctions";
+import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
+import Select from "react-select";
 
 class Appeal extends Component {
     componentDidMount() {
-        this.props.dispatch(getReklamaAction())
+        this.props.dispatch(getClientStatusListAction({type: "REQUEST"}))
         this.props.dispatch(getRegionsAction())
     }
 
@@ -33,7 +34,16 @@ class Appeal extends Component {
 
 
     render() {
-        const {dispatch, showModal, regions, deleteModal, currentPage, reklamas, selectItems} = this.props
+        const {
+            dispatch,
+            showModal,
+            regions,
+            deleteModal,
+            currentPage,
+            clientStatusList,
+            reklamas,
+            selectItems
+        } = this.props
         const {currentObject} = this.state
 
         const openModal = (item) => {
@@ -60,6 +70,9 @@ class Appeal extends Component {
                     deleteModal: !deleteModal
                 }
             })
+        }
+        const setClientStatus = (e, v) => {
+            console.log(e);
         }
         const saveItem = (e, v) => {
             if (currentObject) {
@@ -199,6 +212,15 @@ class Appeal extends Component {
                                         }}
                                         label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"991234567"} required/>
+                                    <Select
+                                        placeholder="Bo'limni tanlang..."
+                                        name="groupId"
+                                        isSearchable={true}
+                                        options={clientStatusList && clientStatusList.length > 0 && formatSelectList(clientStatusList)}
+                                        onChange={setClientStatus}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
                                     <AvRadioGroup name="gender"
                                                   defaultValue={currentObject ? currentObject.gender : ""}
                                                   label="Jins" required
@@ -221,6 +243,7 @@ class Appeal extends Component {
                                             : ""}
                                         label={"Yoshingiz"} name={"birthDate"} className={"form-control"}
                                     />
+
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
@@ -253,8 +276,9 @@ class Appeal extends Component {
 Appeal.propTypes = {};
 
 export default connect(({
-                            app: {currentPage, regions, loading, reklamas, showModal, deleteModal},
+                            app: {clientStatusList, currentPage, regions, loading, reklamas, showModal, deleteModal},
                         }) => ({
+        clientStatusList,
         regions, currentPage,
         loading, reklamas, showModal, deleteModal
     })
