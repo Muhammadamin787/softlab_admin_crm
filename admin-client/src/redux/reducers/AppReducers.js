@@ -37,7 +37,8 @@ const initState = {
     currentItem: [],
     studentPayment: [],
     selectGroups: [],
-    selectClients: []
+    selectClients: [],
+    currentPage: ''
 }
 
 const reducers = {

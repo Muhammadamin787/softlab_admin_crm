@@ -26,6 +26,8 @@ import SelectGroup from "../pages/adminPages/SelectGroup";
 import StudentPayment from "../pages/adminPages/StudentPayment";
 import Client from "../pages/adminPages/Client"
 import Staff from "../pages/adminPages/Staff";
+import Appeal from "../pages/adminPages/Appeal";
+import Card from "../pages/card/Card";
 
 
 const App = () => {
@@ -57,6 +59,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/studentPayment/:id" component={StudentPayment}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
                 <PrivateRoute exact path="/admin/staff" component={Staff}/>
+                <PrivateRoute exact path="/admin/appeals" component={Appeal}/>
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

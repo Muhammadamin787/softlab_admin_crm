@@ -228,9 +228,10 @@ class SelectStudent extends Component {
                                                                 <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Ota-onasining telefon
+                                                                <small className={"text-secondary"}>Ota-onasining
+                                                                    telefon
                                                                     raqami: </small>
-                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.phoneNumber)} </p>
+                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.parentPhone)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balans: </small>
@@ -404,6 +405,11 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
                                             label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                            placeholer={"nomi"} required/>
+                                        <AvField
+                                            defaultValue={currentObject ? currentObject.parentPhone : ""}
+                                            type={"number"}
+                                            label={"Ota-onasi tel:"} name={"parentPhone"} className={"form-control"}
                                             placeholer={"nomi"} required/>
                                         <AvField
                                             type={"date"}
