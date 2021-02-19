@@ -22,6 +22,7 @@ public class Student extends AbsEntity {
     @ManyToOne
     private User user;
     private double balans;
+    private String parentPhone;
     @OneToMany
     private Set<StudentGroup> studentGroup;
 }
