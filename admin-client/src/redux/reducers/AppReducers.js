@@ -160,37 +160,15 @@ const reducers = {
         }
     },
 
-    // //teacher
-    // [types.REQUEST_GET_TEACHER_SUCCESS](state, payload) {
-    //     if (payload && payload.payload && payload.payload.object) {
-    //         state.teachers = payload.payload.object.object.sort((a, b) =>
-    //             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-    //         );
-    //         let ketmon = []
-    //         for (let i = 0; i < state.teachers.length; i++) {
-    //             ketmon.push({value: state.teachers[i].id, label: state.teachers[i].name})
-    //         }
-    //         state.selectItems = ketmon
-    //     }
-    // },
-    // [types.REQUEST_SAVE_TEACHER_SUCCESS](state, payload) {
-    //     state.showModal = false
-    // },
-
-    //specialized
     //reklama
     [types.REQUEST_SAVE_REKLAMA_SUCCESS](state, payload) {
         state.showModal = false
     },
     [types.REQUEST_GET_REKLAMA_SUCCESS](state, payload) {
+        console.log(payload)
         if (payload && payload.payload && payload.payload.object) {
             state.reklamas = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0);
-            let tesha = []
-            for (let i = 0; i < state.reklamas.length; i++) {
-                tesha.push({value: state.reklamas[i].id, label: state.reklamas[i].name})
-            }
-            state.selectItem = tesha
         }
     },
     //testCategory

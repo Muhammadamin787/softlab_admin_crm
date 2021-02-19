@@ -33,7 +33,6 @@ import Card from "../pages/card/Card";
 const App = () => {
     return (
         <Provider store={store}>
-            {console.log(store)}
             <Switch>
                 <PublicRoute exact path="/" component={HomePage}/>
                 <PublicRoute exact path="/login" component={Login}/>
@@ -59,6 +58,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/studentPayment/:id" component={StudentPayment}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
                 <PrivateRoute exact path="/admin/staff" component={Staff}/>
+                <PrivateRoute exact path="/admin/reklama" component={Reklama}/>
                 <PrivateRoute exact path="/admin/appeals" component={Appeal}/>
                 <Route component={NotFound}/>
             </Switch>
