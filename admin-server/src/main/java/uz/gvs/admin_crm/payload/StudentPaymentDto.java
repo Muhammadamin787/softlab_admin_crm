@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.PayType;
 import uz.gvs.admin_crm.entity.Student;
-import uz.gvs.admin_crm.entity.StudentGroup;
 
-
-import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -31,6 +28,7 @@ public class StudentPaymentDto {
     private Integer groupId;
     private UUID studentId;
     private Integer payTypeId;
+    private Group group;
 
 
     public StudentPaymentDto(UUID id, PayType payType, Student student, double sum, String payDate, String comment) {
@@ -40,5 +38,15 @@ public class StudentPaymentDto {
         this.sum = sum;
         this.payDate = payDate;
         this.comment = comment;
+    }
+
+    public StudentPaymentDto(UUID id, PayType payType, Student student, double sum, String payDate, String comment, Group group) {
+        this.id = id;
+        this.payType = payType;
+        this.student = student;
+        this.sum = sum;
+        this.payDate = payDate;
+        this.comment = comment;
+        this.group = group;
     }
 }

@@ -23,6 +23,8 @@ public class StudentDto {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String phoneNumber;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private String parentPhone;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String description;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int age;
@@ -49,11 +51,12 @@ public class StudentDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private StudentGroup studentGroup;
 
-    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {
+    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber,String parentPhone, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {
         this.id = id;
         this.userId = userId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+        this.parentPhone = parentPhone;
         this.description = description;
         this.region = region;
         this.regionId = regionId;
