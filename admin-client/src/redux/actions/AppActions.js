@@ -278,6 +278,7 @@ export const saveReklamaAction = (data) => (dispatch) => {
 }
 export const deleteReklamaAction = (data) => (dispatch) => {
     dispatch({
+        api:deleteReklamaApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
@@ -291,7 +292,7 @@ export const deleteReklamaAction = (data) => (dispatch) => {
                 deleteModal: false
             }
         })
-        toast.success(res.payload.message)
+        toast.success("Malumot o`chirildi")
         dispatch(getReklamaAction())
     }).catch((err) => {
         toast.error("O`chirishda xatolik")

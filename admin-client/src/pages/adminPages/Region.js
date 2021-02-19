@@ -28,6 +28,7 @@ class Region extends Component {
     render() {
         const {currentObject} = this.state;
         const {dispatch, showModal, deleteModal, loading, regions, selectItems} = this.props;
+
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -37,7 +38,6 @@ class Region extends Component {
                 }
             })
         }
-
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -74,6 +74,7 @@ class Region extends Component {
                 dispatch(saveRegionAction(v))
             }
         }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
