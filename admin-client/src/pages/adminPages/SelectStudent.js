@@ -31,7 +31,7 @@ import {DeleteIcon, EditIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
-import {formatPhoneNumber} from "../../utils/addFunctions";
+import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
 
 class SelectStudent extends Component {
@@ -51,13 +51,15 @@ class SelectStudent extends Component {
     state = {
         showModal: false,
         showPaymentModal: false,
+        showModal1: false,
+        showPaymentEditModal: false,
         currentObject: "",
         addGroup: "",
         activeTab: "1",
     }
 
     render() {
-        const {currentObject, activeTab, showPaymentModal, addGroup} = this.state;
+        const {currentObject, activeTab, showPaymentModal, showPaymentEditModal, addGroup} = this.state;
         const {
             getItems,
             selectItems,
@@ -65,6 +67,7 @@ class SelectStudent extends Component {
             history,
             dispatch,
             showModal,
+            showModal1,
             deleteModal,
             currentItem,
             regions,
@@ -76,6 +79,15 @@ class SelectStudent extends Component {
                 type: "updateState",
                 payload: {
                     showModal: !showModal
+                }
+            })
+        }
+        const openModal1 = (item) => {
+            this.setState({currentObject: item, showPaymentEditModal: false})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showModal1: !showModal1
                 }
             })
         }
@@ -141,6 +153,19 @@ class SelectStudent extends Component {
                 }
             }
         }
+        //StudentPayment Edit Start
+        const editItem = (e, v) => {
+            if (currentObject && currentObject.id) {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    v.id = currentObject.id
+                    v.groupId = addGroup;
+                    v.studentId = this.props.match.params.id;
+                    v.payDate = moment(v.payDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    dispatch(saveStudentPaymentAction(v));
+                }
+            }
+        }
+        //StudentPayment Edit finish
         const toggle = tab => {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
@@ -201,6 +226,11 @@ class SelectStudent extends Component {
                                                                 <small className={"text-secondary"}>Telefon
                                                                     raqam: </small>
                                                                 <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Ota-onasining telefon
+                                                                    raqami: </small>
+                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balans: </small>
@@ -294,6 +324,16 @@ class SelectStudent extends Component {
                                                         <td>{item.payType ? item.payType.name : ''}</td>
                                                         <td>{item.comment}</td>
                                                         <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                        <td>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openModal1(item)}>
+                                                                <EditIcon/>
+                                                            </Button>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(item)}>
+                                                                <DeleteIcon/>
+                                                            </Button>
+                                                        </td>
                                                     </tr>
                                                 ) : 'Malumot topilmadi'}
                                                 </tbody>
@@ -306,6 +346,9 @@ class SelectStudent extends Component {
                             : ""}
                     </div>
                 </div>
+
+                {/*STUDENT PAYMENT QO'SHISH VA  TALABANI EDIT QILISH*/}
+
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -397,6 +440,74 @@ class SelectStudent extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
+                {/*STUDENTPAYMENTNI EDIT QILISH UCHUN */}
+                <Modal id={"allModalStyle"} isOpen={showModal1} toggle={openModal1} className={""}>
+                    <AvForm className={""} onValidSubmit={editItem}>
+                        <ModalHeader isOpen={showModal1} toggle={openModal1} charCode="X">
+                            To'lovni taxrirlash
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100 modal-form"}>
+                                <AvField
+                                    defaultValue={currentObject && currentObject.student && currentObject.student.user ? currentObject.student.user.fullName : ""}
+                                    disabled={showPaymentEditModal}
+                                    type={"text"}
+                                    label={"FISH"} name={"fullName"} className={"form-control"}
+                                    placeholer={"nomi"} required/>
+
+                                <>
+                                    <Select
+                                        defaultValue={currentObject && currentObject.group && {
+                                            value: currentObject.group.id,
+                                            label: (currentObject.group.name)
+                                        }}
+                                        placeholder="Guruhni tanlang..."
+                                        name="groupId"
+                                        isSearchable={true}
+                                        options={selectGroups}
+                                        onChange={setPaymentGroup}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
+
+                                    Tolov Turi
+                                    <AvRadioGroup name="payTypeId"
+                                                  defaultValue={currentObject && currentObject.payType ? currentObject.payType.name : ""}
+                                                  label="" required className="pay-form-style d-block"
+                                                  errorMessage="Birini tanlang!">
+
+                                        {payTypes ? payTypes.map((item, i) =>
+                                            <AvRadio key={i} className="d-block" label={item.name} value={item.id}
+                                                     checked={currentObject && currentObject.payType && currentObject.payType.id === item.id}/>
+                                        ) : ""}
+                                    </AvRadioGroup>
+                                    {console.log(currentObject)}
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.sum : ""}
+                                        type={"number"}
+                                        label={"So'm"} name={"sum"} className={"form-control"}
+                                        placeholer={""} required/>
+                                    <AvField
+                                        type={"datetime-local"}
+                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.payDate).format('YYYY-MM-DD hh:mm:ss')
+                                            : ""}
+                                        label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
+                                        required/>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.comment : ""}
+                                        type={"textarea"}
+                                        label={"Izoh"} name={"comment"} className={"form-control"}/>
+                                </>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={openModal1}>Bekor qilish</Button>
+                            <Button color="primary">Taxrirlash</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
+
                 <Modal isOpen={showAddGroupModal} toggle={openAddGroupModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveAddGroup}>
                         <ModalHeader isOpen={showAddGroupModal} toggle={openAddGroupModal} charCode="X">
@@ -406,9 +517,9 @@ class SelectStudent extends Component {
                             <div className={"w-100"}>
                                 <Select
                                     placeholder="Guruhni tanlang..."
-                                    name="regionId"
+                                    name="groupId"
                                     isSearchable={true}
-                                    options={selectItems}
+                                    options={getItems}
                                     onChange={getAddGroup}
                                     className="basic-multi-select"
                                     classNamePrefix="select"
@@ -447,6 +558,7 @@ export default connect(({
                                 loading,
                                 showModal,
                                 deleteModal,
+                                showModal1,
                                 parentItems,
                                 regions,
                                 durationTypes,
@@ -460,7 +572,16 @@ export default connect(({
         showAddGroupModal,
         payTypes,
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal, studentPayment,
+        loading,
+        durationTypes,
+        showModal,
+        showModal1,
+        deleteModal,
+        parentItems,
+        regions,
+        getItems,
+        readModal,
+        studentPayment,
         selectGroups
     })
 )(SelectStudent);

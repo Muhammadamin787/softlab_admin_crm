@@ -252,6 +252,9 @@ export const getStudentGroupsApi = (data) => {
 export const saveStudentPaymentApi = (data) => {
     return HttpClient.doPost(api.studentPayment + "/" + data.studentId, data)
 }
+export const editStudentPaymentApi = (data) =>{
+    return HttpClient.doPut(api.studentPayment +"/" +data.id,data)
+}
 // FINISH STUDENT PAYMENT API
 
 // START TEACHER API

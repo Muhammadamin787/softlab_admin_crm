@@ -86,7 +86,12 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi, changeStudentGroupStatusApi,
+    getTeacherGroupsApi,
+    getStudentPaymentApi,
+    getStudentGroupsApi,
+    saveStudentPaymentApi,
+    changeStudentGroupStatusApi,
+    editStudentPaymentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1108,7 +1113,7 @@ export const getStudentGroupAction = (data) => (dispatch) => {
 }
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
-        api: (data.id ? editStudentApi : saveStudentPaymentApi),
+        api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS,
