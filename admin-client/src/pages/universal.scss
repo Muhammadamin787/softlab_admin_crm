@@ -17,7 +17,6 @@
       color: #313E47;
       border-bottom: 10px solid #F9FAFB;
       border-top: 10px solid #F9FAFB;
-      border-radius: 10px;
 
       .table-icon {
         background-color: transparent;
@@ -264,16 +263,16 @@
 
 //select group page css
 .student-list {
-  font-size: 14px;
+  font-size: 13px;
   font-family: Nunito, sans-serif;
   border-radius: 5px;
 
   .more-button {
     background-color: #EE8033;
     border: none;
-    padding: 3px;
-    padding-left: 10px;
-    padding-right: 10px;
+    //padding: 3px;
+    //padding-left: 10px;
+    //padding-right: 10px;
     margin-bottom: 5px;
     border-radius: 10px;
     color: white;
