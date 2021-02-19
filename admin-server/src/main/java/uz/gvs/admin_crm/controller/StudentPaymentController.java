@@ -46,14 +46,13 @@ public class StudentPaymentController {
         ApiResponse apiResponse = studentService.getStudentPaymentList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-//
     @GetMapping("/{id}")
     public HttpEntity<?> getStudentPayment(@PathVariable UUID id, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         ApiResponse apiResponse = studentService.getStudentPaymentListStudent(id, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
+//get
     @GetMapping("/studentGroup/{id}")
     public HttpEntity<?> getStudentGroups(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.getStudentGroups(id);
