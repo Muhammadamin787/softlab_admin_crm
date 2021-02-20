@@ -66,12 +66,14 @@ export const deletePayTypeApi = (data) => {
 //Reklama
 
 export const saveReklamaApi = (data) => {
+    console.log(data)
     return HttpClient.doPost(api.reklama, data)
 }
 export const editReklamaApi = (data) => {
     return HttpClient.doPut(api.reklama + "/" + data.id, data)
 }
 export const deleteReklamaApi = (data) => {
+    console.log(data)
     return HttpClient.doDelete(api.reklama + "/" + data.id)
 }
 export const getReklamaApi = () => {
@@ -264,6 +266,9 @@ export const getStudentGroupsApi = (data) => {
 // START STUDENT PAYMENT API
 export const saveStudentPaymentApi = (data) => {
     return HttpClient.doPost(api.studentPayment + "/" + data.studentId, data)
+}
+export const editStudentPaymentApi = (data) =>{
+    return HttpClient.doPut(api.studentPayment +"/" +data.id,data)
 }
 // FINISH STUDENT PAYMENT API
 

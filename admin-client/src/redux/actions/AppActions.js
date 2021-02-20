@@ -92,7 +92,12 @@ import {
     getGroupsForSelectApi,
     studentAddGroup,
     getGroupStudentsApi,
-    getTeacherGroupsApi, getStudentPaymentApi, getStudentGroupsApi, saveStudentPaymentApi, changeStudentGroupStatusApi,
+    getTeacherGroupsApi,
+    getStudentPaymentApi,
+    getStudentGroupsApi,
+    saveStudentPaymentApi,
+    changeStudentGroupStatusApi,
+    editStudentPaymentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -340,6 +345,7 @@ export const saveReklamaAction = (data) => (dispatch) => {
 }
 export const deleteReklamaAction = (data) => (dispatch) => {
     dispatch({
+        api:deleteReklamaApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
@@ -353,7 +359,7 @@ export const deleteReklamaAction = (data) => (dispatch) => {
                 deleteModal: false
             }
         })
-        toast.success(res.payload.message)
+        toast.success("Malumot o`chirildi")
         dispatch(getReklamaAction())
     }).catch((err) => {
         toast.error("O`chirishda xatolik")
@@ -1169,7 +1175,7 @@ export const getStudentGroupAction = (data) => (dispatch) => {
 }
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
-        api: (data.id ? editStudentApi : saveStudentPaymentApi),
+        api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS,

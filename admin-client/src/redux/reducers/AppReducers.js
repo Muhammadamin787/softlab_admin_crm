@@ -7,6 +7,7 @@ const initState = {
     durationTypes: [],
     secondPage: false,
     showModal: false,
+    showModal1: false,
     deleteModal: false,
     profession: [],
     regions: [],
@@ -124,7 +125,7 @@ const reducers = {
         for (let i = 0; i < groupsForSelect.length; i++) {
             ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
         }
-        state.selectItems = ketmon
+        state.getItems = ketmon
     },
     [types.REQUEST_GET_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
@@ -194,11 +195,6 @@ const reducers = {
         if (payload && payload.payload && payload.payload.object) {
             state.reklamas = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0);
-            let tesha = []
-            for (let i = 0; i < state.reklamas.length; i++) {
-                tesha.push({value: state.reklamas[i].id, label: state.reklamas[i].name})
-            }
-            state.selectItem = tesha
         }
     },
     //testCategory
@@ -332,6 +328,8 @@ const reducers = {
 
 
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        state.showModal1 = false;
+        state.showPaymentEditModal = false;
         state.showPaymentModal = false;
         state.showModal = false;
     },
