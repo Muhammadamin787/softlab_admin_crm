@@ -381,4 +381,15 @@ public class StudentService {
         }
     }
 
+    public ApiResponse getDebtorStudents(int page, int size) {
+        Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
+        return apiResponseService.getResponse(
+                new PageableDto(
+                        all.getTotalPages(),
+                        all.getTotalElements(),
+                        all.getNumber(),
+                        all.getSize(),
+                        all.get().map(this::makeStudentDto).collect(Collectors.toList())
+                ));
+    }
 }

@@ -50,6 +50,9 @@ const reducers = {
         state.showModal = false
         state.deleteModal = false
     },
+
+
+
     [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },

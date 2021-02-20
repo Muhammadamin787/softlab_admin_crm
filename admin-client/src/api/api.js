@@ -13,5 +13,5 @@ export const api = {
     group: '/group',
     client:'/client',
     studentPayment:'/studentPayment',
-    reklama:'/reklama'
+    reklama:'/reklama',
 };

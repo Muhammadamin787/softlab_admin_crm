@@ -83,4 +83,13 @@ StudentController {
         ApiResponse apiResponse = studentService.makeSituation(situationDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @GetMapping("/debtors")
+    public HttpEntity<?> getDebtorStudents(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                        @CurrentUser User user) {
+        ApiResponse apiResponse = studentService.getDebtorStudents(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
 }

@@ -91,10 +91,9 @@ import {
     getStudentGroupsApi,
     saveStudentPaymentApi,
     changeStudentGroupStatusApi,
-    editStudentPaymentApi,
+    editStudentPaymentApi
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
-
 
 export const getClientAction = (data) => (dispatch) => {
     console.log(data);
@@ -283,7 +282,7 @@ export const saveReklamaAction = (data) => (dispatch) => {
 }
 export const deleteReklamaAction = (data) => (dispatch) => {
     dispatch({
-        api:deleteReklamaApi,
+        api: deleteReklamaApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,

@@ -57,7 +57,6 @@ public class TeacherService {
         }
     }
 
-
     public ApiResponse getTeacherListForSelect() {
 //        List<Object[]> teacherForSelect = teacherRepository.getTeacherForSelect();
 //        List<ResSelect> resSelects = new ArrayList<>();
@@ -110,7 +109,6 @@ public class TeacherService {
         );
     }
 
-
     public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
         try {
             Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
@@ -146,7 +144,6 @@ public class TeacherService {
         }
 
     }
-
 
     public ApiResponse getGroupsTeacher(UUID id) {
         try {
