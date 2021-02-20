@@ -230,7 +230,7 @@ class SelectStudent extends Component {
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Ota-onasining telefon
                                                                     raqami: </small>
-                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.phoneNumber)} </p>
+                                                                <p className={"d-inline"}> {formatParentPhone(currentItem.parentPhone)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balans: </small>
