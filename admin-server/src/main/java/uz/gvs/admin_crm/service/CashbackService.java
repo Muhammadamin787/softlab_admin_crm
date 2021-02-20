@@ -46,12 +46,15 @@ public class CashbackService {
             Optional<Cashback> optional = cashbackRepository.findById(id);
             if (optional.isPresent()) {
                 if (cashbackDto.getPercent() >= 0 && cashbackDto.getPrice() >= 0) {
-                    Cashback cashback = optional.get();
-                    cashback.setPrice(cashbackDto.getPrice());
-                    cashback.setPercent(cashbackDto.getPercent());
-                    cashback.setActive(cashbackDto.isActive());
-                    cashbackRepository.save(cashback);
-                    return apiResponseService.updatedResponse();
+                    if (!cashbackRepository.existsByPriceEqualsAndPercent(cashbackDto.getPrice(), cashbackDto.getPercent())) {
+                        Cashback cashback = optional.get();
+                        cashback.setPrice(cashbackDto.getPrice());
+                        cashback.setPercent(cashbackDto.getPercent());
+                        cashback.setActive(cashbackDto.isActive());
+                        cashbackRepository.save(cashback);
+                        return apiResponseService.updatedResponse();
+                    }
+                    return apiResponseService.existResponse();
                 }
                 return apiResponseService.notEnoughErrorResponse();
             }
