@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     getRoomListAction,
     saveRoomAction,
-    deleteRoomAction
+    deleteRoomAction, getCashbackListAction, deleteCashbackAction, saveCashbackAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
@@ -10,10 +10,10 @@ import {AvField, AvForm} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 
-class Room extends Component {
+class Cashback extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getRoomListAction())
+        this.props.dispatch(getCashbackListAction())
     }
 
     state = {
@@ -23,10 +23,11 @@ class Room extends Component {
     }
 
 
+
     render() {
 
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, rooms} = this.props;
+        const {dispatch, showModal, deleteModal, cashbacks} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -38,24 +39,28 @@ class Room extends Component {
 
         }
         const openDeleteModal = (item) => {
-            this.setState({currentObject: item.id, showDeleteModal: !this.state.showDeleteModal})
+            this.setState(
+                {
+                    currentObject: item.id,
+                    showDeleteModal: !this.state.showDeleteModal
+                })
         }
         const deleteItem = () => {
-            console.log(currentObject)
-            dispatch(deleteRoomAction(currentObject))
+            dispatch(deleteCashbackAction(currentObject))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
                 v.id = currentObject.id
             }
-            dispatch(saveRoomAction(v))
+            console.log(v);
+            dispatch(saveCashbackAction(v))
         }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Xonalar</h1>
+                    <h1>Cashback</h1>
                     <div align={"right"}>
                         <Button color={"success"} onClick={() => openModal('add')} className={"mb-2 add-button px-4"}>Yangisini
                             qo'shish
@@ -65,17 +70,19 @@ class Room extends Component {
                         <thead className={""}>
                         <tr className={"text-center"}>
                             <th>№</th>
-                            <th>Nomi</th>
+                            <th>Min summa</th>
+                            <th>Cashback</th>
                             <th>Holati</th>
                             <th>Amal</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {rooms ? rooms.map((item, i) =>
+                        {cashbacks ? cashbacks.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
-                                <td>{item.name}</td>
-                                <td><input type="checkbox" id={item.name} checked={item.active}/></td>
+                                <td>{item.price}</td>
+                                <td>{item.percent}</td>
+                                <td><input type="checkbox" checked={item.active}/></td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openModal(item)}>
                                         <EditIcon/>
@@ -92,13 +99,16 @@ class Room extends Component {
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                {currentObject ? "Xonani tahrirlash" : "Yangi xona qo'shish"}
+                                {currentObject ? "Cashbackni tahrirlash" : "Yangi cashback qo'shish"}
                             </ModalHeader>
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
-                                    <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
-                                             label={"Nomi"} id={'name'} name={"name"} className={"form-control"}
-                                             placeholer={"nomi"} autofocus required/>
+                                    <AvField defaultValue={currentObject ? currentObject.price : ""} type={"number"}
+                                             label={"Min narx"} id={'name'} name={"price"} className={"form-control"}
+                                             placeholer={"min narx"} autofocus required/>
+                                    <AvField defaultValue={currentObject ? currentObject.percent : ""} type={"number"}
+                                             label={"%"} id={'percent'} name={"percent"} className={"form-control"}
+                                             placeholer={"cashback"} autofocus required/>
                                     <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
                                              label={"Holati"} name={"active"}/>
                                 </div>
@@ -127,10 +137,10 @@ class Room extends Component {
     }
 }
 
-Room.propTypes = {}
+Cashback.propTypes = {}
 export default connect(({
-                            app: {loading, rooms, showModal, deleteModal, selectItems},
+                            app: {loading, cashbacks, showModal, deleteModal, selectItems},
                         }) => ({
-        loading, rooms, showModal, deleteModal, selectItems
+        loading, cashbacks, showModal, deleteModal, selectItems
     })
-)(Room);
+)(Cashback);

@@ -60,6 +60,16 @@ class AdminLayout extends Component {
                                     Murojaatlar
                                 </div>
                             </Link>
+                            <Link to="/admin/reklama" className={
+                                this.props.pathname === "/admin/reklama" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-customer"/>
+                                <div className="main-link">
+                                    Reklama
+                                </div>
+                            </Link>
+
                             <Link to="/admin/courses/list" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/course") ?
                                     "active-link" : "default-link"
@@ -130,6 +140,15 @@ class AdminLayout extends Component {
                                 <span className="icon icon-teacher"/>
                                 <div className="main-link">
                                     Murojaat bo'limlari
+                                </div>
+                            </Link>
+                            <Link to="/admin/cashback" className={
+                                this.props.pathname === "/admin/cashback" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-payment"/>
+                                <div className="main-link">
+                                    Cashback
                                 </div>
                             </Link>
                             <Link to="/admin/payType" className={

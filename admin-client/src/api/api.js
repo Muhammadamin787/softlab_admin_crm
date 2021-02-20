@@ -14,5 +14,6 @@ export const api = {
     client: '/client',
     studentPayment: '/studentPayment',
     reklama: '/reklama',
-    clientStatus: '/clientStatus'
+    clientStatus: '/clientStatus',
+    cashback : 'cashback'
 };
