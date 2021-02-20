@@ -38,9 +38,10 @@ const initState = {
     studentPayment: [],
     selectGroups: [],
     selectClients: [],
-    currentPage: '',
+    currentPage: 'REQUEST',
     getClientStatusList: [],
-    cashbacks : []
+    cashbacks: [],
+    appealList: []
 };
 
 const reducers = {
@@ -338,7 +339,22 @@ const reducers = {
         }
     },
 
-
+    // START APPEAL REDUCERS
+    [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.appealList = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    // FINISH APPEAL REDUCERS
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
         state.showModal1 = false;
         state.showPaymentEditModal = false;

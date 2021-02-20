@@ -97,7 +97,12 @@ import {
     getStudentGroupsApi,
     saveStudentPaymentApi,
     changeStudentGroupStatusApi,
-    editStudentPaymentApi, getClientStatusListApi, saveClientStatusApi, editClientStatusApi, deleteClientStatusApi,
+    editStudentPaymentApi,
+    getClientStatusListApi,
+    saveClientStatusApi,
+    editClientStatusApi,
+    deleteClientStatusApi,
+    getReklamaForSelectApi, saveAppealApi, getAppealListByEnumTypeApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -366,6 +371,16 @@ export const deleteClientStatusAction = (data) => (dispatch) => {
 export const getReklamaAction = () => (dispatch) => {
     dispatch({
         api: getReklamaApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_REKLAMA_SUCCESS,
+            types.REQUEST_ERROR
+        ]
+    })
+}
+export const getReklamaListForSelectAction = () => (dispatch) => {
+    dispatch({
+        api: getReklamaForSelectApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_REKLAMA_SUCCESS,
@@ -1236,3 +1251,32 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
 }
 
 // FINISH STUDENT PAYMENT ACTIONS
+
+// START APPEAL ACTIONS
+export const saveAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch(getAppealListByEnumTypeAction({enumType: "REQUEST", page: 0, size: 20}))
+    })
+}
+export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListByEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// FINISH APPEAL ACTIONS

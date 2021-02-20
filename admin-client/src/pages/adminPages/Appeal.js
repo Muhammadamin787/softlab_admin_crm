@@ -1,40 +1,46 @@
 import React, {Component} from 'react';
 import {
+    getAppealListByEnumTypeAction,
     getClientStatusListAction,
-    getRegionsAction,
-    getStudentsAction,
-    saveStudentAction
+    getRegionsAction, getReklamaAction,
+    getStudentsAction, saveAppealAction,
 } from "../../redux/actions/AppActions";
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {connect} from "react-redux";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation"
-import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
-import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
-import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
+import {formatPhoneNumber, formatSelectList, normalizeInput} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
 import Select from "react-select";
+import PhoneInput from "react-phone-number-input";
 
 class Appeal extends Component {
     componentDidMount() {
-        this.props.dispatch(getClientStatusListAction({type: "REQUEST"}))
-        this.props.dispatch(getRegionsAction())
+        const {dispatch} = this.props;
+        dispatch(getClientStatusListAction({type: "REQUEST"}))
+        dispatch(getRegionsAction())
+        dispatch(getReklamaAction())
+        dispatch(getAppealListByEnumTypeAction({enumType: "REQUEST", page: 0, size: 20}))
     }
 
     state = {
         showModal: false,
         currentObject: "",
+        reklamaId: "",
+        statusTypeId: "",
     }
 
     handlePageChange(pageNumber) {
         this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
     }
 
-
     render() {
         const {
+            size,
+            page,
+            totalElements,
             dispatch,
             showModal,
             regions,
@@ -42,9 +48,10 @@ class Appeal extends Component {
             currentPage,
             clientStatusList,
             reklamas,
-            selectItems
+            selectItems,
+            appealList
         } = this.props
-        const {currentObject} = this.state
+        const {currentObject, reklamaId, statusTypeId} = this.state
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -72,25 +79,16 @@ class Appeal extends Component {
             })
         }
         const setClientStatus = (e, v) => {
-            console.log(e);
+            this.setState({statusTypeId: e.value})
+        }
+        const setClientRekalam = (e, v) => {
+            this.setState({reklamaId: e.value})
         }
         const saveItem = (e, v) => {
-            if (currentObject) {
-                v.id = currentObject.id
-                console.clear();
-            }
-            let studentDto;
-            studentDto = {
-                fullName: v.fullName,
-                gender: v.gender,
-                phoneNumber: v.phoneNumber,
-                parentPhone: v.parentPhone,
-                avatarId: v.attachmentId,
-                regionId: v.regionId,
-                description: v.description,
-                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
-            }
-            dispatch(saveStudentAction(studentDto))
+            v.reklamaId = reklamaId
+            v.clientStatusId = statusTypeId
+            v.statusEnum = currentPage
+            dispatch(saveAppealAction(v));
         }
 
         return (
@@ -142,30 +140,32 @@ class Appeal extends Component {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr className={"table-tr"}>
-                                    <td>1</td>
-                                    <td>Mijoz Mijozov</td>
-                                    <td>{formatPhoneNumber("991234567")}</td>
-                                    <td>Telegram</td>
-                                    <td>
-                                        <Button className="table-icon"
-                                            // onClick={() => openDeleteModal(item)}
-                                        >
-                                            <EditIcon/>
-                                        </Button>
-                                        <Button className="table-icon"
-                                            // onClick={() => openDeleteModal(item)}
-                                        >
-                                            <DeleteIcon/>
-                                        </Button>
-                                    </td>
-                                </tr>
+                                {appealList && appealList.length > 0 ? appealList.map((item, i) =>
+                                    <tr key={i} className={"table-tr"}>
+                                        <td>{i + 1}</td>
+                                        <td>{item.fullName}</td>
+                                        <td>{formatPhoneNumber(item.phoneNumber)}</td>
+                                        <td>{item.statusName}</td>
+                                        <td>
+                                            <Button className="table-icon"
+                                                    onClick={() => openModal(item)}
+                                            >
+                                                <EditIcon/>
+                                            </Button>
+                                            <Button className="table-icon"
+                                                // onClick={() => openDeleteModal(item)}
+                                            >
+                                                <DeleteIcon/>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ) : "Murojaat mavjud emas"}
                                 </tbody>
                             </Table>
                             <Pagination
-                                activePage={1}
-                                itemsCountPerPage={10}
-                                totalItemsCount={110}
+                                activePage={page + 1}
+                                itemsCountPerPage={size}
+                                totalItemsCount={totalElements}
                                 pageRangeDisplayed={5}
                                 onChange={this.handlePageChange.bind(this)} itemClass="page-item"
                                 linkClass="page-link"
@@ -173,16 +173,16 @@ class Appeal extends Component {
                         </Col>
                         <Col md={3}>
                             <button
-                                onClick={() => changePage("")}
-                                className={"btn btn-block appeal-button" + (currentPage === "" ? " appeal-button-active" : "")}>So'rovlar
+                                onClick={() => changePage("REQUEST")}
+                                className={"btn btn-block appeal-button" + (currentPage === "REQUEST" ? " appeal-button-active" : "")}>So'rovlar
                             </button>
                             <button
-                                onClick={() => changePage("pending")}
-                                className={"btn btn-block appeal-button" + (currentPage === "pending" ? " appeal-button-active" : "")}>Kutish
+                                onClick={() => changePage("WAITING")}
+                                className={"btn btn-block appeal-button" + (currentPage === "WAITING" ? " appeal-button-active" : "")}>Kutish
                             </button>
                             <button
-                                onClick={() => changePage("set")}
-                                className={"btn btn-block appeal-button " + (currentPage === "set" ? " appeal-button-active" : "")}>To'plam
+                                onClick={() => changePage("SET")}
+                                className={"btn btn-block appeal-button " + (currentPage === "SET" ? " appeal-button-active" : "")}>To'plam
                             </button>
                         </Col>
                     </Row>
@@ -198,20 +198,22 @@ class Appeal extends Component {
                                     <AvField
                                         defaultValue={currentObject ? currentObject.fullName : ""}
                                         type={"text"}
+                                        errorMessage={"Ismni yozish majburiy"}
                                         label={"FISH"} name={"fullName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                        type={"number"}
+                                        type={"text"}
                                         errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
                                         validate={{
                                             required: {value: true},
-                                            pattern: {value: "^[0-9]+$"},
+                                            pattern: {value: "^[0-9]+$", errorMessage: "faqat raqam yozing"},
                                             minLength: {value: 9},
                                             maxLength: {value: 9}
                                         }}
                                         label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
-                                        placeholer={"991234567"} required/>
+                                        placeholer={"99 1234567"} required/>
+                                    Murojaat bo'limi
                                     <Select
                                         placeholder="Bo'limni tanlang..."
                                         name="groupId"
@@ -221,9 +223,10 @@ class Appeal extends Component {
                                         className="basic-multi-select"
                                         classNamePrefix="select"
                                     />
+                                    Jinsi
                                     <AvRadioGroup name="gender"
                                                   defaultValue={currentObject ? currentObject.gender : ""}
-                                                  label="Jins" required
+                                                  required
                                                   className={""}
                                                   errorMessage="Birini tanlang!">
                                         <Row>
@@ -239,9 +242,8 @@ class Appeal extends Component {
                                 <Col>
                                     <AvField
                                         type={"number"}
-                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
-                                            : ""}
-                                        label={"Yoshingiz"} name={"birthDate"} className={"form-control"}
+                                        defaultValue={currentObject && currentObject.age}
+                                        label={"Yoshi"} name={"age"} className={"form-control"}
                                     />
 
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
@@ -252,7 +254,16 @@ class Appeal extends Component {
                                             <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
-
+                                    Reklama turi
+                                    <Select
+                                        placeholder="Reklamani tanlang..."
+                                        name="groupId"
+                                        isSearchable={true}
+                                        options={reklamas && reklamas.length > 0 && formatSelectList(reklamas)}
+                                        onChange={setClientRekalam}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
                                     <AvField
                                         defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
@@ -276,8 +287,24 @@ class Appeal extends Component {
 Appeal.propTypes = {};
 
 export default connect(({
-                            app: {clientStatusList, currentPage, regions, loading, reklamas, showModal, deleteModal},
+                            app: {
+                                size,
+                                page,
+                                totalElements,
+                                appealList,
+                                clientStatusList,
+                                currentPage,
+                                regions,
+                                loading,
+                                reklamas,
+                                showModal,
+                                deleteModal
+                            },
                         }) => ({
+        size,
+        page,
+        totalElements,
+        appealList,
         clientStatusList,
         regions, currentPage,
         loading, reklamas, showModal, deleteModal

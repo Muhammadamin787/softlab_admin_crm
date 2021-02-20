@@ -26,5 +26,6 @@ public class ClientStatus {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Column
     private boolean active;
+    @Enumerated(EnumType.STRING)
     private ClientStatusEnum clientStatusEnum;
 }

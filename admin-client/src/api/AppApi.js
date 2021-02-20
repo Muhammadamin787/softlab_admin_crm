@@ -79,6 +79,9 @@ export const deleteReklamaApi = (data) => {
 export const getReklamaApi = () => {
     return HttpClient.doGet(api.reklama)
 }
+export const getReklamaForSelectApi = () => {
+    return HttpClient.doGet(api.reklama + "/select")
+}
 //START CLIENT STATUS
 export const getClientStatusListApi = (data) => {
     if (data && data.type)
@@ -318,3 +321,12 @@ export const deleteTeacherApi = (data) => {
 export const editStudentStatusApi = (data) => {
     return HttpClient.doDelete(api.student + "/" + data.id, data)
 }
+
+// START APPEAL API
+export const saveAppealApi = (data) => {
+    return HttpClient.doPost(api.appeal, data)
+}
+export const getAppealListByEnumTypeApi = (data) => {
+    return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
+}
+// FINISH APPEAL API
