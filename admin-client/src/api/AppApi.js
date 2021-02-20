@@ -31,6 +31,21 @@ export const deleteRoomApi = (data) => {
 }
 // Room End
 
+// Cashback Start
+export const saveCashbackApi = (data) => {
+    return HttpClient.doPost(api.cashback, data)
+}
+export const getCashbackList = () => {
+    return HttpClient.doGet(api.cashback)
+}
+export const editCashbackApi = (data) => {
+    return HttpClient.doPut(api.cashback + "/" + data.id, data)
+}
+export const deleteCashbackApi = (data) => {
+    return HttpClient.doDelete(api.cashback + "/" + data)
+}
+// Cashback End
+
 // PayType
 export const savePayTypeApi = (data) => {
     return HttpClient.doPost(api.payType, data)
@@ -282,3 +297,7 @@ export const deleteTeacherApi = (data) => {
 }
 
 // FINISH TEACHER API
+
+export const editStudentStatusApi = (data) => {
+    return HttpClient.doDelete(api.student + "/" + data.id, data)
+}

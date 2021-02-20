@@ -16,6 +16,7 @@ import CourseCategory from "../pages/adminPages/CourseCategory";
 import AddTeacher from "../pages/adminPages/Teacher";
 import GeneralSetting from "../pages/adminPages/GeneralSetting";
 import Room from "../pages/adminPages/Room";
+import Cashback from "../pages/adminPages/Cashback";
 import SelectCourse from "../pages/adminPages/SelectCourse";
 import Group from "../pages/adminPages/Group";
 import Student from "../pages/adminPages/Student";
@@ -51,6 +52,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/teacher/:id" component={SelectTeacher}/>
                 {/*<PrivateRoute exact path="/admin/reklama" component={Reklama}/>*/}
                 <PrivateRoute exact path="/admin/room" component={Room}/>
+                <PrivateRoute exact path="/admin/cashback" component={Cashback}/>
                 <PrivateRoute exact path="/admin/payType" component={PayType}/>
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
                 <PrivateRoute exact path="/admin/studentPayment/:id" component={StudentPayment}/>

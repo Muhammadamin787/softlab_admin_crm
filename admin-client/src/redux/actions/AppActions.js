@@ -14,6 +14,12 @@ import {
     saveRoomApi,
     deleteRoomApi,
 
+    // Cashback
+    getCashbackList,
+    editCashbackApi,
+    saveCashbackApi,
+    deleteCashbackApi,
+
     //PayType
     getPayTypeList,
     editPayTypeApi,
@@ -202,6 +208,62 @@ export const deleteRoomAction = (data) => (dispatch) => {
 };
 
 // End Room
+
+
+// Start Cashback
+
+export const getCashbackListAction = () => (dispatch) => {
+    dispatch({
+        api: getCashbackList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CASHBACK_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+
+export const saveCashbackAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editCashbackApi : saveCashbackApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_CASHBACK_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getCashbackListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+export const deleteCashbackAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteCashbackApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_CASHBACK_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                cashback: null
+            }
+        })
+        toast.success("Malumot ochirildi")
+        dispatch(getCashbackListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+};
+
+// End Cashback
 
 // PayType
 export const getPayTypeListAction = () => (dispatch) => {
@@ -1121,6 +1183,7 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
+        dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
     }).catch((err) => {
         toast.error("Xatolik!")

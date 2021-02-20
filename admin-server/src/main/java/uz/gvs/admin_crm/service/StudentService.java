@@ -221,25 +221,25 @@ public class StudentService {
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
-                double eskiNarx = studentPayment.getSum();
+                double oldAmount = studentPayment.getSum();
+                double newAmount = studentPaymentDto.getSum();
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
                 ////Balans uchun
                 Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
-                double yangiNarx = studentPaymentDto.getSum();
                 if (byId1.isPresent()) {
-                    if (yangiNarx != eskiNarx) {
+                    if (newAmount != oldAmount) {
                         Student student = byId1.get();
-                        if (eskiNarx > yangiNarx && eskiNarx != 0) {//15>5
-                            //20  5-15+20=-10+20=10
-                            student.setBalans((eskiNarx - yangiNarx) + student.getBalans());
-                        } else {
-                            //5<15
-                            //20  5-15+20=10
-                            student.setBalans((yangiNarx - eskiNarx) + student.getBalans());
+                        if (oldAmount != 0 && newAmount != 0) {
+                            student.setBalans((student.getBalans()-oldAmount)+newAmount);
                         }
+//                        if (oldAmount > newAmount && oldAmount != 0) {
+//                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
+//                        } else {
+//                            student.setBalans((oldAmount+(newAmount - oldAmount)) + student.getBalans());
+//                        }
 
                         studentRepository.save(student);
                     }
