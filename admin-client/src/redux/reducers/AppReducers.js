@@ -36,7 +36,8 @@ const initState = {
     currentItem: [],
     studentPayment: [],
     selectGroups: [],
-    selectClients: []
+    selectClients: [],
+    cashbacks : [],
 };
 
 const reducers = {
@@ -71,6 +72,15 @@ const reducers = {
         );
     },
     [types.REQUEST_SAVE_ROOM_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    // Cashback
+    [types.REQUEST_GET_CASHBACK_SUCCESS](state, payload) {
+        state.cashbacks = payload.payload.object.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    [types.REQUEST_SAVE_CASHBACK_SUCCESS](state, payload) {
         state.showModal = false
     },
 
