@@ -123,6 +123,15 @@ class AdminLayout extends Component {
                                     Xonalar
                                 </div>
                             </Link>
+                            <Link to="/admin/cashback" className={
+                                this.props.pathname === "/admin/cashback" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-payment"/>
+                                <div className="main-link">
+                                    Cashback
+                                </div>
+                            </Link>
                             <Link to="/admin/payType" className={
                                 this.props.pathname === "/admin/payType" ?
                                     "active-link" : "default-link"
