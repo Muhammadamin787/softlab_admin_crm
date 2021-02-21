@@ -326,7 +326,14 @@ export const editStudentStatusApi = (data) => {
 export const saveAppealApi = (data) => {
     return HttpClient.doPost(api.appeal, data)
 }
+export const changeAppealEnumTypeApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doPut(api.appeal + "/changeType/" + data.id, data)
+}
 export const getAppealListByEnumTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
+}
+export const getAppealListByStatusTypeApi = (data) => {
+    return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&typeId=" + data.typeId + "&page=" + data.page + "&size=" + data.size)
 }
 // FINISH APPEAL API

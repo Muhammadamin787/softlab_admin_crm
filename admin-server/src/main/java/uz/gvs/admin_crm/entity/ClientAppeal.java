@@ -29,6 +29,7 @@ public class ClientAppeal {
     @ManyToOne
     private Client client;
     private String statusId;
+    @Enumerated(EnumType.STRING)
     private ClientStatusEnum statusEnum;
 
 }

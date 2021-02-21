@@ -102,7 +102,11 @@ import {
     saveClientStatusApi,
     editClientStatusApi,
     deleteClientStatusApi,
-    getReklamaForSelectApi, saveAppealApi, getAppealListByEnumTypeApi,
+    getReklamaForSelectApi,
+    saveAppealApi,
+    getAppealListByEnumTypeApi,
+    getAppealListByStatusTypeApi,
+    changeAppealEnumTypeApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -323,6 +327,17 @@ export const deletePayTypeAction = (data) => (dispatch) => {
 // PayType End
 // START CLIENT STATUS
 export const getClientStatusListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getClientStatusListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const getClientStatusListForSelectAction = (data) => (dispatch) => {
     dispatch({
         api: getClientStatusListApi,
         types: [
@@ -1268,9 +1283,44 @@ export const saveAppealAction = (data) => (dispatch) => {
         dispatch(getAppealListByEnumTypeAction({enumType: "REQUEST", page: 0, size: 20}))
     })
 }
+export const changeAppalTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeAppealEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        if (data && data.enumType)
+            if (data.typeId)
+                dispatch(getAppealListByStatusTypeAction({
+                    enumType: data.enumType,
+                    typeId: data.typeId,
+                    page: 0,
+                    size: 20
+                }))
+            else
+                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
+    })
+}
 export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
     dispatch({
         api: getAppealListByEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListByStatusTypeApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_APPEAL_LIST_SUCCESS,

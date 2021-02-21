@@ -8,6 +8,7 @@ const initState = {
     secondPage: false,
     showModal: false,
     showModal1: false,
+    showChangeModal: false,
     deleteModal: false,
     profession: [],
     regions: [],
@@ -74,6 +75,11 @@ const reducers = {
     },
     [types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS](state, payload) {
         state.clientStatusList = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    [types.REQUEST_GET_CLIENT_STATUS_LIST_FOR_SELECT_SUCCESS](state, payload) {
+        state.selectItems = payload.payload.object.sort((a, b) =>
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
@@ -342,6 +348,7 @@ const reducers = {
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
         state.showModal = false
+        state.showChangeModal = false
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {

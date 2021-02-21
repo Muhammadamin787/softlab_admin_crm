@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {
-    getAppealListByEnumTypeAction,
-    getClientStatusListAction,
+    changeAppalTypeAction,
+    getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
+    getClientStatusListAction, getClientStatusListForSelectAction,
     getRegionsAction, getReklamaAction,
     getStudentsAction, saveAppealAction,
 } from "../../redux/actions/AppActions";
@@ -23,17 +24,30 @@ class Appeal extends Component {
         dispatch(getRegionsAction())
         dispatch(getReklamaAction())
         dispatch(getAppealListByEnumTypeAction({enumType: "REQUEST", page: 0, size: 20}))
+        dispatch({
+            type: "updateState",
+            payload: {
+                currentPage: 'REQUEST'
+            }
+        })
     }
 
     state = {
         showModal: false,
         currentObject: "",
         reklamaId: "",
+        regionId: "",
         statusTypeId: "",
+        newTypeId: "",
+        changeLocationType: "",
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getAppealListByEnumTypeAction({
+            enumType: "REQUEST",
+            page: (pageNumber - 1),
+            size: this.props.size
+        }))
     }
 
     render() {
@@ -49,9 +63,10 @@ class Appeal extends Component {
             clientStatusList,
             reklamas,
             selectItems,
+            showChangeModal,
             appealList
         } = this.props
-        const {currentObject, reklamaId, statusTypeId} = this.state
+        const {currentObject, reklamaId, regionId, statusTypeId} = this.state
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -69,6 +84,14 @@ class Appeal extends Component {
                     currentPage: item
                 }
             })
+            dispatch(getAppealListByEnumTypeAction({enumType: item, page: 0, size: 20}))
+            dispatch(getClientStatusListAction({type: item}))
+        }
+        const changeStatusType = (e, v) => {
+            if (v === "all")
+                dispatch(getAppealListByEnumTypeAction({enumType: currentPage, page: 0, size: 20}))
+            else
+                dispatch(getAppealListByStatusTypeAction({enumType: currentPage, typeId: v, page: 0, size: 20}))
         }
         const openDeleteModal = (item) => {
             dispatch({
@@ -81,14 +104,59 @@ class Appeal extends Component {
         const setClientStatus = (e, v) => {
             this.setState({statusTypeId: e.value})
         }
-        const setClientRekalam = (e, v) => {
+        const setChangeClientStatus = (e, v) => {
+            this.setState({newTypeId: e.value})
+        }
+        const setClientRekalama = (e, v) => {
             this.setState({reklamaId: e.value})
         }
+        const setClientRegion = (e, v) => {
+            this.setState({regionId: e.value})
+        }
         const saveItem = (e, v) => {
+            v.regionId = regionId
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             v.statusEnum = currentPage
             dispatch(saveAppealAction(v));
+        }
+        const allowDrop = (e) => {
+            e.preventDefault();
+            this.setState({changeLocationType: e.target.id})
+        }
+
+        const drag = (e) => {
+            this.setState({object: e.target.id})
+            e.dataTransfer.setData("text", e.target.id);
+            // if (window.getComputedStyle(document.getElementById(e.target.id)).cursor == 'pointer')
+            // var element = document.getElementById(e.target.id);
+            // element.classList.add("appeal-drag");
+        }
+
+        const drop = (e) => {
+            e.preventDefault();
+            let data = e.dataTransfer.getData("text");
+            openChangeModal(...appealList.filter(item => item.id === data))
+            dispatch(getClientStatusListForSelectAction({type: this.state.changeLocationType}))
+            // var element = document.getElementById(data);
+            // element.classList.remove("appeal-drag");
+        }
+        const openChangeModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showChangeModal: !showChangeModal
+                }
+            })
+        }
+        const saveTransfer = (e, v) => {
+            v.id = currentObject.id
+            v.clientStatusId = this.state.newTypeId
+            v.statusEnum = this.state.changeLocationType
+            v.enumType = currentPage
+            v.typeId = statusTypeId
+            dispatch(changeAppalTypeAction(v))
         }
 
         return (
@@ -109,13 +177,14 @@ class Appeal extends Component {
                                 <div className="col-md-3">
                                     <AvForm>
                                         <AvField type="select" name="selectSize"
-                                            // onChange={changeSize}
-                                            // defaultValue={size}
+                                                 onChange={changeStatusType}
+                                                 defaultValue={size}
                                         >
                                             <option value="all">Barchasi</option>
-                                            <option value="25">Telegram</option>
-                                            <option value="50">Sayt</option>
-                                            <option value="100">Ofis</option>
+                                            {clientStatusList && clientStatusList.length > 0 &&
+                                            clientStatusList.map((item, i) =>
+                                                <option value={item.id}>{item.name}</option>
+                                            )}
                                         </AvField>
                                     </AvForm>
                                 </div>
@@ -141,7 +210,8 @@ class Appeal extends Component {
                                 </thead>
                                 <tbody>
                                 {appealList && appealList.length > 0 ? appealList.map((item, i) =>
-                                    <tr key={i} className={"table-tr"}>
+                                    <tr key={i} id={item.id} className={"table-tr"} draggable={true}
+                                        onDragStart={drag}>
                                         <td>{i + 1}</td>
                                         <td>{item.fullName}</td>
                                         <td>{formatPhoneNumber(item.phoneNumber)}</td>
@@ -173,14 +243,19 @@ class Appeal extends Component {
                         </Col>
                         <Col md={3}>
                             <button
+                                id={"REQUEST"}
+                                onDrop={drop} onDragOver={allowDrop}
                                 onClick={() => changePage("REQUEST")}
                                 className={"btn btn-block appeal-button" + (currentPage === "REQUEST" ? " appeal-button-active" : "")}>So'rovlar
                             </button>
                             <button
+                                id={"WAITING"}
+                                onDrop={drop} onDragOver={allowDrop}
                                 onClick={() => changePage("WAITING")}
                                 className={"btn btn-block appeal-button" + (currentPage === "WAITING" ? " appeal-button-active" : "")}>Kutish
                             </button>
                             <button
+                                id={"SET"}
                                 onClick={() => changePage("SET")}
                                 className={"btn btn-block appeal-button " + (currentPage === "SET" ? " appeal-button-active" : "")}>To'plam
                             </button>
@@ -245,22 +320,24 @@ class Appeal extends Component {
                                         defaultValue={currentObject && currentObject.age}
                                         label={"Yoshi"} name={"age"} className={"form-control"}
                                     />
-
-                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                             name="regionId"
-                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                        <option key={0} value={"0"}>Hududni tanlang</option>
-                                        {regions && regions.length > 0 ? regions.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
-                                    Reklama turi
+                                    Hudud
+                                    <Select
+                                        placeholder="Hududni tanlang..."
+                                        name="regionId"
+                                        isSearchable={true}
+                                        options={regions && regions.length > 0 && formatSelectList(regions)}
+                                        onChange={setClientRegion}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
+                                    <br/>
+                                    Reklama
                                     <Select
                                         placeholder="Reklamani tanlang..."
                                         name="groupId"
                                         isSearchable={true}
                                         options={reklamas && reklamas.length > 0 && formatSelectList(reklamas)}
-                                        onChange={setClientRekalam}
+                                        onChange={setClientRekalama}
                                         className="basic-multi-select"
                                         classNamePrefix="select"
                                     />
@@ -278,6 +355,30 @@ class Appeal extends Component {
                     </AvForm>
                 </Modal>
 
+
+                <Modal id={""} isOpen={showChangeModal} toggle={openChangeModal} className={""} size={"md"}>
+                    <AvForm className={""} onValidSubmit={saveTransfer}>
+                        <ModalHeader isOpen={showChangeModal} toggle={openChangeModal} charCode="X">
+                            Bo'limni o'zgartirish
+                        </ModalHeader>
+                        <ModalBody>
+                            <Select
+                                placeholder="Bo'limni tanlang..."
+                                name="groupId"
+                                isSearchable={true}
+                                options={selectItems && selectItems.length > 0 && formatSelectList(clientStatusList)}
+                                onChange={setChangeClientStatus}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={openChangeModal}>Bekor qilish</Button>
+                            <Button color="primary">O'tkazish</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
+
             </AdminLayout>
         );
     }
@@ -288,6 +389,8 @@ Appeal.propTypes = {};
 
 export default connect(({
                             app: {
+                                selectItems,
+                                showChangeModal,
                                 size,
                                 page,
                                 totalElements,
@@ -301,6 +404,8 @@ export default connect(({
                                 deleteModal
                             },
                         }) => ({
+        selectItems,
+        showChangeModal,
         size,
         page,
         totalElements,

@@ -1,9 +1,11 @@
 export function formatSelectList(list) {
-    let newSelectList = []
-    for (let i = 0; i < list.length; i++) {
-        newSelectList.push({value: list[i].id, label: list[i].name})
-    }
-    return newSelectList;
+    if (list && list.length > 0) {
+        let newSelectList = []
+        for (let i = 0; i < list.length; i++) {
+            newSelectList.push({value: list[i].id, label: list[i].name})
+        }
+        return newSelectList;
+    } else return []
 }
 
 export function formatPhoneNumber(phoneNumberString) {

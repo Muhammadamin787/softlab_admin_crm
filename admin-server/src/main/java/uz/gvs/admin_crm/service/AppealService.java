@@ -13,6 +13,7 @@ import uz.gvs.admin_crm.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -86,6 +87,48 @@ public class AppealService {
         }
     }
 
+    public ApiResponse changeStatus(UUID id, AppealDto appealDto) {
+        try {
+            Optional<Client> byId = clientRepository.findById(id);
+            if (!byId.isPresent())
+                return apiResponseService.notFoundResponse();
+            // clientni saqlash
+            Client client = byId.get();
+            ClientStatus clientStatus = clientStatusRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get client status"));
+
+            Optional<ClientStatusConnect> byClient_id = clientStatusConnectRepository.findByClient_id(client.getId());
+
+            ClientStatusConnect clientStatusConnect = byClient_id.get();
+            if (appealDto.getStatusEnum().equals("COLLECTION")) {
+                toplamRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
+                clientStatusConnect.setStatusId(appealDto.getClientStatusId().toString());
+                clientStatusConnect.setToplam(true);
+            } else {
+                clientStatusConnect.setToplam(false);
+                clientStatusConnect.setStatusId(appealDto.getClientStatusId().toString());
+            }
+            ClientStatusConnect saveClientStatusConnect = clientStatusConnectRepository.save(clientStatusConnect);
+
+            // statistika murojaat voronkasi uchun murojaatni saqlab olish
+            ClientAppeal clientAppeal = null;
+            Optional<ClientAppeal> optionalClientAppeal = clientAppealRepository.findByClient_idAndStatusEnum(client.getId(),
+                    ClientStatusEnum.valueOf(appealDto.getStatusEnum()));
+            if (optionalClientAppeal.isPresent()) {
+                clientAppeal = optionalClientAppeal.get();
+                clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
+            } else {
+                clientAppeal = new ClientAppeal();
+                clientAppeal.setClient(client);
+                clientAppeal.setStatusEnum(clientStatus.getClientStatusEnum());
+                clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
+            }
+            clientAppealRepository.save(clientAppeal);
+            return apiResponseService.updatedResponse();
+        } catch (Exception e) {
+            return apiResponseService.errorResponse();
+        }
+    }
+
     /*
      enumType - murojaatning qaysi bo'limga tegishli ekanligi, So'rov = REQUEST
      typeId  - murojaatning qaysi bo'limning qaysi qismiga tegishli ekanligi, enumType turiga qarab
@@ -101,23 +144,24 @@ public class AppealService {
             if (typeId == 0) {
                 object = clientRepository.getClientByFilterEnumType(enumType, page, size);
                 totalItems = clientRepository.getCountByEnumType(enumType);
-                for (Object obj : object) {
-                    Object[] client = (Object[]) obj;
-                    UUID id = UUID.fromString(client[0].toString());
-                    String fullName = client[1].toString();
-                    String phoneNumber = client[2].toString();
-                    Integer statusId = Integer.valueOf(client[3].toString());
-                    String statusName = client[4].toString();
-                    String statusEnum = client[5].toString();
-                    AppealDto appealDto = new AppealDto(id, fullName, phoneNumber, statusName, statusEnum, statusId);
-                    clientList.add(appealDto);
-                }
             } else {
                 if (clientStatusEnum.equals(ClientStatusEnum.COLLECTION)) {
 //                    clientList = clientRepository.getClientByFilterStatusToplam(enumType, typeId, page, size);
                 } else {
-//                    clientList = clientRepository.getClientByFilterStatus(enumType, typeId, page, size);
+                    object = clientRepository.getClientByFilterStatus(enumType, typeId, page, size);
+                    totalItems = clientRepository.getCountByStatusType(enumType, typeId);
                 }
+            }
+            for (Object obj : object) {
+                Object[] client = (Object[]) obj;
+                UUID id = UUID.fromString(client[0].toString());
+                String fullName = client[1].toString();
+                String phoneNumber = client[2].toString();
+                Integer statusId = Integer.valueOf(client[3].toString());
+                String statusName = client[4].toString();
+                String statusEnum = client[5].toString();
+                AppealDto appealDto = new AppealDto(id, fullName, phoneNumber, statusName, statusEnum, statusId);
+                clientList.add(appealDto);
             }
             return apiResponseService.getResponse(new PageableDto(Long.valueOf(totalItems.toString()), page, size, clientList));
         } catch (Exception e) {

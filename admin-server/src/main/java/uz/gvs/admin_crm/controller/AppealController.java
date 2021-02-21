@@ -9,6 +9,8 @@ import uz.gvs.admin_crm.payload.AppealDto;
 import uz.gvs.admin_crm.service.AppealService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/appeal")
 public class AppealController {
@@ -19,6 +21,12 @@ public class AppealController {
     public HttpEntity<?> saveAppeal(@RequestBody AppealDto appealDto) {
         ApiResponse apiResponse = appealService.saveAppeal(appealDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
+    }
+
+    @PutMapping("/changeType/{id}")
+    public HttpEntity<?> changeAppealStatus(@PathVariable UUID id, @RequestBody AppealDto appealDto) {
+        ApiResponse apiResponse = appealService.changeStatus(id, appealDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
     @GetMapping
