@@ -16,5 +16,6 @@ export const api = {
     reklama: '/reklama',
     clientStatus: '/clientStatus',
     cashback : 'cashback',
-    appeal : 'appeal'
+    appeal : 'appeal',
+    toplam : 'toplam'
 };

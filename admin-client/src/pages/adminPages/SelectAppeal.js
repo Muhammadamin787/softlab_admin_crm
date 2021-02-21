@@ -4,18 +4,20 @@ import {
     getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
     getClientStatusListAction, getClientStatusListForSelectAction,
     getRegionsAction, getReklamaAction,
-    saveAppealAction,
+    getStudentsAction, saveAppealAction,
 } from "../../redux/actions/AppActions";
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {connect} from "react-redux";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation"
 import AdminLayout from "../../component/AdminLayout";
 import Pagination from "react-js-pagination";
-import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
+import {formatPhoneNumber, formatSelectList, normalizeInput} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
+import moment from "moment";
 import Select from "react-select";
+import PhoneInput from "react-phone-number-input";
 
-class Appeal extends Component {
+class SelectAppeal extends Component {
     componentDidMount() {
         const {dispatch} = this.props;
         dispatch(getClientStatusListAction({type: "REQUEST"}))
@@ -384,7 +386,7 @@ class Appeal extends Component {
 }
 
 
-Appeal.propTypes = {};
+SelectAppeal.propTypes = {};
 
 export default connect(({
                             app: {
@@ -413,4 +415,4 @@ export default connect(({
         regions, currentPage,
         loading, reklamas, showModal, deleteModal
     })
-)(Appeal);
+)(SelectAppeal);

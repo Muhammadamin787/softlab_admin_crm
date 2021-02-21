@@ -29,6 +29,12 @@ public class AppealController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
+    @GetMapping("/{id}")
+    public HttpEntity<?> getAppealById(@PathVariable UUID id) {
+        ApiResponse apiResponse = appealService.getOneAppeal(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @GetMapping
     public HttpEntity<?> getAppealList(
             @RequestParam(value = "enumType", defaultValue = "REQUEST") String enumType,

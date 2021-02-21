@@ -57,4 +57,16 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
             "where cs.id=:status_tr and(cast(cs.client_status_enum as varchar)) = (cast(:enumtype as varchar)) ")
     Integer getCountByStatusType(String enumtype, Integer status_tr);
 
+
+    // GET ONE APPEAL FOR SELECT APPEAL PAGE
+    @Query(nativeQuery = true, value = " select cast(cl.id as varchar) as client_id, cl.full_name as fish, cl.phone_number as tel, " +
+            "       cs.id as status_id, cs.name as status_name, cs.client_status_enum as enum_type, cast(cl.created_at as datetime) as kelgan_vaqti " +
+            "from client cl " +
+            "         inner join client_status_connect csc on cl.id = csc.client_id " +
+            "         inner join client_status cs on cast(csc.status_id as integer) = cs.id " +
+            " where cl.id =:clientId ")
+    List<Object> getOneClientByFilterEnumType(UUID clientId);
+
+    @Query(nativeQuery = true, value = "select * from client_appeal where client_id=:client_id")
+    List<Object> getClientAppealHistoryList(UUID client_id);
 }

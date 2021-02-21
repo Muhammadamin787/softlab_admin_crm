@@ -21,6 +21,7 @@ public abstract class AbsIntEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @CreationTimestamp
     private Timestamp createdAt;
 

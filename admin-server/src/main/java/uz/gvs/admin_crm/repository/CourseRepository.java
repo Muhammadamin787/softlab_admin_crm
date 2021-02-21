@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
     List<Course> findAllByCourseCategory_id(Integer courseCategory_id);
-
+    List<Course> findAllByActiveIsTrue();
     boolean existsByNameEqualsIgnoreCaseAndCourseCategoryId(String name, Integer courseCategory_id);
 }

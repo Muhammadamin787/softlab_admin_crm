@@ -168,4 +168,13 @@ public class AppealService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+
+    public ApiResponse getOneAppeal(UUID id) {
+        try {
+            return apiResponseService.deleteResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }

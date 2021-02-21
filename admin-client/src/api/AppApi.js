@@ -124,6 +124,9 @@ export const editCourseApi = (data) => {
 export const getCoursesApi = (data) => {
     return HttpClient.doGet(api.course + (data && data.id ? "?categoryId=" + data.id : ""))
 }
+export const getCourseListForSelectApi = () => {
+    return HttpClient.doGet(api.course);
+}
 export const getCourseApi = (data) => {
     return HttpClient.doGet(api.course + (data && data.id ? "/" + data.id : ""))
 }
@@ -337,3 +340,24 @@ export const getAppealListByStatusTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&typeId=" + data.typeId + "&page=" + data.page + "&size=" + data.size)
 }
 // FINISH APPEAL API
+
+// START TOPLAM API
+export const saveToplamApi = (data) => {
+    return HttpClient.doPost(api.toplam, data)
+}
+export const editToplamApi = (data) => {
+    return HttpClient.doGet(api.toplam + "/" + data.id, data)
+}
+export const getToplamListApi = (data) => {
+    return HttpClient.doGet(api.toplam + "?page=" + data.page + "&size=" + data.size)
+}
+export const getToplamApi = (data) => {
+    return HttpClient.doGet(api.toplam + "/" + data.id)
+}
+export const deleteToplamApi = (data) => {
+    return HttpClient.doDelete(api.toplam + "/" + data.id)
+}
+export const getToplamListForSelectApi = () => {
+    return HttpClient.doGet(api.toplam + "/select")
+}
+// FINISH TOPLAM API

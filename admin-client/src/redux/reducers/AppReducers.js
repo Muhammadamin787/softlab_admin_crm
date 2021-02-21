@@ -42,7 +42,8 @@ const initState = {
     currentPage: 'REQUEST',
     getClientStatusList: [],
     cashbacks: [],
-    appealList: []
+    appealList: [],
+    toplamList: []
 };
 
 const reducers = {
@@ -302,7 +303,12 @@ const reducers = {
         state.currentItem = payload.payload.object
     },
     [types.REQUEST_GET_TEACHERS_FOR_SELECT_SUCCESS](state, payload) {
-        state.teachers = payload.payload.object
+        let teacherList = payload.payload.object
+        let teachersList = []
+        for (let i = 0; i < teacherList.length; i++) {
+            teachersList.push({id: teacherList[i].uuid, name: teacherList[i].name})
+        }
+        state.teachers = teachersList
     },
     [types.REQUEST_GET_TEACHERS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
@@ -352,9 +358,7 @@ const reducers = {
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.appealList = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
+            state.appealList = payload.payload.object.object
             state.page = payload.payload.object.number
             state.size = payload.payload.object.size
             state.totalElements = payload.payload.object.totalElements
@@ -362,6 +366,21 @@ const reducers = {
         }
     },
     // FINISH APPEAL REDUCERS
+    // START TOPLAM REDUCERS
+    [types.REQUEST_SAVE_TOPLAM_SUCCESS](state, payload) {
+        state.showModal = false
+        state.showChangeModal = false
+    },
+    [types.REQUEST_GET_TOPLAM_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.toplamList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    // FINISH TOPLAM REDUCERS
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
         state.showModal1 = false;
         state.showPaymentEditModal = false;

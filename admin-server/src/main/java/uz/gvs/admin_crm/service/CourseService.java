@@ -11,9 +11,11 @@ import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.CourseDto;
 import uz.gvs.admin_crm.payload.PageableDto;
+import uz.gvs.admin_crm.payload.ResSelect;
 import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 import uz.gvs.admin_crm.repository.CourseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +70,22 @@ public class CourseService {
                 course.getPrice(),
                 course.getCourseCategory()
         );
+    }
+
+    public ApiResponse getCourseList() {
+        try {
+            List<Course> courseList = courseRepository.findAllByActiveIsTrue();
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Course course : courseList) {
+                ResSelect resSelect = new ResSelect();
+                resSelect.setName(course.getName());
+                resSelect.setId(course.getId());
+                resSelects.add(resSelect);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 
     public ApiResponse getOneCourse(Integer id) {

@@ -16,12 +16,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Toplam extends AbsIntEntity {
+
+    private String name;
     @ManyToOne
     private Course course;
-
     @ManyToOne
     private Teacher teacher;
-
     @OneToMany
     private Set<Weekday> weekdays;
 
