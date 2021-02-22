@@ -21,10 +21,16 @@ public class ToplamController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public HttpEntity<?> editToplam(@PathVariable int id, @RequestBody ToplamDto toplamDto) {
         ApiResponse apiResponse = toplamService.editToplam(id, toplamDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/{id}")
+    public HttpEntity<?> getToplam(@PathVariable int id) {
+        ApiResponse apiResponse = toplamService.getOneToplam(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping

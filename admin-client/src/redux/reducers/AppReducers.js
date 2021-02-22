@@ -374,6 +374,9 @@ const reducers = {
         state.showModal = false
         state.showChangeModal = false
     },
+    [types.REQUEST_GET_TOPLAM_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+    },
     [types.REQUEST_GET_TOPLAM_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.toplamList = payload.payload.object.object

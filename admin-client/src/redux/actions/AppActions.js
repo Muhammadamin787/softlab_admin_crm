@@ -112,7 +112,7 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1376,6 +1376,17 @@ export const getToplamListAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_TOPLAM_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const getOneToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: getToplamApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TOPLAM_SUCCESS,
             types.REQUEST_ERROR
         ],
         data

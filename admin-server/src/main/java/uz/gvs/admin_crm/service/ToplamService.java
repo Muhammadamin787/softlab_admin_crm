@@ -3,15 +3,12 @@ package uz.gvs.admin_crm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Toplam;
 import uz.gvs.admin_crm.entity.Weekday;
-import uz.gvs.admin_crm.entity.enums.ClientStatusEnum;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.AppealDto;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ToplamDto;
 import uz.gvs.admin_crm.repository.CourseRepository;
@@ -86,7 +83,8 @@ public class ToplamService {
 
     public ApiResponse getOneToplam(Integer id) {
         try {
-            return apiResponseService.getResponse(toplamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("get toplam")));
+            Toplam getToplam = toplamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
+            return apiResponseService.getResponse(makeToplamDto(getToplam));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

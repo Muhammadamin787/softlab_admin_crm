@@ -15,6 +15,7 @@ import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import Select from "react-select";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 class Appeal extends Component {
     componentDidMount() {
@@ -161,13 +162,17 @@ class Appeal extends Component {
         }
         const saveTransfer = (e, v) => {
             e.preventDefault();
-            v.id = currentObject.id
-            v.clientStatusId = this.state.newTypeId
-            v.statusEnum = this.state.changeLocationType
-            v.enumType = currentPage
-            v.typeId = statusTypeId
-            dispatch(changeAppalTypeAction(v))
-            e.preventDefault()
+            if (currentObject && currentObject.id) {
+                v.id = currentObject.id
+                v.clientStatusId = this.state.newTypeId
+                v.statusEnum = this.state.changeLocationType
+                v.enumType = currentPage
+                v.typeId = statusTypeId
+                dispatch(changeAppalTypeAction(v))
+                e.preventDefault()
+            } else {
+                toast.warn("Xatolik!")
+            }
         }
 
         return (
@@ -214,7 +219,7 @@ class Appeal extends Component {
                                     {toplamList && toplamList.length > 0 ? toplamList.map((toplam, k) =>
                                             <div className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
                                                 <h5>
-                                                    <Link to={"/admin/appeal/" + toplam.id}
+                                                    <Link to={"/admin/appeal/toplam/" + toplam.id}
                                                           className={"text-decoration-none"}>
                                                         {toplam.name + " "}
                                                     </Link>
@@ -223,17 +228,21 @@ class Appeal extends Component {
                                                 </h5>
                                                 <small
                                                     className={" text-secondary"}>
-                                                    Ustoz: {toplam.teacherName}
+                                                    Ustoz: <span
+                                                    className={"text-dark"}>{toplam.teacherName}</span>
                                                 </small>
                                                 <br/>
                                                 <small
                                                     className={" text-secondary"}>Dars
-                                                    kunlari: {toplam.weekdays && toplam.weekdays.length > 0 && toplam.weekdays.map((week) =>
-                                                        <span>{week}, </span>)}
+                                                    kunlari:
+                                                    <span
+                                                        className={"text-dark"}> {toplam.weekdays && toplam.weekdays.length > 0 && toplam.weekdays.map((week) =>
+                                                        <span>{week}, </span>)}</span>
                                                 </small>
                                                 <small
                                                     className={"d-block text-secondary"}>
-                                                    Murojaatlar: {toplam.soni}
+                                                    Murojaatlar: <span
+                                                    className={"text-dark"}>{toplam.soni}</span>
                                                 </small>
                                             </div>
                                         )
@@ -256,7 +265,7 @@ class Appeal extends Component {
                                             onDragStart={drag}>
                                             <td>{i + 1}</td>
                                             <td>
-                                                <Link to={"/admin/appeals/" + item.id}
+                                                <Link to={"/admin/appeal/" + item.id}
                                                       className={"text-decoration-none text-dark"}>
                                                     {item.fullName}
                                                 </Link>

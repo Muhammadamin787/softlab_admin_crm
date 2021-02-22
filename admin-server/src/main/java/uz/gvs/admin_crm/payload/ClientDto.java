@@ -31,7 +31,7 @@ public class ClientDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Client client;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<ClientAppeal> clientAppealList;
+    private List<ClientAppealDto> clientAppealList;
 
     public ClientDto(UUID id, String fullName, String phoneNumber, String description, int age, Integer regionId, Region region, String gender) {
         this.id = id;
@@ -44,7 +44,7 @@ public class ClientDto {
         this.gender = gender;
     }
 
-    public ClientDto(ClientStatusConnect clientStatusConnect, List<ClientAppeal> clientAppealList) {
+    public ClientDto(ClientStatusConnect clientStatusConnect, List<ClientAppealDto> clientAppealList) {
         this.clientStatusConnect = clientStatusConnect;
         this.clientAppealList = clientAppealList;
     }

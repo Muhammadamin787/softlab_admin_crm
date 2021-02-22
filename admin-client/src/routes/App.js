@@ -32,6 +32,7 @@ import Card from "../pages/card/Card";
 import ClientStatus from "../pages/adminPages/ClientStatus";
 import Toplam from "../pages/adminPages/Toplam";
 import SelectAppeal from "../pages/adminPages/SelectAppeal";
+import SelectToplam from "../pages/adminPages/SelectToplam";
 
 
 const App = () => {
@@ -68,6 +69,8 @@ const App = () => {
                 <PrivateRoute exact path="/admin/clientStatus" component={ClientStatus}/>/>
                 <PrivateRoute exact path="/admin/toplam" component={Toplam}/>/>
                 <PrivateRoute exact path="/admin/appeal/:id" component={SelectAppeal}/>/>
+                <PrivateRoute exact path="/admin/appeal/toplam/:id" component={SelectToplam}/>/>
+                <PrivateRoute exact path="/admin/toplam/:id" component={SelectToplam}/>/>
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

@@ -14,17 +14,20 @@ public interface ClientAppealRepository extends JpaRepository<ClientAppeal, UUID
 
     List<ClientAppeal> findAllByClient_id(UUID client_id);
 
-    @Query(nativeQuery = true, value = "select cast(cl.id as varchar), ca.status_enum, cs.name, cast(cs.id as varchar), ca.updated_at, cast(ca.id as varchar) " +
+    @Query(nativeQuery = true, value = "select cast(cl.id as varchar) as client_id, cast(ca.status_enum as varchar) as status_enum,  " +
+            "cs.name as status_nomi, cast(cs.id as varchar) as status_id, cast(ca.updated_at as varchar) as vaqt, cast(ca.id as varchar) as tarix_id" +
             " from client cl" +
             " inner join client_appeal ca on cl.id = ca.client_id" +
-            " inner join client_status cs on cs.id = cast(ca.status_id as integer)" +
-            " where cl.id=:mijoz_id and ca.status_enum!='SET' order by ca.updated_at")
-    List<Object> getClientAppealList(UUID mijoz_id);
+            " inner join client_status cs on cast(ca.status_id as integer) = cs.id" +
+            " where cl.id=:mijoz and ca.status_enum!='COLLECTION'")
+    List<Object> getClientAppealList(UUID mijoz);
 
-    @Query(nativeQuery = true, value = "select cast(cl.id as varchar), ca.status_enum, cs.name, cast(cs.id as varchar), ca.updated_at, cast(ca.id as varchar) " +
-            " from client cl" +
-            " inner join client_appeal ca on cl.id = ca.client_id" +
-            " inner join client_status cs on cs.id = cast(ca.status_id as integer)" +
-            " where cl.id=:mijoz_id and ca.status_enum!='SET' order by ca.updated_at")
-    List<Object> getClientAppealListByToplam(UUID mijoz_id);
+    @Query(nativeQuery = true, value = "select cast(cl.id as varchar) as client_id, cast(ca.status_enum as varchar) as status_enum," +
+            " t.name as toplam_nomi, cast(t.id as varchar) as toplam_id, " +
+            "cast(ca.updated_at as varchar) as vaqt, cast(ca.id as varchar) as tarix_id " +
+            "from client cl " +
+            "inner join client_appeal ca on cl.id = ca.client_id " +
+            "inner join toplam t on cast(ca.status_id as integer)=t.id " +
+            "where cl.id=:mijoz and ca.status_enum='COLLECTION'")
+    List<Object> getClientAppealListByToplam(UUID mijoz);
 }

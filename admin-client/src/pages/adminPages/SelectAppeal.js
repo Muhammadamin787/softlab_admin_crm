@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     changeAppalTypeAction,
     getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
-    getClientStatusListAction, getClientStatusListForSelectAction, getOneAppeal,
+    getClientStatusListAction, getClientStatusListForSelectAction, getOneAppeal, getOneToplamAction,
     getRegionsAction, getReklamaAction, getStudentAction,
     getStudentsAction, saveAppealAction,
 } from "../../redux/actions/AppActions";
@@ -10,12 +10,10 @@ import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} fro
 import {connect} from "react-redux";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation"
 import AdminLayout from "../../component/AdminLayout";
-import Pagination from "react-js-pagination";
-import {formatPhoneNumber, formatSelectList, normalizeInput} from "../../utils/addFunctions";
+import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
 import Select from "react-select";
-import PhoneInput from "react-phone-number-input";
 import {Link} from "react-router-dom";
 
 class SelectAppeal extends Component {
@@ -59,9 +57,6 @@ class SelectAppeal extends Component {
     render() {
         const {
             currentItem,
-            size,
-            page,
-            totalElements,
             dispatch,
             showModal,
             regions,
@@ -212,7 +207,7 @@ class SelectAppeal extends Component {
                                                     {currentItem.clientStatusConnect
                                                     && currentItem.clientStatusConnect.client
                                                     && currentItem.clientStatusConnect.client.reklama
-                                                    && moment(currentItem.clientStatusConnect.client.createdAt).format("DD/MM/yyyy HH:mm")
+                                                    && moment(currentItem.clientStatusConnect.client.createdAt).format("DD/MM/yyyy, HH:mm")
                                                     }</h6>
                                             </hgroup>
                                             <hgroup>
@@ -267,17 +262,16 @@ class SelectAppeal extends Component {
                                             currentItem.clientAppealList && currentItem.clientAppealList.length > 0 ? currentItem.clientAppealList.map((item, i) =>
                                                     <div
                                                         className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
-                                                        <Link to={"/admin/course/select/" + item.id}
-                                                              className={"w-100 text-decoration-none "}>
-                                                            <h5>{item.name}</h5>
-                                                            <p>{item.price} UZS</p>
-                                                        </Link>
+                                                        <h5>{item.status + " - " + item.statusName}</h5>
+                                                        <p>
+                                                            <small className={"text-secondary"}>Vaqti: </small>
+                                                            {moment(item.date).format("DD/MM/yyyy, HH:mm")}
+                                                        </p>
                                                     </div>
                                                 )
                                                 :
                                                 <Col>
                                                     <h5 className={"text-center"}>
-                                                        Kurs topilmadi
                                                     </h5>
                                                 </Col>
                                         }
@@ -417,9 +411,6 @@ export default connect(({
                                 currentItem,
                                 selectItems,
                                 showChangeModal,
-                                size,
-                                page,
-                                totalElements,
                                 appealList,
                                 clientStatusList,
                                 currentPage,
@@ -433,9 +424,6 @@ export default connect(({
         currentItem,
         selectItems,
         showChangeModal,
-        size,
-        page,
-        totalElements,
         appealList,
         clientStatusList,
         regions, currentPage,

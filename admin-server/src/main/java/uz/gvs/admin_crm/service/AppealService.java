@@ -207,13 +207,29 @@ public class AppealService {
                                     updateTime,
                                     statusName));
                 }
+                object = clientAppealRepository.getClientAppealListByToplam(id);
+                for (Object obj : object) {
+                    Object[] client = (Object[]) obj;
+                    UUID clientId = UUID.fromString(client[0].toString());
+                    String statusEnum = "To'plam";
+                    String statusName = client[2].toString();
+                    Integer statusId = Integer.valueOf(client[3].toString());
+                    String updateTime = client[4].toString();
+                    UUID caId = UUID.fromString(client[5].toString());
+                    clientAppealDtos.add(
+                            new ClientAppealDto(
+                                    caId,
+                                    statusEnum,
+                                    clientId,
+                                    statusId,
+                                    updateTime,
+                                    statusName));
+                }
 
-
-                List<ClientAppeal> allByClient_id = clientAppealRepository.findAllByClient_id(id);
                 return apiResponseService.getResponse(
                         new ClientDto(
                                 byClient_id.get(),
-                                allByClient_id
+                                clientAppealDtos
                         ));
             }
             return apiResponseService.notFoundResponse();
