@@ -36,6 +36,8 @@ public class ToplamDto {
     private String courseName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer soni;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<ClientDto> clientDtos;
 
 
     public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<String> weekdays, String time, boolean active, String courseName, Integer soni) {
@@ -49,6 +51,20 @@ public class ToplamDto {
         this.active = active;
         this.courseName = courseName;
         this.soni = soni;
+    }
+
+    public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<String> weekdays, String time, boolean active, String courseName, Integer soni, List<ClientDto> clientDtos) {
+        this.id = id;
+        this.name = name;
+        this.courseId = courseId;
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        this.weekdays = weekdays;
+        this.time = time;
+        this.active = active;
+        this.courseName = courseName;
+        this.soni = soni;
+        this.clientDtos = clientDtos;
     }
 
     public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<String> weekdays, String time, boolean active, String courseName) {

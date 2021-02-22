@@ -32,4 +32,9 @@ public interface ToplamRepository extends JpaRepository<Toplam, Integer> {
     @Query(nativeQuery = true, value = "select t.id, (select count(*) from client_status_connect csc where csc.toplam is true and cast(csc.status_id as integer)=t.id) as soni from toplam t where active is true")
     List<Object> getToplamCount();
 
+    @Query(nativeQuery = true, value = "select cast(cl.id as varchar), cl.full_name, cl.phone_number, cast(csc.updated_at as varchar) as vaqt from client cl " +
+            "inner join client_status_connect csc on cl.id = csc.client_id " +
+            "where csc.toplam is true and cast(csc.status_id as integer)=:toplamId")
+    List<Object> getClientListByToplam(Integer toplamId);
+
 }

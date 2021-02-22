@@ -182,7 +182,7 @@ class SelectAppeal extends Component {
                     <div className="row">
                         {currentItem ?
                             <>
-                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 align-self-start"}>
                                     <div className="row">
                                         <div className="col-8">
                                             <hgroup>

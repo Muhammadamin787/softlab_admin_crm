@@ -9,12 +9,10 @@ import uz.gvs.admin_crm.entity.Toplam;
 import uz.gvs.admin_crm.entity.Weekday;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.ClientDto;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ToplamDto;
-import uz.gvs.admin_crm.repository.CourseRepository;
-import uz.gvs.admin_crm.repository.TeacherRepository;
-import uz.gvs.admin_crm.repository.ToplamRepository;
-import uz.gvs.admin_crm.repository.WeekdayRepository;
+import uz.gvs.admin_crm.repository.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,8 +81,27 @@ public class ToplamService {
 
     public ApiResponse getOneToplam(Integer id) {
         try {
+            List<Object> object = toplamRepository.getClientListByToplam(id);
+            List<ClientDto> clientDtos = new ArrayList<>();
             Toplam getToplam = toplamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
-            return apiResponseService.getResponse(makeToplamDto(getToplam));
+            ToplamDto toplamDto = makeToplamDto(getToplam);
+            for (Object obj : object) {
+                Object[] client = (Object[]) obj;
+                UUID clientId = UUID.fromString(client[0].toString());
+                String fullName = client[1].toString();
+                String phoneNumber = client[2].toString();
+                String vaqt = client[3].toString();
+                clientDtos.add(new ClientDto(
+                        clientId,
+                        fullName,
+                        phoneNumber,
+                        vaqt
+                ));
+            }
+
+            toplamDto.setClientDtos(clientDtos);
+            toplamDto.setSoni(clientDtos.size());
+            return apiResponseService.getResponse(toplamDto);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

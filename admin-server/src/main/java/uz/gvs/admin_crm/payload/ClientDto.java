@@ -32,6 +32,15 @@ public class ClientDto {
     private Client client;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ClientAppealDto> clientAppealList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String time;
+
+    public ClientDto(UUID id, String fullName, String phoneNumber, String time) {
+        this.id = id;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.time = time;
+    }
 
     public ClientDto(UUID id, String fullName, String phoneNumber, String description, int age, Integer regionId, Region region, String gender) {
         this.id = id;

@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import {
+    changeAppalTypeAction, changeAppalTypeByToplamAction,
     deleteReklamaAction,
-    getAppealListByEnumTypeAction,
+    getAppealListByEnumTypeAction, getClientStatusListForSelectAction,
     getCourseListForSelectAction,
     getCoursesAction,
     getOneAppeal,
     getOneToplamAction,
     getReklamaAction,
     getTeachersForSelectAction,
-    getToplamListAction,
+    getToplamListAction, getToplamListForSelectAction,
     saveReklamaAction,
     saveToplamAction
 } from "../../redux/actions/AppActions";
-import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {connect} from "react-redux";
 import {AvForm, AvField, AvCheckbox, AvCheckboxGroup} from "availity-reactstrap-validation"
 import {toast} from "react-toastify";
@@ -38,13 +39,15 @@ class Toplam extends Component {
     }
 
     state = {
-        showModal: false,
-        currentObject: "",
         courseId: "",
         teacherId: "",
-        selectReklama: [],
-        selectParentReklama: "",
-        parentReklamaDisable: false
+        reklamaId: "",
+        regionId: "",
+        statusTypeId: "",
+        newTypeId: "",
+        object: '',
+        changeLocationType: "",
+        currentObject: "",
     }
 
     handlePageChange(pageNumber) {
@@ -57,7 +60,7 @@ class Toplam extends Component {
 
     render() {
         const {
-            currentItem,
+            currentItem, showChangeModal, selectItems, currentPage, statusTypeId,
             dispatch, showModal, deleteModal, reklamas, toplamList, size,
             teachers, getItems
         } = this.props
@@ -84,7 +87,6 @@ class Toplam extends Component {
         const saveToplam = (e, v) => {
             v.teacherId = this.state.teacherId
             v.courseId = this.state.courseId
-            console.log(v);
             if (v.courseId && v.teacherId)
                 dispatch(saveToplamAction(v))
         }
@@ -96,6 +98,67 @@ class Toplam extends Component {
         const setToplamTeacher = (e, v) => {
             this.setState({teacherId: e.value})
         }
+        const allowDrop = (e) => {
+            e.preventDefault();
+            this.setState({changeLocationType: e.target.id})
+        }
+
+        const drag = (e) => {
+            this.setState({object: e.target.id})
+            e.dataTransfer.setData("text", e.target.id);
+            // if (window.getComputedStyle(document.getElementById(e.target.id)).cursor == 'pointer')
+            // var element = document.getElementById(e.target.id);
+            // element.classList.add("appeal-drag");
+        }
+
+        const drop = (e) => {
+            e.preventDefault();
+            let data = e.dataTransfer.getData("text");
+            if (currentItem && currentItem.clientDtos) {
+                console.log(currentItem.clientDtos, "clie");
+                console.log(data, "data");
+                openChangeModal(...currentItem.clientDtos.filter(item => item.id === data))
+                if (this.state.changeLocationType === "COLLECTION") {
+                    dispatch(getToplamListForSelectAction())
+                } else {
+                    dispatch(getClientStatusListForSelectAction({type: this.state.changeLocationType}))
+                }
+            }
+            // var element = document.getElementById(data);
+            // element.classList.remove("appeal-drag");
+        }
+        const openChangeModal = (item) => {
+            console.log(item);
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showChangeModal: !showChangeModal
+                }
+            })
+        }
+        const setChangeClientStatus = (e, v) => {
+            this.setState({newTypeId: e.value})
+        }
+        const saveTransfer = (e, v) => {
+            e.preventDefault();
+            console.log(currentObject);
+            if (currentObject && currentObject.id) {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    v.id = currentObject.id
+                    v.clientStatusId = this.state.newTypeId
+                    v.statusEnum = this.state.changeLocationType
+                    v.enumType = currentPage
+                    v.typeId = statusTypeId
+                    v.toplamId = this.props.match.params.id;
+                    dispatch(changeAppalTypeByToplamAction(v))
+                    e.preventDefault()
+                }
+            } else {
+                toast.warn("Xatolik!")
+            }
+        }
+
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -114,7 +177,7 @@ class Toplam extends Component {
                     <div className="row">
                         {currentItem ?
                             <>
-                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 align-self-start"}>
                                     <div className="row">
                                         <div className="col-8">
                                             <hgroup>
@@ -144,6 +207,16 @@ class Toplam extends Component {
                                                     <small className={"text-secondary"}>Holati: </small>
                                                     {currentItem.active ? "Ochiq" : "Yopilgan"}</h6>
                                             </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Murojaatlar soni: </small>
+                                                    {currentItem.soni}</h6>
+                                            </hgroup>
+                                            <div className="button-block">
+                                                <Button className="table-icon px-2 border rounded-circle">
+                                                    <span className="icon icon-wallet bg-primary "/>
+                                                </Button>
+                                            </div>
                                         </div>
                                         <div className="col-4">
                                             <Button className="table-icon" onClick={() => openModal(currentItem)}>
@@ -155,16 +228,25 @@ class Toplam extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"col-md-7"}>
+                                <div className={"col-md-4 col-10"}>
                                     <div className="row">
                                         {
-                                            currentItem.clientAppealList && currentItem.clientAppealList.length > 0 ? currentItem.clientAppealList.map((item, i) =>
+                                            currentItem.clientDtos && currentItem.clientDtos.length > 0 ? currentItem.clientDtos.map((client, i) =>
                                                     <div
-                                                        className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
-                                                        <h5>{item.status + " - " + item.statusName}</h5>
+                                                        className={"m-2 p-2 pb-0 bg-white rounded courses-style category-courses w-100"}
+                                                        key={i}
+                                                        id={client.id}
+                                                        draggable={true}
+                                                        onDragStart={drag}>
+                                                        <h5>{i + 1}.
+                                                            <Link to={"/admin/appeal/" + client.id}
+                                                                  className={"text-decoration-none text-dark"}>
+                                                                {" " + client.fullName + " / " + formatPhoneNumber(client.phoneNumber)}
+                                                            </Link>
+                                                        </h5>
                                                         <p>
                                                             <small className={"text-secondary"}>Vaqti: </small>
-                                                            {moment(item.date).format("DD/MM/yyyy, HH:mm")}
+                                                            {moment(client.date).format("DD/MM/yyyy, HH:mm")}
                                                         </p>
                                                     </div>
                                                 )
@@ -176,6 +258,24 @@ class Toplam extends Component {
                                         }
                                     </div>
                                 </div>
+                                <div className={"col-md-3 ml-auto col-10"}>
+                                    <button
+                                        id={"REQUEST"}
+                                        onDrop={drop} onDragOver={allowDrop}
+                                        className={"btn btn-block appeal-button bg-white border-primary rounded shadow"}>So'rovlar
+                                    </button>
+                                    <button
+                                        id={"WAITING"}
+                                        onDrop={drop} onDragOver={allowDrop}
+                                        className={"btn btn-block appeal-button bg-white border-primary rounded shadow"}>Kutish
+                                    </button>
+                                    <button
+                                        id={"COLLECTION"}
+                                        onDrop={drop} onDragOver={allowDrop}
+                                        className={"btn btn-block appeal-button bg-white border-primary rounded shadow"}>To'plam
+                                    </button>
+                                </div>
+
                             </>
                             : ""}
                     </div>
@@ -241,6 +341,30 @@ class Toplam extends Component {
                             <Button color="light" onClick={() => deleteNumber(currentObject)}>Delete</Button>
                         </ModalFooter>
                     </Modal>
+
+                    <Modal id={""} isOpen={showChangeModal} toggle={openChangeModal} className={""} size={"md"}>
+                        <AvForm className={""} onValidSubmit={saveTransfer}>
+                            <ModalHeader isOpen={showChangeModal} toggle={openChangeModal} charCode="X">
+                                Bo'limni o'zgartirish
+                            </ModalHeader>
+                            <ModalBody>
+                                <Select
+                                    placeholder="Bo'limni tanlang..."
+                                    name="groupId"
+                                    isSearchable={true}
+                                    options={selectItems && selectItems.length > 0 && formatSelectList(selectItems)}
+                                    onChange={setChangeClientStatus}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={openChangeModal}>Bekor qilish</Button>
+                                <Button color="primary">O'tkazish</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
+
                 </div>
             </AdminLayout>
         );
@@ -252,6 +376,9 @@ Toplam.propTypes = {};
 
 export default connect(({
                             app: {
+                                currentPage, statusTypeId,
+                                selectItems,
+                                showChangeModal,
                                 currentItem,
                                 getItems,
                                 teachers,
@@ -259,6 +386,9 @@ export default connect(({
                                 loading, reklamas, showModal, deleteModal
                             },
                         }) => ({
+        currentPage, statusTypeId,
+        selectItems,
+        showChangeModal,
         currentItem,
         getItems,
         teachers,

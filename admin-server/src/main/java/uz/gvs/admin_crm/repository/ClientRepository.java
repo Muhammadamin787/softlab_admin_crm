@@ -100,4 +100,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     @Query(nativeQuery = true, value = "select * from client_appeal where client_id=:client_id")
     List<Object> getClientAppealHistoryList(UUID client_id);
+
+
 }

@@ -1334,6 +1334,23 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
                 dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
     })
 }
+export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeAppealEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch(getOneToplamAction({id: data.toplamId}))
+
+
+    })
+}
 export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
     dispatch({
         api: getAppealListByEnumTypeApi,
