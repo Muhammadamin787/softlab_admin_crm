@@ -104,8 +104,11 @@ class Toplam extends Component {
                         <thead className={""}>
                         <tr>
                             <th>№</th>
-                            <th>Izoh</th>
-                            <th>Holat</th>
+                            <th>Nomi</th>
+                            <th>Kursi</th>
+                            <th>O'qituvchi</th>
+                            <th>Vaqti</th>
+                            <th>Holati</th>
                             <th>Amal</th>
                         </tr>
                         </thead>
@@ -114,11 +117,15 @@ class Toplam extends Component {
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
+                                <td>{item.courseName}</td>
+                                <td>{item.teacherName}</td>
+                                <td>
+                                    {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
+                                        <span>{week}, </span>)}
+                                    <br/>{item.time}
+                                </td>
                                 <td><input type="checkbox" checked={item.active}/></td>
-                                <td><Button color={"white"} onClick={() => openModal(item)}
-                                            className={"mx-1"}>
-                                    <EditIcon className={"text-white"}/>
-                                </Button>
+                                <td>
                                     <Button color={"white"} onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>

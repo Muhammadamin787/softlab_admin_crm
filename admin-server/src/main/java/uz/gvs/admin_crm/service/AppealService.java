@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.ClientStatusEnum;
 import uz.gvs.admin_crm.entity.enums.Gender;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.AppealDto;
-import uz.gvs.admin_crm.payload.PageableDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
 import java.util.ArrayList;
@@ -119,7 +117,11 @@ public class AppealService {
             } else {
                 clientAppeal = new ClientAppeal();
                 clientAppeal.setClient(client);
-                clientAppeal.setStatusEnum(clientStatus.getClientStatusEnum());
+                if (appealDto.getStatusEnum().equals("COLLECTION")) {
+                    clientAppeal.setStatusEnum(ClientStatusEnum.COLLECTION);
+                } else {
+                    clientAppeal.setStatusEnum(clientStatus.getClientStatusEnum());
+                }
                 clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
             }
             clientAppealRepository.save(clientAppeal);
@@ -142,11 +144,17 @@ public class AppealService {
             Integer totalItems = 0;
 
             if (typeId == 0) {
-                object = clientRepository.getClientByFilterEnumType(enumType, page, size);
-                totalItems = clientRepository.getCountByEnumType(enumType);
+                if (clientStatusEnum.equals(ClientStatusEnum.COLLECTION)) {
+                    object = clientRepository.getClientByFilterEnumSet(page, size);
+                    totalItems = clientRepository.getCountByEnumSet();
+                } else {
+                    object = clientRepository.getClientByFilterEnumType(enumType, page, size);
+                    totalItems = clientRepository.getCountByEnumType(enumType);
+                }
             } else {
                 if (clientStatusEnum.equals(ClientStatusEnum.COLLECTION)) {
-//                    clientList = clientRepository.getClientByFilterStatusToplam(enumType, typeId, page, size);
+                    object = clientRepository.getClientByFilterToplamStatus(typeId, page, size);
+                    totalItems = clientRepository.getCountByStatusToplam(typeId);
                 } else {
                     object = clientRepository.getClientByFilterStatus(enumType, typeId, page, size);
                     totalItems = clientRepository.getCountByStatusType(enumType, typeId);
@@ -159,7 +167,12 @@ public class AppealService {
                 String phoneNumber = client[2].toString();
                 Integer statusId = Integer.valueOf(client[3].toString());
                 String statusName = client[4].toString();
-                String statusEnum = client[5].toString();
+                String statusEnum = "";
+                if (clientStatusEnum.equals(ClientStatusEnum.COLLECTION)) {
+                    statusEnum = "COLLECTION";
+                } else {
+                    statusEnum = client[5].toString();
+                }
                 AppealDto appealDto = new AppealDto(id, fullName, phoneNumber, statusName, statusEnum, statusId);
                 clientList.add(appealDto);
             }
@@ -171,6 +184,45 @@ public class AppealService {
 
 
     public ApiResponse getOneAppeal(UUID id) {
+        try {
+            Optional<Client> byId = clientRepository.findById(id);
+            Optional<ClientStatusConnect> byClient_id = clientStatusConnectRepository.findByClient_id(id);
+            if (byId.isPresent() && byClient_id.isPresent()) {
+                List<Object> object = clientAppealRepository.getClientAppealList(id);
+                List<ClientAppealDto> clientAppealDtos = new ArrayList<>();
+                for (Object obj : object) {
+                    Object[] client = (Object[]) obj;
+                    UUID clientId = UUID.fromString(client[0].toString());
+                    String statusEnum = (client[1].toString().equals("WAITING") ? "Kutish" : "So'rov");
+                    String statusName = client[2].toString();
+                    Integer statusId = Integer.valueOf(client[3].toString());
+                    String updateTime = client[4].toString();
+                    UUID caId = UUID.fromString(client[5].toString());
+                    clientAppealDtos.add(
+                            new ClientAppealDto(
+                                    caId,
+                                    statusEnum,
+                                    clientId,
+                                    statusId,
+                                    updateTime,
+                                    statusName));
+                }
+
+
+                List<ClientAppeal> allByClient_id = clientAppealRepository.findAllByClient_id(id);
+                return apiResponseService.getResponse(
+                        new ClientDto(
+                                byClient_id.get(),
+                                allByClient_id
+                        ));
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse deleteAppeal(UUID id) {
         try {
             return apiResponseService.deleteResponse();
         } catch (Exception e) {

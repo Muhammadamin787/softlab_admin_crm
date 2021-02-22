@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uz.gvs.admin_crm.entity.Weekday;
+import uz.gvs.admin_crm.entity.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,14 +34,30 @@ public class ToplamDto {
     private boolean active;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String courseName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer soni;
 
-    public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<Weekday> weekdayList, String time, boolean active, String courseName) {
+
+    public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<String> weekdays, String time, boolean active, String courseName, Integer soni) {
         this.id = id;
         this.name = name;
         this.courseId = courseId;
         this.teacherId = teacherId;
         this.teacherName = teacherName;
-        this.weekdayList = weekdayList;
+        this.weekdays = weekdays;
+        this.time = time;
+        this.active = active;
+        this.courseName = courseName;
+        this.soni = soni;
+    }
+
+    public ToplamDto(Integer id, String name, Integer courseId, UUID teacherId, String teacherName, Set<String> weekdays, String time, boolean active, String courseName) {
+        this.id = id;
+        this.name = name;
+        this.courseId = courseId;
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        this.weekdays = weekdays;
         this.time = time;
         this.active = active;
         this.courseName = courseName;

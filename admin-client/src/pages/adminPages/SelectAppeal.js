@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {
     changeAppalTypeAction,
     getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
-    getClientStatusListAction, getClientStatusListForSelectAction,
-    getRegionsAction, getReklamaAction,
+    getClientStatusListAction, getClientStatusListForSelectAction, getOneAppeal,
+    getRegionsAction, getReklamaAction, getStudentAction,
     getStudentsAction, saveAppealAction,
 } from "../../redux/actions/AppActions";
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
@@ -16,10 +16,16 @@ import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
 import Select from "react-select";
 import PhoneInput from "react-phone-number-input";
+import {Link} from "react-router-dom";
 
 class SelectAppeal extends Component {
     componentDidMount() {
         const {dispatch} = this.props;
+        let id = 0
+        if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            id = this.props.match.params.id;
+            dispatch(getOneAppeal({id: id}))
+        }
         dispatch(getClientStatusListAction({type: "REQUEST"}))
         dispatch(getRegionsAction())
         dispatch(getReklamaAction())
@@ -52,6 +58,7 @@ class SelectAppeal extends Component {
 
     render() {
         const {
+            currentItem,
             size,
             page,
             totalElements,
@@ -164,104 +171,121 @@ class SelectAppeal extends Component {
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>Murojaatlar</h3>
+                        <h3>
+                            {currentItem.clientStatusConnect
+                            && currentItem.clientStatusConnect.client
+                            && currentItem.clientStatusConnect.client.fullName
+                            }
+                        </h3>
+                        <Link to={"/admin/appeals"}
+                              className={"text-decoration-none"}>
+                        <span
+                            className={""}>Murojaatlar
+                        </span>
+                        </Link>
                     </hgroup>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
+                    <div className="row">
+                        {currentItem ?
+                            <>
+                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                                    <div className="row">
+                                        <div className="col-8">
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>FISH: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.fullName
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Tel: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && formatPhoneNumber(currentItem.clientStatusConnect.client.phoneNumber)
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Murojaat vaqti: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.reklama
+                                                    && moment(currentItem.clientStatusConnect.client.createdAt).format("DD/MM/yyyy HH:mm")
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Hududi: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.region
+                                                    && currentItem.clientStatusConnect.client.region.name
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Reklama: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.reklama
+                                                    && currentItem.clientStatusConnect.client.reklama.name
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Jinsi: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.gender === "MALE" ? "Erkak" : "Ayol"
+                                                    }</h6>
+                                            </hgroup>
 
-                    <Row>
-                        <Col md={9}>
-                            <div className={"row"}>
-                                <div className="col-md-3">
-                                    <AvForm>
-                                        <AvField type="select" name="selectSize"
-                                                 onChange={changeStatusType}
-                                                 defaultValue={size}
-                                        >
-                                            <option value="all">Barchasi</option>
-                                            {clientStatusList && clientStatusList.length > 0 &&
-                                            clientStatusList.map((item, i) =>
-                                                <option value={item.id}>{item.name}</option>
-                                            )}
-                                        </AvField>
-                                    </AvForm>
-                                </div>
-                                <div className="col-md-3">
-                                    <AvForm>
-                                        <AvField type="search" name="searchWord"
-                                                 placeholder="Qidirish"
-                                            // onChange={changeSize}
-                                            // defaultValue={size}
-                                        />
-                                    </AvForm>
-                                </div>
-                            </div>
-                            <Table className={"table-style w-100"}>
-                                <thead className={""}>
-                                <tr className={""}>
-                                    <th>No</th>
-                                    <th>Ism</th>
-                                    <th>Telefon</th>
-                                    <th>Bo'lim</th>
-                                    <th>Amal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {appealList && appealList.length > 0 ? appealList.map((item, i) =>
-                                    <tr key={i} id={item.id} className={"table-tr"} draggable={true}
-                                        onDragStart={drag}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.fullName}</td>
-                                        <td>{formatPhoneNumber(item.phoneNumber)}</td>
-                                        <td>{item.statusName}</td>
-                                        <td>
-                                            <Button className="table-icon"
-                                                    onClick={() => openModal(item)}
-                                            >
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Tavsif: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.description
+                                                    }</h6>
+                                            </hgroup>
+                                        </div>
+                                        <div className="col-4">
+                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
                                                 <EditIcon/>
                                             </Button>
-                                            <Button className="table-icon"
-                                                // onClick={() => openDeleteModal(item)}
-                                            >
+                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
                                                 <DeleteIcon/>
                                             </Button>
-                                        </td>
-                                    </tr>
-                                ) : "Murojaat mavjud emas"}
-                                </tbody>
-                            </Table>
-                            <Pagination
-                                activePage={page + 1}
-                                itemsCountPerPage={size}
-                                totalItemsCount={totalElements}
-                                pageRangeDisplayed={5}
-                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                                linkClass="page-link"
-                            />
-                        </Col>
-                        <Col md={3}>
-                            <button
-                                id={"REQUEST"}
-                                onDrop={drop} onDragOver={allowDrop}
-                                onClick={() => changePage("REQUEST")}
-                                className={"btn btn-block appeal-button" + (currentPage === "REQUEST" ? " appeal-button-active" : "")}>So'rovlar
-                            </button>
-                            <button
-                                id={"WAITING"}
-                                onDrop={drop} onDragOver={allowDrop}
-                                onClick={() => changePage("WAITING")}
-                                className={"btn btn-block appeal-button" + (currentPage === "WAITING" ? " appeal-button-active" : "")}>Kutish
-                            </button>
-                            <button
-                                id={"SET"}
-                                onClick={() => changePage("SET")}
-                                className={"btn btn-block appeal-button " + (currentPage === "SET" ? " appeal-button-active" : "")}>To'plam
-                            </button>
-                        </Col>
-                    </Row>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"col-md-7"}>
+                                    <div className="row">
+                                        {
+                                            currentItem.clientAppealList && currentItem.clientAppealList.length > 0 ? currentItem.clientAppealList.map((item, i) =>
+                                                    <div
+                                                        className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                                        <Link to={"/admin/course/select/" + item.id}
+                                                              className={"w-100 text-decoration-none "}>
+                                                            <h5>{item.name}</h5>
+                                                            <p>{item.price} UZS</p>
+                                                        </Link>
+                                                    </div>
+                                                )
+                                                :
+                                                <Col>
+                                                    <h5 className={"text-center"}>
+                                                        Kurs topilmadi
+                                                    </h5>
+                                                </Col>
+                                        }
+                                    </div>
+                                </div>
+                            </>
+                            : ""}
+                    </div>
                 </div>
                 <Modal id={""} isOpen={showModal} toggle={openModal} className={""} size={"md"}>
                     <AvForm className={""} onValidSubmit={saveItem}>
@@ -390,6 +414,7 @@ SelectAppeal.propTypes = {};
 
 export default connect(({
                             app: {
+                                currentItem,
                                 selectItems,
                                 showChangeModal,
                                 size,
@@ -405,6 +430,7 @@ export default connect(({
                                 deleteModal
                             },
                         }) => ({
+        currentItem,
         selectItems,
         showChangeModal,
         size,

@@ -356,6 +356,9 @@ const reducers = {
         state.showModal = false
         state.showChangeModal = false
     },
+    [types.REQUEST_GET_APPEAL_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+    },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.appealList = payload.payload.object.object
@@ -378,6 +381,21 @@ const reducers = {
             state.size = payload.payload.object.size
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    [types.REQUEST_GET_TOPLAM_FOR_SELECT_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            let currentToplam = payload.payload.object
+            state.toplamList = payload.payload.object
+            let toplamList = []
+            for (let i = 0; i < currentToplam.length; i++) {
+                toplamList.push({
+                    id: currentToplam[i].id,
+                    name:
+                        currentToplam[i].name + " (" + currentToplam[i].courseName + ")"
+                })
+            }
+            state.selectItems = toplamList
         }
     },
     // FINISH TOPLAM REDUCERS

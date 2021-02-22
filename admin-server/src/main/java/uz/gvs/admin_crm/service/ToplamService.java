@@ -8,8 +8,10 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Toplam;
 import uz.gvs.admin_crm.entity.Weekday;
+import uz.gvs.admin_crm.entity.enums.ClientStatusEnum;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.AppealDto;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ToplamDto;
 import uz.gvs.admin_crm.repository.CourseRepository;
@@ -17,10 +19,7 @@ import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.ToplamRepository;
 import uz.gvs.admin_crm.repository.WeekdayRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,13 +109,17 @@ public class ToplamService {
     }
 
     public ToplamDto makeToplamDto(Toplam toplam) {
+        Set<String> stringSet = new HashSet<>();
+        for (Weekday weekday : toplam.getWeekdays()) {
+            stringSet.add(weekday.getWeekdayName().name);
+        }
         return new ToplamDto(
                 toplam.getId(),
                 toplam.getName(),
                 toplam.getCourse().getId(),
                 toplam.getTeacher().getId(),
                 toplam.getTeacher().getUser().getFullName(),
-                toplam.getWeekdays(),
+                stringSet,
                 toplam.getTime(),
                 toplam.isActive(),
                 toplam.getCourse().getName()
@@ -125,11 +128,41 @@ public class ToplamService {
 
     public ApiResponse getToplamListForSelect() {
         try {
-            List<ToplamDto> collect = toplamRepository.findAllByActive(true).stream().map(this::makeToplamDto).collect(Collectors.toList());
-            return apiResponseService.getResponse(collect);
+            List<Toplam> allByActive = toplamRepository.findAllByActive(true);
+            List<Object> object = toplamRepository.getToplamCount();
+            List<ToplamDto> toplamDtos = new ArrayList<>();
+            for (Object obj : object) {
+                Object[] client = (Object[]) obj;
+                Integer id = Integer.valueOf(client[0].toString());
+                Integer soni = Integer.valueOf(client[1].toString());
+                for (Toplam toplam : allByActive) {
+                    if (toplam.getId().equals(id)) {
+                        toplamDtos.add(new ToplamDto(
+                                id, toplam.getName(),
+                                toplam.getCourse().getId(),
+                                toplam.getTeacher().getId(),
+                                toplam.getTeacher().getUser().getFullName(),
+                                makeWeekdayName(toplam.getWeekdays()),
+                                toplam.getTime(),
+                                toplam.isActive(),
+                                toplam.getCourse().getName(),
+                                soni
+                        ));
+                    }
+                }
+            }
+            return apiResponseService.getResponse(toplamDtos);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
+    }
+
+    public Set<String> makeWeekdayName(Set<Weekday> weekdays) {
+        Set<String> stringSet = new HashSet<>();
+        for (Weekday weekday : weekdays) {
+            stringSet.add(weekday.getWeekdayName().name);
+        }
+        return stringSet;
     }
 
     public ApiResponse deleteToplam(Integer id) {

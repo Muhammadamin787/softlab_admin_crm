@@ -35,6 +35,12 @@ public class AppealController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @DeleteMapping("/{id}")
+    public HttpEntity<?> deleteAppeal(@PathVariable UUID id) {
+        ApiResponse apiResponse = appealService.deleteAppeal(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @GetMapping
     public HttpEntity<?> getAppealList(
             @RequestParam(value = "enumType", defaultValue = "REQUEST") String enumType,

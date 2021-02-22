@@ -112,7 +112,7 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi,
+    getCourseListForSelectApi, getOneAppealApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -348,7 +348,7 @@ export const getClientStatusListForSelectAction = (data) => (dispatch) => {
         api: getClientStatusListApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS,
+            types.REQUEST_GET_CLIENT_STATUS_LIST_FOR_SELECT_SUCCESS,
             types.REQUEST_ERROR
         ],
         data
@@ -1345,6 +1345,17 @@ export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
         data
     })
 }
+export const getOneAppeal = (data) => (dispatch) => {
+    dispatch({
+        api: getOneAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
 export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
     dispatch({
         api: getAppealListByStatusTypeApi,
@@ -1411,7 +1422,7 @@ export const getToplamListForSelectAction = (data) => (dispatch) => {
         api: getToplamListForSelectApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_TOPLAM_LIST_SUCCESS,
+            types.REQUEST_GET_TOPLAM_FOR_SELECT_LIST_SUCCESS,
             types.REQUEST_ERROR
         ],
         data

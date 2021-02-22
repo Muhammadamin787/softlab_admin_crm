@@ -35,7 +35,7 @@ public class ToplamController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    @GetMapping("select/")
+    @GetMapping("/select")
     public HttpEntity<?> getToplamListForSelect() {
         ApiResponse apiResponse = toplamService.getToplamListForSelect();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);

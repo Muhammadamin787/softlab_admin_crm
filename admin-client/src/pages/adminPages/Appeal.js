@@ -3,7 +3,7 @@ import {
     changeAppalTypeAction,
     getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
     getClientStatusListAction, getClientStatusListForSelectAction,
-    getRegionsAction, getReklamaAction,
+    getRegionsAction, getReklamaAction, getToplamListForSelectAction,
     saveAppealAction,
 } from "../../redux/actions/AppActions";
 import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
@@ -14,6 +14,7 @@ import Pagination from "react-js-pagination";
 import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import Select from "react-select";
+import {Link} from "react-router-dom";
 
 class Appeal extends Component {
     componentDidMount() {
@@ -37,6 +38,7 @@ class Appeal extends Component {
         regionId: "",
         statusTypeId: "",
         newTypeId: "",
+        object: '',
         changeLocationType: "",
     }
 
@@ -62,7 +64,7 @@ class Appeal extends Component {
             reklamas,
             selectItems,
             showChangeModal,
-            appealList
+            appealList, toplamList
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId} = this.state
 
@@ -82,8 +84,12 @@ class Appeal extends Component {
                     currentPage: item
                 }
             })
-            dispatch(getAppealListByEnumTypeAction({enumType: item, page: 0, size: 20}))
-            dispatch(getClientStatusListAction({type: item}))
+            if (item === "COLLECTION") {
+                dispatch(getToplamListForSelectAction())
+            } else {
+                dispatch(getAppealListByEnumTypeAction({enumType: item, page: 0, size: 20}))
+                dispatch(getClientStatusListAction({type: item}))
+            }
         }
         const changeStatusType = (e, v) => {
             if (v === "all")
@@ -136,7 +142,11 @@ class Appeal extends Component {
             e.preventDefault();
             let data = e.dataTransfer.getData("text");
             openChangeModal(...appealList.filter(item => item.id === data))
-            dispatch(getClientStatusListForSelectAction({type: this.state.changeLocationType}))
+            if (this.state.changeLocationType === "COLLECTION") {
+                dispatch(getToplamListForSelectAction())
+            } else {
+                dispatch(getClientStatusListForSelectAction({type: this.state.changeLocationType}))
+            }
             // var element = document.getElementById(data);
             // element.classList.remove("appeal-drag");
         }
@@ -150,12 +160,14 @@ class Appeal extends Component {
             })
         }
         const saveTransfer = (e, v) => {
+            e.preventDefault();
             v.id = currentObject.id
             v.clientStatusId = this.state.newTypeId
             v.statusEnum = this.state.changeLocationType
             v.enumType = currentPage
             v.typeId = statusTypeId
             dispatch(changeAppalTypeAction(v))
+            e.preventDefault()
         }
 
         return (
@@ -197,40 +209,77 @@ class Appeal extends Component {
                                     </AvForm>
                                 </div>
                             </div>
-                            <Table className={"table-style w-100"}>
-                                <thead className={""}>
-                                <tr className={""}>
-                                    <th>No</th>
-                                    <th>Ism</th>
-                                    <th>Telefon</th>
-                                    <th>Bo'lim</th>
-                                    <th>Amal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {appealList && appealList.length > 0 ? appealList.map((item, i) =>
-                                    <tr key={i} id={item.id} className={"table-tr"} draggable={true}
-                                        onDragStart={drag}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.fullName}</td>
-                                        <td>{formatPhoneNumber(item.phoneNumber)}</td>
-                                        <td>{item.statusName}</td>
-                                        <td>
-                                            <Button className="table-icon"
-                                                    onClick={() => openModal(item)}
-                                            >
-                                                <EditIcon/>
-                                            </Button>
-                                            <Button className="table-icon"
-                                                // onClick={() => openDeleteModal(item)}
-                                            >
-                                                <DeleteIcon/>
-                                            </Button>
-                                        </td>
+                            {currentPage === "COLLECTION" ?
+                                <div className="row border-top pt-3">
+                                    {toplamList && toplamList.length > 0 ? toplamList.map((toplam, k) =>
+                                            <div className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                                <h5>
+                                                    <Link to={"/admin/appeal/" + toplam.id}
+                                                          className={"text-decoration-none"}>
+                                                        {toplam.name + " "}
+                                                    </Link>
+                                                    - {toplam.courseName + " "}
+                                                    - {toplam.time}
+                                                </h5>
+                                                <small
+                                                    className={" text-secondary"}>
+                                                    Ustoz: {toplam.teacherName}
+                                                </small>
+                                                <br/>
+                                                <small
+                                                    className={" text-secondary"}>Dars
+                                                    kunlari: {toplam.weekdays && toplam.weekdays.length > 0 && toplam.weekdays.map((week) =>
+                                                        <span>{week}, </span>)}
+                                                </small>
+                                                <small
+                                                    className={"d-block text-secondary"}>
+                                                    Murojaatlar: {toplam.soni}
+                                                </small>
+                                            </div>
+                                        )
+                                        : "Top'lamlar mavjud emas"}
+                                </div>
+                                :
+                                <Table className={"table-style w-100"}>
+                                    <thead className={""}>
+                                    <tr className={""}>
+                                        <th>No</th>
+                                        <th>Ism</th>
+                                        <th>Telefon</th>
+                                        <th>Bo'lim</th>
+                                        <th>Amal</th>
                                     </tr>
-                                ) : "Murojaat mavjud emas"}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                    {appealList && appealList.length > 0 ? appealList.map((item, i) =>
+                                        <tr key={i} id={item.id} className={"table-tr"} draggable={true}
+                                            onDragStart={drag}>
+                                            <td>{i + 1}</td>
+                                            <td>
+                                                <Link to={"/admin/appeals/" + item.id}
+                                                      className={"text-decoration-none text-dark"}>
+                                                    {item.fullName}
+                                                </Link>
+                                            </td>
+                                            <td>{formatPhoneNumber(item.phoneNumber)}</td>
+                                            <td>{item.statusName}</td>
+                                            <td>
+                                                <Button className="table-icon"
+                                                        onClick={() => openModal(item)}
+                                                >
+                                                    <EditIcon/>
+                                                </Button>
+                                                <Button className="table-icon"
+                                                    // onClick={() => openDeleteModal(item)}
+                                                >
+                                                    <DeleteIcon/>
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ) : "Murojaat mavjud emas"}
+                                    </tbody>
+                                </Table>
+                            }
                             <Pagination
                                 activePage={page + 1}
                                 itemsCountPerPage={size}
@@ -254,9 +303,10 @@ class Appeal extends Component {
                                 className={"btn btn-block appeal-button" + (currentPage === "WAITING" ? " appeal-button-active" : "")}>Kutish
                             </button>
                             <button
-                                id={"SET"}
-                                onClick={() => changePage("SET")}
-                                className={"btn btn-block appeal-button " + (currentPage === "SET" ? " appeal-button-active" : "")}>To'plam
+                                id={"COLLECTION"}
+                                onDrop={drop} onDragOver={allowDrop}
+                                onClick={() => changePage("COLLECTION")}
+                                className={"btn btn-block appeal-button " + (currentPage === "COLLECTION" ? " appeal-button-active" : "")}>To'plam
                             </button>
                         </Col>
                     </Row>
@@ -365,7 +415,7 @@ class Appeal extends Component {
                                 placeholder="Bo'limni tanlang..."
                                 name="groupId"
                                 isSearchable={true}
-                                options={selectItems && selectItems.length > 0 && formatSelectList(clientStatusList)}
+                                options={selectItems && selectItems.length > 0 && formatSelectList(selectItems)}
                                 onChange={setChangeClientStatus}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
@@ -388,6 +438,7 @@ Appeal.propTypes = {};
 
 export default connect(({
                             app: {
+                                toplamList,
                                 selectItems,
                                 showChangeModal,
                                 size,
@@ -403,6 +454,7 @@ export default connect(({
                                 deleteModal
                             },
                         }) => ({
+        toplamList,
         selectItems,
         showChangeModal,
         size,
