@@ -180,7 +180,8 @@ class Student extends Component {
                                             minLength: {value: 9},
                                             maxLength: {value: 9}
                                         }}
-                                        label={"Ota-onasining telefon Raqami"} name={"parentPhone"} className={"form-control"}
+                                        label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
+                                        className={"form-control"}
                                         placeholer={"991234567"} required/>
                                     <AvField
                                         type={"date"}
