@@ -71,6 +71,7 @@ class Group extends Component {
             dispatch(deleteGroupAction({...item}))
         }
         const saveItem = (e, v) => {
+            console.log(v)
             v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
             v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
