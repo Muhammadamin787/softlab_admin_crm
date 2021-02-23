@@ -134,6 +134,8 @@ class Appeal extends Component {
         const drag = (e) => {
             this.setState({object: e.target.id})
             e.dataTransfer.setData("text", e.target.id);
+            console.log(e.target.id);
+            console.log(e);
             // if (window.getComputedStyle(document.getElementById(e.target.id)).cursor == 'pointer')
             // var element = document.getElementById(e.target.id);
             // element.classList.add("appeal-drag");
@@ -142,6 +144,8 @@ class Appeal extends Component {
         const drop = (e) => {
             e.preventDefault();
             let data = e.dataTransfer.getData("text");
+            console.log(appealList, "royhat");
+            console.log(data, "data");
             openChangeModal(...appealList.filter(item => item.id === data))
             if (this.state.changeLocationType === "COLLECTION") {
                 dispatch(getToplamListForSelectAction())
@@ -170,8 +174,6 @@ class Appeal extends Component {
                 v.typeId = statusTypeId
                 dispatch(changeAppalTypeAction(v))
                 e.preventDefault()
-            } else {
-                toast.warn("Xatolik!")
             }
         }
 
@@ -263,22 +265,24 @@ class Appeal extends Component {
                                     {appealList && appealList.length > 0 ? appealList.map((item, i) =>
                                         <tr key={i} id={item.id} className={"table-tr"} draggable={true}
                                             onDragStart={drag}>
-                                            <td>{i + 1}</td>
-                                            <td>
-                                                <Link to={"/admin/appeal/" + item.id}
+                                            <td draggable={false}>{i + 1}</td>
+                                            <td draggable={false}>
+                                                <Link to={"/admin/appeal/" + item.id} draggable={false}
                                                       className={"text-decoration-none text-dark"}>
                                                     {item.fullName}
                                                 </Link>
                                             </td>
-                                            <td>{formatPhoneNumber(item.phoneNumber)}</td>
-                                            <td>{item.statusName}</td>
-                                            <td>
+                                            <td draggable={false}>{formatPhoneNumber(item.phoneNumber)}</td>
+                                            <td draggable={false}>{item.statusName}</td>
+                                            <td draggable={false}>
                                                 <Button className="table-icon"
+                                                        draggable={false}
                                                         onClick={() => openModal(item)}
                                                 >
                                                     <EditIcon/>
                                                 </Button>
                                                 <Button className="table-icon"
+                                                        draggable={false}
                                                     // onClick={() => openDeleteModal(item)}
                                                 >
                                                     <DeleteIcon/>
@@ -412,7 +416,6 @@ class Appeal extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
 
                 <Modal id={""} isOpen={showChangeModal} toggle={openChangeModal} className={""} size={"md"}>
                     <AvForm className={""} onValidSubmit={saveTransfer}>

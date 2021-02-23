@@ -198,8 +198,8 @@ class Toplam extends Component {
                                             <hgroup>
                                                 <h6>
                                                     <small className={"text-secondary"}>Dars kunlari: </small>
-                                                    {currentItem.weekdays && currentItem.weekdays.length > 0 && currentItem.weekdays.map((week) =>
-                                                        <span>{week}, </span>)} - {currentItem.time}
+                                                    {currentItem.weekdays && currentItem.weekdays.length > 0 && currentItem.weekdays.map((week, l) =>
+                                                        <span key={l}>{week}, </span>)} - {currentItem.time}
                                                 </h6>
                                             </hgroup>
                                             <hgroup>
@@ -238,14 +238,15 @@ class Toplam extends Component {
                                                         id={client.id}
                                                         draggable={true}
                                                         onDragStart={drag}>
-                                                        <h5>{i + 1}.
-                                                            <Link to={"/admin/appeal/" + client.id}
+                                                        <h5 draggable={false}>{i + 1}.
+                                                            <Link to={"/admin/appeal/" + client.id} draggable={false}
                                                                   className={"text-decoration-none text-dark"}>
                                                                 {" " + client.fullName + " / " + formatPhoneNumber(client.phoneNumber)}
                                                             </Link>
                                                         </h5>
-                                                        <p>
-                                                            <small className={"text-secondary"}>Vaqti: </small>
+                                                        <p draggable={false}>
+                                                            <small draggable={false}
+                                                                   className={"text-secondary"}>Vaqti: </small>
                                                             {moment(client.date).format("DD/MM/yyyy, HH:mm")}
                                                         </p>
                                                     </div>
