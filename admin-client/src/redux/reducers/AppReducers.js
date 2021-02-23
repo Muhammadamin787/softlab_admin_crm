@@ -316,6 +316,7 @@ const reducers = {
     },
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            console.log(payload)
             state.studentPayment = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );

@@ -37,6 +37,8 @@ public class StudentService {
     PayTypeRepository payTypeRepository;
     @Autowired
     StudentGroupRepository studentGroupRepository;
+    @Autowired
+    CashbackRepository cashbackRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -198,9 +200,13 @@ public class StudentService {
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
-
                 Student student = byId.get();
-                student.setBalans(student.getBalans() + studentPaymentDto.getSum());
+                List<Cashback> cashbacks = cashbackRepository.findAll();
+                for (int i = 0; i < cashbacks.size(); i++) {
+                    if (studentPaymentDto.getSum() > cashbacks.get(i).getPrice() && studentPaymentDto.getSum() > cashbacks.get(i + 1).getPrice()) {
+                        student.setBalans((studentPayment.getCashback().getPercent()* studentPaymentDto.getSum()/100)+student.getBalans()+studentPaymentDto.getSum());
+                    }
+                }
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
             }
@@ -221,7 +227,10 @@ public class StudentService {
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
+
+                //// OLD OMOUNT
                 double oldAmount = studentPayment.getSum();
+                ////// NEW AMOUT
                 double newAmount = studentPaymentDto.getSum();
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
@@ -233,13 +242,13 @@ public class StudentService {
                     if (newAmount != oldAmount) {
                         Student student = byId1.get();
                         if (oldAmount != 0 && newAmount != 0) {
-                            student.setBalans((student.getBalans()-oldAmount)+newAmount);
+                            student.setBalans((student.getBalans() - oldAmount) + newAmount);
                         }
-//                        if (oldAmount > newAmount && oldAmount != 0) {
-//                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
-//                        } else {
-//                            student.setBalans((oldAmount+(newAmount - oldAmount)) + student.getBalans());
-//                        }
+                        if (oldAmount > newAmount && oldAmount != 0) {
+                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
+                        } else {
+                            student.setBalans((oldAmount+(newAmount - oldAmount)) + student.getBalans());
+                        }
 
                         studentRepository.save(student);
                     }
@@ -258,13 +267,15 @@ public class StudentService {
                 studentPayment.getId(),
                 studentPayment.getPayType(),
                 studentPayment.getStudent(),
+                studentPayment.getCashback(),
                 studentPayment.getSum(),
                 studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
                 studentPayment.getComment(),
                 studentPayment.getGroup()
         );
     }
-//
+
+    //
     public ApiResponse getStudentPaymentList(int page, int size) {
 
         try {

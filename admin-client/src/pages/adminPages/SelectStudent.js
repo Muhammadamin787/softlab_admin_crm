@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction,
+    deleteStudentAction, getCashbackListAction,
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
@@ -44,6 +44,7 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
+        this.props.dispatch(getCashbackListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
 
     }
@@ -56,6 +57,9 @@ class SelectStudent extends Component {
         currentObject: "",
         addGroup: "",
         activeTab: "1",
+        percentOfCash: "",
+        sumOfCash: "",
+        cashBackSumm : 0
     }
 
     render() {
@@ -71,6 +75,7 @@ class SelectStudent extends Component {
             deleteModal,
             currentItem,
             regions,
+            cashbacks,
             payTypes, studentPayment, selectGroups
         } = this.props;
         const openModal = (item) => {
@@ -141,15 +146,20 @@ class SelectStudent extends Component {
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
+                console.log(currentObject);
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
                     v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    // let a = v.cashbackId.split(',')
+                    // v.cashbackId = a[0];
                     dispatch(saveStudentPaymentAction(v));
+                    console.log(v)
+                    // dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
                     v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
-                    dispatch(saveStudentAction(v))
+                    // dispatch(saveStudentAction(v))
                 }
             }
         }
@@ -165,6 +175,19 @@ class SelectStudent extends Component {
                 }
             }
         }
+
+        const calc =(e)=> {
+            let price = document.getElementById("price").value * 1
+            let array = e.target.value.split(',');
+
+            if ((array[0] * 1) < price ){
+                price = (price) / 100 * (array[1] * 1)
+                this.setState({cashBackSumm : price})
+            }else {
+                console.log("NO")
+            }
+        }
+
         //StudentPayment Edit finish
         const toggle = tab => {
             if (activeTab !== tab)
@@ -228,7 +251,8 @@ class SelectStudent extends Component {
                                                                 <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Ota-onasining telefon
+                                                                <small className={"text-secondary"}>Ota-onasining
+                                                                    telefon
                                                                     raqami: </small>
                                                                 <p className={"d-inline"}> {formatParentPhone(currentItem.parentPhone)} </p>
                                                             </hgroup>
@@ -384,9 +408,23 @@ class SelectStudent extends Component {
                                         </AvRadioGroup>
                                         <AvField
                                             // defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"}
+                                            type={"number"} id={"price"}
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
+                                        {/*<AvField className={'form-control'} label={"Cashback turini tanlang"}*/}
+                                        {/*         type="select"*/}
+                                        {/*         name="cashbackId"*/}
+                                        {/*         onChange={calc}*/}
+                                        {/*         defaultValue={currentObject && currentObject.cashbackId ? currentObject.cashbackId : "0"}>*/}
+                                        {/*    <option key={0} value={"0"}>Cashbackni tanlang</option>*/}
+                                        {/*    {cashbacks && cashbacks.length > 0 ? cashbacks.map((item, i) =>*/}
+                                        {/*        <option key={i}*/}
+                                        {/*                value={item.id+','+item.percent}>{item.price + ' => ' + item.percent + '%'}</option>*/}
+                                        {/*    ) : ""}*/}
+                                        {/*</AvField>*/}
+
+                                        <h6>&nbsp;&nbsp;&nbsp;Sizda {this.state.cashBackSumm} so'm chegirma mavjud</h6>
+
                                         <AvField
                                             type={"datetime-local"}
                                             defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
@@ -565,7 +603,8 @@ export default connect(({
                                 getItems,
                                 readModal,
                                 studentPayment,
-                                selectGroups
+                                selectGroups, cashbacks
+
                             },
                         }) => ({
         selectItems,
@@ -582,6 +621,6 @@ export default connect(({
         getItems,
         readModal,
         studentPayment,
-        selectGroups
+        selectGroups, cashbacks
     })
 )(SelectStudent);
