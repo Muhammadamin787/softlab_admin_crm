@@ -206,30 +206,29 @@ class SelectGroup extends Component {
                                     </div>
                                 </div>
                                 {/* START GURUHDAGI STUDENTLAR RO'YHATI*/}
-                                <div className={"student-list border-top p-3"}>
+                                <div className={"student-list border-top py-3 px-1"}>
                                     {students && students.length > 0 && students.map((student, i) =>
                                         <div key={i} className={"row"}>
                                             {student.studentGroup ?
-                                                <div className="col-5">
-                                                    {student.studentGroup.studentGroupStatus === "ACTIVE" ?
-                                                        <span className={"text-success"}>*</span>
-                                                        : ""}
+                                                <div className="col-6">
                                                     <span
-                                                        className={student.studentGroup.studentGroupStatus === "TRANSFER" ?
-                                                            "bg-light text-secondary p-1" :
+                                                        className={"px-1 " + (student.studentGroup.studentGroupStatus === "TRANSFER" ?
+                                                            "bg-light text-secondary" :
                                                             student.studentGroup.studentGroupStatus === "ACTIVE" ?
-                                                                "text-success p-1" :
-                                                                student.studentGroup.studentGroupStatus === "FROZEN" ?
-                                                                    "bg-info text-white p-1" :
-                                                                    student.studentGroup.studentGroupStatus === "TEST_LESSON" ?
-                                                                        "bg-warning text-dark p-1" :
-                                                                        ""}>
+                                                                "text-success" :
+                                                                student.studentGroup.studentGroupStatus === "ARCHIVE" ?
+                                                                    "text-light bg-secondary" :
+                                                                    student.studentGroup.studentGroupStatus === "FROZEN" ?
+                                                                        "bg-info text-white" :
+                                                                        student.studentGroup.studentGroupStatus === "TEST_LESSON" ?
+                                                                            "bg-warning text-dark" :
+                                                                            "")}>
                                                 {student.fullName}
                                                 </span>
                                                 </div>
                                                 : ""}
                                             <div
-                                                className="col-5">{formatPhoneNumber(student.phoneNumber)}</div>
+                                                className="col-4 small">{formatPhoneNumber(student.phoneNumber)}</div>
                                             <div className="col-2">
                                                 <Button className="table-icon"
                                                         onClick={() => changeStatusOpenModal(student)}>

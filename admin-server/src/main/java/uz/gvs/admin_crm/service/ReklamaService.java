@@ -9,8 +9,11 @@ import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ReklamaDto;
+import uz.gvs.admin_crm.payload.ResSelect;
 import uz.gvs.admin_crm.repository.ReklamaRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,16 +26,16 @@ public class ReklamaService {
 
     public ApiResponse addReklama(ReklamaDto reklamaDto) {
         try {
-                if (!reklamaRepository.existsByNameEqualsIgnoreCase(reklamaDto.getName())) {
-                    Reklama reklama = new Reklama();
-                    reklama.setId(reklamaDto.getId());
-                    reklama.setName(reklamaDto.getName());
-                    reklama.setDescription(reklamaDto.getDescription());
-                    reklama.setActive(reklamaDto.isActive());
-                    reklamaRepository.save(reklama);
-                    return apiResponseService.saveResponse();
-                }
-                return apiResponseService.existResponse();
+            if (!reklamaRepository.existsByNameEqualsIgnoreCase(reklamaDto.getName())) {
+                Reklama reklama = new Reklama();
+                reklama.setId(reklamaDto.getId());
+                reklama.setName(reklamaDto.getName());
+                reklama.setDescription(reklamaDto.getDescription());
+                reklama.setActive(reklamaDto.isActive());
+                reklamaRepository.save(reklama);
+                return apiResponseService.saveResponse();
+            }
+            return apiResponseService.existResponse();
         } catch (Exception a) {
             return apiResponseService.tryErrorResponse();
         }
@@ -55,10 +58,23 @@ public class ReklamaService {
         }
     }
 
+    public ApiResponse getReklamaListForSelect() {
+        try {
+            List<Reklama> allByActiveIsTrue = reklamaRepository.findAllByActiveIsTrue();
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Reklama reklama : allByActiveIsTrue) {
+                resSelects.add(new ResSelect(reklama.getId(), reklama.getName()));
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
     public ApiResponse getReklamaList(int page, int size, User user) {
-        try{
-            Page<Reklama> all=null;
-            all = reklamaRepository.findAll(PageRequest.of(page,size));
+        try {
+            Page<Reklama> all = null;
+            all = reklamaRepository.findAll(PageRequest.of(page, size));
             return apiResponseService.getResponse(new PageableDto(
                     all.getTotalPages(),
                     all.getTotalElements(),
@@ -66,12 +82,12 @@ public class ReklamaService {
                     all.getSize(),
                     all.get().map(this::makeReklama).collect(Collectors.toList())
             ));
-        }catch (Exception a){
+        } catch (Exception a) {
             return apiResponseService.tryErrorResponse();
         }
     }
 
-    public ReklamaDto makeReklama(Reklama reklama){
+    public ReklamaDto makeReklama(Reklama reklama) {
         return new ReklamaDto(
                 reklama.getId(),
                 reklama.getName(),
@@ -80,14 +96,14 @@ public class ReklamaService {
         );
     }
 
-    public ApiResponse deleteReklama(Integer id){
-        try{
+    public ApiResponse deleteReklama(Integer id) {
+        try {
             Optional<Reklama> optional = reklamaRepository.findById(id);
             if (optional.isPresent())
                 reklamaRepository.deleteById(id);
-                apiResponseService.deleteResponse();
-                return apiResponseService.deleteResponse();
-        }catch (Exception a){
+            apiResponseService.deleteResponse();
+            return apiResponseService.deleteResponse();
+        } catch (Exception a) {
             return apiResponseService.tryErrorResponse();
         }
     }

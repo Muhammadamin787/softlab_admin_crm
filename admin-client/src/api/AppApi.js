@@ -79,7 +79,26 @@ export const deleteReklamaApi = (data) => {
 export const getReklamaApi = () => {
     return HttpClient.doGet(api.reklama)
 }
-
+export const getReklamaForSelectApi = () => {
+    return HttpClient.doGet(api.reklama + "/select")
+}
+//START CLIENT STATUS
+export const getClientStatusListApi = (data) => {
+    if (data && data.type)
+        return HttpClient.doGet(api.clientStatus + "/list?type=" + data.type)
+}
+export const saveClientStatusApi = (data) => {
+    return HttpClient.doPost(api.clientStatus, data)
+}
+export const editClientStatusApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doPut(api.clientStatus + "/" + data.id, data)
+}
+export const deleteClientStatusApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doDelete(api.clientStatus + "/" + data.id)
+}
+//FINISH CLIENT STATUS
 // START DURATION TYPE
 export const saveDurationTypeApi = (data) => {
     return HttpClient.doPost(api.durationType, data)
@@ -104,6 +123,9 @@ export const editCourseApi = (data) => {
 }
 export const getCoursesApi = (data) => {
     return HttpClient.doGet(api.course + (data && data.id ? "?categoryId=" + data.id : ""))
+}
+export const getCourseListForSelectApi = () => {
+    return HttpClient.doGet(api.course);
 }
 export const getCourseApi = (data) => {
     return HttpClient.doGet(api.course + (data && data.id ? "/" + data.id : ""))
@@ -148,7 +170,7 @@ export const saveGroupApi = (data) => {
     return HttpClient.doPost(api.group, data)
 }
 export const changeStudentGroupStatusApi = (data) => {
-    return HttpClient.doPatch(api.student+"/changeGroupStatus", data)
+    return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
 export const editGroupApi = (data) => {
     if (data && data.id)
@@ -267,8 +289,8 @@ export const getStudentGroupsApi = (data) => {
 export const saveStudentPaymentApi = (data) => {
     return HttpClient.doPost(api.studentPayment + "/" + data.studentId, data)
 }
-export const editStudentPaymentApi = (data) =>{
-    return HttpClient.doPut(api.studentPayment +"/" +data.id,data)
+export const editStudentPaymentApi = (data) => {
+    return HttpClient.doPut(api.studentPayment + "/" + data.id, data)
 }
 // FINISH STUDENT PAYMENT API
 
@@ -302,3 +324,43 @@ export const deleteTeacherApi = (data) => {
 export const editStudentStatusApi = (data) => {
     return HttpClient.doDelete(api.student + "/" + data.id, data)
 }
+
+// START APPEAL API
+export const saveAppealApi = (data) => {
+    return HttpClient.doPost(api.appeal, data)
+}
+export const changeAppealEnumTypeApi = (data) => {
+    if (data && data.id)
+        return HttpClient.doPut(api.appeal + "/changeType/" + data.id, data)
+}
+export const getAppealListByEnumTypeApi = (data) => {
+    return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
+}
+export const getOneAppealApi = (data) => {
+    return HttpClient.doGet(api.appeal + "/" + data.id)
+}
+export const getAppealListByStatusTypeApi = (data) => {
+    return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&typeId=" + data.typeId + "&page=" + data.page + "&size=" + data.size)
+}
+// FINISH APPEAL API
+
+// START TOPLAM API
+export const saveToplamApi = (data) => {
+    return HttpClient.doPost(api.toplam, data)
+}
+export const editToplamApi = (data) => {
+    return HttpClient.doGet(api.toplam + "/" + data.id, data)
+}
+export const getToplamListApi = (data) => {
+    return HttpClient.doGet(api.toplam + "?page=" + data.page + "&size=" + data.size)
+}
+export const getToplamApi = (data) => {
+    return HttpClient.doGet(api.toplam + "/" + data.id)
+}
+export const deleteToplamApi = (data) => {
+    return HttpClient.doDelete(api.toplam + "/" + data.id)
+}
+export const getToplamListForSelectApi = () => {
+    return HttpClient.doGet(api.toplam + "/select")
+}
+// FINISH TOPLAM API

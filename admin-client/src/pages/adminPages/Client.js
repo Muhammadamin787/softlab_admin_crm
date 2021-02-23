@@ -38,7 +38,6 @@ class Client extends Component {
             })
         }
         const saveItem = (e, v) => {
-            console.log(v)
             if (currentObject) {
                 v.id = currentObject.id
             }
@@ -63,14 +62,12 @@ class Client extends Component {
                 }
             })
         }
-        //
         const deleteItem = (item) => {
             dispatch(deleteClientAction(item))
         }
-        //
 
         return (
-            <AdminLayout className="" pathName={this.props.location.pathName}>
+            <AdminLayout className="" pathname={this.props.location.pathName}>
                 <div className={"flex-column container"}>
                     <h1>Client</h1>
                     <div>
