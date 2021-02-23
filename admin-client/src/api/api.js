@@ -11,8 +11,11 @@ export const api = {
     payType: '/payType',
     student: '/student',
     group: '/group',
-    client:'/client',
-    studentPayment:'/studentPayment',
-    reklama:'/reklama',
-    cashback : 'cashback'
+    client: '/client',
+    studentPayment: '/studentPayment',
+    reklama: '/reklama',
+    clientStatus: '/clientStatus',
+    cashback : 'cashback',
+    appeal : 'appeal',
+    toplam : 'toplam'
 };

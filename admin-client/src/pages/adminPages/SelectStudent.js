@@ -444,6 +444,11 @@ class SelectStudent extends Component {
                                             label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                             placeholer={"nomi"} required/>
                                         <AvField
+                                            defaultValue={currentObject ? currentObject.parentPhone : ""}
+                                            type={"number"}
+                                            label={"Ota-onasi tel:"} name={"parentPhone"} className={"form-control"}
+                                            placeholer={"nomi"} required/>
+                                        <AvField
                                             type={"date"}
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
                                                 : ""}

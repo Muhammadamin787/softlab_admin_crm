@@ -51,22 +51,13 @@ class AdminLayout extends Component {
                                     Talabalar
                                 </div>
                             </Link>
-                            <Link to="/admin/clients" className={
-                                this.props.pathname === "/admin/clients" ?
+                            <Link to="/admin/appeals" className={
+                                this.props.pathname === "/admin/appeals" ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-customer"/>
                                 <div className="main-link">
-                                    Client
-                                </div>
-                            </Link>
-                            <Link to="/admin/reklama" className={
-                                this.props.pathname === "/admin/reklama" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-customer"/>
-                                <div className="main-link">
-                                    Reklama
+                                    Murojaatlar
                                 </div>
                             </Link>
                             <Link to="/admin/courses/list" className={
@@ -121,6 +112,33 @@ class AdminLayout extends Component {
                                 <span className="icon icon-teacher"/>
                                 <div className="main-link">
                                     Xonalar
+                                </div>
+                            </Link>
+                            <Link to="/admin/reklama" className={
+                                this.props.pathname === "/admin/reklama" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Reklama turlari
+                                </div>
+                            </Link>
+                            <Link to="/admin/clientStatus" className={
+                                this.props.pathname === "/admin/clientStatus" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Murojaat bo'limlari
+                                </div>
+                            </Link>
+                            <Link to="/admin/toplam" className={
+                                this.props.pathname === "/admin/toplam" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    To'plam
                                 </div>
                             </Link>
                             <Link to="/admin/cashback" className={

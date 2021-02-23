@@ -24,7 +24,7 @@ const initState = {
     alert_mes: "",
     sentUserMe: false,
     permissions: [],
-    menuHidden: false,
+    menuHidden: true,
     addMenu: false
 };
 

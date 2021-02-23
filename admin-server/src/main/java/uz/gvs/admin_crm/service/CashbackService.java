@@ -25,7 +25,7 @@ public class CashbackService {
     public ApiResponse saveCashback(CashbackDto cashbackDto) {
         try {
             if (cashbackDto.getPercent() >= 0 && cashbackDto.getPrice() >= 0) {
-                if (!cashbackRepository.existsByPriceEqualsAndPercent(cashbackDto.getPrice(), cashbackDto.getPercent())) {
+                if (!cashbackRepository.existsByPriceEquals(cashbackDto.getPrice())) {
                     cashbackRepository.save(new Cashback(
                             cashbackDto.getPrice(),
                             cashbackDto.getPercent(),
@@ -46,7 +46,7 @@ public class CashbackService {
             Optional<Cashback> optional = cashbackRepository.findById(id);
             if (optional.isPresent()) {
                 if (cashbackDto.getPercent() >= 0 && cashbackDto.getPrice() >= 0) {
-                    if (!cashbackRepository.existsByPriceEqualsAndPercent(cashbackDto.getPrice(), cashbackDto.getPercent())) {
+                    if (!cashbackRepository.existsByPriceEquals(cashbackDto.getPrice())) {
                         Cashback cashback = optional.get();
                         cashback.setPrice(cashbackDto.getPrice());
                         cashback.setPercent(cashbackDto.getPercent());

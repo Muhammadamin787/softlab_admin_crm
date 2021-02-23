@@ -18,7 +18,6 @@ import javax.persistence.ManyToOne;
 public class ClientStatusConnect extends AbsEntity {
     @ManyToOne
     private Client client;
-    @ManyToOne
-    private ClientStatus clientStatus;
+    private String statusId;
     private boolean toplam;
 }
