@@ -29,18 +29,18 @@ public class ClientService {
 
     public ApiResponse addClient(ClientDto clientDto) {
         try {
-                if (!clientRepository.existsByPhoneNumber(clientDto.getPhoneNumber())) {
-                    Client client = new Client(
-                            clientDto.getFullName(),
-                            clientDto.getPhoneNumber(),
-                            clientDto.getDescription(),
-                            clientDto.getAge(),
-                            (clientDto.getRegionId() != null ? regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Get region")) : null),
-                            Gender.valueOf(clientDto.getGender())
-                    );
-                    clientRepository.save(client);
-                    return apiResponseService.saveResponse();
-            }
+//                if (!clientRepository.existsByPhoneNumber(clientDto.getPhoneNumber())) {
+//                    Client client = new Client(
+//                            clientDto.getFullName(),
+//                            clientDto.getPhoneNumber(),
+//                            clientDto.getDescription(),
+//                            clientDto.getAge(),
+//                            (clientDto.getRegionId() != null ? regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Get region")) : null),
+//                            Gender.valueOf(clientDto.getGender())
+//                    );
+//                    clientRepository.save(client);
+//                    return apiResponseService.saveResponse();
+//            }
             return apiResponseService.existResponse();
         } catch (Exception a) {
             return apiResponseService.tryErrorResponse();

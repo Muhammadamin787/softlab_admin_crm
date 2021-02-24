@@ -1,15 +1,21 @@
 import React, {Component} from 'react';
-import {deleteReklamaAction, getReklamaAction, saveReklamaAction} from "../../redux/actions/AppActions";
+import {
+    deleteClientStatusAction,
+    deleteReklamaAction,
+    getClientStatusListAction,
+    getReklamaAction, saveClientStatusAction,
+    saveReklamaAction
+} from "../../redux/actions/AppActions";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {connect} from "react-redux";
-import {AvForm, AvField} from "availity-reactstrap-validation"
+import {AvForm, AvField, AvRadio, AvRadioGroup} from "availity-reactstrap-validation"
 import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 
-class Reklama extends Component {
+class ClientStatus extends Component {
     componentDidMount() {
-        this.props.dispatch(getReklamaAction())
+        this.props.dispatch(getClientStatusListAction({type: "all"}))
     }
 
     state = {
@@ -21,7 +27,7 @@ class Reklama extends Component {
     }
 
     render() {
-        const {dispatch, showModal, deleteModal, reklamas, selectItems} = this.props
+        const {dispatch, showModal, deleteModal, clientStatusList} = this.props
         const {currentObject} = this.state
 
         const openModal = (item) => {
@@ -42,59 +48,45 @@ class Reklama extends Component {
                 }
             })
         }
-        const saveNumber = (e, v) => {
-            if (v.reklamaId === "0") {
-                v.reklamaId = ""
-            }
-            if (v.reklamaId)
-                v.reklamaId = parseInt(v.reklamaId)
-            if (currentObject) {
+        const saveItem = (e, v) => {
+            if (currentObject && currentObject.id)
                 v.id = currentObject.id
-                //Numberni tahrirlayotganda o`zini tanlamaslik uchun
-                if (v.id && v.reklamaId && v.id === v.reklamaId) {
-                    toast.error("Xatolik")
-                    console.log(e)
-                    console.log(v)
-                } else {
-
-                    dispatch(saveReklamaAction(v))
-                }
-            }
-        }
-        const parentReklama = (e, v) => {
-            if (e && e.value) {
-                this.setState({selectParentReklama: e.value})
-            }
+            dispatch(saveClientStatusAction(v))
         }
         const deleteNumber = (item) => {
-            console.log(item);
-            dispatch(deleteReklamaAction(item))
+            dispatch(deleteClientStatusAction(item))
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>Reklama</h3>
+                        <h3>Murojaat bo'limlari</h3>
                     </hgroup>
                     <div align={"right"}>
                         <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
                     </div>
-                    <Table className="table-style w-100">
+                    <Table className="table-style">
                         <thead className={""}>
                         <tr>
                             <th>№</th>
-                            <th>Izoh</th>
+                            <th>Nomi</th>
+                            <th>Bo'lim</th>
                             <th>Holat</th>
                             <th>Amal</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {reklamas && reklamas.map((item, i) =>
+                        {clientStatusList && clientStatusList.length > 0 ? clientStatusList.map((item, i) =>
                             <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
+                                <td>{item.clientStatusEnum &&
+                                item.clientStatusEnum === "REQUEST" ? "So'rov" :
+                                    item.clientStatusEnum === "WAITING" ? "Kutish" :
+                                        item.clientStatusEnum === "COLLECTION" ? "To'plam" : ""
+                                }</td>
                                 <td><input type="checkbox" checked={item.active}/></td>
                                 <td><Button color={"white"} onClick={() => openModal(item)}
                                             className={"mx-1"}>
@@ -105,13 +97,13 @@ class Reklama extends Component {
                                     </Button>
                                 </td>
                             </tr>
-                        )}
+                        ) : "Ma'lumot topilmadi"}
                         </tbody>
                     </Table>
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                        <AvForm className={""} onValidSubmit={saveNumber}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                {currentObject && currentObject.id ? "Reklamani tahrirlash" : "Yangi reklama qo`shish"}
+                                {currentObject && currentObject.id ? "Bo'limni tahrirlash" : "Yangi bo'lim qo`shish"}
                             </ModalHeader>
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
@@ -120,7 +112,13 @@ class Reklama extends Component {
                                              placeholder={"nomi"} required/>
                                     <AvField defaultValue={currentObject ? currentObject.active : false}
                                              label={"Active"} type="checkbox" name={"active"}/>
-
+                                    <AvRadioGroup name="clientStatusEnum"
+                                                  defaultValue={currentObject ? currentObject.clientStatusEnum : ""}
+                                                  label="Bo'lim turi" required
+                                                  errorMessage="Birini tanlang!">
+                                        <AvRadio label="So'rov" value="REQUEST"/>
+                                        <AvRadio label="Kutish" value="WAITING"/>
+                                    </AvRadioGroup>
                                 </div>
                             </ModalBody>
                             <ModalFooter>
@@ -146,11 +144,11 @@ class Reklama extends Component {
 }
 
 
-Reklama.propTypes = {};
+ClientStatus.propTypes = {};
 
 export default connect(({
-                            app: {loading, reklamas, showModal, deleteModal},
+                            app: {clientStatusList, loading, reklamas, showModal, deleteModal},
                         }) => ({
-        loading, reklamas, showModal, deleteModal
+        clientStatusList, loading, reklamas, showModal, deleteModal
     })
-)(Reklama);
+)(ClientStatus);

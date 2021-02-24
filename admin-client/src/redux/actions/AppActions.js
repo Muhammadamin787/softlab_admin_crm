@@ -97,7 +97,23 @@ import {
     getStudentGroupsApi,
     saveStudentPaymentApi,
     changeStudentGroupStatusApi,
-    editStudentPaymentApi, getDebtorsAPI
+    getDebtorsAPI,
+    editStudentPaymentApi,
+    getClientStatusListApi,
+    saveClientStatusApi,
+    editClientStatusApi,
+    deleteClientStatusApi,
+    getReklamaForSelectApi,
+    saveAppealApi,
+    getAppealListByEnumTypeApi,
+    getAppealListByStatusTypeApi,
+    changeAppealEnumTypeApi,
+    getToplamListApi,
+    getToplamListForSelectApi,
+    saveToplamApi,
+    editToplamApi,
+    deleteToplamApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -320,11 +336,77 @@ export const deletePayTypeAction = (data) => (dispatch) => {
     })
 };
 // PayType End
-
+// START CLIENT STATUS
+export const getClientStatusListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getClientStatusListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const getClientStatusListForSelectAction = (data) => (dispatch) => {
+    dispatch({
+        api: getClientStatusListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_CLIENT_STATUS_LIST_FOR_SELECT_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const saveClientStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editClientStatusApi : saveClientStatusApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_CLIENT_STATUS_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(() => {
+        dispatch(getClientStatusListAction({type: "all"}));
+    })
+}
+export const deleteClientStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteClientStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(() => {
+        toast.success("Ma'lumot o'chirildi!")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
+        dispatch(getClientStatusListAction({type: "all"}));
+    })
+}
+// FINISH CLIENT STATUS
 //Reklmaa
 export const getReklamaAction = () => (dispatch) => {
     dispatch({
         api: getReklamaApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_REKLAMA_SUCCESS,
+            types.REQUEST_ERROR
+        ]
+    })
+}
+export const getReklamaListForSelectAction = () => (dispatch) => {
+    dispatch({
+        api: getReklamaForSelectApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_REKLAMA_SUCCESS,
@@ -425,6 +507,17 @@ export const saveDurationTypeAction = (data) => (dispatch) => {
 export const getCoursesAction = (data) => (dispatch) => {
     dispatch({
         api: getCoursesApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_COURSES_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data: data
+    })
+}
+export const getCourseListForSelectAction = (data) => (dispatch) => {
+    dispatch({
+        api: getCourseListForSelectApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_COURSES_SUCCESS,
@@ -1068,7 +1161,7 @@ export const getTeachersAction = (data) => (dispatch) => {
         data
     })
 }
-export const getTeachersForSelectAction = (data) => (dispatch) => {
+export const getTeachersForSelectAction = () => (dispatch) => {
     dispatch({
         api: getTeachersForSelectApi,
         types: [
@@ -1196,3 +1289,178 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
 }
 
 // FINISH STUDENT PAYMENT ACTIONS
+
+// START APPEAL ACTIONS
+export const saveAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        if (data && data.enumType)
+            if (data.typeId)
+                dispatch(getAppealListByStatusTypeAction({
+                    enumType: data.enumType,
+                    typeId: data.typeId,
+                    page: 0,
+                    size: 20
+                }))
+            else
+                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
+
+    })
+}
+export const changeAppalTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeAppealEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        if (data && data.enumType)
+            if (data.typeId)
+                dispatch(getAppealListByStatusTypeAction({
+                    enumType: data.enumType,
+                    typeId: data.typeId,
+                    page: 0,
+                    size: 20
+                }))
+            else
+                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
+    })
+}
+export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeAppealEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch(getOneToplamAction({id: data.toplamId}))
+
+
+    })
+}
+export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListByEnumTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getOneAppeal = (data) => (dispatch) => {
+    dispatch({
+        api: getOneAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListByStatusTypeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// FINISH APPEAL ACTIONS
+
+// START TOPLAM ACTIONS
+export const getToplamListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getToplamListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TOPLAM_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const getOneToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: getToplamApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TOPLAM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+export const saveToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: data.id ? editToplamApi : saveToplamApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_TOPLAM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch(getToplamListAction({page: 0, size: 20}));
+    })
+}
+export const deleteToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteToplamApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch({
+            type: "updateState",
+            payload: {
+                showDeleteModal: false
+            }
+        })
+        dispatch(getToplamListAction({page: 0, size: 20}));
+    })
+}
+export const getToplamListForSelectAction = (data) => (dispatch) => {
+    dispatch({
+        api: getToplamListForSelectApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TOPLAM_FOR_SELECT_LIST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+
+// FINISH TOPLAM ACTIONS

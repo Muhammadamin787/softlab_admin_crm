@@ -38,6 +38,12 @@ public class CourseController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/select")
+    HttpEntity<?> getCourseListForSelect() {
+        ApiResponse apiResponse = courseService.getCourseList();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @GetMapping
     public HttpEntity<?> getCourseList(
             @RequestParam(value = "categoryId", defaultValue = "0") int categoryId,

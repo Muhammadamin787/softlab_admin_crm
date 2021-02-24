@@ -275,6 +275,88 @@ class Student extends Component {
                             linkClass="page-link"
                         />
 
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
+                            <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                                {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={"w-100 modal-form"}>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.fullName : ""}
+                                        type={"text"}
+                                        label={"FISH"} name={"fullName"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                        type={"number"}
+                                        errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
+                                        label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
+                                        placeholer={"991234567"} required/>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.parentPhone : ""}
+                                        type={"number"}
+                                        errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
+                                        label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
+                                        className={"form-control"}
+                                        placeholer={"991234567"} required/>
+                                    <AvField
+                                        type={"date"}
+                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            : ""}
+                                        label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
+                                        required/>
+                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                             name="regionId"
+                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
+                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                        {regions ? regions.map((item, i) =>
+                                            <option key={i} value={item.id}>{item.name}</option>
+                                        ) : ""}
+                                    </AvField>
+                                    <AvRadioGroup name="gender"
+                                                  defaultValue={currentObject ? currentObject.gender : ""}
+                                                  label="Jins" required
+                                                  errorMessage="Birini tanlang!">
+                                        <AvRadio label="Erkak" value="MALE"/>
+                                        <AvRadio label="Ayol" value="FEMALE"/>
+                                    </AvRadioGroup>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.description : ""}
+                                        type={"textarea"}
+                                        label={"Izoh"} name={"description"} className={"form-control"}/>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                                <Button color="primary">Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
+                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                        <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
 
                         <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                             <AvForm className={""} onValidSubmit={saveItem}>

@@ -8,6 +8,7 @@ const initState = {
     secondPage: false,
     showModal: false,
     showModal1: false,
+    showChangeModal: false,
     debtorsModal:false,
     deleteModal: false,
     profession: [],
@@ -39,6 +40,10 @@ const initState = {
     studentPayment: [],
     selectGroups: [],
     selectClients: [],
+    currentPage: 'REQUEST',
+    getClientStatusList: [],
+    appealList: [],
+    toplamList: [],
     cashbacks : [],
     selectDebtors: []
 };
@@ -73,7 +78,22 @@ const reducers = {
     [types.REQUEST_SAVE_CLIENT_SUCCESS](state, payload) {
         state.showModal = false
     },
+    // START CLIENT STATUS REDUCERS
+    [types.REQUEST_SAVE_CLIENT_STATUS_SUCCESS](state, payload) {
+        state.showModal = false;
+    },
+    [types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS](state, payload) {
+        state.clientStatusList = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
+    [types.REQUEST_GET_CLIENT_STATUS_LIST_FOR_SELECT_SUCCESS](state, payload) {
+        state.selectItems = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
+    },
 
+    // FINISH CLIENT STATUS REDUCER
     // Room
     [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
         state.rooms = payload.payload.object.sort((a, b) =>
@@ -291,7 +311,12 @@ const reducers = {
         state.currentItem = payload.payload.object
     },
     [types.REQUEST_GET_TEACHERS_FOR_SELECT_SUCCESS](state, payload) {
-        state.teachers = payload.payload.object
+        let teacherList = payload.payload.object
+        let teachersList = []
+        for (let i = 0; i < teacherList.length; i++) {
+            teachersList.push({id: teacherList[i].uuid, name: teacherList[i].name})
+        }
+        state.teachers = teachersList
     },
     [types.REQUEST_GET_TEACHERS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
@@ -334,7 +359,57 @@ const reducers = {
         }
     },
 
-
+    // START APPEAL REDUCERS
+    [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
+        state.showModal = false
+        state.showChangeModal = false
+    },
+    [types.REQUEST_GET_APPEAL_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+    },
+    [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.appealList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    // FINISH APPEAL REDUCERS
+    // START TOPLAM REDUCERS
+    [types.REQUEST_SAVE_TOPLAM_SUCCESS](state, payload) {
+        state.showModal = false
+        state.showChangeModal = false
+    },
+    [types.REQUEST_GET_TOPLAM_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+    },
+    [types.REQUEST_GET_TOPLAM_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.toplamList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    [types.REQUEST_GET_TOPLAM_FOR_SELECT_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            let currentToplam = payload.payload.object
+            state.toplamList = payload.payload.object
+            let toplamList = []
+            for (let i = 0; i < currentToplam.length; i++) {
+                toplamList.push({
+                    id: currentToplam[i].id,
+                    name:
+                        currentToplam[i].name + " (" + currentToplam[i].courseName + ")"
+                })
+            }
+            state.selectItems = toplamList
+        }
+    },
+    // FINISH TOPLAM REDUCERS
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
         state.showModal1 = false;
         state.showPaymentEditModal = false;

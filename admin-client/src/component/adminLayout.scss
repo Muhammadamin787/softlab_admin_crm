@@ -347,11 +347,11 @@
   }
 
   .open-add-menu {
-    left: 250px;
+    left: 130px;
   }
 
   .additional-menu-small {
-    left: 100px;
+    left: 130px;
   }
 
   .additional-menu-hidden {
@@ -359,16 +359,116 @@
       display: none;
     }
 
-    left: 250px;
+    left: 130px;
     width: 0;
     box-shadow: none;
     border: none;
   }
 
+  //.main-layout-left {
+  //  position: relative;
+  //  width: 250px;
+  //  min-width: 250px;
+  //  background-color: white;
+  //  height: 100vh;
+  //  padding-bottom: 20px;
+  //  overflow-y: scroll;
+  //  overflow-x: hidden;
+  //  transition: all .3s ease;
+  //  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.3);
+  //  z-index: 2;
+  //  font-family: Nunito, sans-serif;
+  //
+  //  .logo-duo {
+  //    display: flex;
+  //    align-items: center;
+  //    justify-content: center;
+  //
+  //    img {
+  //      width: 155px;
+  //      height: 70px;
+  //      object-fit: contain;
+  //    }
+  //  }
+  //
+  //  .main-link-div {
+  //    margin-top: 100px;
+  //
+  //    .active-link, .default-link {
+  //      border-radius: 6px;
+  //      margin: 10px 10px 0px 10px;
+  //      border: 1px solid #f2f2f2;
+  //      display: flex;
+  //      height: 65px;
+  //      align-items: center;
+  //      text-decoration: none;
+  //
+  //      &:hover {
+  //        cursor: pointer;
+  //
+  //        .main-link {
+  //          color: #04A6FB;
+  //        }
+  //
+  //        .icon {
+  //          background-color: #04A6FB;
+  //        }
+  //      }
+  //
+  //
+  //      .icon {
+  //        margin-left: 20px;
+  //      }
+  //
+  //      .main-link {
+  //        font-style: normal;
+  //        font-weight: 500;
+  //        font-size: 18px;
+  //        color: #313E47;
+  //        text-decoration: none;
+  //        padding-left: 10px;
+  //        margin-left: 10px;
+  //
+  //      }
+  //    }
+  //
+  //    .active-link {
+  //      &:hover {
+  //        cursor: pointer;
+  //
+  //        .main-link {
+  //          color: white;
+  //        }
+  //
+  //        .icon {
+  //          background-color: white;
+  //        }
+  //      }
+  //
+  //      background: #04A6FB;
+  //
+  //      .icon {
+  //        background-color: white;
+  //      }
+  //
+  //      .main-link {
+  //        color: white;
+  //      }
+  //    }
+  //
+  //    //Grey like default-links
+  //    //.default-link {
+  //    //  opacity: 0.3;
+  //    //}
+  //
+  //  }
+  //
+  //
+  //}
   .main-layout-left {
     position: relative;
-    width: 250px;
-    min-width: 250px;
+    width: 130px;
+    min-width: 130px;
     background-color: white;
     height: 100vh;
     padding-bottom: 20px;
@@ -393,15 +493,18 @@
 
     .main-link-div {
       margin-top: 100px;
+      text-align: center;
 
       .active-link, .default-link {
-        border-radius: 6px;
-        margin: 10px 10px 0px 10px;
-        border: 1px solid #f2f2f2;
-        display: flex;
-        height: 65px;
+        border-bottom: 1px solid #f2f2f2;
+        display: block;
+        height: 80px;
         align-items: center;
         text-decoration: none;
+        font-size: 15px;
+        font-family: Nunito, sans-serif !important;
+        letter-spacing: .5px;
+        position: relative;
 
         &:hover {
           cursor: pointer;
@@ -416,19 +519,16 @@
         }
 
 
-        .icon {
-          margin-left: 20px;
-        }
-
         .main-link {
-          font-style: normal;
-          font-weight: 500;
-          font-size: 18px;
           color: #313E47;
           text-decoration: none;
-          padding-left: 10px;
-          margin-left: 10px;
+        }
 
+        .icon {
+          width: 25px;
+          height: 25px;
+          margin-top: 10px;
+          margin-bottom: 10px;
         }
       }
 
@@ -437,22 +537,22 @@
           cursor: pointer;
 
           .main-link {
-            color: white;
+            color: #04A6FB;
           }
 
           .icon {
-            background-color: white;
+            background-color: #04A6FB;
           }
         }
 
-        background: #04A6FB;
+        border-left: 5px solid #04A6FB;
 
         .icon {
-          background-color: white;
+          background-color: #04A6FB;
         }
 
         .main-link {
-          color: white;
+          color: #04A6FB;
         }
       }
 
@@ -466,23 +566,21 @@
 
   }
 
-  .main-layout-left-hidden {
-    width: 100px;
-    min-width: 100px;
-
-    .main-link-div {
-      .active-link, .default-link {
-        .icon {
-          margin-left: 30px;
-
-        }
-      }
-
-      .main-link {
-        display: none;
-      }
-    }
-  }
+  //.main-layout-left-hidden {
+  //  width: 100px;
+  //  min-width: 100px;
+  //
+  //  .main-link-div {
+  //    .active-link, .default-link {
+  //      .icon {
+  //        margin-left: 30px;
+  //      }
+  //    }
+  //    .main-link {
+  //      //display: none;
+  //    }
+  //  }
+  //}
 
   .main-layout-right {
     width: 100%;

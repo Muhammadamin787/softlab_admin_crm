@@ -22,26 +22,34 @@ public class ReklamaController {
     ReklamaRepository reklamaRepository;
 
     @PostMapping
-    public HttpEntity<?> addReklama(@RequestBody ReklamaDto reklamaDto){
+    public HttpEntity<?> addReklama(@RequestBody ReklamaDto reklamaDto) {
         ApiResponse apiResponse = reklamaService.addReklama(reklamaDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @PutMapping("/{id}")
-    public HttpEntity<?> editReklama(@RequestBody ReklamaDto reklamaDto,@PathVariable Integer id){
+    public HttpEntity<?> editReklama(@RequestBody ReklamaDto reklamaDto, @PathVariable Integer id) {
         ApiResponse apiResponse = reklamaService.editReklama(reklamaDto, id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
+
     @GetMapping
     public HttpEntity<?> getReklamaList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                        @CurrentUser User user){
+                                        @CurrentUser User user) {
         ApiResponse reklamaList = reklamaService.getReklamaList(page, size, user);
         return ResponseEntity.status(reklamaList.isSuccess() ? 200 : 409).body(reklamaList);
     }
 
+    @GetMapping("/select")
+    public HttpEntity<?> getReklamaListForSelect() {
+        ApiResponse reklamaList = reklamaService.getReklamaListForSelect();
+        return ResponseEntity.status(reklamaList.isSuccess() ? 200 : 409).body(reklamaList);
+    }
+
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteReklama(@PathVariable Integer id){
-            ApiResponse apiResponse = reklamaService.deleteReklama(id);
-            return ResponseEntity.status(apiResponse.isSuccess() ? 204: 409).body(apiResponse);
-        }
+    public HttpEntity<?> deleteReklama(@PathVariable Integer id) {
+        ApiResponse apiResponse = reklamaService.deleteReklama(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
+    }
 }

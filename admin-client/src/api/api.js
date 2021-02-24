@@ -15,5 +15,8 @@ export const api = {
     studentPayment:'/studentPayment',
     reklama:'/reklama',
     cashback : 'cashback',
-    debtors:'/student/debtors'
+    debtors:'/student/debtors',
+    clientStatus: '/clientStatus',
+    appeal : 'appeal',
+    toplam : 'toplam'
 };

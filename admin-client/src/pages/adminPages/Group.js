@@ -109,7 +109,9 @@ class Group extends Component {
                                 </td>
                                 <td>{item.courseName}</td>
                                 <td>{item.teacherName}</td>
-                                <td>{item.weekdays && item.weekdays.map((i) => <span>{i}, </span>)}
+                                <td>
+                                    {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
+                                        <span>{week}, </span>)}
                                     <br/>{item.startTime + " - " + item.finishTime}</td>
                                 <td>{
                                     moment(item.startDate).format("DD-mm-yyyy") + " -- " +
