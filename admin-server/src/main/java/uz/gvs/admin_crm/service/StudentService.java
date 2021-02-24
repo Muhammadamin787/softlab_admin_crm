@@ -249,7 +249,7 @@ public class StudentService {
                                 studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100));
                         } else {
                             student.setBalans((student.getBalans() - (oldAmount+studentPayment.getCashSum())) + newAmount);
-                            studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100)*0);
+                            studentPayment.setCashSum(0.0);
                         }
                         studentRepository.save(student);
                         return apiResponseService.updatedResponse();
