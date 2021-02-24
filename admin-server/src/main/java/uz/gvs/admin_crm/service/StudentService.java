@@ -201,11 +201,13 @@ public class StudentService {
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
                 Student student = byId.get();
-                List<Cashback> cashbacks = cashbackRepository.findAll();
-                for (int i = 0; i < cashbacks.size(); i++) {
-                    if (studentPaymentDto.getSum() > cashbacks.get(i).getPrice() && studentPaymentDto.getSum() > cashbacks.get(i + 1).getPrice()) {
-                        student.setBalans((studentPayment.getCashback().getPercent()* studentPaymentDto.getSum()/100)+student.getBalans()+studentPaymentDto.getSum());
-                    }
+                Cashback byPrice = cashbackRepository.getByPrice(studentPaymentDto.getSum());
+                studentPayment.setCashback(byPrice);
+                if (byPrice != null) {
+                    student.setBalans((byPrice.getPercent() * (studentPaymentDto.getSum() / 100)) + student.getBalans() + studentPaymentDto.getSum());
+                    studentPayment.setCashSum(byPrice.getPercent() * (studentPaymentDto.getSum() / 100));
+                } else {
+                    student.setBalans(student.getBalans() + studentPaymentDto.getSum());
                 }
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
@@ -227,7 +229,6 @@ public class StudentService {
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
-
                 //// OLD OMOUNT
                 double oldAmount = studentPayment.getSum();
                 ////// NEW AMOUT
@@ -238,25 +239,25 @@ public class StudentService {
                 studentPaymentRepository.save(studentPayment);
                 ////Balans uchun
                 Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
+                Cashback byPrice = cashbackRepository.getByPrice(studentPaymentDto.getSum());
+                studentPayment.setCashback(byPrice);
                 if (byId1.isPresent()) {
                     if (newAmount != oldAmount) {
                         Student student = byId1.get();
-                        if (oldAmount != 0 && newAmount != 0) {
-                            student.setBalans((student.getBalans() - oldAmount) + newAmount);
-                        }
-                        if (oldAmount > newAmount && oldAmount != 0) {
-                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
+                        if (byPrice != null) {
+                                student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + (newAmount + (byPrice.getPercent() * newAmount / 100)));
+                                studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100));
                         } else {
-                            student.setBalans((oldAmount+(newAmount - oldAmount)) + student.getBalans());
+                            student.setBalans((student.getBalans() - (oldAmount+studentPayment.getCashSum())) + newAmount);
+                            studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100)*0);
                         }
-
                         studentRepository.save(student);
+                        return apiResponseService.updatedResponse();
                     }
                 }
-                return apiResponseService.updatedResponse();
+                return apiResponseService.notFoundResponse();
             }
             return apiResponseService.notFoundResponse();
-
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
@@ -391,5 +392,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
 
 }

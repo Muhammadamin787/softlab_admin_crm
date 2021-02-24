@@ -25,9 +25,11 @@ public class StudentPayment extends AbsEntity {
     private Date payDate;
     @Column(columnDefinition = "text")
     private String comment;
+    private double cashSum;
     @ManyToOne
     private Group group;
     @ManyToOne
     private Cashback cashback;
+
 
 }

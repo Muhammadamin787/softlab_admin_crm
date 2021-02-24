@@ -423,7 +423,7 @@ class SelectStudent extends Component {
                                         {/*    ) : ""}*/}
                                         {/*</AvField>*/}
 
-                                        <h6>&nbsp;&nbsp;&nbsp;Sizda {this.state.cashBackSumm} so'm chegirma mavjud</h6>
+                                        {/*<h6>&nbsp;&nbsp;&nbsp;Sizda {this.state.cashBackSumm} so'm chegirma mavjud</h6>*/}
 
                                         <AvField
                                             type={"datetime-local"}

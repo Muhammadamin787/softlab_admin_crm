@@ -27,9 +27,8 @@ public class StudentPaymentDto {
     private String payDate;
 //    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String comment;
-
+    private double cashSum;
     private Integer groupId;
-    private Integer cashbackId;
     private UUID studentId;
     private Integer payTypeId;
     private Group group;
