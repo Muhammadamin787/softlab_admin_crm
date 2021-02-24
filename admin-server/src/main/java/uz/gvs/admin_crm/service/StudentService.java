@@ -233,7 +233,7 @@ public class StudentService {
                     if (newAmount != oldAmount) {
                         Student student = byId1.get();
                         if (oldAmount != 0 && newAmount != 0) {
-                            student.setBalans((student.getBalans()-oldAmount)+newAmount);
+                            student.setBalans((student.getBalans() - oldAmount) + newAmount);
                         }
 //                        if (oldAmount > newAmount && oldAmount != 0) {
 //                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
@@ -264,9 +264,9 @@ public class StudentService {
                 studentPayment.getGroup()
         );
     }
-//
-    public ApiResponse getStudentPaymentList(int page, int size) {
 
+    //
+    public ApiResponse getStudentPaymentList(int page, int size) {
         try {
             Sort sort;
             Page<StudentPayment> all = studentPaymentRepository.findAll(PageRequest.of(page, size));
@@ -389,7 +389,24 @@ public class StudentService {
                         all.getTotalElements(),
                         all.getNumber(),
                         all.getSize(),
-                        all.get().map(this::makeStudentDto).collect(Collectors.toList())
+                        all.get().map(this::makeStudentDtoForDeptors).collect(Collectors.toList())
                 ));
+    }
+
+    public StudentDto makeStudentDtoForDeptors(Student student) {
+        if (student.getBalans() < 0 ) {
+            return new StudentDto(
+                    student.getId(),
+                    student.getUser().getId(),
+                    student.getBalans(),
+                    student.getUser().getFullName(),
+                    student.getUser().getPhoneNumber(),
+                    student.getParentPhone(),
+                    student.getUser().getRegion(),
+                    student.getUser().getRegion() != null ? student.getUser().getRegion().getId() : null,
+                    student.getStudentGroup()
+            );
+        }
+        return null;
     }
 }

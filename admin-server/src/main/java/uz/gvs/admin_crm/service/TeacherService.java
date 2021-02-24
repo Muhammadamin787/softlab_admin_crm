@@ -43,8 +43,6 @@ public class TeacherService {
             if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 1))
                 return apiResponseService.notEnoughErrorResponse();
             if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
-                if (userRepository.existsByFullNameIgnoreCase(teacherDto.getUserDto().getFullName()))
-                    return apiResponseService.existResponse();
                 User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
                 Teacher teacher = new Teacher();
                 teacher.setUser(user);

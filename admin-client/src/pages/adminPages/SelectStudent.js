@@ -45,7 +45,6 @@ class SelectStudent extends Component {
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
-
     }
 
     state = {
@@ -180,12 +179,7 @@ class SelectStudent extends Component {
                 <div className={"flex-column container pl-md-5"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.fullName} </h3>
-                        <Link
-                            to={"/admin/students"}
-                            className={"text-decoration-none"}>
-                        <span
-                            className={""}> Talabalar</span>
-                        </Link>
+                        <Link to={"/admin/students"} className={"text-decoration-none"}><span className={""}> Talabalar</span></Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?

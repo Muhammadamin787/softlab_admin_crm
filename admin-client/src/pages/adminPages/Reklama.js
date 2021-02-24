@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {AvForm, AvField} from "availity-reactstrap-validation"
 import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 
 class Reklama extends Component {
     componentDidMount() {
@@ -91,8 +92,12 @@ class Reklama extends Component {
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
                                 <td><input type="checkbox" checked={item.active}/></td>
-                                <td><Button color={"warning"} onClick={() => openModal(item)} className={"mx-1"}>Tahrirlash</Button>
-                                    <Button color={"danger"} onClick={() => openDeleteModal(item)}>O`chirish</Button>
+                                <td><Button className="table-icon" onClick={() => openModal(item)}>
+                                    <EditIcon/>
+                                </Button>
+                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                        <DeleteIcon/>
+                                    </Button>
                                 </td>
                             </tr>
                         )}

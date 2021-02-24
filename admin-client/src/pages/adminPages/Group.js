@@ -134,6 +134,7 @@ class Group extends Component {
                     />
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                        {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}

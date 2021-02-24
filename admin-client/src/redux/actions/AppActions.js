@@ -97,9 +97,20 @@ import {
     getStudentGroupsApi,
     saveStudentPaymentApi,
     changeStudentGroupStatusApi,
-    editStudentPaymentApi
+    editStudentPaymentApi, getDebtorsAPI
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+
+export const getDebtorsAction = () => (dispatch) => {
+    dispatch({
+        api: getDebtorsAPI,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_DEBTORS_SUCCESS,
+            types.REQUEST_ERROR
+        ]
+    })
+}
 
 export const getClientAction = (data) => (dispatch) => {
     console.log(data);
@@ -194,12 +205,6 @@ export const deleteRoomAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
-        dispatch({
-            type: "updateState",
-            payload: {
-                room: null
-            }
-        })
         toast.success("Malumot ochirildi")
         dispatch(getRoomListAction())
     }).catch((err) => {
