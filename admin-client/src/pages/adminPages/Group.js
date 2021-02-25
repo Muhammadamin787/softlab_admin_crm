@@ -114,8 +114,8 @@ class Group extends Component {
                                         <span>{week}, </span>)}
                                     <br/>{item.startTime + " - " + item.finishTime}</td>
                                 <td>{
-                                    moment(item.startDate).format("DD-mm-yyyy") + " -- " +
-                                    moment(item.finishDate).format("DD-mm-yyyy")
+                                    moment(item.startDate).format("DD-MM-yyyy") + " -- " +
+                                    moment(item.finishDate).format("DD-MM-yyyy")
                                 }</td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
@@ -159,7 +159,7 @@ class Group extends Component {
                                              defaultValue={currentObject && currentObject.teacherId ? currentObject.teacherId : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
-                                            <option key={i} value={item.uuid}>{item.name}</option>
+                                            <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
 

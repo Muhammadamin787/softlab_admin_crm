@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.enums.AttandanceEnum;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
 import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
@@ -23,6 +26,7 @@ public class Attendance extends AbsEntity {
     private Group group;
     @ManyToOne
     private Student student;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private AttandanceEnum attandanceEnum;
     private Date attendDate;
 }
