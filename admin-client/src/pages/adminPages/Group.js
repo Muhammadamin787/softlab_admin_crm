@@ -158,7 +158,7 @@ class Group extends Component {
                                              defaultValue={currentObject && currentObject.teacherId ? currentObject.teacherId : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
-                                            <option key={i} value={item.uuid}>{item.name}</option>
+                                            <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
 
