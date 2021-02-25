@@ -280,7 +280,6 @@ public class StudentService {
 
     //
     public ApiResponse getStudentPaymentList(int page, int size) {
-
         try {
             Sort sort;
             Page<StudentPayment> all = studentPaymentRepository.findAll(PageRequest.of(page, size));
@@ -415,5 +414,33 @@ public class StudentService {
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
+    }
+    public ApiResponse getDebtorStudents(int page, int size) {
+        Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
+        return apiResponseService.getResponse(
+                new PageableDto(
+                        all.getTotalPages(),
+                        all.getTotalElements(),
+                        all.getNumber(),
+                        all.getSize(),
+                        all.get().map(this::makeStudentDtoForDeptors).collect(Collectors.toList())
+                ));
+    }
+
+    public StudentDto makeStudentDtoForDeptors(Student student) {
+        if (student.getBalans() < 0 ) {
+            return new StudentDto(
+                    student.getId(),
+                    student.getUser().getId(),
+                    student.getBalans(),
+                    student.getUser().getFullName(),
+                    student.getUser().getPhoneNumber(),
+                    student.getParentPhone(),
+                    student.getUser().getRegion(),
+                    student.getUser().getRegion() != null ? student.getUser().getRegion().getId() : null,
+                    student.getStudentGroup()
+            );
+        }
+        return null;
     }
 }

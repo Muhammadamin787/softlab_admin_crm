@@ -114,8 +114,8 @@ class Group extends Component {
                                         <span>{week}, </span>)}
                                     <br/>{item.startTime + " - " + item.finishTime}</td>
                                 <td>{
-                                    moment(item.startDate).format("DD-mm-yyyy") + " -- " +
-                                    moment(item.finishDate).format("DD-mm-yyyy")
+                                    moment(item.startDate).format("DD-MM-yyyy") + " -- " +
+                                    moment(item.finishDate).format("DD-MM-yyyy")
                                 }</td>
                                 <td>
                                     <Button className="table-icon" onClick={() => openDeleteModal(item)}>
@@ -136,6 +136,7 @@ class Group extends Component {
                     />
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                        {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
