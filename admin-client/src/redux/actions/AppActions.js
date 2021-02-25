@@ -1476,4 +1476,15 @@ export const giveSalaryAction = (data) => (dispatch) => {
             toast.success(res.payload.message)
     })
 }
+export const getTeacherSalaryListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_LIST_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
 // FINISH TEACHER SALARY
