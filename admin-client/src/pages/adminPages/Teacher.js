@@ -60,7 +60,7 @@ class Teacher extends Component {
                 }
             })
         }
-        const openDeleteModal = (item) => {
+        const openDeleteModal = (item) =>    {
             this.setState({currentObject: item})
             dispatch({
                 type: "updateState",

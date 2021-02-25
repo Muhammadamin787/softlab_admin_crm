@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/client")
-public class ClientController {
+public class    ClientController {
     @Autowired
     ApiResponseService apiResponseService;
     @Autowired

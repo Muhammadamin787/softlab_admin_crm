@@ -1,7 +1,6 @@
 import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
-
 //client
 export const saveClientApi = (data) => {
     return HttpClient.doPost(api.client, data)
@@ -257,6 +256,9 @@ export const getFileAppApi = (data) => {
 
 
 // START STUDENT API
+export const getDebtorsAPI = (data) => {
+    return HttpClient.doGet(api.debtors)
+}
 export const saveStudentApi = (data) => {
     return HttpClient.doPost(api.student, data)
 }
