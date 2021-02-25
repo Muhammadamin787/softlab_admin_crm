@@ -173,7 +173,7 @@ class Course extends Component {
                                             ) : ""}
                                         </AvField>
                                         <AvField defaultValue={currentObject ? currentObject.price : ""} type={"number"}
-                                                 label={"Narxi"} name={"price"} className={"form-control"}
+                                                 label={"1 ta dars narxi"} name={"price"} className={"form-control"}
                                                  placeholer={""} required/>
                                     </>
                                 }

@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction,
+    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction,
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
@@ -44,6 +44,7 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
+        this.props.dispatch(getCashbackListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
     }
 
@@ -55,6 +56,9 @@ class SelectStudent extends Component {
         currentObject: "",
         addGroup: "",
         activeTab: "1",
+        percentOfCash: "",
+        sumOfCash: "",
+        cashBackSumm : 0
     }
 
     render() {
@@ -70,6 +74,7 @@ class SelectStudent extends Component {
             deleteModal,
             currentItem,
             regions,
+            cashbacks,
             payTypes, studentPayment, selectGroups
         } = this.props;
         const openModal = (item) => {
@@ -117,9 +122,22 @@ class SelectStudent extends Component {
                 }
             })
         }
+        const openStudentPayDelModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
+        }
         const deleteItem = (item) => {
             dispatch(deleteStudentAction({...item, history: history}))
         }
+        const deleteStudentPaymentItem = (item) => {
+            dispatch(deleteStudentPaymentAction({...item, history: history}))
+        }
+
         const getAddGroup = (e, v) => {
             if (e && e.value) {
                 this.setState({addGroup: e.value})
@@ -140,15 +158,20 @@ class SelectStudent extends Component {
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
+                console.log(currentObject);
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
                     v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    // let a = v.cashbackId.split(',')
+                    // v.cashbackId = a[0];
                     dispatch(saveStudentPaymentAction(v));
+                    console.log(v)
+                    // dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
                     v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
-                    dispatch(saveStudentAction(v))
+                    // dispatch(saveStudentAction(v))
                 }
             }
         }
@@ -164,6 +187,19 @@ class SelectStudent extends Component {
                 }
             }
         }
+
+        const calc =(e)=> {
+            let price = document.getElementById("price").value * 1
+            let array = e.target.value.split(',');
+
+            if ((array[0] * 1) < price ){
+                price = (price) / 100 * (array[1] * 1)
+                this.setState({cashBackSumm : price})
+            }else {
+                console.log("NO")
+            }
+        }
+
         //StudentPayment Edit finish
         const toggle = tab => {
             if (activeTab !== tab)
@@ -324,7 +360,7 @@ class SelectStudent extends Component {
                                                                 <EditIcon/>
                                                             </Button>
                                                             <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(item)}>
+                                                                    onClick={() => openStudentPayDelModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -378,9 +414,11 @@ class SelectStudent extends Component {
                                         </AvRadioGroup>
                                         <AvField
                                             // defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"}
+                                            type={"number"} id={"price"}
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
+
+
                                         <AvField
                                             type={"datetime-local"}
                                             defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
@@ -541,6 +579,19 @@ class SelectStudent extends Component {
                         <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
+                <Modal isOpen={deleteModal} toggle={() => openStudentPayDelModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => ("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openStudentPayDelModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteStudentPaymentItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+
             </AdminLayout>
         );
     }
@@ -564,7 +615,8 @@ export default connect(({
                                 getItems,
                                 readModal,
                                 studentPayment,
-                                selectGroups
+                                selectGroups, cashbacks
+
                             },
                         }) => ({
         selectItems,
@@ -581,6 +633,6 @@ export default connect(({
         getItems,
         readModal,
         studentPayment,
-        selectGroups
+        selectGroups, cashbacks
     })
 )(SelectStudent);

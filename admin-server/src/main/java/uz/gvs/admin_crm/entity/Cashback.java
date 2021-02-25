@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.aop.aspectj.annotation.LazySingletonAspectInstanceFactoryDecorator;
+import org.w3c.dom.stylesheets.LinkStyle;
 import uz.gvs.admin_crm.entity.template.AbsNameEntity2;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor

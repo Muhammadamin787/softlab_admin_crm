@@ -37,6 +37,8 @@ public class StudentService {
     PayTypeRepository payTypeRepository;
     @Autowired
     StudentGroupRepository studentGroupRepository;
+    @Autowired
+    CashbackRepository cashbackRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -198,9 +200,15 @@ public class StudentService {
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
                 studentPayment.setComment(studentPaymentDto.getComment());
                 studentPaymentRepository.save(studentPayment);
-
                 Student student = byId.get();
-                student.setBalans(student.getBalans() + studentPaymentDto.getSum());
+                Cashback byPrice = cashbackRepository.getByPrice(studentPaymentDto.getSum());
+                studentPayment.setCashback(byPrice);
+                if (byPrice != null) {
+                    student.setBalans((byPrice.getPercent() * (studentPaymentDto.getSum() / 100)) + student.getBalans() + studentPaymentDto.getSum());
+                    studentPayment.setCashSum(byPrice.getPercent() * (studentPaymentDto.getSum() / 100));
+                } else {
+                    student.setBalans(student.getBalans() + studentPaymentDto.getSum());
+                }
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
             }
@@ -221,7 +229,9 @@ public class StudentService {
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
                 studentPayment.setPayType(studentPaymentDto.getPayTypeId() != null ? payTypeRepository.findById(studentPaymentDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")) : null);
+                //// OLD OMOUNT
                 double oldAmount = studentPayment.getSum();
+                ////// NEW AMOUT
                 double newAmount = studentPaymentDto.getSum();
                 studentPayment.setSum(studentPaymentDto.getSum());
                 studentPayment.setPayDate(studentPaymentDto.getPayDate() != null ? formatter1.parse(studentPaymentDto.getPayDate()) : null);
@@ -229,35 +239,38 @@ public class StudentService {
                 studentPaymentRepository.save(studentPayment);
                 ////Balans uchun
                 Optional<Student> byId1 = studentRepository.findById(studentPaymentDto.getStudentId());
+                Cashback byPrice = cashbackRepository.getByPrice(studentPaymentDto.getSum());
+                studentPayment.setCashback(byPrice);
                 if (byId1.isPresent()) {
                     if (newAmount != oldAmount) {
                         Student student = byId1.get();
-                        if (oldAmount != 0 && newAmount != 0) {
-                            student.setBalans((student.getBalans() - oldAmount) + newAmount);
+                        if (byPrice != null) {
+                            student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + (newAmount + (byPrice.getPercent() * newAmount / 100)));
+                            studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100));
+                        } else {
+                            student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + newAmount);
+                            studentPayment.setCashSum(0.0);
                         }
-//                        if (oldAmount > newAmount && oldAmount != 0) {
-//                            student.setBalans((oldAmount-(oldAmount - newAmount)) + student.getBalans());
-//                        } else {
-//                            student.setBalans((oldAmount+(newAmount - oldAmount)) + student.getBalans());
-//                        }
-
                         studentRepository.save(student);
+                        return apiResponseService.updatedResponse();
                     }
                 }
-                return apiResponseService.updatedResponse();
+                return apiResponseService.notFoundResponse();
             }
             return apiResponseService.notFoundResponse();
-
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
     }
 
+
+    //
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
                 studentPayment.getPayType(),
                 studentPayment.getStudent(),
+                studentPayment.getCashback(),
                 studentPayment.getSum(),
                 studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
                 studentPayment.getComment(),
@@ -381,6 +394,27 @@ public class StudentService {
         }
     }
 
+
+    public ApiResponse deleteStudentPayment(UUID id) {
+        try {
+            Optional<StudentPayment> studentOptional = studentPaymentRepository.findById(id);
+            if (studentOptional.isPresent()) {
+                StudentPayment studentPayment = studentOptional.get();
+                studentPaymentRepository.deleteById(studentPayment.getId());
+                Optional<Student> byId = studentRepository.findById(studentPayment.getStudent().getId());
+                Student student = byId.get();
+                if (studentPayment.getCashSum() != 0) {
+                    student.setBalans(student.getBalans() - (studentPayment.getSum() + studentPayment.getCashSum()));
+                } else {
+                    student.setBalans(student.getBalans()-studentPayment.getSum());
+                }
+                return apiResponseService.deleteResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
     public ApiResponse getDebtorStudents(int page, int size) {
         Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
         return apiResponseService.getResponse(

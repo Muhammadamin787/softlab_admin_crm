@@ -108,7 +108,7 @@ class SelectCourse extends Component {
                                             <h6>{currentItem.description} </h6>
                                         </hgroup>
                                         <hgroup>
-                                            <small className={"text-secondary"}>Narx</small>
+                                            <small className={"text-secondary"}>1 ta Dars Narxi</small>
                                             <h6>{currentItem.price} UZS</h6>
                                         </hgroup>
                                     </div>
