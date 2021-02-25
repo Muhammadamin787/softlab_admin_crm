@@ -112,7 +112,7 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1459,3 +1459,21 @@ export const getToplamListForSelectAction = (data) => (dispatch) => {
 }
 
 // FINISH TOPLAM ACTIONS
+
+// START TEACHER SALARY
+export const giveSalaryAction = (data) => (dispatch) => {
+    dispatch({
+        api: giveSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GIVE_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        dispatch(getTeacherAction({id: data.teacherId}))
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+    })
+}
+// FINISH TEACHER SALARY

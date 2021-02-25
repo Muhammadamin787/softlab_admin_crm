@@ -17,5 +17,6 @@ export const api = {
     clientStatus: '/clientStatus',
     cashback : 'cashback',
     appeal : 'appeal',
-    toplam : 'toplam'
+    toplam : 'toplam',
+    teacherSalary : 'teacherSalary',
 };
