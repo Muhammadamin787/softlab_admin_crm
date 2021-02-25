@@ -113,7 +113,7 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi, deleteStudentPaymentApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1285,6 +1285,38 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         dispatch(getStudentAction({id: data.studentId}))
     }).catch((err) => {
         toast.error("Xatolik!")
+    })
+}
+export const deleteStudentPaymentAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteStudentPaymentApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
+        toast.success("Ma'lumot o'chirildi!")
+        if (data && data.history) {
+            data.history.go(-1)
+        }
+        dispatch(getStudentPaymentAction())
+
+    }).catch((err) => {
+        toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
     })
 }
 

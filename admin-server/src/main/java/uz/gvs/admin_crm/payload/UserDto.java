@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class UserDto {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID id;
     private String fullName;
     private String phoneNumber;
