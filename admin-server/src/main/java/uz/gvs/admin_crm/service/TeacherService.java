@@ -43,8 +43,6 @@ public class TeacherService {
             if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 1))
                 return apiResponseService.notEnoughErrorResponse();
             if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
-                if (userRepository.existsByFullNameIgnoreCase(teacherDto.getUserDto().getFullName()))
-                    return apiResponseService.existResponse();
                 User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
                 Teacher teacher = new Teacher();
                 teacher.setUser(user);
@@ -56,7 +54,6 @@ public class TeacherService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getTeacherListForSelect() {
 //        List<Object[]> teacherForSelect = teacherRepository.getTeacherForSelect();
@@ -112,7 +109,6 @@ public class TeacherService {
         );
     }
 
-
     public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
         try {
             Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
@@ -148,7 +144,6 @@ public class TeacherService {
         }
 
     }
-
 
     public ApiResponse getGroupsTeacher(UUID id) {
         try {

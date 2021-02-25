@@ -9,6 +9,7 @@ const initState = {
     showModal: false,
     showModal1: false,
     showChangeModal: false,
+    debtorsModal:false,
     deleteModal: false,
     profession: [],
     regions: [],
@@ -41,9 +42,10 @@ const initState = {
     selectClients: [],
     currentPage: 'REQUEST',
     getClientStatusList: [],
-    cashbacks: [],
     appealList: [],
-    toplamList: []
+    toplamList: [],
+    cashbacks : [],
+    selectDebtors: []
 };
 
 const reducers = {
@@ -56,6 +58,12 @@ const reducers = {
         state.showModal = false
         state.deleteModal = false
     },
+
+    [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
+            state.selectDebtors = payload.payload.object.object
+    },
+
+
     [types.REQUEST_GET_CLIENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },

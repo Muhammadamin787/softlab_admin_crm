@@ -183,8 +183,8 @@ class SelectGroup extends Component {
                                         <hgroup>
                                             <small className={"text-secondary"}>Guruh muddati: </small>
                                             <h6>{
-                                                moment(currentItem.startDate).format("DD-mm-yyyy") + " -- " +
-                                                moment(currentItem.finishDate).format("DD-mm-yyyy")
+                                                moment(currentItem.startDate).format("DD-MM-yyyy") + " -- " +
+                                                moment(currentItem.finishDate).format("DD-MM-yyyy")
                                             }</h6>
                                         </hgroup>
                                         <hgroup>
