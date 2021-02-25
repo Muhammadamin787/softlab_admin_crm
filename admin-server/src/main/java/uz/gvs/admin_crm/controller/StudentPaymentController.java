@@ -52,6 +52,12 @@ public class StudentPaymentController {
         ApiResponse apiResponse = studentService.getStudentPaymentListStudent(id, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @DeleteMapping("/{id}")
+    public HttpEntity<?> deleteStudentPayment(@PathVariable UUID id){
+        ApiResponse apiResponse = studentService.deleteStudentPayment(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
+    }
 //get get
     @GetMapping("/studentGroup/{id}")
     public HttpEntity<?> getStudentGroups(@PathVariable UUID id) {

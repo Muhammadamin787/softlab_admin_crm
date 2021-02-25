@@ -245,10 +245,10 @@ public class StudentService {
                     if (newAmount != oldAmount) {
                         Student student = byId1.get();
                         if (byPrice != null) {
-                                student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + (newAmount + (byPrice.getPercent() * newAmount / 100)));
-                                studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100));
+                            student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + (newAmount + (byPrice.getPercent() * newAmount / 100)));
+                            studentPayment.setCashSum(byPrice.getPercent() * (newAmount / 100));
                         } else {
-                            student.setBalans((student.getBalans() - (oldAmount+studentPayment.getCashSum())) + newAmount);
+                            student.setBalans((student.getBalans() - (oldAmount + studentPayment.getCashSum())) + newAmount);
                             studentPayment.setCashSum(0.0);
                         }
                         studentRepository.save(student);
@@ -263,6 +263,8 @@ public class StudentService {
         }
     }
 
+
+    //
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
@@ -394,4 +396,24 @@ public class StudentService {
     }
 
 
+    public ApiResponse deleteStudentPayment(UUID id) {
+        try {
+            Optional<StudentPayment> studentOptional = studentPaymentRepository.findById(id);
+            if (studentOptional.isPresent()) {
+                StudentPayment studentPayment = studentOptional.get();
+                studentPaymentRepository.deleteById(studentPayment.getId());
+                Optional<Student> byId = studentRepository.findById(studentPayment.getStudent().getId());
+                Student student = byId.get();
+                if (studentPayment.getCashSum() != 0) {
+                    student.setBalans(student.getBalans() - (studentPayment.getSum() + studentPayment.getCashSum()));
+                } else {
+                    student.setBalans(student.getBalans()-studentPayment.getSum());
+                }
+                return apiResponseService.deleteResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }

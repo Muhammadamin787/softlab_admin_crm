@@ -11,4 +11,8 @@ import java.util.UUID;
 public interface StudentRepository extends JpaRepository<Student, UUID> {
     
     List<Student> findAllByStudentGroup_Group_id(Integer studentGroup_group_id);
+
+    boolean deleteByBalans(double balans);
+
+
 }

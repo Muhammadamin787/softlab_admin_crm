@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, getCashbackListAction,
+    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction,
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
@@ -123,9 +123,22 @@ class SelectStudent extends Component {
                 }
             })
         }
+        const openStudentPayDelModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
+        }
         const deleteItem = (item) => {
             dispatch(deleteStudentAction({...item, history: history}))
         }
+        const deleteStudentPaymentItem = (item) => {
+            dispatch(deleteStudentPaymentAction({...item, history: history}))
+        }
+
         const getAddGroup = (e, v) => {
             if (e && e.value) {
                 this.setState({addGroup: e.value})
@@ -354,7 +367,7 @@ class SelectStudent extends Component {
                                                                 <EditIcon/>
                                                             </Button>
                                                             <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(item)}>
+                                                                    onClick={() => openStudentPayDelModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -411,19 +424,7 @@ class SelectStudent extends Component {
                                             type={"number"} id={"price"}
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
-                                        {/*<AvField className={'form-control'} label={"Cashback turini tanlang"}*/}
-                                        {/*         type="select"*/}
-                                        {/*         name="cashbackId"*/}
-                                        {/*         onChange={calc}*/}
-                                        {/*         defaultValue={currentObject && currentObject.cashbackId ? currentObject.cashbackId : "0"}>*/}
-                                        {/*    <option key={0} value={"0"}>Cashbackni tanlang</option>*/}
-                                        {/*    {cashbacks && cashbacks.length > 0 ? cashbacks.map((item, i) =>*/}
-                                        {/*        <option key={i}*/}
-                                        {/*                value={item.id+','+item.percent}>{item.price + ' => ' + item.percent + '%'}</option>*/}
-                                        {/*    ) : ""}*/}
-                                        {/*</AvField>*/}
 
-                                        {/*<h6>&nbsp;&nbsp;&nbsp;Sizda {this.state.cashBackSumm} so'm chegirma mavjud</h6>*/}
 
                                         <AvField
                                             type={"datetime-local"}
@@ -585,6 +586,19 @@ class SelectStudent extends Component {
                         <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
+                <Modal isOpen={deleteModal} toggle={() => openStudentPayDelModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => ("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openStudentPayDelModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteStudentPaymentItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+
             </AdminLayout>
         );
     }
