@@ -179,6 +179,16 @@ class AdminLayout extends Component {
                                     Xodimlar
                                 </Link>
                             </Link>
+                            <Link to="/admin/staff" className={
+                                this.props.pathname === "/admin/studentPaymentList" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <Link to="/admin/studentPayment"
+                                      className="main-link">
+                                    StudentPaymentlar
+                                </Link>
+                            </Link>
                         </div>
                     </div>
 

@@ -692,6 +692,7 @@ export const getGroupStudentsAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupStudentsApi,
         types: [
+
             types.REQUEST_START,
             types.REQUEST_GET_GROUP_STUDENTS_SUCCESS,
             types.REQUEST_ERROR,
@@ -1271,6 +1272,7 @@ export const getStudentGroupAction = (data) => (dispatch) => {
         data: data
     })
 }
+
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
@@ -1318,6 +1320,18 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
                 deleteModal: false,
             }
         })
+    })
+}
+
+export const getStudentPaymentListAction= (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
     })
 }
 
@@ -1497,32 +1511,3 @@ export const getToplamListForSelectAction = (data) => (dispatch) => {
 }
 
 // FINISH TOPLAM ACTIONS
-
-// START TEACHER SALARY
-export const giveSalaryAction = (data) => (dispatch) => {
-    dispatch({
-        api: giveSalaryApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GIVE_SALARY_SUCCESS,
-            types.REQUEST_ERROR
-        ],
-        data
-    }).then(res => {
-        dispatch(getTeacherAction({id: data.teacherId}))
-        if (res && res.payload && res.payload.message)
-            toast.success(res.payload.message)
-    })
-}
-export const getTeacherSalaryListAction = (data) => (dispatch) => {
-    dispatch({
-        api: getTeacherSalaryApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GET_LIST_SALARY_SUCCESS,
-            types.REQUEST_ERROR
-        ],
-        data
-    })
-}
-// FINISH TEACHER SALARY

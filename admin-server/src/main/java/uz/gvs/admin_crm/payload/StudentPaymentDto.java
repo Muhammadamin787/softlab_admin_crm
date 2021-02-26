@@ -44,7 +44,7 @@ public class StudentPaymentDto {
         this.comment = comment;
     }
 
-    public StudentPaymentDto(UUID id, PayType payType, Student student, Cashback cashback,double sum, String payDate, String comment, Group group) {
+    public StudentPaymentDto(UUID id, PayType payType, Student student, Cashback cashback,Double cashSum,double sum, String payDate, String comment, Group group) {
         this.id = id;
         this.payType = payType;
         this.student = student;
@@ -53,5 +53,6 @@ public class StudentPaymentDto {
         this.comment = comment;
         this.group = group;
         this.cashback = cashback;
+        this.cashSum = cashSum;
     }
 }
