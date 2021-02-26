@@ -341,6 +341,7 @@ public class StudentService {
                 } else {
                     student.setBalans(student.getBalans()-studentPayment.getSum());
                 }
+                studentRepository.save(student);
                 return apiResponseService.deleteResponse();
             }
             return apiResponseService.notFoundResponse();
