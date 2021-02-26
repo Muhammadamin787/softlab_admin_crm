@@ -24,7 +24,6 @@ import PayType from "../pages/adminPages/PayType";
 import SelectStudent from "../pages/adminPages/SelectStudent";
 import SelectTeacher from "../pages/adminPages/SelectTeacher";
 import SelectGroup from "../pages/adminPages/SelectGroup";
-import StudentPayment from "../pages/adminPages/StudentPayment";
 import Client from "../pages/adminPages/Client"
 import Staff from "../pages/adminPages/Staff";
 import Appeal from "../pages/adminPages/Appeal";
@@ -33,6 +32,7 @@ import ClientStatus from "../pages/adminPages/ClientStatus";
 import Toplam from "../pages/adminPages/Toplam";
 import SelectAppeal from "../pages/adminPages/SelectAppeal";
 import SelectToplam from "../pages/adminPages/SelectToplam";
+import StudentPaymentList from "../pages/adminPages/StudentPaymentList";
 
 
 const App = () => {
@@ -61,7 +61,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/cashback" component={Cashback}/>
                 <PrivateRoute exact path="/admin/payType" component={PayType}/>
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
-                <PrivateRoute exact path="/admin/studentPayment/:id" component={StudentPayment}/>
+                <PrivateRoute exact path="/admin/studentPayment/" component={StudentPaymentList}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
                 <PrivateRoute exact path="/admin/staff" component={Staff}/>
                 <PrivateRoute exact path="/admin/reklama" component={Reklama}/>

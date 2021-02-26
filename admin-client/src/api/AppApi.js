@@ -294,6 +294,15 @@ export const saveStudentPaymentApi = (data) => {
 export const editStudentPaymentApi = (data) => {
     return HttpClient.doPut(api.studentPayment + "/" + data.id, data)
 }
+export const deleteStudentPaymentApi = (data) => {
+    return HttpClient.doDelete(api.studentPayment + "/" + data.id)
+}
+
+export const getStudentPaymentListApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/list" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
+}
+
 // FINISH STUDENT PAYMENT API
 
 // START TEACHER API

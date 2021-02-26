@@ -45,7 +45,8 @@ const initState = {
     appealList: [],
     toplamList: [],
     cashbacks : [],
-    selectDebtors: []
+    selectDebtors: [],
+    studentPayments :[]
 };
 
 const reducers = {
@@ -347,9 +348,23 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+    /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            console.log(payload)
             state.studentPayment = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+
+    [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.studentPayments = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
             state.page = payload.payload.object.number
