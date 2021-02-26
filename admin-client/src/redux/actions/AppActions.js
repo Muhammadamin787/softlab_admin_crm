@@ -1,6 +1,6 @@
 import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
-import {config} from "../../utils/config";
+
 import {
 
     getClientList,
@@ -114,7 +114,7 @@ import {
     editToplamApi,
     deleteToplamApi,
     getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi, deleteStudentPaymentApi,
+    deleteStudentPaymentApi, getTeacherSalaryApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
