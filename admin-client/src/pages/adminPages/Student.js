@@ -116,6 +116,11 @@ class Student extends Component {
                                                      className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
                         </div>
                         <Button color={"primary w-100"} onClick={openFiltrDebtors}>Qarzdorlar</Button>
+                        <div>
+                            <br/>
+                            <Link to={"/admin/studentPayment"}>StudentPaymentlar</Link>
+                        </div>
+                        <br/>
                         <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>
