@@ -113,7 +113,7 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi, deleteStudentPaymentApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi, deleteStudentPaymentApi, getStudentPaymentListApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -691,6 +691,7 @@ export const getGroupStudentsAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupStudentsApi,
         types: [
+
             types.REQUEST_START,
             types.REQUEST_GET_GROUP_STUDENTS_SUCCESS,
             types.REQUEST_ERROR,
@@ -1270,6 +1271,7 @@ export const getStudentGroupAction = (data) => (dispatch) => {
         data: data
     })
 }
+
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
@@ -1317,6 +1319,18 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
                 deleteModal: false,
             }
         })
+    })
+}
+
+export const getStudentPaymentListAction= (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
     })
 }
 

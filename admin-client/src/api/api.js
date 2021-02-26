@@ -18,5 +18,6 @@ export const api = {
     debtors:'/student/debtors',
     clientStatus: '/clientStatus',
     appeal : 'appeal',
-    toplam : 'toplam'
+    toplam : 'toplam',
+
 };

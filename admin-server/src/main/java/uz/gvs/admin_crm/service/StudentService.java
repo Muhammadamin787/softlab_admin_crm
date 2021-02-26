@@ -271,6 +271,7 @@ public class StudentService {
                 studentPayment.getPayType(),
                 studentPayment.getStudent(),
                 studentPayment.getCashback(),
+                studentPayment.getCashSum(),
                 studentPayment.getSum(),
                 studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
                 studentPayment.getComment(),
@@ -278,7 +279,6 @@ public class StudentService {
         );
     }
 
-    //
     public ApiResponse getStudentPaymentList(int page, int size) {
         try {
             Sort sort;
@@ -323,6 +323,27 @@ public class StudentService {
             } else {
                 return apiResponseService.notFoundResponse();
             }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse deleteStudentPayment(UUID id) {
+        try {
+            Optional<StudentPayment> studentOptional = studentPaymentRepository.findById(id);
+            if (studentOptional.isPresent()) {
+                StudentPayment studentPayment = studentOptional.get();
+                studentPaymentRepository.deleteById(studentPayment.getId());
+                Optional<Student> byId = studentRepository.findById(studentPayment.getStudent().getId());
+                Student student = byId.get();
+                if (studentPayment.getCashSum() != 0) {
+                    student.setBalans(student.getBalans() - (studentPayment.getSum() + studentPayment.getCashSum()));
+                } else {
+                    student.setBalans(student.getBalans()-studentPayment.getSum());
+                }
+                return apiResponseService.deleteResponse();
+            }
+            return apiResponseService.notFoundResponse();
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
@@ -395,26 +416,7 @@ public class StudentService {
     }
 
 
-    public ApiResponse deleteStudentPayment(UUID id) {
-        try {
-            Optional<StudentPayment> studentOptional = studentPaymentRepository.findById(id);
-            if (studentOptional.isPresent()) {
-                StudentPayment studentPayment = studentOptional.get();
-                studentPaymentRepository.deleteById(studentPayment.getId());
-                Optional<Student> byId = studentRepository.findById(studentPayment.getStudent().getId());
-                Student student = byId.get();
-                if (studentPayment.getCashSum() != 0) {
-                    student.setBalans(student.getBalans() - (studentPayment.getSum() + studentPayment.getCashSum()));
-                } else {
-                    student.setBalans(student.getBalans()-studentPayment.getSum());
-                }
-                return apiResponseService.deleteResponse();
-            }
-            return apiResponseService.notFoundResponse();
-        } catch (Exception exception) {
-            return apiResponseService.tryErrorResponse();
-        }
-    }
+
     public ApiResponse getDebtorStudents(int page, int size) {
         Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
         return apiResponseService.getResponse(
