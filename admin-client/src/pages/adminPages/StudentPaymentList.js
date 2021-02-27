@@ -53,7 +53,7 @@ class StudentPaymentList extends Component {
                                     </Link>
                                 </td>
                                 <td>{item.sum +" / " + item.cashSum}</td>
-                                <td>{item && item.cashback ? item.cashback.percent + " &" : ""}</td>
+                                <td>{item && item.cashback ? item.cashback.percent + " %" : "0 %"}</td>
                                 <td>{item.payType ? item.payType.name : ''}</td>
                                 <td>{item.comment}</td>
                                 <td>{item.payDate}</td>
