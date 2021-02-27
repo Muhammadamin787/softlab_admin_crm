@@ -31,4 +31,10 @@ public class TeacherSalaryController {
         ApiResponse apiResponse = service.getSalaries(id, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @PutMapping("/{id}")
+    public HttpEntity<?> editSalary(@PathVariable UUID id, @RequestBody TeacherSalaryDto teacherSalaryDto){
+        ApiResponse apiResponse = service.editSalary(id, teacherSalaryDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }
