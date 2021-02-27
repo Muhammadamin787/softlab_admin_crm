@@ -375,3 +375,12 @@ export const getToplamListForSelectApi = () => {
     return HttpClient.doGet(api.toplam + "/select")
 }
 // FINISH TOPLAM API
+
+// START TEACHER SALARY
+export const giveSalaryApi = (data) => {
+    return HttpClient.doPost(api.teacherSalary, data)
+}
+export const getTeacherSalaryApi = (data) => {
+    return HttpClient.doGet(api.teacherSalary + "/" +data.id + "?page=" + data.page + "&size=" + data.size)
+}
+// FINISH TEACHER SALARY

@@ -8,14 +8,26 @@ import uz.gvs.admin_crm.entity.template.AbsEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Teacher extends AbsEntity {
+public class TeacherSalary extends AbsEntity {
+
+    @OneToOne
+    private Teacher teacher;
     @ManyToOne
-    private User user;
-    private Double balance;
+    private PayType payType;
+    private Double amount;
+    private Date amountDate;
+    private String description;
 }
+
+
+
+
+
