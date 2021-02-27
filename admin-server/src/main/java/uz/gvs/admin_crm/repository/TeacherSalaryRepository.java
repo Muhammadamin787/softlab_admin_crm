@@ -9,7 +9,8 @@ import uz.gvs.admin_crm.entity.*;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, Integer> {
+public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, UUID> {
     Page<TeacherSalary> findAllByTeacher(Teacher teacher, Pageable pageable);
-    Optional<TeacherSalary> findById(UUID id);
+
+
 }
