@@ -16,9 +16,9 @@ import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-valida
 import {
     deleteCourseAction, deleteGroupAction, deleteTeacherAction,
     getPayTypeListAction,
-    getRegionsAction,
+    getRegionsAction, getStudentPaymentAction,
 
-    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, giveSalaryAction,
+    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
     saveCourseAction,
     saveStudentAction, saveStudentPaymentAction, saveTeacherAction,
 } from "../../redux/actions/AppActions";
@@ -48,14 +48,14 @@ class SelectTeacher extends Component {
         showPaymentModal: false,
         currentObject: "",
         showOpenSalaryModal: false,
+        activeTab : "1"
 
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject,activeTab} = this.state;
         const {
             groups,
-            activeTab,
             history,
             payTypes,
             showOpenSalaryModal,
@@ -64,7 +64,8 @@ class SelectTeacher extends Component {
             deleteModal,
             currentItem,
             regions,
-            teacherSalary
+            teacherSalary,
+            teacherSalaryList
         } = this.props;
         const openModal = (item) => {
             console.log(item);
@@ -125,6 +126,22 @@ class SelectTeacher extends Component {
             }
         }
 
+        const toggle = tab => {
+            console.log("tab: "+tab)
+            console.log("activeTab: " + activeTab)
+            if (activeTab !== tab)
+                this.setState({activeTab: tab})
+            if (tab === "2") {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    dispatch(getTeacherSalaryListAction({
+                        id: this.props.match.params.id,
+                        page:0,
+                        size:20
+                    }))
+                }
+            }
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -141,86 +158,145 @@ class SelectTeacher extends Component {
                     <div className="row">
                         {currentItem.id && currentItem.id ?
                             <>
+                                <div className="d-block col-12">
+                                    <Nav tabs>
+                                        <NavItem className={""}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('1');
+                                                }}
+                                            >
+                                                Profil
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('2');
+                                                }}
+                                            >
+                                                To'lovlar
+                                            </NavLink>
+                                        </NavItem>
+                                    </Nav>
+                                    <TabContent activeTab={activeTab}>
+                                        <TabPane tabId="1">
+                                            <div className={"row"}>
+                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                    <div className="row">
+                                                        <div className="col-8">
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>FISH: </small>
+                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Manzil: </small>
+                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
+                                                            </hgroup>
 
-                                <div
-                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
-                                    <div className="row">
-                                        <div className="col-8">
-                                            <hgroup>
-                                                <small className={"text-secondary"}>FISH: </small>
-                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Telefon raqam: </small>
-                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
-                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Manzil: </small>
-                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
-                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Manzil: </small>
+                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Balance: </small>
+                                                                <p className={"d-inline"}> {currentItem.balance}</p>
+                                                                <div className="button-block">
+                                                                    <Button className="table-icon px-2"
+                                                                            onClick={() => openSalaryModal(currentItem)}
+                                                                    >
+                                                                        <span className="icon icon-wallet bg-primary "/>
+                                                                    </Button>
+                                                                </div>
+                                                            </hgroup>
 
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Manzil: </small>
-                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Tavsif: </small>
-                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Balance: </small>
-                                                <p className={"d-inline"}> {currentItem.balance}</p>
-                                                <div className="button-block">
-                                                    <Button className="table-icon px-2"
-                                                            onClick={() => openSalaryModal(currentItem)}
-                                                    >
-                                                        <span className="icon icon-wallet bg-primary "/>
-                                                    </Button>
+                                                        </div>
+                                                        <div className="col-4 button-block">
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openModal(currentItem)}>
+                                                                <EditIcon className="button-icon"/>
+                                                            </Button>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(currentItem)}>
+                                                                <DeleteIcon className="button-icon"/>
+                                                            </Button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </hgroup>
-
-                                        </div>
-                                        <div className="col-4 button-block">
-                                            <Button className="table-icon"
-                                                    onClick={() => openModal(currentItem)}>
-                                                <EditIcon className="button-icon"/>
-                                            </Button>
-                                            <Button className="table-icon"
-                                                    onClick={() => openDeleteModal(currentItem)}>
-                                                <DeleteIcon className="button-icon"/>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"col-md-6"}>
-                                    <h4>Guruhlar</h4>
-                                    <div className={" ml-2 bg-white student-group-block"}>
-                                        {groups && groups.length > 0 ? groups.map((item, i) =>
-                                            <Row key={i} className={"p-2"}>
-                                                <Col md={3} className={"text-center"}>
+                                                <div className={"col-md-6"}>
+                                                    <h4>Guruhlar</h4>
+                                                    <div className={" ml-2 bg-white student-group-block"}>
+                                                        {groups && groups.length > 0 ? groups.map((item, i) =>
+                                                                <Row key={i} className={"p-2"}>
+                                                                    <Col md={3} className={"text-center"}>
                                                     <span
                                                         className={"group-name"}> {item.name}</span>
-                                                </Col>
-                                                <Col md={4}>
+                                                                    </Col>
+                                                                    <Col md={4}>
                                                     <span
                                                         className={"text-left"}>{item.course && item.course.name}</span>
-                                                </Col>
-                                                <Col md={2}>
-                                                    <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
-                                                </Col>
-                                                <Col md={3}>
+                                                                    </Col>
+                                                                    <Col md={2}>
+                                                                        <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
+                                                                    </Col>
+                                                                    <Col md={3}>
                                                     <span
                                                         className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
                                                         <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
                                                     </span>
-                                                </Col>
-                                            </Row>
-                                        ) : "Guruhlar topilmadi"}
-                                    </div>
+                                                                    </Col>
+                                                                </Row>
+                                                        ) : "Guruhlar topilmadi"}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TabPane>
+                                        <TabPane tabId="2">
+                                            <Table>
+                                                <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Miqdor</td>
+                                                    <td>To'lov turi</td>
+                                                    <td>Izoh</td>
+                                                    <td>To'langan vaqti</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {console.log(teacherSalaryList ? teacherSalaryList : '')}
+                                                {teacherSalaryList ? teacherSalaryList.map((item, i) =>
+                                                    <tr key={i + 1}>
+                                                        <td>{i + 1}</td>
+                                                        <td>{item.amount}</td>
+                                                        <td>{item.payType ? item.payType.name : ''}</td>
+                                                        <td>{item.comment}</td>
+                                                        <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                        <td>
+                                                            <Button className="table-icon">
+                                                                <EditIcon/>
+                                                            </Button>
+                                                            <Button className="table-icon">
+                                                                <DeleteIcon/>
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ) : 'Malumot topilmadi'}
+                                                </tbody>
+                                            </Table>
+                                        </TabPane>
+                                    </TabContent>
                                 </div>
                             </>
                             : ""}
@@ -355,6 +431,7 @@ export default connect(({
                                 readModal,
                                 showOpenSalaryModal,
                                 teacherSalary,
+                                teacherSalaryList
 
                             },
                         }) => ({
@@ -370,6 +447,7 @@ export default connect(({
         getItems,
         readModal,
         showOpenSalaryModal,
-        teacherSalary
+        teacherSalary,
+    teacherSalaryList
     })
 )(SelectTeacher);
