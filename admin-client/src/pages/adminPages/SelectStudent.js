@@ -244,8 +244,7 @@ class SelectStudent extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div className="row">
-                                                <div
-                                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                                     <div className="row">
                                                         <div className="col-8">
                                                             <hgroup>

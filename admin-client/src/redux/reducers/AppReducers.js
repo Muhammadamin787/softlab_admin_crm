@@ -425,6 +425,13 @@ const reducers = {
         }
     },
     // FINISH TOPLAM REDUCERS
+
+    // START TEACHER SALARY
+    [types.REQUEST_GIVE_SALARY_SUCCESS](state, payload) {
+        state.showOpenSalaryModal = false;
+    },
+    // FINISH TEACHER SALARY
+
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
         state.showModal1 = false;
         state.showPaymentEditModal = false;

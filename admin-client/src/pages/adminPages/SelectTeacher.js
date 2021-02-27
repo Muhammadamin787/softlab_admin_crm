@@ -1,14 +1,26 @@
 import React, {Component} from 'react';
-import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {
+    Button,
+    Col,
+    CustomInput,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader, Nav,
+    NavItem,
+    NavLink,
+    Row, TabContent,
+    Table, TabPane
+} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteCourseAction, deleteGroupAction, deleteTeacherAction,
     getPayTypeListAction,
     getRegionsAction,
-    getStudentAction,
-    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction,
+
+    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, giveSalaryAction,
     saveCourseAction,
-    saveStudentAction, saveTeacherAction,
+    saveStudentAction, saveStudentPaymentAction, saveTeacherAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -17,6 +29,7 @@ import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
+import Select from "react-select";
 
 class SelectTeacher extends Component {
     componentDidMount() {
@@ -33,19 +46,25 @@ class SelectTeacher extends Component {
     state = {
         showModal: false,
         showPaymentModal: false,
-        currentObject: ""
+        currentObject: "",
+        showOpenSalaryModal: false,
+
     }
 
     render() {
         const {currentObject} = this.state;
         const {
             groups,
+            activeTab,
             history,
+            payTypes,
+            showOpenSalaryModal,
             dispatch,
             showModal,
             deleteModal,
             currentItem,
             regions,
+            teacherSalary
         } = this.props;
         const openModal = (item) => {
             console.log(item);
@@ -54,6 +73,15 @@ class SelectTeacher extends Component {
                 type: "updateState",
                 payload: {
                     showModal: !showModal
+                }
+            })
+        }
+        const openSalaryModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showOpenSalaryModal: !showOpenSalaryModal
                 }
             })
         }
@@ -80,7 +108,6 @@ class SelectTeacher extends Component {
                     fullName: v.fullName,
                     gender: v.gender,
                     phoneNumber: v.phoneNumber,
-                    // avatarId: attachmentId,
                     regionId: v.regionId,
                     description: v.description,
                     birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
@@ -90,6 +117,14 @@ class SelectTeacher extends Component {
             }
 
         }
+        const saveSalary = (e, v) => {
+            if (currentObject) {
+                v.teacherId = currentObject.id;
+                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD').toString()
+                dispatch(giveSalaryAction(v));
+            }
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -102,13 +137,13 @@ class SelectTeacher extends Component {
                             className={""}> O'qituvchilar</span>
                         </Link>
                     </hgroup>
-                    {
-                        console.log(currentItem)
-                    }
+
                     <div className="row">
                         {currentItem.id && currentItem.id ?
                             <>
-                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+
+                                <div
+                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                     <div className="row">
                                         <div className="col-8">
                                             <hgroup>
@@ -136,13 +171,26 @@ class SelectTeacher extends Component {
                                                 <small className={"text-secondary"}>Tavsif: </small>
                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
                                             </hgroup>
+                                            <hgroup>
+                                                <small className={"text-secondary"}>Balance: </small>
+                                                <p className={"d-inline"}> {currentItem.balance}</p>
+                                                <div className="button-block">
+                                                    <Button className="table-icon px-2"
+                                                            onClick={() => openSalaryModal(currentItem)}
+                                                    >
+                                                        <span className="icon icon-wallet bg-primary "/>
+                                                    </Button>
+                                                </div>
+                                            </hgroup>
 
                                         </div>
                                         <div className="col-4 button-block">
-                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                            <Button className="table-icon"
+                                                    onClick={() => openModal(currentItem)}>
                                                 <EditIcon className="button-icon"/>
                                             </Button>
-                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
+                                            <Button className="table-icon"
+                                                    onClick={() => openDeleteModal(currentItem)}>
                                                 <DeleteIcon className="button-icon"/>
                                             </Button>
                                         </div>
@@ -228,6 +276,7 @@ class SelectTeacher extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>
@@ -240,6 +289,50 @@ class SelectTeacher extends Component {
                     </ModalFooter>
                 </Modal>
 
+                <Modal id={"allModalStyle"} isOpen={showOpenSalaryModal} toggle={() => openSalaryModal("")}
+                       className={""}>
+                    <AvForm className={""} onValidSubmit={saveSalary}>
+                        <ModalHeader isOpen={showOpenSalaryModal} toggle={openSalaryModal} charCode="X">
+                            {currentObject ? "Oylik yechish" : ""}
+                        </ModalHeader>
+                        <ModalBody>
+                            <AvField
+                                defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                type={"text"}
+                                label={"FISH"} name={"fullName"} className={"form-control"}
+                                placeholer={"nomi"} required disabled/>
+                            <div className={"w-100 modal-form"}>
+                                <AvField
+                                    // defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                    type={"number"}
+                                    label={"So'm"} name={"amount"} className={"form-control"}
+                                    placeholer={""} required/>
+                                <AvRadioGroup name="payTypeId"
+                                    // defaultValue={currentObject ? currentObject.gender : ""}
+                                              label="" required className="pay-form-style d-block"
+                                              errorMessage="Birini tanlang!">
+                                    {payTypes ? payTypes.map((item, i) =>
+                                        <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
+                                    ) : ""}
+                                </AvRadioGroup>
+                                <AvField
+                                    type={"date"}
+                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
+                                        : ""}
+                                    label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
+                                    required/>
+                                <AvField
+                                    // defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                    type={"textarea"}
+                                    label={"Izoh"} name={"description"} className={"form-control"}/>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={openSalaryModal}>Bekor qilish</Button>
+                            <Button color="primary">Saqlash</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
             </AdminLayout>
         );
     }
@@ -259,12 +352,24 @@ export default connect(({
                                 regions,
                                 durationTypes,
                                 getItems,
-                                readModal
+                                readModal,
+                                showOpenSalaryModal,
+                                teacherSalary,
+
                             },
                         }) => ({
         groups,
         payTypes,
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, regions, getItems, readModal
+        loading,
+        durationTypes,
+        showModal,
+        deleteModal,
+        parentItems,
+        regions,
+        getItems,
+        readModal,
+        showOpenSalaryModal,
+        teacherSalary
     })
 )(SelectTeacher);

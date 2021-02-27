@@ -158,6 +158,7 @@ class SelectGroup extends Component {
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
+                            <>
                             <div className={"m-2 p-3 bg-white box-shadow rounded col-md-4 col-10"}>
                                 <div className="row">
                                     <div className="col-8">
@@ -241,6 +242,10 @@ class SelectGroup extends Component {
                                 </div>
                                 {/* FINISH GURUHDAGI STUDENTLAR RO'YHATI*/}
                             </div>
+                                <div>
+
+                                </div>
+                            </>
                             : ""}
                     </div>
                 </div>
