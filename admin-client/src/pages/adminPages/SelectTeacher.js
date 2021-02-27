@@ -17,7 +17,7 @@ import {
     deleteCourseAction, deleteGroupAction, deleteTeacherAction,
     getPayTypeListAction,
     getRegionsAction,
-    getStudentAction, getStudentPaymentAction,
+
     getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, giveSalaryAction,
     saveCourseAction,
     saveStudentAction, saveStudentPaymentAction, saveTeacherAction,
