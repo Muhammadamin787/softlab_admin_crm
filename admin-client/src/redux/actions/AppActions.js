@@ -1,6 +1,6 @@
 import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
-import {config} from "../../utils/config";
+
 import {
 
     getClientList,
@@ -113,7 +113,8 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi, deleteStudentPaymentApi, getStudentPaymentListApi,
+    getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
+    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1510,3 +1511,32 @@ export const getToplamListForSelectAction = (data) => (dispatch) => {
 }
 
 // FINISH TOPLAM ACTIONS
+
+// START TEACHER SALARY
+export const giveSalaryAction = (data) => (dispatch) => {
+    dispatch({
+        api: giveSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GIVE_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        dispatch(getTeacherAction({id: data.teacherId}))
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+    })
+}
+export const getTeacherSalaryListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_LIST_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+// FINISH TEACHER SALARY

@@ -12,9 +12,11 @@ import java.util.UUID;
 public class TeacherDto {
     private UUID id;
     private UserDto userDto;
+    private Double balance;
 
-    public TeacherDto(UserDto userDto) {
+    public TeacherDto(UserDto userDto, Double balance) {
         this.userDto = userDto;
+        this.balance = balance;
     }
 
 }
