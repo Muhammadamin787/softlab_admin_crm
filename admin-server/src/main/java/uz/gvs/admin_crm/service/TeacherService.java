@@ -94,6 +94,7 @@ public class TeacherService {
     public TeacherDto makeTeacherDto(Teacher teacher) {
         return new TeacherDto(
                 teacher.getId(),
+
                 new UserDto(
                         teacher.getUser().getId(),
                         teacher.getUser().getFullName(),
@@ -103,7 +104,8 @@ public class TeacherService {
                         teacher.getUser().getGender().toString(),
                         teacher.getUser().getBirthDate() != null ? teacher.getUser().getBirthDate().toString() : "",
                         teacher.getUser().getRoles()
-                )
+                ),
+                teacher.getBalance()
         );
     }
 

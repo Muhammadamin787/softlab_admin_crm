@@ -46,7 +46,7 @@ public class CashbackService {
             Optional<Cashback> optional = cashbackRepository.findById(id);
             if (optional.isPresent()) {
                 if (cashbackDto.getPercent() >= 0 && cashbackDto.getPrice() >= 0) {
-                    if (!cashbackRepository.existsByPriceEquals(cashbackDto.getPrice())) {
+                    if (!cashbackRepository.existsByPriceEqualsAndIdNot(cashbackDto.getPrice(), id)) {
                         Cashback cashback = optional.get();
                         cashback.setPrice(cashbackDto.getPrice());
                         cashback.setPercent(cashbackDto.getPercent());
