@@ -12,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeacherSalaryDto {
+    private UUID id;
     private UUID teacherId;
     private Integer payTypeId;
     private Double amount;
@@ -19,7 +20,8 @@ public class TeacherSalaryDto {
     private String description;
     private PayType payType;
 
-    public TeacherSalaryDto(UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
+    public TeacherSalaryDto(UUID id, UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
+        this.id = id;
         this.teacherId = teacherId;
         this.amount = amount;
         this.amountDate = amountDate;

@@ -28,6 +28,7 @@ const initState = {
     readModal: false,
     showAddGroupModal: false,
     changeStatusModal: false,
+    showEditSalaryModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
