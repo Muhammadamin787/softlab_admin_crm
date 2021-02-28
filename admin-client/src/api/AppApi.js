@@ -383,4 +383,14 @@ export const giveSalaryApi = (data) => {
 export const getTeacherSalaryApi = (data) => {
     return HttpClient.doGet(api.teacherSalary + "/" +data.id + "?page=" + data.page + "&size=" + data.size)
 }
+
+export const editTeacherSalaryApi = (data) => {
+    return HttpClient.doPut(api.teacherSalary + "/" + data.id, data)
+}
+
+export const deleteTeacherSalaryApi = (data) => {
+    console.log(data)
+    return HttpClient.doDelete(api.teacherSalary + "/" + data);
+}
+
 // FINISH TEACHER SALARY
