@@ -28,6 +28,8 @@ const initState = {
     readModal: false,
     showAddGroupModal: false,
     changeStatusModal: false,
+    showEditSalaryModal: false,
+    deleteSalaryModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
@@ -46,7 +48,8 @@ const initState = {
     toplamList: [],
     cashbacks : [],
     selectDebtors: [],
-    studentPayments :[]
+    studentPayments :[],
+    teacherSalaryList: []
 };
 
 const reducers = {
@@ -437,6 +440,16 @@ const reducers = {
         state.showPaymentEditModal = false;
         state.showPaymentModal = false;
         state.showModal = false;
+    },
+    [types.REQUEST_GET_LIST_SALARY_SUCCESS](state,payload) {
+        state.teacherSalaryList = null;
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teacherSalaryList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
