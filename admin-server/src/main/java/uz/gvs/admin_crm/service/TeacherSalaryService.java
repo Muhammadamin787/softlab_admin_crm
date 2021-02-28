@@ -72,11 +72,59 @@ public class TeacherSalaryService {
                         all.getNumber(),
                         all.getSize(),
                         all.get().map(this::makeTeacherSalaryDto).collect(Collectors.toList())
-        ));
+                ));
     }
 
-    public TeacherSalaryDto makeTeacherSalaryDto(TeacherSalary teacherSalary){
+    public TeacherSalaryDto makeTeacherSalaryDto(TeacherSalary teacherSalary) {
         return new TeacherSalaryDto(
+                teacherSalary.getId(),
+                teacherSalary.getTeacher().getId(),
+                teacherSalary.getAmount(),
+                teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
+                teacherSalary.getDescription(),
+                teacherSalary.getPayType()
+        );
+    }
+
+    public ApiResponse editSalary(UUID id, TeacherSalaryDto teacherSalaryDto) {
+        try {
+            Optional<TeacherSalary> optional = teacherSalaryRepository.findById(id);
+            if (optional.isPresent()) {
+                if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate() != null) {
+                    TeacherSalary teacherSalary = optional.get();
+                    if (teacherSalaryDto.getTeacherId() == teacherSalary.getTeacher().getId()) {
+                        teacherSalary.setAmount(teacherSalaryDto.getAmount());
+                        teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get Pay Type")));
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
+                        teacherSalary.setDescription(teacherSalaryDto.getDescription());
+                    }
+                    return apiResponseService.errorResponse();
+                }
+                return apiResponseService.notEnoughErrorResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        }catch (Exception e){
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getAllSalaries(int page, int size) {
+        Page<TeacherSalary> all = teacherSalaryRepository.findAll(PageRequest.of(page, size));
+        return apiResponseService.getResponse(
+                new PageableDto(
+                        all.getTotalPages(),
+                        all.getTotalElements(),
+                        all.getNumber(),
+                        all.getSize(),
+                        all.get().map(this::makeSalaryList).collect(Collectors.toList())
+                ));
+    }
+
+    public TeacherSalaryDto makeSalaryList(TeacherSalary teacherSalary) {
+        return new TeacherSalaryDto(
+                teacherSalary.getId(),
+                teacherSalary.getTeacher().getUser().getFullName(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
                 teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
