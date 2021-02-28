@@ -77,6 +77,7 @@ public class TeacherSalaryService {
 
     public TeacherSalaryDto makeTeacherSalaryDto(TeacherSalary teacherSalary) {
         return new TeacherSalaryDto(
+                teacherSalary.getId(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
                 teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
@@ -122,6 +123,7 @@ public class TeacherSalaryService {
 
     public TeacherSalaryDto makeSalaryList(TeacherSalary teacherSalary) {
         return new TeacherSalaryDto(
+                teacherSalary.getId(),
                 teacherSalary.getTeacher().getUser().getFullName(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
