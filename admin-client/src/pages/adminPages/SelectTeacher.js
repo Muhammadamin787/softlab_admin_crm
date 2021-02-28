@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, deleteGroupAction, deleteTeacherAction,
+    deleteCourseAction, deleteGroupAction, deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
     getPayTypeListAction,
     getRegionsAction, getStudentPaymentAction,
 
@@ -47,6 +47,7 @@ class SelectTeacher extends Component {
         showModal: false,
         showPaymentModal: false,
         currentObject: "",
+        currentItem: "",
         showOpenSalaryModal: false,
         activeTab : "1"
 
@@ -66,7 +67,8 @@ class SelectTeacher extends Component {
             regions,
             teacherSalary,
             teacherSalaryList,
-            showEditSalaryModal
+            showEditSalaryModal,
+            deleteSalaryModal
         } = this.props;
 
         const openModal = (item) => {
@@ -155,8 +157,27 @@ class SelectTeacher extends Component {
             }
         }
 
-        const editSalary = (e,v) => {
+        const openDeleteSalaryModal = (item) => {
+            this.setState({currentItem : item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteSalaryModal: !deleteSalaryModal
+                }
+            })
+        }
 
+        const editSalary = (e,v) => {
+            v.teacherId = currentItem.id
+            console.log(v)
+            this.props.dispatch(editTeacherSalaryListAction(v))
+        }
+
+        const deleteSalary = () => {
+            this.props.dispatch(deleteTeacherSalaryAction({
+                id:this.state.currentItem,
+                teacher:currentItem
+            }))
         }
 
         return (
@@ -306,7 +327,7 @@ class SelectTeacher extends Component {
                                                             <Button className="table-icon" onClick={() => openSalaryEditModal(item)}>
                                                                 <EditIcon/>
                                                             </Button>
-                                                            <Button className="table-icon">
+                                                            <Button className="table-icon" onClick={() => openDeleteSalaryModal(item.id)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -328,24 +349,68 @@ class SelectTeacher extends Component {
                 {/*MODAL EDIT*/}
 
                 <Modal id={"allModalStyle"} isOpen={showEditSalaryModal} toggle={openSalaryEditModal} className={""}>
-                    <AvForm className={""} onValidSubmit={editSalary}>
                         <ModalHeader isOpen={showEditSalaryModal} toggle={openSalaryEditModal}  charCode={"X"}>
                             Tahrirlash
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100 modal-form"}>
-                                <AvForm method={"post"}>
-                                    <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.teacherId : ''}/>
+                                {console.log(currentObject ? currentObject : '')}
+                                <AvForm method={"post"} onValidSubmit={editSalary}>
+                                    <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
                                     <AvField name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
-                                    <AvField name={"payType"} type={"text"} defaultValue={currentObject.payType ? currentObject.payType.name : ''}/>
+                                    <AvField name={"payTypeId"} type={"select"}>
+                                        {payTypes ? payTypes.map((item, i) =>
+                                        <option value={item.id}>
+                                            {item.name}
+                                        </option>) : ''}
+                                    </AvField>
                                     <AvField name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
-                                    <AvField name={"payDate"} type={"date"}/>
+                                    {/*<AvField name={"payDate"} type={"date"}/>*/}
+                                    <AvField
+                                        type={"date"}
+                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
+                                            : ""}
+                                        label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
+                                        required/>
+
+                                    <ModalFooter>
+                                        <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
+                                        <Button color={"primary"} type={"submit"}>Saqlash</Button>
+                                    </ModalFooter>
                                 </AvForm>
                             </div>
                         </ModalBody>
+                </Modal>
+
+
+                {/*MODAL DELETE*/}
+
+                <Modal isOpen={deleteSalaryModal} toggle={openDeleteSalaryModal} className={""}>
+                    <ModalHeader toggle={openDeleteSalaryModal}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={openDeleteSalaryModal}>Yo'q</Button>
+                        <Button color="light" onClick={deleteSalary}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+
+                <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                    <AvForm className={""} onValidSubmit={saveItem}>
+                        <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                            {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100 modal-form"}>
+
+                            </div>
+                        </ModalBody>
                         <ModalFooter>
-                            <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
-                            <Button color={"primary"}>Saqlash</Button>
+                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
                 </Modal>
@@ -480,7 +545,8 @@ export default connect(({
                                 showOpenSalaryModal,
                                 teacherSalary,
                                 teacherSalaryList,
-                                showEditSalaryModal
+                                showEditSalaryModal,
+                                deleteSalaryModal
                             },
                         }) => ({
         groups,
@@ -497,6 +563,7 @@ export default connect(({
         showOpenSalaryModal,
         teacherSalary,
     teacherSalaryList,
-    showEditSalaryModal
+    showEditSalaryModal,
+    deleteSalaryModal
     })
 )(SelectTeacher);
