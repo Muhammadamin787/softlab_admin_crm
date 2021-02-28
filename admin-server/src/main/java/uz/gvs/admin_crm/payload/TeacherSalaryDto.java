@@ -19,9 +19,19 @@ public class TeacherSalaryDto {
     private String amountDate;
     private String description;
     private PayType payType;
+    private String teacherName;
 
-    public TeacherSalaryDto(UUID id, UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
+    public TeacherSalaryDto(UUID id,UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
         this.id = id;
+        this.teacherId = teacherId;
+        this.amount = amount;
+        this.amountDate = amountDate;
+        this.description = description;
+        this.payType = payType;
+    }
+    public TeacherSalaryDto(UUID id, String teacherName, UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
+        this.id = id;
+        this.teacherName = teacherName;
         this.teacherId = teacherId;
         this.amount = amount;
         this.amountDate = amountDate;

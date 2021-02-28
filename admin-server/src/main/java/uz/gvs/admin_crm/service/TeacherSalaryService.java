@@ -108,4 +108,28 @@ public class TeacherSalaryService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+    public ApiResponse getAllSalaries(int page, int size) {
+        Page<TeacherSalary> all = teacherSalaryRepository.findAll(PageRequest.of(page, size));
+        return apiResponseService.getResponse(
+                new PageableDto(
+                        all.getTotalPages(),
+                        all.getTotalElements(),
+                        all.getNumber(),
+                        all.getSize(),
+                        all.get().map(this::makeSalaryList).collect(Collectors.toList())
+                ));
+    }
+
+    public TeacherSalaryDto makeSalaryList(TeacherSalary teacherSalary) {
+        return new TeacherSalaryDto(
+                teacherSalary.getId(),
+                teacherSalary.getTeacher().getUser().getFullName(),
+                teacherSalary.getTeacher().getId(),
+                teacherSalary.getAmount(),
+                teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
+                teacherSalary.getDescription(),
+                teacherSalary.getPayType()
+        );
+    }
 }
