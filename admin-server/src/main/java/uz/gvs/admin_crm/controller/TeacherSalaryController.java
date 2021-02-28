@@ -38,6 +38,12 @@ public class TeacherSalaryController {
         ApiResponse apiResponse = service.getSalaries(id, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+    @GetMapping
+    public HttpEntity<?> getAllSalaries(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
+        ApiResponse apiResponse = service.getAllSalaries(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
     @PutMapping("/{id}")
     public HttpEntity<?> editSalary(@PathVariable UUID id, @RequestBody TeacherSalaryDto teacherSalaryDto){
