@@ -14,6 +14,7 @@ import uz.gvs.admin_crm.repository.PayTypeRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.TeacherSalaryRepository;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,6 +78,7 @@ public class TeacherSalaryService {
 
     public TeacherSalaryDto makeTeacherSalaryDto(TeacherSalary teacherSalary) {
         return new TeacherSalaryDto(
+                teacherSalary.getId(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
                 teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
@@ -91,12 +93,13 @@ public class TeacherSalaryService {
             if (optional.isPresent()) {
                 if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate() != null) {
                     TeacherSalary teacherSalary = optional.get();
-                    if (teacherSalaryDto.getTeacherId() == teacherSalary.getTeacher().getId()) {
+                    if (teacherSalaryDto.getTeacherId().equals(teacherSalary.getTeacher().getId())) {
                         teacherSalary.setAmount(teacherSalaryDto.getAmount());
                         teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get Pay Type")));
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
-                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
+                        teacherSalary.setAmountDate(Date.valueOf(teacherSalaryDto.getAmountDate()));
                         teacherSalary.setDescription(teacherSalaryDto.getDescription());
+                        teacherSalaryRepository.save(teacherSalary);
+                        return apiResponseService.updatedResponse();
                     }
                     return apiResponseService.errorResponse();
                 }
@@ -122,6 +125,7 @@ public class TeacherSalaryService {
 
     public TeacherSalaryDto makeSalaryList(TeacherSalary teacherSalary) {
         return new TeacherSalaryDto(
+                teacherSalary.getId(),
                 teacherSalary.getTeacher().getUser().getFullName(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
