@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.*;
 
-public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, Integer> {
+import java.util.Optional;
+import java.util.UUID;
+
+public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, UUID> {
     Page<TeacherSalary> findAllByTeacher(Teacher teacher, Pageable pageable);
+
+
 }

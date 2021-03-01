@@ -14,11 +14,11 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, deleteGroupAction, deleteTeacherAction,
+    deleteCourseAction, deleteGroupAction, deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
     getPayTypeListAction,
-    getRegionsAction,
+    getRegionsAction, getStudentPaymentAction,
 
-    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, giveSalaryAction,
+    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
     saveCourseAction,
     saveStudentAction, saveStudentPaymentAction, saveTeacherAction,
 } from "../../redux/actions/AppActions";
@@ -47,15 +47,16 @@ class SelectTeacher extends Component {
         showModal: false,
         showPaymentModal: false,
         currentObject: "",
+        currentItem: "",
         showOpenSalaryModal: false,
+        activeTab : "1"
 
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject,activeTab} = this.state;
         const {
             groups,
-            activeTab,
             history,
             payTypes,
             showOpenSalaryModal,
@@ -64,10 +65,13 @@ class SelectTeacher extends Component {
             deleteModal,
             currentItem,
             regions,
-            teacherSalary
+            teacherSalary,
+            teacherSalaryList,
+            showEditSalaryModal,
+            deleteSalaryModal
         } = this.props;
+
         const openModal = (item) => {
-            console.log(item);
             this.setState({currentObject: item})
             dispatch({
                 type: "updateState",
@@ -76,6 +80,19 @@ class SelectTeacher extends Component {
                 }
             })
         }
+
+        const openSalaryEditModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: 'updateState',
+                payload: {
+                    showEditSalaryModal: !showEditSalaryModal,
+                    currentObject: item
+                }
+            })
+            console.log(currentObject)
+        }
+
         const openSalaryModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -125,6 +142,44 @@ class SelectTeacher extends Component {
             }
         }
 
+        const toggle = tab => {
+
+            if (activeTab !== tab)
+                this.setState({activeTab: tab})
+            if (tab === "2") {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    dispatch(getTeacherSalaryListAction({
+                        id: this.props.match.params.id,
+                        page:0,
+                        size:20
+                    }))
+                }
+            }
+        }
+
+        const openDeleteSalaryModal = (item) => {
+            this.setState({currentItem : item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteSalaryModal: !deleteSalaryModal
+                }
+            })
+        }
+
+        const editSalary = (e,v) => {
+            v.teacherId = currentItem.id
+            console.log(v)
+            this.props.dispatch(editTeacherSalaryListAction(v))
+        }
+
+        const deleteSalary = () => {
+            this.props.dispatch(deleteTeacherSalaryAction({
+                id:this.state.currentItem,
+                teacher:currentItem
+            }))
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -141,91 +196,225 @@ class SelectTeacher extends Component {
                     <div className="row">
                         {currentItem.id && currentItem.id ?
                             <>
+                                <div className="d-block col-12">
+                                    <Nav tabs>
+                                        <NavItem className={""}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('1');
+                                                }}
+                                            >
+                                                Profil
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('2');
+                                                }}
+                                            >
+                                                To'lovlar
+                                            </NavLink>
+                                        </NavItem>
+                                    </Nav>
+                                    <TabContent activeTab={activeTab}>
+                                        <TabPane tabId="1">
+                                            <div className={"row"}>
+                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                    <div className="row">
+                                                        <div className="col-8">
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>FISH: </small>
+                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Manzil: </small>
+                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
+                                                            </hgroup>
 
-                                <div
-                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
-                                    <div className="row">
-                                        <div className="col-8">
-                                            <hgroup>
-                                                <small className={"text-secondary"}>FISH: </small>
-                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Telefon raqam: </small>
-                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
-                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Manzil: </small>
-                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
-                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Manzil: </small>
+                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Tavsif: </small>
+                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Balance: </small>
+                                                                <p className={"d-inline"}> {currentItem.balance}</p>
+                                                                <div className="button-block">
+                                                                    <Button className="table-icon px-2"
+                                                                            onClick={() => openSalaryModal(currentItem)}
+                                                                    >
+                                                                        <span className="icon icon-wallet bg-primary "/>
+                                                                    </Button>
+                                                                </div>
+                                                            </hgroup>
 
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Manzil: </small>
-                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Tavsif: </small>
-                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
-                                            </hgroup>
-                                            <hgroup>
-                                                <small className={"text-secondary"}>Balance: </small>
-                                                <p className={"d-inline"}> {currentItem.balance}</p>
-                                                <div className="button-block">
-                                                    <Button className="table-icon px-2"
-                                                            onClick={() => openSalaryModal(currentItem)}
-                                                    >
-                                                        <span className="icon icon-wallet bg-primary "/>
-                                                    </Button>
+                                                        </div>
+                                                        <div className="col-4 button-block">
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openModal(currentItem)}>
+                                                                <EditIcon className="button-icon"/>
+                                                            </Button>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(currentItem)}>
+                                                                <DeleteIcon className="button-icon"/>
+                                                            </Button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </hgroup>
-
-                                        </div>
-                                        <div className="col-4 button-block">
-                                            <Button className="table-icon"
-                                                    onClick={() => openModal(currentItem)}>
-                                                <EditIcon className="button-icon"/>
-                                            </Button>
-                                            <Button className="table-icon"
-                                                    onClick={() => openDeleteModal(currentItem)}>
-                                                <DeleteIcon className="button-icon"/>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"col-md-6"}>
-                                    <h4>Guruhlar</h4>
-                                    <div className={" ml-2 bg-white student-group-block"}>
-                                        {groups && groups.length > 0 ? groups.map((item, i) =>
-                                            <Row key={i} className={"p-2"}>
-                                                <Col md={3} className={"text-center"}>
+                                                <div className={"col-md-6"}>
+                                                    <h4>Guruhlar</h4>
+                                                    <div className={" ml-2 bg-white student-group-block"}>
+                                                        {groups && groups.length > 0 ? groups.map((item, i) =>
+                                                                <Row key={i} className={"p-2"}>
+                                                                    <Col md={3} className={"text-center"}>
                                                     <span
                                                         className={"group-name"}> {item.name}</span>
-                                                </Col>
-                                                <Col md={4}>
+                                                                    </Col>
+                                                                    <Col md={4}>
                                                     <span
                                                         className={"text-left"}>{item.course && item.course.name}</span>
-                                                </Col>
-                                                <Col md={2}>
-                                                    <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
-                                                </Col>
-                                                <Col md={3}>
+                                                                    </Col>
+                                                                    <Col md={2}>
+                                                                        <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
+                                                                    </Col>
+                                                                    <Col md={3}>
                                                     <span
                                                         className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
                                                         <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
                                                     </span>
-                                                </Col>
-                                            </Row>
-                                        ) : "Guruhlar topilmadi"}
-                                    </div>
+                                                                    </Col>
+                                                                </Row>
+                                                        ) : "Guruhlar topilmadi"}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TabPane>
+
+                                        {/*  START TAB PANE  */}
+
+                                        <TabPane tabId="2">
+                                            <Table>
+                                                <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Miqdor</td>
+                                                    <td>To'lov turi</td>
+                                                    <td>Izoh</td>
+                                                    <td>To'langan vaqti</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {teacherSalaryList ? teacherSalaryList.map((item, i) =>
+                                                    <tr key={i + 1}>
+                                                        <td>{i + 1}</td>
+                                                        <td>{item.amount}</td>
+                                                        <td>{item.payType ? item.payType.name : ''}</td>
+                                                        <td>{item.description}</td>
+                                                        <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                        <td>
+                                                            <Button className="table-icon" onClick={() => openSalaryEditModal(item)}>
+                                                                <EditIcon/>
+                                                            </Button>
+                                                            <Button className="table-icon" onClick={() => openDeleteSalaryModal(item.id)}>
+                                                                <DeleteIcon/>
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ) : 'Malumot topilmadi'}
+                                                </tbody>
+                                            </Table>
+                                        </TabPane>
+
+                                    {/*  END TAB PANE  */}
+
+                                    </TabContent>
                                 </div>
                             </>
                             : ""}
                     </div>
                 </div>
+
+                {/*MODAL EDIT*/}
+
+                <Modal id={"allModalStyle"} isOpen={showEditSalaryModal} toggle={openSalaryEditModal} className={""}>
+                        <ModalHeader isOpen={showEditSalaryModal} toggle={openSalaryEditModal}  charCode={"X"}>
+                            Tahrirlash
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100 modal-form"}>
+                                {console.log(currentObject ? currentObject : '')}
+                                <AvForm method={"post"} onValidSubmit={editSalary}>
+                                    <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
+                                    <AvField name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
+                                    <AvField name={"payTypeId"} type={"select"}>
+                                        {payTypes ? payTypes.map((item, i) =>
+                                        <option value={item.id}>
+                                            {item.name}
+                                        </option>) : ''}
+                                    </AvField>
+                                    <AvField name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
+                                    {/*<AvField name={"payDate"} type={"date"}/>*/}
+                                    <AvField
+                                        type={"date"}
+                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
+                                            : ""}
+                                        label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
+                                        required/>
+
+                                    <ModalFooter>
+                                        <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
+                                        <Button color={"primary"} type={"submit"}>Saqlash</Button>
+                                    </ModalFooter>
+                                </AvForm>
+                            </div>
+                        </ModalBody>
+                </Modal>
+
+
+                {/*MODAL DELETE*/}
+
+                <Modal isOpen={deleteSalaryModal} toggle={openDeleteSalaryModal} className={""}>
+                    <ModalHeader toggle={openDeleteSalaryModal}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={openDeleteSalaryModal}>Yo'q</Button>
+                        <Button color="light" onClick={deleteSalary}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+
+                <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                    <AvForm className={""} onValidSubmit={saveItem}>
+                        <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                            {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100 modal-form"}>
+
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="primary">Saqlash</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
+
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -322,7 +511,7 @@ class SelectTeacher extends Component {
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
                                     required/>
                                 <AvField
-                                    // defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                    defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
                                     type={"textarea"}
                                     label={"Izoh"} name={"description"} className={"form-control"}/>
                             </div>
@@ -355,7 +544,9 @@ export default connect(({
                                 readModal,
                                 showOpenSalaryModal,
                                 teacherSalary,
-
+                                teacherSalaryList,
+                                showEditSalaryModal,
+                                deleteSalaryModal
                             },
                         }) => ({
         groups,
@@ -370,6 +561,9 @@ export default connect(({
         getItems,
         readModal,
         showOpenSalaryModal,
-        teacherSalary
+        teacherSalary,
+    teacherSalaryList,
+    showEditSalaryModal,
+    deleteSalaryModal
     })
 )(SelectTeacher);

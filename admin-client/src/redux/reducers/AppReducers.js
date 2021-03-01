@@ -47,7 +47,8 @@ const initState = {
     cashbacks : [],
     selectDebtors: [],
     studentPayments :[],
-    studentPaymentCashbaks :[]
+    studentPaymentCashbaks :[],
+    teacherSalaryAppApi: []
 };
 
 const reducers = {
@@ -348,6 +349,8 @@ const reducers = {
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
         }
+        console.clear()
+        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
@@ -366,18 +369,6 @@ const reducers = {
     [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.studentPayments = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-    },
-    [types.REQUEST_GET_STUDENT_PAYMENT_CASHBACKS_SUCCESS](state, payload) {
-        console.log(payload)
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.studentPaymentCashbaks = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
             state.page = payload.payload.object.number
@@ -462,6 +453,10 @@ const reducers = {
             }
             state.selectGroups = ketmon
         }
+    },
+    [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
+        state.teacherSalaryAppApi = null
+        state.teacherSalaryAppApi = payload.payload.object.object
     },
 
 

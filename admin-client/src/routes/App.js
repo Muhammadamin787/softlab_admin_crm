@@ -34,6 +34,7 @@ import SelectAppeal from "../pages/adminPages/SelectAppeal";
 import SelectToplam from "../pages/adminPages/SelectToplam";
 import StudentPaymentList from "../pages/adminPages/StudentPaymentList";
 import studentPaymentCashbacks from "../pages/adminPages/studentPaymentCashbacks";
+import Finance from "../pages/adminPages/Finance";
 
 
 const App = () => {
@@ -73,6 +74,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/appeal/:id" component={SelectAppeal}/>/>
                 <PrivateRoute exact path="/admin/appeal/toplam/:id" component={SelectToplam}/>/>
                 <PrivateRoute exact path="/admin/toplam/:id" component={SelectToplam}/>/>
+                <PrivateRoute exact path="/admin/finance" component={Finance} />
                 <Route component={NotFound}/>
             </Switch>
         </Provider>
