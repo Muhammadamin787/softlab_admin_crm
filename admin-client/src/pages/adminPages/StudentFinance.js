@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 
-class Finance extends Component {
+class StudentFinance extends Component {
 
     handlePageChange(pageNumber) {
         console.clear()
@@ -44,7 +44,7 @@ class Finance extends Component {
 
         const {currentObject, activeTab,} = this.state;
         const {
-            dispatch,studentPayments,page,size,totalElements, teacherSalaryAppApi
+            dispatch,studentPayments,page,size,totalElements, teacherSalaryAppApi, studentPaymentCashbaks
         } = this.props;
         console.log(studentPayments)
 
@@ -60,7 +60,6 @@ class Finance extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
-                    <h3>Moliya</h3>
                     <div className="row mb-4">
                         <div className="col-md-3">
                             <input type="date" className="form-control"/>
@@ -79,7 +78,7 @@ class Finance extends Component {
                                     toggle('1');
                                 }}
                             >
-                                O'quvchilar
+                                Barchasi
                             </NavLink>
                         </NavItem>
                         <NavItem>
@@ -88,7 +87,16 @@ class Finance extends Component {
                                     toggle('2');
                                 }}
                             >
-                                O'qituvchilar
+                                Cashbacklar
+                            </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink
+                                onClick={() => {
+                                    toggle('3');
+                                }}
+                            >
+                                Tushumlar
                             </NavLink>
                         </NavItem>
                     </Nav>
@@ -96,12 +104,12 @@ class Finance extends Component {
                         <TabPane tabId="1">
                             <div>
                                 <div className={"flex-column container"}>
-                                    <Table className={"table-style w-75"}>
+                                    <Table className={"table-style w-100"}>
                                         <thead>
                                         <tr>
                                             <td>#</td>
                                             <td>Student</td>
-                                            <td>summa</td>
+                                            <td>Summa</td>
                                             <td>Cash Foiz %</td>
                                             <td>Tolov Turi</td>
                                             <td>Izoh</td>
@@ -114,12 +122,13 @@ class Finance extends Component {
                                             <tr key={i+1} className={"table-row-student"}>
                                                 <td>{i+1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>
+                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                        ? item.student.id : '')}>
                                                         {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
                                                 <td>{item.sum +" / " + item.cashSum}</td>
-                                                <td>{item && item.cashback ? item.cashback.percent + " &" : ""}</td>
+                                                <td>{item && item.cashback ? item.cashback.percent + " %" : "0%"}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
                                                 <td>{item.payDate}</td>
@@ -141,32 +150,34 @@ class Finance extends Component {
                         <TabPane tabId="2">
                             <div>
                                 <div className={"flex-column container"}>
-                                    <Table className={"table-style w-75"}>
+                                    <Table className={"table-style w-100"}>
                                         <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td>O'qituvchi</td>
+                                            <td>O'quvchi</td>
                                             <td>Summa</td>
-                                            <td>Tolov Turi</td>
+                                            <td>Cah Foiz %</td>
+                                            <td>To'lov Turi</td>
                                             <td>Izoh</td>
                                             <td>Tolov vaqti</td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(teacherSalaryAppApi)}
-                                        {teacherSalaryAppApi ? teacherSalaryAppApi.map((item,i)=>
+                                        {console.log(studentPaymentCashbaks)}
+                                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
                                             <tr key={i+1}>
                                                 <td>{i+1}</td>
                                                 <td>
-                                                    {/*<Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>*/}
-                                                    {/*    {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}*/}
-                                                    {/*</Link>*/}
-                                                    {item.teacherName ? item.teacherName : ''}
+                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                        ? item.student.id : '')}>
+                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
+                                                    </Link>
                                                 </td>
-                                                <td>{item && item.amount ? item.amount : ""}</td>
+                                                <td>{item.sum +" / " + item.cashSum}</td>
+                                                <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
-                                                <td>{item.description}</td>
-                                                <td>{item.amountDate}</td>
+                                                <td>{item.comment}</td>
+                                                <td>{item.payDate}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>
@@ -189,15 +200,15 @@ class Finance extends Component {
     }
 }
 
-Finance.propTypes = {};
+StudentFinance.propTypes = {};
 
 export default connect(({
                             app: {
                                 studentPayments,
-                                page,size,totalElements,teacherSalaryAppApi
+                                page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
 
                             },
                         }) => ({
-        studentPayments,page,size,totalElements,teacherSalaryAppApi
+        studentPayments,page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
     })
-)(Finance);
+)(StudentFinance);

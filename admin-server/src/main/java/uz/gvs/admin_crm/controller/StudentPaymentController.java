@@ -59,6 +59,13 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
     }
 
+    @GetMapping("/paymentCashbacks")
+    public HttpEntity<?> getStudentPaymentCashbacks(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        ApiResponse apiResponse = studentService.getStudentPaymentCashbacks(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
     @GetMapping("/studentGroup/{id}")
     public HttpEntity<?> getStudentGroups(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.getStudentGroups(id);

@@ -33,7 +33,9 @@ import Toplam from "../pages/adminPages/Toplam";
 import SelectAppeal from "../pages/adminPages/SelectAppeal";
 import SelectToplam from "../pages/adminPages/SelectToplam";
 import StudentPaymentList from "../pages/adminPages/StudentPaymentList";
-import Finance from "../pages/adminPages/Finance";
+import studentPaymentCashbacks from "../pages/adminPages/studentPaymentCashbacks";
+import Finance from "../pages/adminPages/TeacherFinance";
+import StudentFinance from "../pages/adminPages/StudentFinance";
 
 
 const App = () => {
@@ -62,7 +64,8 @@ const App = () => {
                 <PrivateRoute exact path="/admin/cashback" component={Cashback}/>
                 <PrivateRoute exact path="/admin/payType" component={PayType}/>
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
-                <PrivateRoute exact path="/admin/studentPayment/" component={StudentPaymentList}/>
+                <PrivateRoute exact path="/admin/studentPayment" component={StudentPaymentList}/>
+                <PrivateRoute exact path="/admin/studentPaymentCashbacks" component={studentPaymentCashbacks}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
                 <PrivateRoute exact path="/admin/staff" component={Staff}/>
                 <PrivateRoute exact path="/admin/reklama" component={Reklama}/>
@@ -73,6 +76,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/appeal/toplam/:id" component={SelectToplam}/>/>
                 <PrivateRoute exact path="/admin/toplam/:id" component={SelectToplam}/>/>
                 <PrivateRoute exact path="/admin/finance" component={Finance} />
+                <PrivateRoute exact path="/admin/StudentFinance" component={StudentFinance} />
                 <Route component={NotFound}/>
             </Switch>
         </Provider>
