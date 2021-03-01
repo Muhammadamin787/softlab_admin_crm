@@ -1535,6 +1535,7 @@ export const giveSalaryAction = (data) => (dispatch) => {
             toast.success(res.payload.message)
     })
 }
+
 export const getTeacherSalaryListAction = (data) => (dispatch) => {
     dispatch({
         api: getTeacherSalaryApi,
@@ -1546,6 +1547,7 @@ export const getTeacherSalaryListAction = (data) => (dispatch) => {
         data
     })
 }
+
 export const editTeacherSalaryListAction = (payload) => (dispatch) => {
     dispatch({
         api: app.editTeacherSalaryApi,

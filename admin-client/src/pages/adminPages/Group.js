@@ -100,7 +100,7 @@ class Group extends Component {
                         </thead>
                         <tbody>
                         {groups && groups.length > 0 ? groups.map((item, i) =>
-                            <tr key={i} className={"table-tr"}>
+                            <tr key={i} className={"table-row-student"}>
                                 <td>{i + 1}</td>
                                 <td>
                                     <Link className={"text-dark"} to={"/admin/group/" + (item.id)}>

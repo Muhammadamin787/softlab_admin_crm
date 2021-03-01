@@ -16,7 +16,7 @@ import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-valida
 import {
     deleteCourseAction, deleteGroupAction, deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
     getPayTypeListAction,
-    getRegionsAction, getStudentPaymentAction,
+    getRegionsAction, getStudentPaymentAction, getStudentsAction,
 
     getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
     saveCourseAction,
@@ -30,6 +30,7 @@ import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
+import Pagination from "react-js-pagination";
 
 class SelectTeacher extends Component {
     componentDidMount() {
@@ -41,6 +42,10 @@ class SelectTeacher extends Component {
         }
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getPayTypeListAction())
+    }
+
+    handlePageChange(pageNumber) {
+        this.props.dispatch(getTeacherSalaryListAction({page: (pageNumber - 1), size: this.props.size}))
     }
 
     state = {
@@ -68,8 +73,10 @@ class SelectTeacher extends Component {
             teacherSalary,
             teacherSalaryList,
             showEditSalaryModal,
-            deleteSalaryModal
+            deleteSalaryModal,
+            page,size,totalElements
         } = this.props;
+
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -151,7 +158,7 @@ class SelectTeacher extends Component {
                     dispatch(getTeacherSalaryListAction({
                         id: this.props.match.params.id,
                         page:0,
-                        size:20
+                        size:size
                     }))
                 }
             }
@@ -309,7 +316,10 @@ class SelectTeacher extends Component {
 
                                         {/*  START TAB PANE  */}
 
-                                        <TabPane tabId="2">
+                                        <TabPane tabId="2" className={"teacher-salary-block"}>
+                                            <p className={"teacher-salary-block__title"}>
+                                                To'lovlar
+                                            </p>
                                             <Table>
                                                 <thead>
                                                 <tr>
@@ -340,6 +350,14 @@ class SelectTeacher extends Component {
                                                 ) : 'Malumot topilmadi'}
                                                 </tbody>
                                             </Table>
+                                            <Pagination
+                                                activePage={page + 1}
+                                                itemsCountPerPage={size}
+                                                totalItemsCount={totalElements}
+                                                pageRangeDisplayed={5}
+                                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                                linkClass="page-link"
+                                            />
                                         </TabPane>
 
                                     {/*  END TAB PANE  */}
@@ -508,8 +526,8 @@ class SelectTeacher extends Component {
                                     ) : ""}
                                 </AvRadioGroup>
                                 <AvField
-                                    type={"datetime-local"}
-                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD hh:mm:ss')
+                                    type={"date"}
+                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
                                         : ""}
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
                                     required/>
@@ -549,7 +567,8 @@ export default connect(({
                                 teacherSalary,
                                 teacherSalaryList,
                                 showEditSalaryModal,
-                                deleteSalaryModal
+                                deleteSalaryModal,
+                                page,size,totalElements
                             },
                         }) => ({
         groups,
@@ -567,6 +586,7 @@ export default connect(({
         teacherSalary,
     teacherSalaryList,
     showEditSalaryModal,
-    deleteSalaryModal
+    deleteSalaryModal,
+    page,size,totalElements
     })
 )(SelectTeacher);

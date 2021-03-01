@@ -1,7 +1,27 @@
 body {
-  overflow: scroll !important;
-  background-color: red;
+  overflow: auto !important;
 }
+
+/*START DASHBOARD*/
+
+.col-analytics-dashboard {
+  color: rgb(33, 33, 33);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 19px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px;
+  padding: 0 !important;
+}
+
+/*END DASHBOARD*/
+
+/*START STUDENT*/
+
+.table-row-student {
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px;
+}
+
+/*END STUDENT*/
 
 .photoUpload {
   width: 300px;
@@ -10,6 +30,19 @@ body {
   border: 1px solid black;
 }
 
-.asdfg {
-  background-color: red !important;
+.teacher-salary-block {
+  padding: 28px;
+  margin: 24px 0;
+  color: rgb(33, 33, 33);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 19px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px;
+  max-width: 842px;
+}
+
+.teacher-salary-block__title {
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 32px;
 }

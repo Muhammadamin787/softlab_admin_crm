@@ -47,7 +47,8 @@ const initState = {
     cashbacks : [],
     selectDebtors: [],
     studentPayments :[],
-    teacherSalaryAppApi: []
+    teacherSalaryAppApi: [],
+    teacherSalaryList:[]
 };
 
 const reducers = {
@@ -454,8 +455,8 @@ const reducers = {
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
-        state.teacherSalaryAppApi = null
-        state.teacherSalaryAppApi = payload.payload.object.object
+        state.teacherSalaryList = null
+        state.teacherSalaryList = payload.payload.object.object
     },
 
 
