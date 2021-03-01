@@ -1579,6 +1579,7 @@ export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
+
         ],
         data: payload.id
     }).then(res => {
