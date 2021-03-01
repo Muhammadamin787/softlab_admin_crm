@@ -302,6 +302,10 @@ export const getStudentPaymentListApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/list" + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
+export const getStudentPaymentCashbacksApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/paymentCashbacks" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
+}
 
 // FINISH STUDENT PAYMENT API
 
@@ -388,7 +392,6 @@ export const editTeacherSalaryApi = (data) => {
 }
 
 export const deleteTeacherSalaryApi = (data) => {
-    console.log(data)
     return HttpClient.doDelete(api.teacherSalary + "/" + data);
 }
 export const getTeacherSalaryAppApi = () => {
