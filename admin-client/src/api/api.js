@@ -20,4 +20,5 @@ export const api = {
     appeal : 'appeal',
     toplam : 'toplam',
     teacherSalary : 'teacherSalary',
+    teacherSalaryApi : '/teacherSalary'
 };
