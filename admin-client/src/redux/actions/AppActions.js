@@ -113,11 +113,17 @@ import {
     saveToplamApi,
     editToplamApi,
     deleteToplamApi,
-    getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
-    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi, deleteTeacherSalaryApi,
+    getCourseListForSelectApi,
+    getOneAppealApi,
+    getToplamApi,
+    giveSalaryApi,
+    deleteStudentPaymentApi,
+    getTeacherSalaryApi,
+    getStudentPaymentListApi,
+    getTeacherSalaryAppApi,
+    deleteTeacherSalaryApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
-import {REQUEST_START} from "../actionTypes/AppActionTypes";
 
 export const getDebtorsAction = () => (dispatch) => {
     dispatch({
@@ -1537,10 +1543,9 @@ export const getTeacherSalaryListAction = (data) => (dispatch) => {
             types.REQUEST_GET_LIST_SALARY_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data: data
+        data
     })
 }
-
 export const editTeacherSalaryListAction = (payload) => (dispatch) => {
     dispatch({
         api: app.editTeacherSalaryApi,
@@ -1563,7 +1568,7 @@ export const editTeacherSalaryListAction = (payload) => (dispatch) => {
                 showEditSalaryModal: false
             }
         })
-        }).catch(err => {
+    }).catch(err => {
         toast.error("Xato")
     })
 }
@@ -1575,6 +1580,7 @@ export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
+
         ],
         data: payload.id
     }).then(res => {
@@ -1598,6 +1604,14 @@ export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
         toast.error("Xato")
     })
 }
-
-
+export const getTeacherSalaryAppAction = () => (dispatch) => {
+    dispatch({
+        api: getTeacherSalaryAppApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_LIST_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ]
+    })
+}
 // FINISH TEACHER SALARY
