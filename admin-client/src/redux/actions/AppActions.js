@@ -114,7 +114,7 @@ import {
     editToplamApi,
     deleteToplamApi,
     getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
-    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi,
+    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi, getStudentPaymentCashbacksApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1329,6 +1329,17 @@ export const getStudentPaymentListAction= (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getStudentPaymentCashbacksAction= (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentCashbacksApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_PAYMENT_CASHBACKS_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data

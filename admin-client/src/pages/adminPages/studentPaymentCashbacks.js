@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {
-    getStudentPaymentAction, getStudentPaymentListAction, getStudentsAction
+    getStudentPaymentAction, getStudentPaymentCashbacksAction, getStudentPaymentListAction, getStudentsAction
 } from "../../redux/actions/AppActions";
 import {Link} from "react-router-dom";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
@@ -10,21 +10,21 @@ import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactst
 import AdminLayout from "../../component/AdminLayout";
 import Pagination from "react-js-pagination";
 
-class StudentPaymentList extends Component {
+class studentPaymentCashbacks extends Component {
     componentDidMount() {
         console.clear()
-        this.props.dispatch(getStudentPaymentListAction({page: 0, size: this.props.size}))
+        this.props.dispatch(getStudentPaymentCashbacksAction({page: 0, size: this.props.size}))
 
     }
     state = {
         currentObject: ''
     }
     handlePageChange(pageNumber) {
-        this.props.dispatch(getStudentPaymentListAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getStudentPaymentCashbacksAction({page: (pageNumber - 1), size: this.props.size}))
     }
     render() {
         const {currentObject} = this.state
-        const {studentPayments,dispatch,page,size,totalElements} = this.props
+        const {studentPaymentCashbaks,dispatch,page,size,totalElements,studentPayments} = this.props
         console.log(studentPayments)
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -44,7 +44,7 @@ class StudentPaymentList extends Component {
                         </thead>
                         <tbody>
                         {console.log(studentPayments)}
-                        {studentPayments ? studentPayments.map((item,i)=>
+                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
                             <tr key={i+1}>
                                 <td>{i+1}</td>
                                 <td>
@@ -53,7 +53,7 @@ class StudentPaymentList extends Component {
                                     </Link>
                                 </td>
                                 <td>{item.sum +" / " + item.cashSum}</td>
-                                <td>{item && item.cashback ? item.cashback.percent + " %" : "0 %"}</td>
+                                <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
                                 <td>{item.payType ? item.payType.name : ''}</td>
                                 <td>{item.comment}</td>
                                 <td>{item.payDate}</td>
@@ -76,14 +76,12 @@ class StudentPaymentList extends Component {
     }
 }
 
-StudentPaymentList.propTypes = {};
-
 
 export default connect(({
                             app: {
-                                studentPayments,page,size,totalElements
+                                studentPaymentCashbaks,page,size,totalElements,studentPayments
                             },
                         }) => ({
-    studentPayments,page,size,totalElements
+    studentPaymentCashbaks,page,size,totalElements,studentPayments
     })
-)(StudentPaymentList);
+)(studentPaymentCashbacks);

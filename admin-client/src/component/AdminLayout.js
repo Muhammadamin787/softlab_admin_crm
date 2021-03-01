@@ -189,6 +189,16 @@ class AdminLayout extends Component {
                                     StudentPaymentlar
                                 </Link>
                             </Link>
+                            <Link to="/admin/staff" className={
+                                this.props.pathname === "/admin/studentPaymentCashbacks" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <Link to="/admin/studentPaymentCashbacks"
+                                      className="main-link">
+                                    StudentPayment Cashbacklar
+                                </Link>
+                            </Link>
                         </div>
                     </div>
 

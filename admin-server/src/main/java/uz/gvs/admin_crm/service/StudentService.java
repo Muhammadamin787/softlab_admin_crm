@@ -279,6 +279,20 @@ public class StudentService {
         );
     }
 
+    public StudentPaymentDto makeStudentPaymentCashbacks(StudentPayment studentPayment) {
+            return new StudentPaymentDto(
+                    studentPayment.getId(),
+                    studentPayment.getPayType(),
+                    studentPayment.getStudent(),
+                    studentPayment.getCashback(),
+                    studentPayment.getCashSum(),
+                    studentPayment.getSum(),
+                    studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
+                    studentPayment.getComment(),
+                    studentPayment.getGroup()
+            );
+    }
+
     public ApiResponse getStudentPaymentList(int page, int size) {
         try {
             Sort sort;
@@ -339,7 +353,7 @@ public class StudentService {
                 if (studentPayment.getCashSum() != 0) {
                     student.setBalans(student.getBalans() - (studentPayment.getSum() + studentPayment.getCashSum()));
                 } else {
-                    student.setBalans(student.getBalans()-studentPayment.getSum());
+                    student.setBalans(student.getBalans() - studentPayment.getSum());
                 }
                 studentRepository.save(student);
                 return apiResponseService.deleteResponse();
@@ -417,7 +431,6 @@ public class StudentService {
     }
 
 
-
     public ApiResponse getDebtorStudents(int page, int size) {
         Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
         return apiResponseService.getResponse(
@@ -431,7 +444,7 @@ public class StudentService {
     }
 
     public StudentDto makeStudentDtoForDeptors(Student student) {
-        if (student.getBalans() < 0 ) {
+        if (student.getBalans() < 0) {
             return new StudentDto(
                     student.getId(),
                     student.getUser().getId(),
@@ -445,5 +458,23 @@ public class StudentService {
             );
         }
         return null;
+    }
+
+    public ApiResponse getStudentPaymentCashbacks(int page, int size) {
+        try {
+            Sort sort;
+            Page<StudentPayment> all = studentPaymentRepository.getStudentPaymentByCashback(PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                    )
+            );
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 }
