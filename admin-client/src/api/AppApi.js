@@ -388,7 +388,6 @@ export const editTeacherSalaryApi = (data) => {
 }
 
 export const deleteTeacherSalaryApi = (data) => {
-    console.log(data)
     return HttpClient.doDelete(api.teacherSalary + "/" + data);
 }
 export const getTeacherSalaryAppApi = () => {
