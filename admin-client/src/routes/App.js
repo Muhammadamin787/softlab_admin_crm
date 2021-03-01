@@ -34,7 +34,7 @@ import SelectAppeal from "../pages/adminPages/SelectAppeal";
 import SelectToplam from "../pages/adminPages/SelectToplam";
 import StudentPaymentList from "../pages/adminPages/StudentPaymentList";
 import studentPaymentCashbacks from "../pages/adminPages/studentPaymentCashbacks";
-import Finance from "../pages/adminPages/Finance";
+import Finance from "../pages/adminPages/TeacherFinance";
 import StudentFinance from "../pages/adminPages/StudentFinance";
 
 

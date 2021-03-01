@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 
-class Finance extends Component {
+class TeacherFinance extends Component {
 
     handlePageChange(pageNumber) {
         console.clear()
@@ -80,7 +80,7 @@ class Finance extends Component {
                                     toggle('1');
                                 }}
                             >
-                                O'quvchilar
+                                Barchasi
                             </NavLink>
                         </NavItem>
                         <NavItem>
@@ -89,57 +89,12 @@ class Finance extends Component {
                                     toggle('2');
                                 }}
                             >
-                                O'qituvchilar
+                                To'lovlar
                             </NavLink>
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId="1">
-                            <div>
-                                <div className={"flex-column container"}>
-                                    <Table className={"table-style w-100"}>
-                                        <thead>
-                                        <tr>
-                                            <td>#</td>
-                                            <td>Student</td>
-                                            <td>Summa</td>
-                                            <td>Cash Foiz %</td>
-                                            <td>Tolov Turi</td>
-                                            <td>Izoh</td>
-                                            <td>Tolov vaqti</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {console.log(studentPayments)}
-                                        {studentPayments ? studentPayments.map((item,i)=>
-                                            <tr key={i+1}>
-                                                <td>{i+1}</td>
-                                                <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
-                                                    </Link>
-                                                </td>
-                                                <td>{item.sum +" / " + item.cashSum}</td>
-                                                <td>{item && item.cashback ? item.cashback.percent + " %" : ""}</td>
-                                                <td>{item.payType ? item.payType.name : ''}</td>
-                                                <td>{item.comment}</td>
-                                                <td>{item.payDate}</td>
-                                            </tr>
-                                        ) : 'Malumot topilmadi'}
-                                        </tbody>
-                                    </Table>
-                                    <Pagination
-                                        activePage={page + 1}
-                                        itemsCountPerPage={size}
-                                        totalItemsCount={totalElements}
-                                        pageRangeDisplayed={5}
-                                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                                        linkClass="page-link"
-                                    />
-                                </div>
-                            </div>
-                        </TabPane>
-                        <TabPane tabId="2">
                             <div>
                                 <div className={"flex-column container"}>
                                     <Table className={"table-style w-75"}>
@@ -182,6 +137,51 @@ class Finance extends Component {
                                 </div>
                             </div>
                         </TabPane>
+                        {/*<TabPane tabId="2">*/}
+                        {/*    <div>*/}
+                        {/*        <div className={"flex-column container"}>*/}
+                        {/*            <Table className={"table-style w-100"}>*/}
+                        {/*                <thead>*/}
+                        {/*                <tr>*/}
+                        {/*                    <td>#</td>*/}
+                        {/*                    <td>Student</td>*/}
+                        {/*                    <td>Summa</td>*/}
+                        {/*                    <td>Cash Foiz %</td>*/}
+                        {/*                    <td>Tolov Turi</td>*/}
+                        {/*                    <td>Izoh</td>*/}
+                        {/*                    <td>Tolov vaqti</td>*/}
+                        {/*                </tr>*/}
+                        {/*                </thead>*/}
+                        {/*                <tbody>*/}
+                        {/*                {console.log(studentPayments)}*/}
+                        {/*                {studentPayments ? studentPayments.map((item,i)=>*/}
+                        {/*                    <tr key={i+1}>*/}
+                        {/*                        <td>{i+1}</td>*/}
+                        {/*                        <td>*/}
+                        {/*                            <Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>*/}
+                        {/*                                {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}*/}
+                        {/*                            </Link>*/}
+                        {/*                        </td>*/}
+                        {/*                        <td>{item.sum +" / " + item.cashSum}</td>*/}
+                        {/*                        <td>{item && item.cashback ? item.cashback.percent + " %" : ""}</td>*/}
+                        {/*                        <td>{item.payType ? item.payType.name : ''}</td>*/}
+                        {/*                        <td>{item.comment}</td>*/}
+                        {/*                        <td>{item.payDate}</td>*/}
+                        {/*                    </tr>*/}
+                        {/*                ) : 'Malumot topilmadi'}*/}
+                        {/*                </tbody>*/}
+                        {/*            </Table>*/}
+                        {/*            <Pagination*/}
+                        {/*                activePage={page + 1}*/}
+                        {/*                itemsCountPerPage={size}*/}
+                        {/*                totalItemsCount={totalElements}*/}
+                        {/*                pageRangeDisplayed={5}*/}
+                        {/*                onChange={this.handlePageChange.bind(this)} itemClass="page-item"*/}
+                        {/*                linkClass="page-link"*/}
+                        {/*            />*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</TabPane>*/}
                     </TabContent>
                 </div>
             </AdminLayout>
@@ -189,7 +189,7 @@ class Finance extends Component {
     }
 }
 
-Finance.propTypes = {};
+TeacherFinance.propTypes = {};
 
 export default connect(({
                             app: {
@@ -200,4 +200,4 @@ export default connect(({
                         }) => ({
         studentPayments,page,size,totalElements,teacherSalaryAppApi
     })
-)(Finance);
+)(TeacherFinance);
