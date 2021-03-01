@@ -10,7 +10,7 @@ import {config} from "../utils/config";
 
 class AdminLayout extends Component {
     render() {
-        const {currentUser, addMenu, menuHidden, dispatch} = this.props;
+        const {currentUser, addMenu, addMenu1, menuHidden, dispatch} = this.props;
         const changeMenu = () => {
             dispatch({
                 type: "updateState",
@@ -24,6 +24,14 @@ class AdminLayout extends Component {
                 type: "updateState",
                 payload: {
                     addMenu: !addMenu
+                }
+            })
+        }
+        const thirdMenu = () => {
+            dispatch({
+                type: "updateState",
+                payload: {
+                    addMenu1: !addMenu1
                 }
             })
         }
@@ -87,7 +95,7 @@ class AdminLayout extends Component {
                                     O'qituvchilar
                                 </div>
                             </Link>
-                            <Link to="/admin/finance" className={
+                            <Link to="#" onClick={thirdMenu} className={
                                 this.props.pathname === "/admin/finance" ?
                                     "active-link" : "default-link"
                             }>
@@ -200,6 +208,28 @@ class AdminLayout extends Component {
                             </Link>
                         </div>
                     </div>
+                    <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                        <div className={"main-link-div"}>
+                            <Link to="/admin/StudentFinance" className={
+                                this.props.pathname === "/admin/" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Student Moliya
+                                </div>
+                            </Link>
+                            <Link to="/admin/finance" className={
+                                this.props.pathname === "/admin/reklama" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-teacher"/>
+                                <div className="main-link">
+                                    Teacher Moliya
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
 
                     <div className="main-layout-right">
                         {this.props.children}
@@ -251,11 +281,12 @@ export default connect(
              notifications
          }
          ,
-         auth: {addMenu, menuHidden, isAdmin, isSuperAdmin, currentUser}
+         auth: {addMenu, addMenu1, menuHidden, isAdmin, isSuperAdmin, currentUser}
      }
     ) =>
         ({
             addMenu,
+            addMenu1,
             menuHidden,
             isOpenGeneral,
             isOpenPages,
