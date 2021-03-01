@@ -46,7 +46,8 @@ const initState = {
     toplamList: [],
     cashbacks : [],
     selectDebtors: [],
-    studentPayments :[]
+    studentPayments :[],
+    teacherSalaryAppApi: []
 };
 
 const reducers = {
@@ -347,6 +348,8 @@ const reducers = {
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
         }
+        console.clear()
+        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
@@ -449,6 +452,10 @@ const reducers = {
             }
             state.selectGroups = ketmon
         }
+    },
+    [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
+        state.teacherSalaryAppApi = null
+        state.teacherSalaryAppApi = payload.payload.object.object
     },
 
 

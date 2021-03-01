@@ -114,7 +114,7 @@ import {
     editToplamApi,
     deleteToplamApi,
     getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
-    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi,
+    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi, getTeacherSalaryAppApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1537,6 +1537,16 @@ export const getTeacherSalaryListAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
+    })
+}
+export const getTeacherSalaryAppAction = () => (dispatch) => {
+    dispatch({
+        api: getTeacherSalaryAppApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_LIST_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ]
     })
 }
 // FINISH TEACHER SALARY
