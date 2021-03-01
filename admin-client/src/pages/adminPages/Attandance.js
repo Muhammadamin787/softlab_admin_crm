@@ -6,7 +6,7 @@ class Attandance extends Component {
         return (
             <div>
                 <AdminLayout pathname={this.props.location.pathname}>
-
+                    OK
                 </AdminLayout>
             </div>
         );
