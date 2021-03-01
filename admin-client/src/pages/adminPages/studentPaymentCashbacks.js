@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {
-    getStudentPaymentAction, getStudentPaymentCashbacksAction, getStudentPaymentListAction, getStudentsAction
+    getStudentPaymentCashbacksAction
 } from "../../redux/actions/AppActions";
 import {Link} from "react-router-dom";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
@@ -24,8 +24,7 @@ class studentPaymentCashbacks extends Component {
     }
     render() {
         const {currentObject} = this.state
-        const {studentPaymentCashbaks,dispatch,page,size,totalElements,studentPayments} = this.props
-        console.log(studentPayments)
+        const {studentPaymentCashbaks,dispatch,page,size,totalElements} = this.props
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -43,14 +42,16 @@ class studentPaymentCashbacks extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {console.log(studentPayments)}
+                        {console.log(studentPaymentCashbaks)}
                         {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
                             <tr key={i+1}>
                                 <td>{i+1}</td>
                                 <td>
-                                    <Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>
+                                    <Link to={"/admin/student/"+ (item && item.student
+                                    ? item.student.id : '')}>
                                         {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
                                     </Link>
+
                                 </td>
                                 <td>{item.sum +" / " + item.cashSum}</td>
                                 <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>

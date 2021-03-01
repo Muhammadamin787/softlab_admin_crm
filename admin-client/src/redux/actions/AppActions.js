@@ -1342,6 +1342,19 @@ export const getStudentPaymentListAction= (data) => (dispatch) => {
         data
     })
 }
+export const getStudentPaymentCashbacksAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentCashbacksApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_PAYMENT_CASHBACKS_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+
+
 
 // FINISH STUDENT PAYMENT ACTIONS
 

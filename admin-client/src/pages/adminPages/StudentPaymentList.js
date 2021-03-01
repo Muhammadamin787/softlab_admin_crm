@@ -43,12 +43,12 @@ class StudentPaymentList extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {console.log(studentPayments)}
                         {studentPayments ? studentPayments.map((item,i)=>
                             <tr key={i+1}>
                                 <td>{i+1}</td>
                                 <td>
-                                    <Link to={"/admin/student/"+ (item && item.student && item.student.user ? item.student.user.id:'')}>
+                                    <Link to={"/admin/student/"+ (item && item.student
+                                        ? item.student.id : '')}>
                                         {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
                                     </Link>
                                 </td>
