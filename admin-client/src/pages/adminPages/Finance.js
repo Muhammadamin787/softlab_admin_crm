@@ -48,6 +48,7 @@ class Finance extends Component {
         } = this.props;
         console.log(studentPayments)
 
+
         const toggle = tab => {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
