@@ -114,9 +114,10 @@ import {
     editToplamApi,
     deleteToplamApi,
     getCourseListForSelectApi, getOneAppealApi, getToplamApi, giveSalaryApi,
-    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi,
+    deleteStudentPaymentApi, getTeacherSalaryApi, getStudentPaymentListApi, deleteTeacherSalaryApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+import {REQUEST_START} from "../actionTypes/AppActionTypes";
 
 export const getDebtorsAction = () => (dispatch) => {
     dispatch({
@@ -1536,7 +1537,66 @@ export const getTeacherSalaryListAction = (data) => (dispatch) => {
             types.REQUEST_GET_LIST_SALARY_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data
+        data: data
     })
 }
+
+export const editTeacherSalaryListAction = (payload) => (dispatch) => {
+    dispatch({
+        api: app.editTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_ERROR
+        ],
+        data: payload
+    }).then(res => {
+        dispatch(getTeacherSalaryListAction({
+            id : payload.teacherId,
+            page:0,
+            size:20
+        }))
+
+        toast.success(res.payload.message)
+        dispatch({
+            type: {
+                showEditSalaryModal: false
+            }
+        })
+        }).catch(err => {
+        toast.error("Xato")
+    })
+}
+
+export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
+    dispatch({
+        api: deleteTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: payload.id
+    }).then(res => {
+        console.log(res)
+
+        dispatch(getTeacherSalaryListAction({
+            id : payload.teacher.id,
+            page:0,
+            size:20
+        }))
+
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteSalaryModal: false
+            }
+        })
+        toast.success("OK")
+
+    }).catch(err => {
+        toast.error("Xato")
+    })
+}
+
+
 // FINISH TEACHER SALARY
