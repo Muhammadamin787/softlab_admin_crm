@@ -33,7 +33,7 @@ import Toplam from "../pages/adminPages/Toplam";
 import SelectAppeal from "../pages/adminPages/SelectAppeal";
 import SelectToplam from "../pages/adminPages/SelectToplam";
 import StudentPaymentList from "../pages/adminPages/StudentPaymentList";
-import Attandance from "../pages/adminPages/Attandance";
+import Finance from "../pages/adminPages/Finance";
 
 
 const App = () => {
@@ -43,8 +43,7 @@ const App = () => {
                 <PublicRoute exact path="/" component={HomePage}/>
                 <PublicRoute exact path="/login" component={Login}/>
                 <PrivateRoute exact path="/admin" component={Dashboard}/>
-                <PrivateRoute exact path="/admin" component={Dashboard}/>
-                <PrivateRoute exact path="/admin/attandance" component={Attandance}/>
+                <PrivateRoute exact path="/admin/durationType" component={DurationType}/>
                 <PrivateRoute exact path="/admin/region" component={Region}/>
                 <PrivateRoute exact path="/admin/course/select/:id" component={SelectCourse}/>
                 <PrivateRoute exact path="/admin/course/:id" component={Course}/>
@@ -73,6 +72,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/appeal/:id" component={SelectAppeal}/>/>
                 <PrivateRoute exact path="/admin/appeal/toplam/:id" component={SelectToplam}/>/>
                 <PrivateRoute exact path="/admin/toplam/:id" component={SelectToplam}/>/>
+                <PrivateRoute exact path="/admin/finance" component={Finance} />
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

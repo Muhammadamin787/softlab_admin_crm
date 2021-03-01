@@ -28,8 +28,6 @@ const initState = {
     readModal: false,
     showAddGroupModal: false,
     changeStatusModal: false,
-    showEditSalaryModal: false,
-    deleteSalaryModal: false,
     spec: [],
     attachmentId: '',
     arr: [{id: 1, values: []}],
@@ -49,7 +47,7 @@ const initState = {
     cashbacks : [],
     selectDebtors: [],
     studentPayments :[],
-    teacherSalaryList: []
+    teacherSalaryAppApi: []
 };
 
 const reducers = {
@@ -350,6 +348,8 @@ const reducers = {
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
         }
+        console.clear()
+        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
@@ -441,16 +441,6 @@ const reducers = {
         state.showPaymentModal = false;
         state.showModal = false;
     },
-    [types.REQUEST_GET_LIST_SALARY_SUCCESS](state,payload) {
-        state.teacherSalaryList = null;
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.teacherSalaryList = payload.payload.object.object
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-    },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
@@ -462,6 +452,10 @@ const reducers = {
             }
             state.selectGroups = ketmon
         }
+    },
+    [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
+        state.teacherSalaryAppApi = null
+        state.teacherSalaryAppApi = payload.payload.object.object
     },
 
 
