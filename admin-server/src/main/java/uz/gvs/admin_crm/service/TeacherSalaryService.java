@@ -54,7 +54,7 @@ public class TeacherSalaryService {
             teacherSalary.setTeacher(teacherRepository.findById(teacherSalaryDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get Teacher")));
             teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")));
             teacherSalary.setAmount(teacherSalaryDto.getAmount());
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
             teacherSalary.setDescription(teacherSalaryDto.getDescription());
             return teacherSalaryRepository.save(teacherSalary);
@@ -96,7 +96,8 @@ public class TeacherSalaryService {
                     if (teacherSalaryDto.getTeacherId().equals(teacherSalary.getTeacher().getId())) {
                         teacherSalary.setAmount(teacherSalaryDto.getAmount());
                         teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get Pay Type")));
-                        teacherSalary.setAmountDate(Date.valueOf(teacherSalaryDto.getAmountDate()));
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() !=null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
                         teacherSalary.setDescription(teacherSalaryDto.getDescription());
                         teacherSalaryRepository.save(teacherSalary);
                         return apiResponseService.updatedResponse();
@@ -129,7 +130,7 @@ public class TeacherSalaryService {
                 teacherSalary.getTeacher().getUser().getFullName(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
-                teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
+                teacherSalary.getAmountDate().toString(),
                 teacherSalary.getDescription(),
                 teacherSalary.getPayType()
         );

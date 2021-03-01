@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.PayType;
 import uz.gvs.admin_crm.entity.Teacher;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class TeacherSalaryDto {
         this.description = description;
         this.payType = payType;
     }
-    public TeacherSalaryDto(UUID id, String teacherName, UUID teacherId,  Double amount, String amountDate, String description, PayType payType) {
+    public TeacherSalaryDto(UUID id, String teacherName, UUID teacherId, Double amount, String amountDate, String description, PayType payType) {
         this.id = id;
         this.teacherName = teacherName;
         this.teacherId = teacherId;

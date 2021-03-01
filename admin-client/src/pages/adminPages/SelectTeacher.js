@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     Button,
     Col,
-    CustomInput,
+    CustomInput, Input,
     Modal,
     ModalBody,
     ModalFooter,
@@ -181,7 +181,7 @@ class SelectTeacher extends Component {
         }
 
         return (
-            <AdminLayout className="" pathname={this.props.location.pathname}>
+            <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.userDto && currentItem.userDto.fullName} </h3>
@@ -349,7 +349,7 @@ class SelectTeacher extends Component {
                 {/*MODAL EDIT*/}
 
                 <Modal id={"allModalStyle"} isOpen={showEditSalaryModal} toggle={openSalaryEditModal} className={""}>
-                        <ModalHeader isOpen={showEditSalaryModal} toggle={openSalaryEditModal}  charCode={"X"}>
+                        <ModalHeader toggle={openSalaryEditModal}  charCode={"X"}>
                             Tahrirlash
                         </ModalHeader>
                         <ModalBody>
@@ -357,20 +357,19 @@ class SelectTeacher extends Component {
                                 {console.log(currentObject ? currentObject : '')}
                                 <AvForm method={"post"} onValidSubmit={editSalary}>
                                     <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
-                                    <AvField name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
-                                    <AvField name={"payTypeId"} type={"select"}>
-                                        {payTypes ? payTypes.map((item, i) =>
-                                        <option value={item.id}>
-                                            {item.name}
-                                        </option>) : ''}
+                                    <AvField label={"Miqdor"} name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
+                                    <AvField label={"To'lov turi"} name={"payTypeId"} type={"select"}>
+                                        {currentObject && currentObject.payType ? <option value={currentObject.payType.id}>{currentObject.payType.name}</option> : '' }
+                                        {payTypes ? payTypes.map((item,i) =>
+                                            currentObject && currentObject.payType && currentObject.payType.id !== item.id ? <option value={item.id}>{item.name}</option> : ''
+                                        ):''}
                                     </AvField>
-                                    <AvField name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
+                                    <AvField label={"Izoh"} name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
                                     {/*<AvField name={"payDate"} type={"date"}/>*/}
                                     <AvField
-                                        type={"date"}
-                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
-                                            : ""}
-                                        label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
+                                        type={"datetime-local"}
+                                        defaultValue={currentObject && currentObject.amountDate ? currentObject.amountDate : ""}
+                                        label={"To'langan vaqti"} name={"amountDate"}
                                         required/>
 
                                     <ModalFooter>
@@ -505,8 +504,8 @@ class SelectTeacher extends Component {
                                     ) : ""}
                                 </AvRadioGroup>
                                 <AvField
-                                    type={"date"}
-                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
+                                    type={"datetime-local"}
+                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD hh:mm:ss')
                                         : ""}
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
                                     required/>
