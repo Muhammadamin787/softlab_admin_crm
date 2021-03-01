@@ -87,3 +87,4 @@ export default connect(({
     studentPayments,page,size,totalElements
     })
 )(StudentPaymentList);
+///
