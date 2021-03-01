@@ -104,7 +104,10 @@ public class TeacherService {
                         teacher.getUser().getBirthDate() != null ? teacher.getUser().getBirthDate().toString() : "",
                         teacher.getUser().getRoles()
                 ),
-                teacher.getBalance()
+                teacher.getBalance(),
+                teacher.isPercent(),
+                teacher.getSalary()
+
         );
     }
 

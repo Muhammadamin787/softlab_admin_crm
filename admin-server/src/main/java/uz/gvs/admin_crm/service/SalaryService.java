@@ -8,6 +8,7 @@ import uz.gvs.admin_crm.payload.TeacherDto;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SalaryService {
@@ -18,17 +19,22 @@ public class SalaryService {
 
 
     public ApiResponse saveSalary(TeacherDto teacherDto) {
-        Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
-        if (optional.isPresent()) {
-            if (teacherDto.getSalary() != null) {
-                Teacher teacher = optional.get();
-                teacher.setSalary(teacherDto.getSalary());
-                teacher.setPercent(teacherDto.isPercent());
-                teacherRepository.save(teacher);
-                return apiResponseService.saveResponse();
+        try {
+            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+            if (optional.isPresent()) {
+                if (teacherDto.getSalary() != null) {
+                    Teacher teacher = optional.get();
+                        teacher.setSalary(teacherDto.getSalary());
+                        teacher.setPercent(teacherDto.isPercent());
+                        teacherRepository.save(teacher);
+                        return apiResponseService.saveResponse();
+                }
+                return apiResponseService.notEnoughErrorResponse();
             }
-            return apiResponseService.notEnoughErrorResponse();
+            return apiResponseService.notFoundResponse();
+        }catch (Exception e){
+            return apiResponseService.tryErrorResponse();
         }
-        return apiResponseService.notFoundResponse();
     }
+
 }

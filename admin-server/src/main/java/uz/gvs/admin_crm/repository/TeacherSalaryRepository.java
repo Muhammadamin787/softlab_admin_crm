@@ -12,5 +12,4 @@ import java.util.UUID;
 public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, UUID> {
     Page<TeacherSalary> findAllByTeacher(Teacher teacher, Pageable pageable);
 
-
 }

@@ -16,20 +16,12 @@ public class TeacherDto {
     private boolean isPercent;
     private Double salary;
 
-    public TeacherDto(UUID id, UserDto userDto, Double balance) {
-        this.id = id;
-        this.userDto = userDto;
-        this.balance = balance;
-    }
+
 
     public TeacherDto(UserDto userDto, Double balance) {
         this.userDto = userDto;
         this.balance = balance;
     }
 
-    public TeacherDto(UUID id, boolean isPercent, Double salary) {
-        this.id = id;
-        this.isPercent = isPercent;
-        this.salary = salary;
-    }
+
 }
