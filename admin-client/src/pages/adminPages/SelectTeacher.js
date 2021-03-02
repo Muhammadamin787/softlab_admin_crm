@@ -205,7 +205,7 @@ class SelectTeacher extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={""}>
+                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -214,7 +214,7 @@ class SelectTeacher extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem>
+                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -328,6 +328,8 @@ class SelectTeacher extends Component {
                                                     <td>To'lov turi</td>
                                                     <td>Izoh</td>
                                                     <td>To'langan vaqti</td>
+                                                    <td/>
+                                                    <td/>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -337,7 +339,7 @@ class SelectTeacher extends Component {
                                                         <td>{item.amount}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>
                                                         <td>{item.description}</td>
-                                                        <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                        <td>{moment(item.amountDate).format('LLL').toString()}</td>
                                                         <td>
                                                             <Button className="table-icon" onClick={() => openSalaryEditModal(item)}>
                                                                 <EditIcon/>
@@ -389,11 +391,11 @@ class SelectTeacher extends Component {
                                     <AvField label={"Izoh"} name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
                                     {/*<AvField name={"payDate"} type={"date"}/>*/}
                                     <AvField
-                                        type={"datetime-local"}
-                                        defaultValue={currentObject && currentObject.amountDate ? currentObject.amountDate : ""}
-                                        label={"To'langan vaqti"} name={"amountDate"}
+                                        type={"date"}
+                                        defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
+                                        label={"To'langan vaqti"} name={"amountDate2"} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                                         required/>
-
+                                    {console.log(currentObject)}
                                     <ModalFooter>
                                         <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
                                         <Button color={"primary"} type={"submit"}>Saqlash</Button>
@@ -455,6 +457,7 @@ class SelectTeacher extends Component {
                                     placeholer={"nomi"} required/>
                                 <AvField
                                     type={"date"}
+
                                     defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}

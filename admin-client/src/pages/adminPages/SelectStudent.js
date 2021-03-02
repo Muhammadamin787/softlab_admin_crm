@@ -222,7 +222,7 @@ class SelectStudent extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={"color-bg"}>
+                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -231,7 +231,7 @@ class SelectStudent extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem>
+                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');

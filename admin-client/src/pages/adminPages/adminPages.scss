@@ -46,3 +46,16 @@ body {
   font-size: 18px;
   margin-bottom: 32px;
 }
+
+.tab-item-style-active {
+  border-bottom: 2px solid #007BFF !important;
+  cursor: pointer;
+}
+
+.tab-item-style-active:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.tab-item-style-default:not(:first-child) {
+  margin-left: 1rem;
+}

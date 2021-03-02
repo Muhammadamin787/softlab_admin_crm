@@ -19,6 +19,7 @@ public class TeacherSalaryDto {
     private Integer payTypeId;
     private Double amount;
     private String amountDate;
+    private Date amountDate2;
     private String description;
     private PayType payType;
     private String teacherName;
