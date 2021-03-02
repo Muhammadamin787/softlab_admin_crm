@@ -222,7 +222,7 @@ class SelectStudent extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={""}>
+                                        <NavItem className={"color-bg"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
