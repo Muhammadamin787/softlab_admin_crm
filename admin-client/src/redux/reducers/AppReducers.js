@@ -60,6 +60,8 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+        state.changeToArchiveModal = false
+        state.changeToActiveModal = false
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
