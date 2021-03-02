@@ -10,8 +10,6 @@ import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
-import {formatPhoneNumber} from "../../utils/addFunctions";
-import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 
 class Course extends Component {

@@ -7,6 +7,7 @@ import uz.gvs.admin_crm.entity.enums.GroupStatus;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class ResGroupDto {
 
     private String name;
     private String courseName;
+    private UUID teacherId;
     private String teacherName;
     private String startTime;
     private String finishTime;
