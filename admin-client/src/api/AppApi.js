@@ -171,6 +171,12 @@ export const saveGroupApi = (data) => {
 export const changeStudentGroupStatusApi = (data) => {
     return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
+export const changeGroupToArchiveStatusApi = (data) => {
+    return HttpClient.doPatch(api.group + "/changeToArchiveStatus", data)
+}
+export const changeGroupToActiveStatusApi = (data) => {
+    return HttpClient.doPatch(api.group + "/changeToActiveStatus", data)
+}
 export const editGroupApi = (data) => {
     if (data && data.id)
         return HttpClient.doPut(api.group + "/" + data.id, data)

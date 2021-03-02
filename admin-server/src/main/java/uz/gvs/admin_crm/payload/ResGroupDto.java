@@ -3,6 +3,7 @@ package uz.gvs.admin_crm.payload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -21,4 +22,6 @@ public class ResGroupDto {
     private List<String> weekdays;
     private Date startDate;
     private Date finishDate;
+    private GroupStatus groupStatus;
+    private boolean active;
 }

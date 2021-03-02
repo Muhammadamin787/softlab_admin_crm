@@ -7,6 +7,7 @@ import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.CourseCategory;
 import uz.gvs.admin_crm.entity.Room;
 import uz.gvs.admin_crm.entity.Teacher;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
 
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class GroupDto {
     private Teacher teacher;
     private Course course;
     private Room room;
+    private GroupStatus groupStatus;
 
 //    public CourseDto(Integer id, String name, String description, boolean active, double price, CourseCategory courseCategory){
 //        this.id = id;

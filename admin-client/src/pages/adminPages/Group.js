@@ -1,20 +1,45 @@
 import React, {Component} from 'react';
-import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {
+    Button,
+    Col,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    Table, TabPane
+} from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
+    changeGroupStatusAction, changeGroupStatusToActiveAction, changeGroupStatusToArchiveAction,
     deleteGroupAction,
     deleteRegionAction, getCoursesAction, getGroupsAction,
-    getRoomListAction, getTeachersForSelectAction, saveGroupAction,
+    getRoomListAction, getStudentPaymentAction, getTeachersForSelectAction, saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon} from "../../component/Icons";
+import {
+    BgIcon,
+    BrandIcon,
+    CloseIcon,
+    DashboardIcon,
+    DeleteIcon,
+    EditIcon, GlobusIcon, MessageIcon,
+    ShowIcon, UserIcon,
+    WarehouseIcon
+} from "../../component/Icons";
 import moment from "moment";
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
+import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 
 class Group extends Component {
+
     componentDidMount() {
         this.props.dispatch(getGroupsAction({page: 0, size: this.props.size}))
         this.props.dispatch(getRoomListAction())
@@ -27,7 +52,8 @@ class Group extends Component {
         currentObject: "",
         selectRegion: [],
         selectParentRegion: "",
-        parentRegionDisable: false
+        parentRegionDisable: false,
+        activeTab: "1"
     }
 
     handlePageChange(pageNumber) {
@@ -35,7 +61,7 @@ class Group extends Component {
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject, activeTab,} = this.state;
         const {
             page,
             size,
@@ -43,6 +69,8 @@ class Group extends Component {
             dispatch,
             showModal,
             deleteModal,
+            changeToArchiveModal,
+            changeToActiveModal,
             groups,
             teachers,
             getItems,
@@ -58,6 +86,16 @@ class Group extends Component {
             })
         }
 
+        const toggle = tab => {
+            if (activeTab !== tab)
+                this.setState({activeTab: tab})
+            if (tab === "2") {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    dispatch(getStudentPaymentAction(this.props.match.params.id))
+                }
+            }
+        }
+
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -67,9 +105,35 @@ class Group extends Component {
                 }
             })
         }
+        const openChangeToArchive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    changeToArchiveModal: !changeToArchiveModal
+                }
+            })
+        }
+        const openChangeToActive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    changeToActiveModal: !changeToActiveModal
+                }
+            })
+        }
+
         const deleteItem = (item) => {
             dispatch(deleteGroupAction({...item}))
         }
+        const changeItemToArchive = (item) => {
+            dispatch(changeGroupStatusToArchiveAction({...item}))
+        }
+        const changeItemToActive = (item) => {
+            dispatch(changeGroupStatusToActiveAction({...item}))
+        }
+
         const saveItem = (e, v) => {
             console.log(v)
             v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
@@ -85,55 +149,146 @@ class Group extends Component {
                             qo'shish
                         </Button>
                     </div>
-                    <Table className={"table-style"}>
-                        <thead className={""}>
-                        <tr className={""}>
-                            <td>T/r</td>
-                            <td>Nomi</td>
-                            <td>Kurs nomi</td>
-                            <td>O'qituvchi</td>
-                            <td>Kunlari</td>
-                            {/*<th>Vaqti</th>*/}
-                            <td>Dars sanalari</td>
-                            <td>Amal</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {groups && groups.length > 0 ? groups.map((item, i) =>
-                            <tr key={i} className={"table-tr"}>
-                                <td>{i + 1}</td>
-                                <td>
-                                    <Link className={"text-dark"} to={"/admin/group/" + (item.id)}>
-                                        {item.name}
-                                    </Link>
-                                </td>
-                                <td>{item.courseName}</td>
-                                <td>{item.teacherName}</td>
-                                <td>
-                                    {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
-                                        <span>{week}, </span>)}
-                                    <br/>{item.startTime + " - " + item.finishTime}</td>
-                                <td>{
-                                    moment(item.startDate).format("DD-MM-yyyy") + " -- " +
-                                    moment(item.finishDate).format("DD-MM-yyyy")
-                                }</td>
-                                <td>
-                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                        <DeleteIcon/>
-                                    </Button>
-                                </td>
-                            </tr>
-                        ) : "Guruhlar mavjud emas"}
-                        </tbody>
-                    </Table>
-                    <Pagination
-                        activePage={page + 1}
-                        itemsCountPerPage={size}
-                        totalItemsCount={totalElements}
-                        pageRangeDisplayed={5}
-                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                        linkClass="page-link"
-                    />
+                    <Nav tabs>
+                        <NavItem className={""}>
+                            <NavLink
+                                onClick={() => {
+                                    toggle('1');
+                                }}
+                            >
+                                Faol Guruhlar
+                            </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink
+                                onClick={() => {
+                                    toggle('2');
+                                }}
+                            >
+                                Arxiv Guruhlar
+                            </NavLink>
+                        </NavItem>
+                    </Nav>
+                    <TabContent activeTab={activeTab}>
+
+                        <TabPane tabId="1">
+                            <Table className={"table-style"}>
+                                <thead className={""}>
+                                <tr className={""}>
+                                    <td>T/r</td>
+                                    <td>Nomi</td>
+                                    <td>Kurs nomi</td>
+                                    <td>O'qituvchi</td>
+                                    <td>Kunlari</td>
+                                    <td>Dars sanalari</td>
+                                    <td>Amal</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {groups && groups.length > 0 ? groups.map((item, i) =>
+                                    item.active ?
+                                        <tr key={i} className={"table-tr"}>
+                                            <td>{i + 1}</td>
+                                            <td>
+                                                <Link className={"text-dark"} to={"/admin/group/" + (item.id)}>
+                                                    {item.name}
+                                                </Link>
+                                            </td>
+                                            <td>{item.courseName}</td>
+                                            <td>{item.teacherName}</td>
+                                            <td>
+                                                {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
+                                                    <span>{week}, </span>)}
+                                                <br/>{item.startTime + " - " + item.finishTime}</td>
+                                            <td>{
+                                                moment(item.startDate).format("DD-MM-yyyy") + " -- " +
+                                                moment(item.finishDate).format("DD-MM-yyyy")
+                                            }</td>
+                                            <td>
+                                                <Button className={"table-info"}
+                                                        onClick={() => openChangeToArchive(item)}>
+                                                    <GlobusIcon/>
+                                                </Button>
+                                            </td>
+                                            <td>
+                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                    <DeleteIcon/>
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                        :
+                                        ''
+                                ) : "Guruhlar mavjud emas"}
+                                </tbody>
+                            </Table>
+                            <Pagination
+                                activePage={page + 1}
+                                itemsCountPerPage={size}
+                                totalItemsCount={totalElements}
+                                pageRangeDisplayed={5}
+                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                linkClass="page-link"
+                            />
+                        </TabPane>
+                        <TabPane tabId="2">
+                            <Table className={"table-style"}>
+                                <thead className={""}>
+                                <tr className={""}>
+                                    <td>T/r</td>
+                                    <td>Nomi</td>
+                                    <td>Kurs nomi</td>
+                                    <td>O'qituvchi</td>
+                                    <td>Kunlari</td>
+                                    <td>Dars sanalari</td>
+                                    <td>Amal</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {groups && groups.length > 0 ? groups.map((item, i) =>
+                                    item.active ? ""
+                                        :
+                                        <tr key={i} className={"table-tr"}>
+                                            <td>{i + 1}</td>
+                                            <td>
+                                                <Link className={"text-dark"} to={"/admin/group/" + (item.id)}>
+                                                    {item.name}
+                                                </Link>
+                                            </td>
+                                            <td>{item.courseName}</td>
+                                            <td>{item.teacherName}</td>
+                                            <td>
+                                                {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
+                                                    <span>{week}, </span>)}
+                                                <br/>{item.startTime + " - " + item.finishTime}</td>
+                                            <td>{
+                                                moment(item.startDate).format("DD-MM-yyyy") + " -- " +
+                                                moment(item.finishDate).format("DD-MM-yyyy")
+                                            }</td>
+                                            <td>
+                                                <Button className={"table-info"}
+                                                        onClick={() => openChangeToActive(item)}>
+                                                    <GlobusIcon/>
+                                                </Button>
+                                            </td>
+                                            <td>
+                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                    <DeleteIcon/>
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                ) : "Guruhlar mavjud emas"}
+                                </tbody>
+                            </Table>
+                            <Pagination
+                                activePage={page + 1}
+                                itemsCountPerPage={size}
+                                totalItemsCount={totalElements}
+                                pageRangeDisplayed={5}
+                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                linkClass="page-link"
+                            />
+                        </TabPane>
+                    </TabContent>
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         {console.log(currentObject)}
@@ -221,6 +376,31 @@ class Group extends Component {
                             <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
+
+                    <Modal isOpen={changeToArchiveModal} toggle={() => openChangeToArchive("")} className={""}>
+                        <ModalHeader isOpen={changeToArchiveModal} toggle={() => openChangeToArchive("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Bu Guruhni Arxiv Guruhlarga Qo'shmoqchimisiz
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => changeToArchiveModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => changeItemToArchive(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
+
+                    <Modal isOpen={changeToActiveModal} toggle={() => openChangeToActive("")} className={""}>
+                        <ModalHeader isOpen={changeToActiveModal} toggle={() => openChangeToActive("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Bu Guruhni Faol Guruhlarga Qo'shmoqchimsiz
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => changeToActiveModal("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => changeItemToActive(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
+
                 </div>
             </AdminLayout>
         );
@@ -242,7 +422,9 @@ export default connect(({
                                 regions,
                                 showModal,
                                 deleteModal,
-                                selectItems
+                                selectItems,
+                                changeToArchiveModal,
+                                changeToActiveModal
                             },
                         }) => ({
         page,
@@ -250,6 +432,7 @@ export default connect(({
         totalElements,
         getItems, teachers,
         groups, rooms,
-        loading, regions, showModal, deleteModal, selectItems
+        loading, regions, showModal, deleteModal, selectItems, changeToArchiveModal,
+        changeToActiveModal
     })
 )(Group);

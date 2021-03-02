@@ -51,7 +51,6 @@ class studentPaymentCashbacks extends Component {
                                     ? item.student.id : '')}>
                                         {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
                                     </Link>
-
                                 </td>
                                 <td>{item.sum +" / " + item.cashSum}</td>
                                 <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
