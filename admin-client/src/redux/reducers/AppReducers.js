@@ -475,6 +475,9 @@ const reducers = {
     [types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS](state, payload) {
         state.students = payload.payload.object
     },
+    [types.REQUEST_GET_ATTENDANCE_SUCCESS](state, payload) {
+        state.attendanceList = payload.payload.object
+    },
 
 
     // Attachment

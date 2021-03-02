@@ -54,6 +54,7 @@ class Attandance extends Component {
         const {days,months,year,month,daysOfMonth,day,dayName,groupSelect,currentGroup,openModal,currentDay} = this.state
         const {groups,attendanceList,students} = this.props
 
+        console.log(attendanceList)
 
         const plusM = () => {
             if (month === 11)
@@ -185,7 +186,7 @@ class Attandance extends Component {
                                                 <td className={"text-center"}>
                                                     {
                                                         attendanceList ? attendanceList.map(item3 =>
-                                                            (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                            (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id  && item3.attandanceEnum === "YES"  ?
                                                                 <Input type={"checkbox"} checked={true} /> : ''
                                                         ) : ''
                                                     }
