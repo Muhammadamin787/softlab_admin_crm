@@ -94,6 +94,7 @@ public class GroupService {
                     group.getId(),
                     group.getName(),
                     group.getCourse().getName(),
+                    group.getTeacher().getId(),
                     group.getTeacher().getUser().getFullName(),
                     group.getStartTime(),
                     group.getFinishTime(),

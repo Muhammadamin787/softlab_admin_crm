@@ -1,6 +1,14 @@
 import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
+
+export const getAttendanceListAppApi = (data) => {
+    return HttpClient.doGet(api.attendance +"/"+ data)
+}
+export const saveAttendanceAppApi = (data) => {
+    return HttpClient.doPost(api.attendance, data)
+}
+
 //client
 export const saveClientApi = (data) => {
     return HttpClient.doPost(api.client, data)
@@ -268,6 +276,9 @@ export const editStudentApi = (data) => {
 export const getStudentsApi = (data) => {
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
+}
+export const getStudentByGroupApi = (data) => {
+    return HttpClient.doGet(api.student + "/groupStudent/" + data)
 }
 export const getStudentApi = (data) => {
     return HttpClient.doGet(api.student + "/" + data.id)
