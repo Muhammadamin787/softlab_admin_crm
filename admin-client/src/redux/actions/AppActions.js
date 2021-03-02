@@ -122,7 +122,11 @@ import {
     getStudentPaymentListApi,
     getStudentPaymentCashbacksApi,
     getTeacherSalaryAppApi,
-    deleteTeacherSalaryApi, changeGroupStatusApi, changeGroupToArchiveStatusApi, changeGroupToActiveStatusApi,
+    deleteTeacherSalaryApi,
+    changeGroupStatusApi,
+    changeGroupToArchiveStatusApi,
+    changeGroupToActiveStatusApi,
+    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -136,6 +140,17 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data : payload
+    })
+}
+export const getStudentsByGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentByGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
     })
 }
 
