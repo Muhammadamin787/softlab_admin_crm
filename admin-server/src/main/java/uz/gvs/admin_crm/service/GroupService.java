@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.*;
@@ -48,6 +49,7 @@ public class GroupService {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             group.setStartDate(groupDto.getStartDate() != null ? formatter.parse(groupDto.getStartDate()) : null);
             group.setFinishDate(groupDto.getFinishDate() != null ? formatter.parse(groupDto.getFinishDate()) : null);
+            group.setGroupStatus(GroupStatus.ACTIVE);
 
             Set<Weekday> weekdayNameSet = new HashSet<>();
             for (String weekday : groupDto.getWeekdays()) {
@@ -76,7 +78,6 @@ public class GroupService {
         groupDto.setStartDate(group.getStartDate().toString());
         groupDto.setFinishDate(group.getFinishDate().toString());
         Set<String> stringSet = new HashSet<>();
-
         for (Weekday weekday : group.getWeekdays()) {
             stringSet.add(weekday.getWeekdayName().name);
         }
@@ -94,12 +95,15 @@ public class GroupService {
                     group.getId(),
                     group.getName(),
                     group.getCourse().getName(),
+                    group.getTeacher().getId(),
                     group.getTeacher().getUser().getFullName(),
                     group.getStartTime(),
                     group.getFinishTime(),
                     stringSet,
                     group.getStartDate(),
-                    group.getFinishDate()
+                    group.getFinishDate(),
+                    group.getGroupStatus(),
+                    group.isActive()
             );
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
@@ -226,6 +230,32 @@ public class GroupService {
             return apiResponseService.existResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse changeToArchiveStatus(GroupDto groupDto) {
+        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
+        if (groupOptional.isPresent()) {
+            Group group = groupOptional.get();
+            group.setActive(!group.isActive());
+            group.setGroupStatus(GroupStatus.ARCHIVE);
+            groupRepository.save(group);
+            return apiResponseService.updatedResponse();
+        } else {
+            return apiResponseService.notFoundResponse();
+        }
+    }
+
+    public ApiResponse changeToActiveStatus(GroupDto groupDto) {
+        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
+        if (groupOptional.isPresent()) {
+            Group group = groupOptional.get();
+            group.setActive(!group.isActive());
+            group.setGroupStatus(GroupStatus.ACTIVE);
+            groupRepository.save(group);
+            return apiResponseService.updatedResponse();
+        } else {
+            return apiResponseService.notFoundResponse();
         }
     }
 }

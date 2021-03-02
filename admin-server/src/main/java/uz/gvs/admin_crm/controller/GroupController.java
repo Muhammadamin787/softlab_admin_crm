@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.gvs.admin_crm.payload.AddGroupDto;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.GroupDto;
+import uz.gvs.admin_crm.payload.SituationDto;
 import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.GroupService;
@@ -58,6 +59,18 @@ public class GroupController {
         ApiResponse apiResponse = groupService.editGroup(groupDto, id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
+
+    @PatchMapping("/changeToArchiveStatus")
+    public HttpEntity<?> changeToArchiveStatus(@RequestBody GroupDto groupDto) {
+        ApiResponse apiResponse = groupService.changeToArchiveStatus(groupDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+    @PatchMapping("/changeToActiveStatus")
+    public HttpEntity<?> changeToActiveStatus(@RequestBody GroupDto groupDto) {
+        ApiResponse apiResponse = groupService.changeToActiveStatus(groupDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteGroup(@PathVariable Integer id) {
