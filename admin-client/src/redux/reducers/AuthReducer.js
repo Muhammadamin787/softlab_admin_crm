@@ -25,7 +25,8 @@ const initState = {
     sentUserMe: false,
     permissions: [],
     menuHidden: true,
-    addMenu: false
+    addMenu: false,
+    addMenu1: false
 };
 
 const reducers = {

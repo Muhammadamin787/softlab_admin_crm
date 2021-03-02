@@ -250,7 +250,7 @@ class SelectTeacher extends Component {
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Maosh :  </small>
-                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.percent ? " %" : " so'm"}</p>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? currentItem.percent ? " %" : " so'm" : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
