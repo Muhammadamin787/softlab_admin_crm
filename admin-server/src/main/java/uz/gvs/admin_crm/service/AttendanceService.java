@@ -37,7 +37,7 @@ public class AttendanceService {
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
-            // userni tescher yoki superadmin admin roliga tekshirish
+            // userni teacher yoki superadmin admin roliga tekshirish
             Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
             if (optionalGroup.isPresent() && optionalTeacher.isPresent()

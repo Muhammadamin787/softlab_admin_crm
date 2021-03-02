@@ -249,6 +249,10 @@ class SelectTeacher extends Component {
                                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
                                                             </hgroup>
                                                             <hgroup>
+                                                                <small className={"text-secondary"}>Maosh :  </small>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? currentItem.percent ? " %" : " so'm" : ''}</p>
+                                                            </hgroup>
+                                                            <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
                                                                 <p className={"d-inline"}> {currentItem.balance}</p>
                                                                 <div className="button-block">
@@ -259,6 +263,7 @@ class SelectTeacher extends Component {
                                                                     </Button>
                                                                 </div>
                                                             </hgroup>
+
 
                                                         </div>
                                                         <div className="col-4 button-block">
@@ -354,7 +359,6 @@ class SelectTeacher extends Component {
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100 modal-form"}>
-                                {console.log(currentObject ? currentObject : '')}
                                 <AvForm method={"post"} onValidSubmit={editSalary}>
                                     <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
                                     <AvField name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>

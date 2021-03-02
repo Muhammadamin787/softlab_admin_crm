@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.*;
@@ -26,6 +27,9 @@ public class Group extends AbsNameEntity {
     private Room room;
     private Date finishDate;
     private Date startDate;
+    @Enumerated(EnumType.STRING)
+    private GroupStatus groupStatus;
+    private boolean active;
 
     @ManyToMany
     @JoinTable(name = "group_weekdays",
