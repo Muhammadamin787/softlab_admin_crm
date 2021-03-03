@@ -153,10 +153,13 @@ class SelectTeacher extends Component {
             }
         }
         const saveSalaryItem = (e, v) => {
-            console.log(v)
-            console.log(currentObject)
-
             if (currentObject) {
+                if (currentObject.salary !== null){
+                    if(v.percent === ""){
+                        v.percent = currentObject.percent
+                    }
+                }
+                console.log(currentObject)
                 v.teacherId = currentObject.id
                 dispatch(saveTeacherSalaryAction(v));
             }
@@ -270,7 +273,7 @@ class SelectTeacher extends Component {
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Maosh :  </small>
-                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? currentItem.percent ? " %" : " so'm" : ''}</p>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
@@ -559,22 +562,31 @@ class SelectTeacher extends Component {
                         </ModalHeader>
                         <ModalBody>
                             <Row>
-                                {/*<AvField*/}
-                                {/*    defaultValue={currentObject ? currentObject.fullName : ""}*/}
-                                {/*    type={"text"}*/}
-                                {/*    label={"FISH"} name={"fullName"} className={"form-control"}*/}
-                                {/*    placeholer={"nomi"} required/>*/}
                                 <Col md={7} className={"pr-0"}>
                                     <AvField
                                         defaultValue={currentObject ? currentObject.salary  : ""}
                                         type={"number"} name={"salary"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                 </Col>
+                                {console.log(currentObject)}
                                 <Col md={5} className={"pl-0"}>
                                     <AvField type="select" name="percent">
-                                        <option value={currentObject ? currentObject.percent : currentObject.percent} selected>{currentObject && currentObject.percent ? "Foiz %"  : "Sum "}</option>
-                                        <option value={true}>Foiz %</option>
-                                        <option value={false}>Oyiga So'm</option>
+                                        {currentObject.salary === null ?
+                                            <option>Tanlang</option>
+                                            :
+                                            <option value={currentObject.percent} selected>{currentObject && currentObject.percent ? "Foiz %"  : "Sum "}</option>
+                                        }
+                                        {currentObject.salary === null ?
+                                            <>
+                                                <option value={true}>Foiz %</option>
+                                                <option value={false}>Oyiga So'm</option>
+                                            </>
+                                            :
+                                            currentObject && currentObject.percent ?
+                                                <option value={false}>Oyiga So'm</option>
+                                                :
+                                                <option value={true}>Foiz %</option>
+                                        }
                                     </AvField>
                                 </Col>
                             </Row>
