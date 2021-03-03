@@ -16,9 +16,9 @@ public class SalaryController {
     @Autowired
     SalaryService salaryService;
 
-    @PostMapping
-    public HttpEntity<?> saveSalary(@RequestBody TeacherDto teacherDto) {
-        ApiResponse apiResponse = salaryService.saveSalary(teacherDto);
+    @PostMapping("/{id}")
+    public HttpEntity<?> saveSalary( @PathVariable UUID id,@RequestBody TeacherDto teacherDto) {
+        ApiResponse apiResponse = salaryService.saveSalary(id,teacherDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 }
