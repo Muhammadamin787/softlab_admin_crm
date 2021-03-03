@@ -3,7 +3,11 @@ import AdminLayout from "../../component/AdminLayout";
 import {Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getStudentAction,
-    getStudentPaymentAction, getStudentPaymentListAction, getStudentsAction, getTeacherSalaryAppAction
+    getStudentPaymentAction,
+    getStudentPaymentCashbacksAction,
+    getStudentPaymentListAction,
+    getStudentsAction,
+    getTeacherSalaryAppAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
@@ -24,6 +28,7 @@ class StudentFinance extends Component {
             this.props.dispatch(getStudentAction({id: id}))
         }
         this.props.dispatch(getStudentPaymentListAction({page: 0, size: this.props.size}))
+        this.props.dispatch(getStudentPaymentCashbacksAction({page: 0, size: this.props.size}))
         this.props.dispatch(getTeacherSalaryAppAction())
     }
 
