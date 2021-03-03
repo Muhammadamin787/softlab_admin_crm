@@ -436,3 +436,4 @@ export default connect(({
         changeToActiveModal
     })
 )(Group);
+//
