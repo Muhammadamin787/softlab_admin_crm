@@ -50,6 +50,17 @@ class AdminLayout extends Component {
                                     Dashboard
                                 </div>
                             </Link>
+
+                            <Link to="/admin/attandance" className={
+                                this.props.pathname === "/admin/attandance" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-dashboard"/>
+                                <div className="main-link">
+                                    Davomat
+                                </div>
+                            </Link>
+
                             <Link to="/admin/students" className={
                                 this.props.pathname === "/admin/students" ?
                                     "active-link" : "default-link"

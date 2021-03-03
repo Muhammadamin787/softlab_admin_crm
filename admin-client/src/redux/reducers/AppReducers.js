@@ -48,7 +48,8 @@ const initState = {
     selectDebtors: [],
     studentPayments :[],
     studentPaymentCashbaks :[],
-    teacherSalaryAppApi: []
+    teacherSalaryAppApi: [],
+    attendanceList : []
 };
 
 const reducers = {
@@ -60,6 +61,8 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+        state.changeToArchiveModal = false
+        state.changeToActiveModal = false
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
@@ -472,6 +475,12 @@ const reducers = {
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
         state.teacherSalaryAppApi = null
         state.teacherSalaryAppApi = payload.payload.object.object
+    },
+    [types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS](state, payload) {
+        state.students = payload.payload.object
+    },
+    [types.REQUEST_GET_ATTENDANCE_SUCCESS](state, payload) {
+        state.attendanceList = payload.payload.object
     },
 
 

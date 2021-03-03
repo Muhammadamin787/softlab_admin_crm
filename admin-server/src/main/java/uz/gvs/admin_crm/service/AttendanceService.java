@@ -15,6 +15,7 @@ import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,6 @@ public class AttendanceService {
             Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
             if (optionalGroup.isPresent() && optionalTeacher.isPresent()
-                    && !attendanceDto.getDate().isEmpty()
                     && attendanceDto.getStudentList() != null
                     && attendanceDto.getStudentList().size() > 0) {
                 List<Attendance> attendances = new ArrayList<>();
@@ -51,8 +51,7 @@ public class AttendanceService {
                     if (byId.isPresent()) {
                         Attendance attendance = new Attendance();
                         Student student = byId.get();
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        attendance.setAttendDate(attendanceDto.getDate() != null ? formatter.parse(attendanceDto.getDate()) : null);
+                        attendance.setAttendDate(attendanceDto.getDate());
                         // guruhdagai statusini tekshirish kerak muzlagan yoki faol bo'lsa
                         attendance.setTeacher(teacher);
                         attendance.setGroup(group);

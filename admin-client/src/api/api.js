@@ -21,5 +21,6 @@ export const api = {
     toplam : 'toplam',
     teacherSalary : 'teacherSalary',
     teacherSalaryApi : '/teacherSalary',
-    salary: '/salary'
+    salary: '/salary',
+    attendance : "/attendance"
 };
