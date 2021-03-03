@@ -122,7 +122,7 @@ import {
     getStudentPaymentListApi,
     getStudentPaymentCashbacksApi,
     getTeacherSalaryAppApi,
-    deleteTeacherSalaryApi,
+    deleteTeacherSalaryApi, giveTeacherSalaryApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1540,6 +1540,21 @@ export const giveSalaryAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GIVE_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        dispatch(getTeacherAction({id: data.teacherId}))
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+    })
+}
+export const saveTeacherSalaryAction = (data) => (dispatch) => {
+    dispatch({
+        api: giveTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_TEACHER_SALARY_SUCCESS,
             types.REQUEST_ERROR
         ],
         data
