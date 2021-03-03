@@ -62,18 +62,26 @@ class StudentFinance extends Component {
                 }
             }
         }
+        function showHide() {
+            var element = document.getElementById("filtrMenu");
+            element.classList.toggle("hide");
+        }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
-                    <div className="row mb-4">
-                        <div className="col-md-3">
-                            <input type="date" className="form-control"/>
-                        </div>
-                        <div className="col-md-3">
-                            <input type="date" className="form-control"/>
-                        </div>
-                        <div className="col-md-3">
-                            <button className="btn btn-primary">Filtrlash</button>
+                    <h3>Moliya</h3>
+                    <h5 className="mb-3" onClick={showHide}>Filtr</h5>
+                    <div id="filtrMenu">
+                        <div className="row mb-4">
+                            <div className="col-md-3">
+                                <input type="date" className="form-control"/>
+                            </div>
+                            <div className="col-md-3">
+                                <input type="date" className="form-control"/>
+                            </div>
+                            <div className="col-md-3">
+                                <button className="btn btn-primary">Filtrlash</button>
+                            </div>
                         </div>
                     </div>
                     <Nav tabs>

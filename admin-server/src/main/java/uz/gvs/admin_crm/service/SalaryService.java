@@ -18,9 +18,9 @@ public class SalaryService {
     ApiResponseService apiResponseService;
 
 
-    public ApiResponse saveSalary(TeacherDto teacherDto) {
+    public ApiResponse saveSalary(UUID id,TeacherDto teacherDto) {
         try {
-            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+            Optional<Teacher> optional = teacherRepository.findById(id);
             if (optional.isPresent()) {
                 if (teacherDto.getSalary() != null) {
                     Teacher teacher = optional.get();
