@@ -365,7 +365,7 @@ class SelectTeacher extends Component {
                                                 </thead>
                                                 <tbody>
                                                 {teacherSalaryList ? teacherSalaryList.map((item, i) =>
-                                                    <tr key={i + 1}>
+                                                    <tr key={i + 1} className={"table-row-data"}>
                                                         <td>{i + 1}</td>
                                                         <td>{item.amount}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>

@@ -133,7 +133,7 @@ class Student extends Component {
                             <tbody>
                             {
                                 students ? students.map((item, i) =>
-                                    <tr key={i} className={"table-row-student"}>
+                                    <tr key={i}>
                                         <td>{i + 1}</td>
                                         <td><Link className={"text-dark"}
                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
