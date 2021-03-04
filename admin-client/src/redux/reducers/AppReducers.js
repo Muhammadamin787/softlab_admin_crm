@@ -455,8 +455,13 @@ const reducers = {
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
-        state.teacherSalaryList = null
-        state.teacherSalaryList = payload.payload.object.object
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teacherSalaryList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
 
 

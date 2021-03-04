@@ -45,7 +45,7 @@ class SelectTeacher extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getTeacherSalaryListAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getTeacherSalaryListAction({ id: this.props.match.params.id,page: (pageNumber - 1), size: this.props.size}))
     }
 
     state = {
@@ -176,6 +176,9 @@ class SelectTeacher extends Component {
 
         const editSalary = (e,v) => {
             v.teacherId = currentItem.id
+            if (v.payTypeId === ""){
+                v.payTypeId = currentObject.payType.id
+            }
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }
