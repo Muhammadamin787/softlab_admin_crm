@@ -63,9 +63,9 @@ class CourseCategory extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Kurs kategoriyalar</h1>
+                    <h4>Kurs kategoriyalar</h4>
                     <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-3 add-button px-4"}>Yangisini
+                        <Button onClick={openModal} className={"mb-3 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
                     </div>
@@ -75,6 +75,7 @@ class CourseCategory extends Component {
                                     <div key={i} className={"m-2 p-3 bg-white course-category"}>
                                         <Link to={"/admin/course/" + item.id}
                                               className={"w-100 text-decoration-none "}>
+                                            <img src="https://image.freepik.com/free-photo/english-lettering-blue-wooden-background_23-2148293461.jpg" alt="" className={"w-100 mb-3"}/>
                                             <h5>{item.name}</h5>
                                             <p>{item.description}</p>
                                         </Link>
