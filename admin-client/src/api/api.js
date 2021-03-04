@@ -19,5 +19,8 @@ export const api = {
     clientStatus: '/clientStatus',
     appeal : 'appeal',
     toplam : 'toplam',
-    teacherSalary : 'teacherSalary'
+    teacherSalary : 'teacherSalary',
+    teacherSalaryApi : '/teacherSalary',
+    salary: '/salary',
+    attendance : "/attendance"
 };

@@ -47,7 +47,9 @@ const initState = {
     cashbacks : [],
     selectDebtors: [],
     studentPayments :[],
+    studentPaymentCashbaks :[],
     teacherSalaryAppApi: [],
+    attendanceList : [],
     teacherSalaryList:[]
 };
 
@@ -60,6 +62,8 @@ const reducers = {
         state.loading = false
         state.showModal = false
         state.deleteModal = false
+        state.changeToArchiveModal = false
+        state.changeToActiveModal = false
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
@@ -434,11 +438,15 @@ const reducers = {
     [types.REQUEST_GIVE_SALARY_SUCCESS](state, payload) {
         state.showOpenSalaryModal = false;
     },
+    [types.REQUEST_SAVE_TEACHER_SALARY_SUCCESS](state, payload) {
+        state.showOpenSalaryModal1 = false;
+    },
     // FINISH TEACHER SALARY
 
     [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
         state.showModal1 = false;
         state.showPaymentEditModal = false;
+        state.showPaymentEditModal1 = false;
         state.showPaymentModal = false;
         state.showModal = false;
     },
@@ -462,6 +470,12 @@ const reducers = {
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
         }
+    },
+    [types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS](state, payload) {
+        state.students = payload.payload.object
+    },
+    [types.REQUEST_GET_ATTENDANCE_SUCCESS](state, payload) {
+        state.attendanceList = payload.payload.object
     },
 
 

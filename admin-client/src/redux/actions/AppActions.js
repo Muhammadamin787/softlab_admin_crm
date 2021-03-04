@@ -122,9 +122,55 @@ import {
     getStudentPaymentListApi,
     getStudentPaymentCashbacksApi,
     getTeacherSalaryAppApi,
-    deleteTeacherSalaryApi,
+    deleteTeacherSalaryApi, giveTeacherSalaryApi,
+    changeGroupStatusApi,
+    changeGroupToArchiveStatusApi,
+    changeGroupToActiveStatusApi,
+    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+
+
+export const getAttendanceListAction = (payload) => (dispatch) => {
+    dispatch({
+        api: getAttendanceListAppApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_ATTENDANCE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data : payload
+    })
+}
+export const getStudentsByGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentByGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+
+export const saveAttendanceAction = (data) => (dispatch) => {
+    console.log(data)
+    dispatch({
+        api: saveAttendanceAppApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getAttendanceListAction(data.groupId))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
 
 export const getDebtorsAction = () => (dispatch) => {
     dispatch({
@@ -760,6 +806,56 @@ export const saveGroupAction = (data) => (dispatch) => {
             dispatch(getTeachersForSelectAction())
         } else {
             dispatch(getGroupsAction())
+        }
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+
+export const changeGroupStatusToArchiveAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeGroupToArchiveStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                changeModal: false
+            }
+        })
+        toast.success(res.payload.message)
+        if (data && data.groupId) {
+            dispatch(getGroupAction({id: data.groupId}))
+        }
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+
+export const changeGroupStatusToActiveAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeGroupToActiveStatusApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                changeModal: false
+            }
+        })
+        toast.success(res.payload.message)
+        if (data && data.groupId) {
+            dispatch(getGroupAction({id: data.groupId}))
         }
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -1549,7 +1645,21 @@ export const giveSalaryAction = (data) => (dispatch) => {
             toast.success(res.payload.message)
     })
 }
-
+export const saveTeacherSalaryAction = (data) => (dispatch) => {
+    dispatch({
+        api: giveTeacherSalaryApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_TEACHER_SALARY_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        dispatch(getTeacherAction({id: data.teacherId}))
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+    })
+}
 export const getTeacherSalaryListAction = (data) => (dispatch) => {
     dispatch({
         api: getTeacherSalaryApi,
@@ -1561,7 +1671,6 @@ export const getTeacherSalaryListAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const editTeacherSalaryListAction = (payload) => (dispatch) => {
     dispatch({
         api: app.editTeacherSalaryApi,

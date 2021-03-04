@@ -15,6 +15,7 @@ import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.StudentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,27 +41,41 @@ public class AttendanceService {
             Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
             if (optionalGroup.isPresent() && optionalTeacher.isPresent()
-                    && !attendanceDto.getDate().isEmpty()
                     && attendanceDto.getStudentList() != null
                     && attendanceDto.getStudentList().size() > 0) {
                 List<Attendance> attendances = new ArrayList<>();
                 Group group = optionalGroup.get();
+                double dailyPrice = 0;
                 Teacher teacher = optionalTeacher.get();
+                List<Student> studentList = new ArrayList<>();
                 for (StudentAttendDto sadto : attendanceDto.getStudentList()) {
                     Optional<Student> byId = studentRepository.findById(sadto.getStudentId());
                     if (byId.isPresent()) {
                         Attendance attendance = new Attendance();
                         Student student = byId.get();
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        attendance.setAttendDate(attendanceDto.getDate() != null ? formatter.parse(attendanceDto.getDate()) : null);
+                        attendance.setAttendDate(attendanceDto.getDate());
                         // guruhdagai statusini tekshirish kerak muzlagan yoki faol bo'lsa
                         attendance.setTeacher(teacher);
                         attendance.setGroup(group);
                         attendance.setAttandanceEnum(sadto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
                         attendance.setStudent(student);
                         attendances.add(attendance);
+                        if (sadto.isActive()){
+                            dailyPrice += group.getCourse().getPrice();
+                            student.setBalans(student.getBalans() - group.getCourse().getPrice());
+                            studentList.add(student);
+                        }
                     }
                 }
+
+                if (teacher.isPercent()){
+                    double teacherPrice = dailyPrice / 100 * teacher.getSalary();
+                    teacher.setBalance(teacher.getBalance() + teacherPrice);
+                }else {
+                    teacher.setBalance(teacher.getBalance() + teacher.getSalary());
+                }
+                teacherRepository.save(teacher);
+                studentRepository.saveAll(studentList);
                 List<Attendance> attendances1 = attendanceRepository.saveAll(attendances);
                 //studetent balansidan pul yechib olish
                 return apiResponseService.saveResponse();

@@ -1,6 +1,14 @@
 import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
+
+export const getAttendanceListAppApi = (data) => {
+    return HttpClient.doGet(api.attendance +"/"+ data)
+}
+export const saveAttendanceAppApi = (data) => {
+    return HttpClient.doPost(api.attendance, data)
+}
+
 //client
 export const saveClientApi = (data) => {
     return HttpClient.doPost(api.client, data)
@@ -171,6 +179,12 @@ export const saveGroupApi = (data) => {
 export const changeStudentGroupStatusApi = (data) => {
     return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
+export const changeGroupToArchiveStatusApi = (data) => {
+    return HttpClient.doPatch(api.group + "/changeToArchiveStatus", data)
+}
+export const changeGroupToActiveStatusApi = (data) => {
+    return HttpClient.doPatch(api.group + "/changeToActiveStatus", data)
+}
 export const editGroupApi = (data) => {
     if (data && data.id)
         return HttpClient.doPut(api.group + "/" + data.id, data)
@@ -268,6 +282,9 @@ export const editStudentApi = (data) => {
 export const getStudentsApi = (data) => {
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
+}
+export const getStudentByGroupApi = (data) => {
+    return HttpClient.doGet(api.student + "/groupStudent/" + data)
 }
 export const getStudentApi = (data) => {
     return HttpClient.doGet(api.student + "/" + data.id)
@@ -383,6 +400,9 @@ export const getToplamListForSelectApi = () => {
 // START TEACHER SALARY
 export const giveSalaryApi = (data) => {
     return HttpClient.doPost(api.teacherSalary, data)
+}
+export const giveTeacherSalaryApi = (data) => {
+    return HttpClient.doPost(api.salary + "/" +data.teacherId, data)
 }
 export const getTeacherSalaryApi = (data) => {
     return HttpClient.doGet(api.teacherSalary + "/" +data.id + "?page=" + data.page + "&size=" + data.size)

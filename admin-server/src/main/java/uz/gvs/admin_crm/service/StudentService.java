@@ -374,7 +374,6 @@ public class StudentService {
                         if (situationDto.getSituation().equals("TRANSFER")) {
                             studentGroup.setStudentGroupStatus(StudentGroupStatus.valueOf(situationDto.getSituation()));
                             if (isHaveStudentGroup(student.getStudentGroup(), situationDto.getNewGroupId())) {
-
                                 StudentGroup newStudentGroup = studentGroupRepository.save(new StudentGroup(
                                         groupRepository.findById(situationDto.getNewGroupId()).get(),
                                         StudentGroupStatus.TEST_LESSON,
@@ -477,4 +476,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+
 }
