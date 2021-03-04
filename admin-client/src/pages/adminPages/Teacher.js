@@ -124,7 +124,7 @@ class Teacher extends Component {
                         </thead>
                         <tbody>
                         {teachers ? teachers.map((item, i) =>
-                            <tr key={i} className={"table-tr"}>
+                            <tr key={i} className={"table-row-student"}>
                                 <td>{i + 1}</td>
                                 <td>
                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
