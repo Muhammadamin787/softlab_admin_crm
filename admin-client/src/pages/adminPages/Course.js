@@ -78,7 +78,7 @@ class Course extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>{currentItem && currentItem.name} </h3>
+                        <h3>{currentItem && currentItem.name}</h3>
                         <Link
                             to={"/admin/courses/list"}
                             className={"text-decoration-none"}>
@@ -96,10 +96,11 @@ class Course extends Component {
                         <div className={"col-md-4"}>
                             {currentItem && currentItem.id ?
                                 <div
-                                    className={"m-2 p-3 bg-white rounded w-100 select-student-style"}>
+                                    className={"m-2 px-3 pt-0 pb-3 bg-white rounded w-100 select-student-style"}>
                                     <div className="row">
-                                        <div className="col-8">
+                                        <div className="col-12">
                                             <hgroup>
+                                                <img src="https://image.freepik.com/free-photo/english-lettering-blue-wooden-background_23-2148293461.jpg" alt="" className={"w-100 mb-3 select-student-style_img position-relative"}/>
                                                 <small className={"text-secondary"}>Nomi: </small>
                                                 <p className={"d-inline"}> {currentItem.name}</p>
                                             </hgroup>
@@ -112,11 +113,11 @@ class Course extends Component {
                                                 <p className={"d-inline"}> {currentItem.description}</p>
                                             </hgroup>
                                         </div>
-                                        <div className="col-4 button-block">
-                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
+                                        <div className="button-block position-absolute select-student-style_buttonsGroup">
+                                            <Button className="table-icon mr-1" onClick={() => openModal(currentItem)}>
                                                 <EditIcon className="button-icon"/>
                                             </Button>
-                                            <Button className="table-icon"
+                                            <Button className="table-icon ml-1"
                                                     onClick={() => openDeleteModal(currentItem)}>
                                                 <DeleteIcon className="button-icon"/>
                                             </Button>

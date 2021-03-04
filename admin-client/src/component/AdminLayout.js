@@ -23,7 +23,7 @@ class AdminLayout extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    addMenu: !addMenu
+                    addMenu: !addMenu,
                 }
             })
         }
@@ -31,7 +31,7 @@ class AdminLayout extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    addMenu1: !addMenu1
+                    addMenu1: !addMenu1,
                 }
             })
         }
@@ -129,9 +129,9 @@ class AdminLayout extends Component {
                             </Link>
                         </div>
                     </div>
-
+                    {addMenu}
                     <div
-                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} onClick={addMenu}>
                         <div className="main-link-div">
                             <Link to="/admin/room" className={
                                 this.props.pathname === "/admin/room" ?
@@ -229,7 +229,7 @@ class AdminLayout extends Component {
                             </Link>
                         </div>
                     </div>
-                    <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                    <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} onClick={addMenu1}>
                         <div className={"main-link-div"}>
                             <Link to="/admin/StudentFinance" className={
                                 this.props.pathname === "/admin/" ?
