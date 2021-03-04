@@ -5,7 +5,7 @@ import {
     getStudentAction,
     getStudentPaymentAction,
     getStudentPaymentCashbacksAction,
-    getStudentPaymentListAction,
+    getStudentPaymentListAction, getStudentPaymentListByDateAction,
     getStudentsAction,
     getTeacherSalaryAppAction
 } from "../../redux/actions/AppActions";
@@ -42,14 +42,15 @@ class StudentFinance extends Component {
         activeTab: "1",
         percentOfCash: "",
         sumOfCash: "",
-        cashBackSumm : 0,
+        date1: "",
+        cashBackSumm: 0,
     }
 
     render() {
 
         const {currentObject, activeTab,} = this.state;
         const {
-            dispatch,studentPayments,page,size,totalElements, teacherSalaryAppApi, studentPaymentCashbaks
+            dispatch, studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
         } = this.props;
         console.log(studentPayments)
 
@@ -62,9 +63,19 @@ class StudentFinance extends Component {
                 }
             }
         }
+
         function showHide() {
             var element = document.getElementById("filtrMenu");
             element.classList.toggle("hide");
+        }
+
+        const filtrByDate = (e) => {
+            if(e.nativeEvent.path[0].name === 'date2'){
+                dispatch(getStudentPaymentListByDateAction({page: 0, size: this.props.size, date1: this.state.date1, date2: e.target.value}))
+            }else{
+                this.setState({date1: e.target.value})
+            }
+
         }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -74,13 +85,10 @@ class StudentFinance extends Component {
                     <div id="filtrMenu">
                         <div className="row mb-4">
                             <div className="col-md-3">
-                                <input type="date" className="form-control"/>
+                                <input type="date" className="form-control" name={"date1"} onChange={filtrByDate}/>
                             </div>
                             <div className="col-md-3">
-                                <input type="date" className="form-control"/>
-                            </div>
-                            <div className="col-md-3">
-                                <button className="btn btn-primary">Filtrlash</button>
+                                <input type="date" className="form-control" name={"date2"} onChange={filtrByDate}/>
                             </div>
                         </div>
                     </div>
@@ -131,16 +139,16 @@ class StudentFinance extends Component {
                                         </thead>
                                         <tbody>
                                         {console.log(studentPayments)}
-                                        {studentPayments ? studentPayments.map((item,i)=>
-                                            <tr key={i+1}>
-                                                <td>{i+1}</td>
+                                        {studentPayments ? studentPayments.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                    <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
+                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item.sum +" / " + item.cashSum}</td>
+                                                <td>{item.sum + " / " + item.cashSum}</td>
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : "0%"}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
@@ -177,16 +185,16 @@ class StudentFinance extends Component {
                                         </thead>
                                         <tbody>
                                         {console.log(studentPaymentCashbaks)}
-                                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
-                                            <tr key={i+1}>
-                                                <td>{i+1}</td>
+                                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                    <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
+                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item.sum +" / " + item.cashSum}</td>
+                                                <td>{item.sum + " / " + item.cashSum}</td>
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
@@ -218,10 +226,10 @@ StudentFinance.propTypes = {};
 export default connect(({
                             app: {
                                 studentPayments,
-                                page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
+                                page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
 
                             },
                         }) => ({
-        studentPayments,page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
+        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
     })
 )(StudentFinance);

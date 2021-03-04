@@ -11,12 +11,15 @@ import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.StudentPayment;
 
+import java.util.Date;
 import java.util.UUID;
 
-public interface StudentPaymentRepository extends JpaRepository<StudentPayment, UUID>{
+public interface StudentPaymentRepository extends JpaRepository<StudentPayment, UUID> {
     Page<StudentPayment> findAllByStudent_id(UUID student_id, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select * from student_payment where student_payment.cashback_id != 0 " )
+    @Query(nativeQuery = true, value = "select * from student_payment where student_payment.cashback_id != 0 ")
     Page<StudentPayment> getStudentPaymentByCashback(Pageable pageable);
 
+    @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2")
+    Page<StudentPayment> getByDate(Date date1, Date date2, Pageable pageable);
 }

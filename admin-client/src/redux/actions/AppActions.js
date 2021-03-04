@@ -126,7 +126,7 @@ import {
     changeGroupStatusApi,
     changeGroupToArchiveStatusApi,
     changeGroupToActiveStatusApi,
-    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi,
+    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi, getStudentPaymentListByDateApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1433,6 +1433,17 @@ export const getStudentPaymentListAction= (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getStudentPaymentListByDateAction= (data) => (dispatch) => {
+    dispatch({
+        api: getStudentPaymentListByDateApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_PAYMENT_BY_DATE_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data

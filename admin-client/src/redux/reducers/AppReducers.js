@@ -22,6 +22,8 @@ const initState = {
     getItems: [],
     size: 20,
     page: 0,
+    date1: '',
+    date2: '',
     totalElements: 0,
     totalPages: 0,
     parentItems: [],
@@ -368,7 +370,18 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-
+    [types.REQUEST_GET_STUDENT_PAYMENT_BY_DATE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            console.log(payload)
+            state.studentPayments = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
     [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.studentPayments = payload.payload.object.object.sort((a, b) =>

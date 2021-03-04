@@ -280,17 +280,17 @@ public class StudentService {
     }
 
     public StudentPaymentDto makeStudentPaymentCashbacks(StudentPayment studentPayment) {
-            return new StudentPaymentDto(
-                    studentPayment.getId(),
-                    studentPayment.getPayType(),
-                    studentPayment.getStudent(),
-                    studentPayment.getCashback(),
-                    studentPayment.getCashSum(),
-                    studentPayment.getSum(),
-                    studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
-                    studentPayment.getComment(),
-                    studentPayment.getGroup()
-            );
+        return new StudentPaymentDto(
+                studentPayment.getId(),
+                studentPayment.getPayType(),
+                studentPayment.getStudent(),
+                studentPayment.getCashback(),
+                studentPayment.getCashSum(),
+                studentPayment.getSum(),
+                studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
+                studentPayment.getComment(),
+                studentPayment.getGroup()
+        );
     }
 
     public ApiResponse getStudentPaymentList(int page, int size) {
@@ -477,5 +477,26 @@ public class StudentService {
         }
     }
 
+
+    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2) {
+        try {
+            String a = data1;
+            String b = data2;
+            Date date1=new SimpleDateFormat("dd-MM-yyyy").parse(a);
+            Date date2=new SimpleDateFormat("dd-MM-yyyy").parse(b);
+            Page<StudentPayment> all = studentPaymentRepository.getByDate(date1, date2, PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                    )
+            );
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
 }

@@ -319,6 +319,10 @@ export const getStudentPaymentListApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/list" + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
+export const getStudentPaymentListByDateApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/byDate" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size + "&date1=" + data.date1 + "&date2=" + data.date2 : ""))
+}
 export const getStudentPaymentCashbacksApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/paymentCashbacks" + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
