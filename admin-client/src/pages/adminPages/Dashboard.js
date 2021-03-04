@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AdminLayout from "../../component/AdminLayout";
+import './adminPages.scss';
 
 class Dashboard extends Component {
     render() {
@@ -8,7 +9,7 @@ class Dashboard extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <div className={"row dashboard-style"}>
-                        <div className="col-md-3">
+                        <div className="col-md-3 col-analytics-dashboard">
                             <div className="card">
                                 <hgroup>
                                     <h4>Faol talabalar</h4>
@@ -16,7 +17,7 @@ class Dashboard extends Component {
                                 </hgroup>
                             </div>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-3 col-analytics-dashboard">
                             <div className="card">
                                 <hgroup>
                                     <h4>Faol talabalar</h4>
@@ -24,7 +25,7 @@ class Dashboard extends Component {
                                 </hgroup>
                             </div>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-3 col-analytics-dashboard">
                             <div className="card">
                                 <hgroup>
                                     <h4>Faol talabalar</h4>
@@ -32,7 +33,7 @@ class Dashboard extends Component {
                                 </hgroup>
                             </div>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-3 col-analytics-dashboard">
                             <div className="card">
                                 <hgroup>
                                     <h4>Faol talabalar</h4>

@@ -118,10 +118,10 @@ class Student extends Component {
                         <Button color={"primary w-100"} onClick={openFiltrDebtors}>Qarzdorlar</Button>
                         <div>
                             <br/>
-                            <Link to={"/admin/studentPayment"}>StudentPaymentlar</Link>
+                            <Link to={"/admin/studentPayment"}>Student Paymentlar</Link>
                         </div>
                         <br/>
-                        <Table className={"table-style w-75"}>
+                        <Table className={"table-style w-100"}>
                             <thead className={""}>
                             <tr className={""}>
                                 <th>No</th>
@@ -133,7 +133,7 @@ class Student extends Component {
                             <tbody>
                             {
                                 students ? students.map((item, i) =>
-                                    <tr key={i} className={"table-tr"}>
+                                    <tr key={i} className={"table-row-student"}>
                                         <td>{i + 1}</td>
                                         <td><Link className={"text-dark"}
                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
@@ -453,7 +453,6 @@ class Student extends Component {
 
 Student.propTypes = {}
 
-;
 
 export default connect((
     {

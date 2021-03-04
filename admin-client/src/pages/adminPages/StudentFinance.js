@@ -127,7 +127,7 @@ class StudentFinance extends Component {
                                         <tbody>
                                         {console.log(studentPayments)}
                                         {studentPayments ? studentPayments.map((item,i)=>
-                                            <tr key={i+1}>
+                                            <tr key={i+1} className={"table-row-student"}>
                                                 <td>{i+1}</td>
                                                 <td>
                                                     <Link to={"/admin/student/"+ (item && item.student

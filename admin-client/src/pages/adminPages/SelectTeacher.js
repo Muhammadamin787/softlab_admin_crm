@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     Button,
     Col,
-    CustomInput,
+    CustomInput, Input,
     Modal,
     ModalBody,
     ModalFooter,
@@ -16,7 +16,7 @@ import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-valida
 import {
     deleteCourseAction, deleteGroupAction, deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
     getPayTypeListAction,
-    getRegionsAction, getStudentPaymentAction,
+    getRegionsAction, getStudentPaymentAction, getStudentsAction,
 
     getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
     saveCourseAction,
@@ -30,6 +30,7 @@ import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
+import Pagination from "react-js-pagination";
 
 class SelectTeacher extends Component {
     componentDidMount() {
@@ -41,6 +42,10 @@ class SelectTeacher extends Component {
         }
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getPayTypeListAction())
+    }
+
+    handlePageChange(pageNumber) {
+        this.props.dispatch(getTeacherSalaryListAction({ id: this.props.match.params.id,page: (pageNumber - 1), size: this.props.size}))
     }
 
     state = {
@@ -70,8 +75,10 @@ class SelectTeacher extends Component {
             teacherSalary,
             teacherSalaryList,
             showEditSalaryModal,
-            deleteSalaryModal
+            deleteSalaryModal,
+            page,size,totalElements
         } = this.props;
+
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -174,7 +181,7 @@ class SelectTeacher extends Component {
                     dispatch(getTeacherSalaryListAction({
                         id: this.props.match.params.id,
                         page:0,
-                        size:20
+                        size:size
                     }))
                 }
             }
@@ -192,6 +199,9 @@ class SelectTeacher extends Component {
 
         const editSalary = (e,v) => {
             v.teacherId = currentItem.id
+            if (v.payTypeId === ""){
+                v.payTypeId = currentObject.payType.id
+            }
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }
@@ -204,7 +214,7 @@ class SelectTeacher extends Component {
         }
 
         return (
-            <AdminLayout className="" pathname={this.props.location.pathname}>
+            <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.userDto && currentItem.userDto.fullName} </h3>
@@ -221,7 +231,7 @@ class SelectTeacher extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={""}>
+                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -230,7 +240,7 @@ class SelectTeacher extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem>
+                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -337,7 +347,10 @@ class SelectTeacher extends Component {
 
                                         {/*  START TAB PANE  */}
 
-                                        <TabPane tabId="2">
+                                        <TabPane tabId="2" className={"teacher-salary-block"}>
+                                            <p className={"teacher-salary-block__title"}>
+                                                To'lovlar
+                                            </p>
                                             <Table>
                                                 <thead>
                                                 <tr>
@@ -346,6 +359,8 @@ class SelectTeacher extends Component {
                                                     <td>To'lov turi</td>
                                                     <td>Izoh</td>
                                                     <td>To'langan vaqti</td>
+                                                    <td/>
+                                                    <td/>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -355,7 +370,7 @@ class SelectTeacher extends Component {
                                                         <td>{item.amount}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>
                                                         <td>{item.description}</td>
-                                                        <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                        <td>{moment(item.amountDate).format('LLL').toString()}</td>
                                                         <td>
                                                             <Button className="table-icon" onClick={() => openSalaryEditModal(item)}>
                                                                 <EditIcon/>
@@ -368,6 +383,14 @@ class SelectTeacher extends Component {
                                                 ) : 'Malumot topilmadi'}
                                                 </tbody>
                                             </Table>
+                                            <Pagination
+                                                activePage={page + 1}
+                                                itemsCountPerPage={size}
+                                                totalItemsCount={totalElements}
+                                                pageRangeDisplayed={5}
+                                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                                linkClass="page-link"
+                                            />
                                         </TabPane>
 
                                     {/*  END TAB PANE  */}
@@ -382,29 +405,28 @@ class SelectTeacher extends Component {
                 {/*MODAL EDIT*/}
 
                 <Modal id={"allModalStyle"} isOpen={showEditSalaryModal} toggle={openSalaryEditModal} className={""}>
-                        <ModalHeader isOpen={showEditSalaryModal} toggle={openSalaryEditModal}  charCode={"X"}>
+                        <ModalHeader toggle={openSalaryEditModal}  charCode={"X"}>
                             Tahrirlash
                         </ModalHeader>
                         <ModalBody>
                             <div className={"w-100 modal-form"}>
                                 <AvForm method={"post"} onValidSubmit={editSalary}>
                                     <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
-                                    <AvField name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
-                                    <AvField name={"payTypeId"} type={"select"}>
-                                        {payTypes ? payTypes.map((item, i) =>
-                                        <option value={item.id}>
-                                            {item.name}
-                                        </option>) : ''}
+                                    <AvField label={"Miqdor"} name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
+                                    <AvField label={"To'lov turi"} name={"payTypeId"} type={"select"}>
+                                        {currentObject && currentObject.payType ? <option value={currentObject.payType.id}>{currentObject.payType.name}</option> : '' }
+                                        {payTypes ? payTypes.map((item,i) =>
+                                            currentObject && currentObject.payType && currentObject.payType.id !== item.id ? <option value={item.id}>{item.name}</option> : ''
+                                        ):''}
                                     </AvField>
-                                    <AvField name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
+                                    <AvField label={"Izoh"} name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
                                     {/*<AvField name={"payDate"} type={"date"}/>*/}
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
-                                            : ""}
-                                        label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
+                                        defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
+                                        label={"To'langan vaqti"} name={"amountDate2"} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                                         required/>
-
+                                    {console.log(currentObject)}
                                     <ModalFooter>
                                         <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
                                         <Button color={"primary"} type={"submit"}>Saqlash</Button>
@@ -466,6 +488,7 @@ class SelectTeacher extends Component {
                                     placeholer={"nomi"} required/>
                                 <AvField
                                     type={"date"}
+
                                     defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
@@ -622,7 +645,8 @@ export default connect(({
                                 teacherSalary,
                                 teacherSalaryList,
                                 showEditSalaryModal,
-                                deleteSalaryModal
+                                deleteSalaryModal,
+                                page,size,totalElements
                             },
                         }) => ({
         groups,
@@ -641,6 +665,7 @@ export default connect(({
         teacherSalary,
     teacherSalaryList,
     showEditSalaryModal,
-    deleteSalaryModal
+    deleteSalaryModal,
+    page,size,totalElements
     })
 )(SelectTeacher);
