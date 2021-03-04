@@ -181,8 +181,7 @@ class Attandance extends Component {
                                     <tr key={i}>
                                         <td>{i+1}</td>
                                         <td>{item.fullName}</td>
-                                        {
-                                            daysOfMonth ? daysOfMonth.map(item2 =>
+                                        {daysOfMonth ? daysOfMonth.map(item2 =>
                                                 <td className={"text-center"}>
                                                     {
                                                         attendanceList ? attendanceList.map(item3 =>
@@ -191,8 +190,7 @@ class Attandance extends Component {
                                                         ) : ''
                                                     }
                                                 </td>
-                                            ) : ''
-                                        }
+                                            ) : ''}
                                     </tr>
                                 ) : ''}
                                 <tr>
