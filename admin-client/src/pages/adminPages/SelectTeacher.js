@@ -20,7 +20,7 @@ import {
 
     getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
     saveCourseAction,
-    saveStudentAction, saveStudentPaymentAction, saveTeacherAction,
+    saveStudentAction, saveStudentPaymentAction, saveTeacherAction, saveTeacherSalaryAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -49,6 +49,7 @@ class SelectTeacher extends Component {
         currentObject: "",
         currentItem: "",
         showOpenSalaryModal: false,
+        showOpenSalaryModal1: false,
         activeTab : "1"
 
     }
@@ -60,6 +61,7 @@ class SelectTeacher extends Component {
             history,
             payTypes,
             showOpenSalaryModal,
+            showOpenSalaryModal1,
             dispatch,
             showModal,
             deleteModal,
@@ -102,6 +104,15 @@ class SelectTeacher extends Component {
                 }
             })
         }
+        const openSalaryModal1 = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showOpenSalaryModal1: !showOpenSalaryModal1
+                }
+            })
+        }
 
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
@@ -139,6 +150,18 @@ class SelectTeacher extends Component {
                 v.teacherId = currentObject.id;
                 v.amountDate = moment(v.amountDate).format('YYYY/MM/DD').toString()
                 dispatch(giveSalaryAction(v));
+            }
+        }
+        const saveSalaryItem = (e, v) => {
+            if (currentObject) {
+                if (currentObject.salary !== null){
+                    if(v.percent === ""){
+                        v.percent = currentObject.percent
+                    }
+                }
+                console.log(currentObject)
+                v.teacherId = currentObject.id
+                dispatch(saveTeacherSalaryAction(v));
             }
         }
 
@@ -250,7 +273,7 @@ class SelectTeacher extends Component {
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Maosh :  </small>
-                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? currentItem.percent ? " %" : " so'm" : ''}</p>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
@@ -258,6 +281,11 @@ class SelectTeacher extends Component {
                                                                 <div className="button-block">
                                                                     <Button className="table-icon px-2"
                                                                             onClick={() => openSalaryModal(currentItem)}
+                                                                    >
+                                                                        <span className="icon icon-wallet bg-primary "/>
+                                                                    </Button>
+                                                                    <Button className="table-icon px-2"
+                                                                            onClick={() => openSalaryModal1(currentItem)}
                                                                     >
                                                                         <span className="icon icon-wallet bg-primary "/>
                                                                     </Button>
@@ -295,10 +323,10 @@ class SelectTeacher extends Component {
                                                                         <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
                                                                     </Col>
                                                                     <Col md={3}>
-                                                    <span
-                                                        className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
-                                                        <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
-                                                    </span>
+                                                                        <span
+                                                                            className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
+                                                                            <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                                        </span>
                                                                     </Col>
                                                                 </Row>
                                                         ) : "Guruhlar topilmadi"}
@@ -526,6 +554,49 @@ class SelectTeacher extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+                <Modal id={""} isOpen={showOpenSalaryModal1} toggle={() => openSalaryModal1("")}
+                       className={""}>
+                    <AvForm onValidSubmit={saveSalaryItem}>
+                        <ModalHeader isOpen={showOpenSalaryModal1} toggle={openSalaryModal1} charCode="x">
+                            <h5>Oylik</h5>
+                        </ModalHeader>
+                        <ModalBody>
+                            <Row>
+                                <Col md={7} className={"pr-0"}>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.salary  : ""}
+                                        type={"number"} name={"salary"} className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                </Col>
+                                {console.log(currentObject)}
+                                <Col md={5} className={"pl-0"}>
+                                    <AvField type="select" name="percent">
+                                        {currentObject.salary === null ?
+                                            <option>Tanlang</option>
+                                            :
+                                            <option value={currentObject.percent} selected>{currentObject && currentObject.percent ? "Foiz %"  : "Sum "}</option>
+                                        }
+                                        {currentObject.salary === null ?
+                                            <>
+                                                <option value={true}>Foiz %</option>
+                                                <option value={false}>Oyiga So'm</option>
+                                            </>
+                                            :
+                                            currentObject && currentObject.percent ?
+                                                <option value={false}>Oyiga So'm</option>
+                                                :
+                                                <option value={true}>Foiz %</option>
+                                        }
+                                    </AvField>
+                                </Col>
+                            </Row>
+                            <ModalFooter>
+                                <Button color="secondary" onClick={() => openSalaryModal1("")}>Yo'q</Button>
+                                <Button color="light" type={"submit"}>Ha</Button>
+                            </ModalFooter>
+                        </ModalBody>
+                    </AvForm>
+                </Modal>
             </AdminLayout>
         );
     }
@@ -547,6 +618,7 @@ export default connect(({
                                 getItems,
                                 readModal,
                                 showOpenSalaryModal,
+                                showOpenSalaryModal1,
                                 teacherSalary,
                                 teacherSalaryList,
                                 showEditSalaryModal,
@@ -565,6 +637,7 @@ export default connect(({
         getItems,
         readModal,
         showOpenSalaryModal,
+        showOpenSalaryModal1,
         teacherSalary,
     teacherSalaryList,
     showEditSalaryModal,
