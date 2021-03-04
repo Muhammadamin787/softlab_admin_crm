@@ -60,14 +60,16 @@ public class AttendanceService {
                         attendance.setAttandanceEnum(sadto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
                         attendance.setStudent(student);
                         attendances.add(attendance);
-                        dailyPrice += group.getCourse().getPrice();
-                        student.setBalans(student.getBalans() - group.getCourse().getPrice());
-                        studentList.add(student);
+                        if (sadto.isActive()){
+                            dailyPrice += group.getCourse().getPrice();
+                            student.setBalans(student.getBalans() - group.getCourse().getPrice());
+                            studentList.add(student);
+                        }
                     }
                 }
 
                 if (teacher.isPercent()){
-                    double teacherPrice = dailyPrice / teacher.getSalary();
+                    double teacherPrice = dailyPrice / 100 * teacher.getSalary();
                     teacher.setBalance(teacher.getBalance() + teacherPrice);
                 }else {
                     teacher.setBalance(teacher.getBalance() + teacher.getSalary());
