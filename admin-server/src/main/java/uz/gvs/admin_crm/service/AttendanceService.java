@@ -45,7 +45,9 @@ public class AttendanceService {
                     && attendanceDto.getStudentList().size() > 0) {
                 List<Attendance> attendances = new ArrayList<>();
                 Group group = optionalGroup.get();
+                double dailyPrice = 0;
                 Teacher teacher = optionalTeacher.get();
+                List<Student> studentList = new ArrayList<>();
                 for (StudentAttendDto sadto : attendanceDto.getStudentList()) {
                     Optional<Student> byId = studentRepository.findById(sadto.getStudentId());
                     if (byId.isPresent()) {
@@ -58,8 +60,22 @@ public class AttendanceService {
                         attendance.setAttandanceEnum(sadto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
                         attendance.setStudent(student);
                         attendances.add(attendance);
+                        if (sadto.isActive()){
+                            dailyPrice += group.getCourse().getPrice();
+                            student.setBalans(student.getBalans() - group.getCourse().getPrice());
+                            studentList.add(student);
+                        }
                     }
                 }
+
+                if (teacher.isPercent()){
+                    double teacherPrice = dailyPrice / 100 * teacher.getSalary();
+                    teacher.setBalance(teacher.getBalance() + teacherPrice);
+                }else {
+                    teacher.setBalance(teacher.getBalance() + teacher.getSalary());
+                }
+                teacherRepository.save(teacher);
+                studentRepository.saveAll(studentList);
                 List<Attendance> attendances1 = attendanceRepository.saveAll(attendances);
                 //studetent balansidan pul yechib olish
                 return apiResponseService.saveResponse();
