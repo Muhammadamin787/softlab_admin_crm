@@ -36,7 +36,6 @@ import {
 import moment from "moment";
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
-import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 
 class Group extends Component {
 
@@ -197,8 +196,8 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
-                                                    <span>{week}, </span>)}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
+                                                    <span>{week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
@@ -257,8 +256,8 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 && item.weekdays.map((week) =>
-                                                    <span>{week}, </span>)}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
+                                                    <span>{week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
