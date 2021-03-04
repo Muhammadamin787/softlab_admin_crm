@@ -348,7 +348,7 @@ class SelectStudent extends Component {
                                                 </thead>
                                                 <tbody>
                                                 {studentPayment ? studentPayment.map((item, i) =>
-                                                    <tr key={i + 1} className={"table-row-student"}>
+                                                    <tr key={i + 1} className={"table-row-data"}>
                                                         <td>{i + 1}</td>
                                                         <td>{item.sum}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>

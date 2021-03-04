@@ -263,7 +263,7 @@ class Appeal extends Component {
                                     </thead>
                                     <tbody>
                                     {appealList && appealList.length > 0 ? appealList.map((item, i) =>
-                                        <tr key={i} id={item.id} className={"table-row-student"} draggable={true}
+                                        <tr key={i} id={item.id} className={"table-row-data"} draggable={true}
                                             onDragStart={drag}>
                                             <td draggable={false}>{i + 1}</td>
                                             <td draggable={false}>
