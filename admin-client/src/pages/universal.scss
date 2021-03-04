@@ -115,6 +115,17 @@
 .add-button {
   border-radius: 20px;
   font-weight: lighter;
+  background-color: #F67C00;
+  border: none;
+}
+
+.add-button:hover, .add-button:focus, .add-button:active{
+  background-color: #F67C00!important;
+  box-shadow: none!important;
+}
+.select-student-style_buttonsGroup{
+  margin-left: 240px;
+  margin-top: 14px;
 }
 
 .select-student-style {
@@ -125,6 +136,8 @@
     .table-icon {
       border: 1px solid #cccccc;
       border-radius: 100%;
+      background-color: white;
+      width: 40px;
       padding: 6px;
       margin: 1px;
 
@@ -132,6 +145,11 @@
         width: 30px !important;
         height: 30px !important;
       }
+    }
+    .table-icon:hover, .table-icon:active, .table-icon:focus{
+      background-color: white!important;
+      border: 1px solid #cccccc;
+      box-shadow: none!important;
     }
   }
 
