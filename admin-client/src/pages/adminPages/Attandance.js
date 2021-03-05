@@ -184,6 +184,7 @@ class Attandance extends Component {
                                 </Row>
                             </Container>
 
+
                             <br />
                             <Table style={gg}>
                                 <tr>
