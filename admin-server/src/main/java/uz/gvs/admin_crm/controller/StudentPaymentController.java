@@ -77,12 +77,28 @@ public class StudentPaymentController {
     @GetMapping("/byDate")
     public HttpEntity<?> getStudentPaymentByDate(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                  @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                                 @RequestParam(value = "date1", defaultValue = "" ) String data1,
+                                                 @RequestParam(value = "date1", defaultValue = "") String data1,
                                                  @RequestParam(value = "date2", defaultValue = "") String data2) {
-        ApiResponse apiResponse = studentService.getStudentPaymentByDate(page, size,data1,data2);
+        ApiResponse apiResponse = studentService.getStudentPaymentByDate(page, size, data1, data2);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/tolov")
+    public HttpEntity<?> getTolovlar(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        ApiResponse apiResponse = studentService.getTolovlar(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
 
+    @GetMapping("/finance")
+    public HttpEntity<?> getPayments(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                     @RequestParam(value = "all", defaultValue = "") String all,
+                                     @RequestParam(value = "cashbacks", defaultValue = "") String byCashbacks,
+                                     @RequestParam(value = "getPrices", defaultValue = "") String getPrices) {
+        ApiResponse apiResponse = studentService.getPayments(page, size, all, byCashbacks,getPrices);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }
 ////

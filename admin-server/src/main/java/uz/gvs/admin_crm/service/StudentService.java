@@ -499,4 +499,9 @@ public class StudentService {
         }
     }
 
+
+
+    public ApiResponse getPayments(int page, int size, String all, String byCashbacks, String getPrices) {
+        return  null;
+    }
 }
