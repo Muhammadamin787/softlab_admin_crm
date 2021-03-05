@@ -115,13 +115,9 @@ class Student extends Component {
                         <div align={"right"}><Button color={"success"} onClick={openModal}
                                                      className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
                         </div>
-                        <Button color={"primary w-100"} onClick={openFiltrDebtors}>Qarzdorlar</Button>
-                        <div>
-                            <br/>
-                            <Link to={"/admin/studentPayment"}>Student Paymentlar</Link>
-                        </div>
+                        <Button color={"primary"} onClick={openFiltrDebtors}>Qarzdorlar</Button>
                         <br/>
-                        <Table className={"table-style w-100"}>
+                        <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>
                                 <th>No</th>
@@ -133,7 +129,7 @@ class Student extends Component {
                             <tbody>
                             {
                                 students ? students.map((item, i) =>
-                                    <tr key={i}>
+                                    <tr key={i} className={"table-tr"}>
                                         <td>{i + 1}</td>
                                         <td><Link className={"text-dark"}
                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
@@ -246,7 +242,7 @@ class Student extends Component {
                     :
                     <div className={"flex-column container"}>
                         <h1>Qazdorlar</h1>
-                        <Button color={"primary mt-5 w-100"} onClick={openFiltrDebtors}>Talabalar</Button>
+                        <Button color={"primary mt-5"} onClick={openFiltrDebtors}>Talabalar</Button>
                         <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>

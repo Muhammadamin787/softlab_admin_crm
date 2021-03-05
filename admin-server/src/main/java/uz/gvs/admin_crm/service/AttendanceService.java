@@ -2,21 +2,13 @@ package uz.gvs.admin_crm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Attendance;
-import uz.gvs.admin_crm.entity.Group;
-import uz.gvs.admin_crm.entity.Student;
-import uz.gvs.admin_crm.entity.Teacher;
+import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.AttandanceEnum;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.AttendanceDto;
 import uz.gvs.admin_crm.payload.StudentAttendDto;
-import uz.gvs.admin_crm.repository.AttendanceRepository;
-import uz.gvs.admin_crm.repository.GroupRepository;
-import uz.gvs.admin_crm.repository.StudentRepository;
-import uz.gvs.admin_crm.repository.TeacherRepository;
+import uz.gvs.admin_crm.repository.*;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +26,8 @@ public class AttendanceService {
     GroupRepository groupRepository;
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
@@ -48,6 +42,7 @@ public class AttendanceService {
                 double dailyPrice = 0;
                 Teacher teacher = optionalTeacher.get();
                 List<Student> studentList = new ArrayList<>();
+
                 for (StudentAttendDto sadto : attendanceDto.getStudentList()) {
                     Optional<Student> byId = studentRepository.findById(sadto.getStudentId());
                     if (byId.isPresent()) {
@@ -60,7 +55,7 @@ public class AttendanceService {
                         attendance.setAttandanceEnum(sadto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
                         attendance.setStudent(student);
                         attendances.add(attendance);
-                        if (sadto.isActive()){
+                        if (sadto.isActive()) {
                             dailyPrice += group.getCourse().getPrice();
                             student.setBalans(student.getBalans() - group.getCourse().getPrice());
                             studentList.add(student);
@@ -68,15 +63,33 @@ public class AttendanceService {
                     }
                 }
 
-                if (teacher.isPercent()){
+
+                double teachPrice = 0;
+                if (teacher.isPercent()) {
                     double teacherPrice = dailyPrice / 100 * teacher.getSalary();
                     teacher.setBalance(teacher.getBalance() + teacherPrice);
-                }else {
+                    teachPrice = dailyPrice / 100 * teacher.getSalary();
+                } else {
                     teacher.setBalance(teacher.getBalance() + teacher.getSalary());
+                    teachPrice = teacher.getSalary();
                 }
+
                 teacherRepository.save(teacher);
                 studentRepository.saveAll(studentList);
                 List<Attendance> attendances1 = attendanceRepository.saveAll(attendances);
+
+                List<Payment> paymentList = new ArrayList<>();
+                for (Attendance attendance : attendances1) {
+                    if (attendance.getAttandanceEnum().equals(AttandanceEnum.YES)) {
+                        Payment payment = new Payment();
+                        payment.setAttendance(attendance);
+                        payment.setAmount(group.getCourse().getPrice());
+                        payment.setAmountTeacher(teachPrice);
+                        paymentList.add(payment);
+                    }
+                }
+
+                paymentRepository.saveAll(paymentList);
                 //studetent balansidan pul yechib olish
                 return apiResponseService.saveResponse();
             } else {
