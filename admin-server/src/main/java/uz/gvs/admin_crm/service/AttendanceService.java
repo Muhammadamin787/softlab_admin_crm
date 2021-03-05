@@ -33,6 +33,7 @@ public class AttendanceService {
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
+
             // userni teacher yoki superadmin admin roliga tekshirish
             Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
