@@ -7,24 +7,22 @@ import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class StudentAttendancePayment extends AbsEntity {
+public class TeacherPayment extends AbsEntity {
 
-    @ManyToOne(optional = false)
-    private Group group;
-
-    @ManyToOne(optional = false)
-    private Teacher teacher;
-
-    private Date date;
+    @OneToMany
+    private List<Payment> paymentList;
 
     private double price;
+
+    private Date date;
 
 }
