@@ -27,8 +27,6 @@ public class AttendanceService {
     @Autowired
     StudentRepository studentRepository;
     @Autowired
-    TeacherPaymentRepository teacherPaymentRepository;
-    @Autowired
     PaymentRepository paymentRepository;
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
@@ -57,7 +55,7 @@ public class AttendanceService {
                         attendance.setAttandanceEnum(sadto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
                         attendance.setStudent(student);
                         attendances.add(attendance);
-                        if (sadto.isActive()){
+                        if (sadto.isActive()) {
                             dailyPrice += group.getCourse().getPrice();
                             student.setBalans(student.getBalans() - group.getCourse().getPrice());
                             studentList.add(student);
@@ -67,11 +65,11 @@ public class AttendanceService {
 
 
                 double teachPrice = 0;
-                if (teacher.isPercent()){
+                if (teacher.isPercent()) {
                     double teacherPrice = dailyPrice / 100 * teacher.getSalary();
                     teacher.setBalance(teacher.getBalance() + teacherPrice);
                     teachPrice = dailyPrice / 100 * teacher.getSalary();
-                }else {
+                } else {
                     teacher.setBalance(teacher.getBalance() + teacher.getSalary());
                     teachPrice = teacher.getSalary();
                 }
@@ -89,9 +87,7 @@ public class AttendanceService {
                     paymentList.add(payment);
                 }
 
-                    List<Payment> paymentList1 = paymentRepository.saveAll(paymentList);
-
-                teacherPaymentRepository.save(new TeacherPayment(paymentList1,teachPrice,attendanceDto.getDate()));
+                paymentRepository.saveAll(paymentList);
                 //studetent balansidan pul yechib olish
                 return apiResponseService.saveResponse();
             } else {
