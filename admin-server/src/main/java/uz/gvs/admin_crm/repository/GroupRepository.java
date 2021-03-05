@@ -21,6 +21,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(nativeQuery = true, value = "select * from groups where id=ANY(select group_id from student_group where id=ANY(select student_group_id from student_student_group where student_id=:ketmon))")
     List<Group> getStudentGroupList(UUID ketmon);
 
-    @Query(nativeQuery = true, value = "select * from groups where active = true and group_status = 'ACTIVE' and id = (select groups_id from groups_weekdays where weekdays_id = (select weekday.id from weekday where weekday_name =:week))")
-    List<Group> findAllGroups(WeekdayName week);
+    @Query(nativeQuery = true, value = "select * from groups gr where gr.active = true and gr.group_status = 'ACTIVE'  and gr.id =(select gw.group_id from group_weekdays gw where gr.id=gw.group_id and gw.weekday_id = (select wd.id from weekday wd where wd.weekday_name =:week))")
+    List<Group> findAllGroups(String week);
 }
