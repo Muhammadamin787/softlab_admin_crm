@@ -11,16 +11,16 @@ import {
     Dropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem
+    DropdownItem, Container, Table, Input
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
     changeStudentGroupStatusAction,
-    deleteCourseAction, deleteGroupAction,
+    deleteCourseAction, deleteGroupAction, getAttendanceListAction,
     getCoursesAction,
     getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
-    getRoomListAction,
-    getTeachersForSelectAction,
+    getRoomListAction, getStudentsByGroupAction,
+    getTeachersForSelectAction, saveAttendanceAction,
     saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -44,6 +44,25 @@ class SelectGroup extends Component {
             dispatch(getCoursesAction())
             dispatch(getGroupsForSelectAction())
             dispatch(getTeachersForSelectAction())
+
+            dispatch(getAttendanceListAction(id))
+            dispatch(getStudentsByGroupAction(id))
+
+            let year = new Date().getFullYear()
+            let month = new Date().getMonth()
+            let date = new Date().getDate()
+
+
+            let arr = []
+            for (let i = 1; i <=new Date(this.state.year, this.state.month+1, 0).getDate();i++){
+                arr.push(i)
+            }
+            this.setState({
+                daysOfMonth : arr,
+                year : year,
+                month : month,
+                day : date
+            })
         }
     }
 
@@ -54,10 +73,25 @@ class SelectGroup extends Component {
         setDropdownOpen: false,
         groupInput: false,
         newGroup: [],
+        days : ['Yak','Du', 'Se', 'Chor', 'Pay', 'Juma', 'Shanba'],
+        months : ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
+
+        year : '',
+        //Bitta kam sanaladi
+        month : '',
+        day : '',
+
+        daysOfMonth : [],
+
+        groupSelect : [],
+        currentGroup : "",
+        openModal1 : false,
+        currentDay :''
     }
 
     render() {
-        const {currentObject, dropdownOpen, setDropdownOpen} = this.state;
+        const {days,months,year,month,daysOfMonth,day,dayName,groupSelect,
+            currentGroup,openModal1,currentDay,currentObject, dropdownOpen, setDropdownOpen} = this.state
         const {
             selectItems,
             changeStatusModal,
@@ -69,8 +103,43 @@ class SelectGroup extends Component {
             currentItem,
             teachers,
             getItems,
-            rooms
+            rooms,
+            attendanceList,
         } = this.props;
+
+        const plusM = () => {
+            if (month === 11)
+            {
+                this.setState({month : 0})
+                this.setState({year : year+1})
+            }else {
+                this.setState({month : month + 1})
+            }
+
+            let arr = []
+            for (let i = 1; i <=new Date(year, month, 0).getDate();i++){
+                arr.push(i)
+            }
+            this.setState({daysOfMonth : arr})
+
+
+        }
+
+        const minusM = () => {
+            if (month === 0)
+            {
+                this.setState({month : 11})
+                this.setState({year : year-1})
+            }else {
+                this.setState({month : month - 1})
+            }
+            let arr = []
+            for (let i = 1; i <=new Date(year, month, 0).getDate();i++){
+                arr.push(i)
+            }
+            this.setState({daysOfMonth : arr})
+        }
+
         const openModal = (item) => {
             if (item && item.id) {
                 this.setState({currentObject: item})
@@ -145,10 +214,47 @@ class SelectGroup extends Component {
                 dispatch(saveGroupAction(v))
             }
         }
+
+        const saveAttendance = (e,v) => {
+
+            let arr = []
+            students.map(item => {
+                arr.push({
+                    studentId:item.id,
+                    active:document.getElementById(item.id).checked
+                })
+            })
+            v.studentList = arr
+
+            this.props.dispatch(saveAttendanceAction(v))
+            showHideModal()
+        }
+
+        const gg = {
+            overflowX: "scroll",
+            overflowY: "auto",
+            marginTop : "20px"
+        }
+
+        const showHideModal = (item) => {
+            if (item) {
+                this.setState({
+                    openModal1 : !openModal1,
+                    currentDay: year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item > 9 ? item : "0"+item)
+                })
+            }else {
+                this.setState({
+                    openModal1 : !openModal1,
+                    currentDay : ""
+                })
+            }
+        }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <hgroup className={"course-select-header"}>
+                    <Row>
+                        <Col>
+                            <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.name} </h3>
 
                         <Link
@@ -156,7 +262,7 @@ class SelectGroup extends Component {
                             className={""}> Guruhlar</span>
                         </Link>
                     </hgroup>
-                    <div className="row">
+                            <div className="row">
                         {currentItem && currentItem.id ?
                             <>
                             <div className={"m-2 p-3 bg-white box-shadow rounded col-md-4 col-10"}>
@@ -248,6 +354,64 @@ class SelectGroup extends Component {
                             </>
                             : ""}
                     </div>
+                        </Col>
+                        <Col>
+                            {currentItem !== "" ?
+                                <>
+                                    <Button onClick={minusM}>-</Button>
+                                    {" "+year + " - yil, "+ months[month]+" "}
+                                    <Button onClick={plusM}>+</Button>
+
+                                    <br />
+                                    <Table style={gg}>
+                                        <tr>
+                                            <td>#</td>
+                                            <td>Student</td>
+                                            {
+                                                daysOfMonth ? daysOfMonth.map(item =>
+                                                    <td className={"text-center"}>
+                                                        {item} / {days[new Date(year, month,item).getDay()]}
+                                                    </td>
+                                                ) : ''
+                                            }
+                                        </tr>
+                                        {students ? students.map((item,i) =>
+                                            <tr key={i}>
+                                                <td>{i+1}</td>
+                                                <td>{item.fullName}</td>
+                                                {daysOfMonth ? daysOfMonth.map(item2 =>
+                                                    <td className={"text-center"}>
+                                                        {
+                                                            attendanceList ? attendanceList.map(item3 =>
+                                                                (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id  && item3.attandanceEnum === "YES"  ?
+                                                                    <Input type={"checkbox"} checked={true} /> : ''
+                                                            ) : ''
+                                                        }
+                                                    </td>
+                                                ) : ''}
+                                            </tr>
+                                        ) : ''}
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            {
+                                                daysOfMonth ? daysOfMonth.map(item =>
+                                                    <td className={"text-center"}>
+                                                        <Button outline color={'primary'} onClick={()=>showHideModal(item)}>
+                                                            Davomat
+                                                        </Button>
+                                                    </td>
+                                                ) : ''
+                                            }
+                                        </tr>
+
+                                    </Table>
+                                </>
+                                :
+                                ''
+                            }
+                        </Col>
+                    </Row>
                 </div>
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
@@ -370,6 +534,35 @@ class SelectGroup extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
+                <Modal isOpen={openModal1}>
+                    <ModalHeader>Kunlik davomat</ModalHeader>
+                    <ModalBody>
+                        <AvForm onValidSubmit={saveAttendance}>
+                            {/*<AvField type={"date"} name={"date"}/>*/}
+                            <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" />
+                            <AvField type={"hidden"} name={"teacherId"} defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''} />
+                            <AvField type={"hidden"} name={"groupId"} defaultValue={currentItem ? currentItem.id : ''} />
+                            <Table>
+                                {students ? students.map((item,i) =>
+                                    <tr key={i}>
+                                        <td>{i+1}</td>
+                                        <td>{item.fullName}</td>
+                                        <td>
+                                            <Input type={"checkbox"} id={item.id} />
+                                        </td>
+                                    </tr>
+                                ) : ''}
+                            </Table>
+
+                            <ModalFooter>
+                                <Button outline onClick={showHideModal}>Bekor qilish</Button>
+                                <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </ModalBody>
+
+                </Modal>
             </AdminLayout>
         );
     }
@@ -394,6 +587,7 @@ export default connect(({
                                 courseCategories,
                                 durationTypes,
                                 readModal,
+                                attendanceList,
                             },
                         }) => ({
         selectItems,
@@ -404,6 +598,7 @@ export default connect(({
         rooms,
         groups,
         currentItem,
+        attendanceList,
         loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
     })
 )(SelectGroup);
