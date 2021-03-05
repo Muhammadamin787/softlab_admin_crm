@@ -166,7 +166,8 @@ class Appeal extends Component {
         }
         const saveTransfer = (e, v) => {
             e.preventDefault();
-            if (currentObject && currentObject.id) {
+            if (currentObject && currentObject.id && this.state.changeLocationType
+                && this.state.newTypeId) {
                 v.id = currentObject.id
                 v.clientStatusId = this.state.newTypeId
                 v.statusEnum = this.state.changeLocationType
@@ -175,6 +176,9 @@ class Appeal extends Component {
                 dispatch(changeAppalTypeAction(v))
                 e.preventDefault()
             }
+
+            this.setState({currentObject: '', object: '', changeLocationType: ''})
+            e.preventDefault()
         }
 
         return (
@@ -263,7 +267,7 @@ class Appeal extends Component {
                                     </thead>
                                     <tbody>
                                     {appealList && appealList.length > 0 ? appealList.map((item, i) =>
-                                        <tr key={i} id={item.id} className={"table-row-data"} draggable={true}
+                                        <tr key={i} id={item.id} className={"table-tr"} draggable={true}
                                             onDragStart={drag}>
                                             <td draggable={false}>{i + 1}</td>
                                             <td draggable={false}>
