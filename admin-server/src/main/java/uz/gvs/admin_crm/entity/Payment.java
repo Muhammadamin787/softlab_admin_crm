@@ -5,19 +5,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
-import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @ManyToOne
+public class Payment extends AbsEntity{
+    @OneToOne(optional = false)
     private Attendance attendance;
     private double amount;
+    private double amountTeacher;
 }

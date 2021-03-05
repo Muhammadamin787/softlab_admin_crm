@@ -60,7 +60,7 @@ class Teacher extends Component {
                 }
             })
         }
-        const openDeleteModal = (item) =>    {
+        const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
                 type: "updateState",
@@ -124,7 +124,7 @@ class Teacher extends Component {
                         </thead>
                         <tbody>
                         {teachers ? teachers.map((item, i) =>
-                            <tr key={i} className={"table-row-data"}>
+                            <tr key={i} className={"table-tr"}>
                                 <td>{i + 1}</td>
                                 <td>
                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
