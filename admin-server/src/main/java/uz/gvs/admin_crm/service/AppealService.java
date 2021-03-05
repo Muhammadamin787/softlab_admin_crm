@@ -98,8 +98,8 @@ public class AppealService {
 
             ClientStatusConnect clientStatusConnect = byClient_id.get();
             if (appealDto.getStatusEnum().equals("COLLECTION")) {
-                toplamRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
-                clientStatusConnect.setStatusId(appealDto.getClientStatusId().toString());
+                Toplam getToplam = toplamRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
+                clientStatusConnect.setStatusId(getToplam.getId().toString());
                 clientStatusConnect.setToplam(true);
             } else {
                 clientStatusConnect.setToplam(false);

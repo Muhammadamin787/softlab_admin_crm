@@ -79,6 +79,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/toplam/:id" component={SelectToplam}/>/>
                 <PrivateRoute exact path="/admin/finance" component={Finance} />
                 <PrivateRoute exact path="/admin/StudentFinance" component={StudentFinance} />
+                <PrivateRoute exact path="/admin/card" component={Card} />
                 <Route component={NotFound}/>
             </Switch>
         </Provider>

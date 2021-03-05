@@ -1,7 +1,8 @@
 import {Component} from "react";
 import "./Card.css";
 
-import {Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
+import AdminLayout from "../../component/AdminLayout";
 
 class Card extends Component {
     componentDidMount() {
@@ -12,7 +13,7 @@ class Card extends Component {
         object: '',
         columns: [
             {
-                title: "leads",
+                title: "So'rovlar",
                 leads: [],
                 sections: [
                     {
@@ -41,7 +42,7 @@ class Card extends Component {
                 ]
             },
             {
-                title: "expectation",
+                title: "Kutish",
                 leads: [],
                 sections: [
                     {
@@ -69,17 +70,6 @@ class Card extends Component {
                     },
                     {
                         type: "section",
-                        title: "Boshlang'ich dasturlash",
-                        leads: [],
-                        expand: false
-                    },
-                    {
-                        type: "section",
-                        title: "Arab Tili",
-                        leads: []
-                    },
-                    {
-                        type: "section",
                         title: "IELTS",
                         leads: [
                             {
@@ -94,121 +84,11 @@ class Card extends Component {
                         type: "section",
                         title: "Pre-IELTS",
                         leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Grammatika",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "English for beginner",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Ingliz tili",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Frontend dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Boshlang'ich dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "IELTS",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Pre-IELTS",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Grammatika",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "English for beginner",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Ingliz tili",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Frontend dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Boshlang'ich dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "IELTS",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Pre-IELTS",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Grammatika",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "English for beginner",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Ingliz tili",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Frontend dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Dasturlash",
-                        leads: []
-                    },
-                    {
-                        type: "section",
-                        title: "Boshlang'ich dasturlash",
-                        leads: []
                     }
                 ]
             },
             {
-                title: "set",
+                title: "To'plam",
                 leads: [],
                 sections: [
                     {
@@ -301,37 +181,43 @@ class Card extends Component {
             e.target.appendChild(document.getElementById(data));
         }
         return (
-            <section>
-                <Container>
-                    <Row>
-                        {this.state.columns.map(item =>
-                            <div className={"col"} id={item.title} onDrop={drop} onDragOver={allowDrop}>
-                                <h1>{item.title} : {item.sections.length}</h1>
-                                <hr/>
-                                {item.sections ? item.sections.map(item2 =>
-                                    <div className={item2.type}>
-                                        <h6>{item2.title} : {item2.leads ? item2.leads.length : 0}</h6>
-                                        <hr/>
-                                        {item2.leads ? item2.leads.map((item3, i) =>
-                                            <div className={item3.type} draggable={true} onDragStart={drag}
-                                                 id={item.title + i}>
-                                                {item.title === "expectation" ?
-                                                    <div>
-                                                        <button className='btn btn-secondary'>&nbsp;</button>
-                                                        {" " + item3.name + " / " + item3.phone}
-                                                    </div>
-                                                    :
-                                                    item3.name + " / " + item3.phone
-                                                }
-                                            </div>
-                                        ) : ''}
-                                    </div>
-                                ) : ''}
-                            </div>
-                        )}
-                    </Row>
-                </Container>
-            </section>
+            <AdminLayout pathname={this.props.location.pathname}>
+                <div className={"flex-column container bg-white p-3 box-shadow rounded mb-3"}>
+                    <hgroup className={"course-select-header"}>
+                        <h3>Murojaatlar</h3>
+                    </hgroup>
+                    <Container>
+                        <Row>
+                            {this.state.columns.map(item =>
+                                <div className={"col"} id={item.title} onDrop={drop} onDragOver={allowDrop}>
+                                    <h1>{item.title} : {item.sections.length}</h1>
+                                    <hr/>
+                                    {item.sections ? item.sections.map(item2 =>
+                                        <div className={item2.type}>
+                                            <h6>{item2.title} : {item2.leads ? item2.leads.length : 0}</h6>
+                                            <hr/>
+                                            {item2.leads ? item2.leads.map((item3, i) =>
+                                                <div className={item3.type} draggable={true} onDragStart={drag}
+                                                     onDrop={false}
+                                                     id={item.title + i}>
+                                                    {item.title === "expectation" ?
+                                                        <div draggable={false}>
+                                                            <button className='btn btn-secondary'>&nbsp;</button>
+                                                            {" " + item3.name + " / " + item3.phone}
+                                                        </div>
+                                                        :
+                                                        item3.name + " / " + item3.phone
+                                                    }
+                                                </div>
+                                            ) : ''}
+                                        </div>
+                                    ) : ''}
+                                </div>
+                            )}
+                        </Row>
+                    </Container>
+                </div>
+            </AdminLayout>
         )
     }
 
