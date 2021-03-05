@@ -169,10 +169,20 @@ class Attandance extends Component {
                     </Container>
                     <hr />
                     {currentGroup !== "" ?
-                        <>
-                            <Button onClick={minusM}>-</Button>
-                            {" "+year + " - yil, "+ months[month]+" "}
-                            <Button onClick={plusM}>+</Button>
+                        <div className={"position-relative"}>
+                            <Container className={"text-center position-fixed"}>
+                                <Row>
+                                    <Col md={2}>
+                                        <Button onClick={minusM}>-</Button>
+                                    </Col>
+                                    <Col md={8}>
+                                        {" "+year + " - yil, "+ months[month]+" "}
+                                    </Col>
+                                    <Col md={2}>
+                                        <Button onClick={plusM}>+</Button>
+                                    </Col>
+                                </Row>
+                            </Container>
 
                             <br />
                             <Table style={gg}>
@@ -218,7 +228,7 @@ class Attandance extends Component {
                                 </tr>
 
                             </Table>
-                        </>
+                        </div>
                         :
                         ''
                     }
