@@ -8,9 +8,18 @@ import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
 import {config} from "../utils/config";
 
+
 class AdminLayout extends Component {
+
+    state = {
+        addMenu: false,
+        addMenu1: false
+    }
+
     render() {
-        const {currentUser, addMenu, addMenu1, menuHidden, dispatch} = this.props;
+        const {currentUser, menuHidden, dispatch} = this.props;
+        const {addMenu, addMenu1} = this.state
+
         const changeMenu = () => {
             dispatch({
                 type: "updateState",
@@ -19,24 +28,24 @@ class AdminLayout extends Component {
                 }
             })
         }
+
+        const closeFun = () =>{
+            if (addMenu || addMenu1){
+                this.setState({addMenu: false})
+                this.setState({addMenu1: false})
+            }
+        }
+
         const secondMenu = () => {
-            dispatch({
-                type: "updateState",
-                payload: {
-                    addMenu: !addMenu,
-                }
-            })
+            this.setState({addMenu: !addMenu})
         }
+
         const thirdMenu = () => {
-            dispatch({
-                type: "updateState",
-                payload: {
-                    addMenu1: !addMenu1,
-                }
-            })
+            this.setState({addMenu1: !addMenu1})
         }
+
         return (
-            <div className={"admin-layout-page"}>
+            <div className={"admin-layout-page"} onClick={closeFun}>
                 <div className={"main-layout"}>
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
@@ -130,7 +139,7 @@ class AdminLayout extends Component {
                         </div>
                     </div>
                     <div
-                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} id={"test1234"}>
                         <div className="main-link-div">
                             <Link to="/admin/room" className={
                                 this.props.pathname === "/admin/room" ?
