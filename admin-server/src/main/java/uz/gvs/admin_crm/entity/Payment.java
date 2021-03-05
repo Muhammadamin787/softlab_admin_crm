@@ -17,4 +17,5 @@ public class Payment extends AbsEntity{
     @OneToOne(optional = false)
     private Attendance attendance;
     private double amount;
+    private double amountTeacher;
 }

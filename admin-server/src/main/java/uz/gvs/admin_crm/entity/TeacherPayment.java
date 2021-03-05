@@ -19,7 +19,7 @@ import java.util.List;
 public class TeacherPayment extends AbsEntity {
 
     @OneToMany
-    private List<Payment> paymentList;
+    private List<Payment> payments;
 
     private double price;
 

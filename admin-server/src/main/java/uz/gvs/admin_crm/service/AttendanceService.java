@@ -85,6 +85,12 @@ public class AttendanceService {
                     Payment payment = new Payment();
                     payment.setAttendance(attendance);
                     payment.setAmount(attendance.getAttandanceEnum().equals(AttandanceEnum.YES) ? group.getCourse().getPrice() : 0);
+                    payment.setAmountTeacher(attendance.getAttandanceEnum().equals(AttandanceEnum.YES) ?
+                            teacher.isPercent() ?
+                                    (group.getCourse().getPrice() / 100 * teacher.getSalary())
+                                    :
+                                    (teacher.getSalary() / attendanceDto.getStudentList().size())
+                            : 0);
                     paymentList.add(payment);
                 }
 
