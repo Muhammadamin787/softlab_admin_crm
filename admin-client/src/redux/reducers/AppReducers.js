@@ -49,7 +49,8 @@ const initState = {
     studentPayments :[],
     studentPaymentCashbaks :[],
     teacherSalaryAppApi: [],
-    attendanceList : []
+    attendanceList : [],
+    teacherSalaryList:[]
 };
 
 const reducers = {
@@ -380,17 +381,6 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-    [types.REQUEST_GET_STUDENT_PAYMENT_CASHBACKS_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.studentPaymentCashbaks = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-    },
 
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
@@ -473,8 +463,13 @@ const reducers = {
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
-        state.teacherSalaryAppApi = null
-        state.teacherSalaryAppApi = payload.payload.object.object
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teacherSalaryList = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
     [types.REQUEST_GET_STUDENTS_BY_GROUP_SUCCESS](state, payload) {
         state.students = payload.payload.object
