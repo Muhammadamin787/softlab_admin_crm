@@ -92,12 +92,15 @@ public class TeacherSalaryService {
         try {
             Optional<TeacherSalary> optional = teacherSalaryRepository.findById(id);
             if (optional.isPresent()) {
-                if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate() != null) {
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
+                if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate2() != null) {
                     TeacherSalary teacherSalary = optional.get();
                     if (teacherSalaryDto.getTeacherId().equals(teacherSalary.getTeacher().getId())) {
                         teacherSalary.setAmount(teacherSalaryDto.getAmount());
                         teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get Pay Type")));
-                        teacherSalary.setAmountDate(Date.valueOf(teacherSalaryDto.getAmountDate()));
+
+                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate2());
+
                         teacherSalary.setDescription(teacherSalaryDto.getDescription());
                         teacherSalaryRepository.save(teacherSalary);
                         return apiResponseService.updatedResponse();
@@ -130,7 +133,7 @@ public class TeacherSalaryService {
                 teacherSalary.getTeacher().getUser().getFullName(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
-                teacherSalary.getAmountDate() != null ? teacherSalary.getAmountDate().toString() : "",
+                teacherSalary.getAmountDate().toString(),
                 teacherSalary.getDescription(),
                 teacherSalary.getPayType()
         );

@@ -80,7 +80,7 @@ class StudentFinance extends Component {
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('1');
@@ -89,7 +89,7 @@ class StudentFinance extends Component {
                                 Barchasi
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('2');
@@ -98,7 +98,7 @@ class StudentFinance extends Component {
                                 Cashbacklar
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('3');
@@ -127,7 +127,7 @@ class StudentFinance extends Component {
                                         <tbody>
                                         {console.log(studentPayments)}
                                         {studentPayments ? studentPayments.map((item,i)=>
-                                            <tr key={i+1}>
+                                            <tr key={i+1} className={"table-row-data"}>
                                                 <td>{i+1}</td>
                                                 <td>
                                                     <Link to={"/admin/student/"+ (item && item.student
