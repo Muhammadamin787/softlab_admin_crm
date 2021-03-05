@@ -173,16 +173,17 @@ class Attandance extends Component {
                             <Container className={"text-center position-fixed"}>
                                 <Row>
                                     <Col md={2}>
-                                        <Button onClick={minusM}>-</Button>
+                                        <i onClick={minusM} className="fas fa-angle-left"/>
                                     </Col>
                                     <Col md={8}>
                                         {" "+year + " - yil, "+ months[month]+" "}
                                     </Col>
                                     <Col md={2}>
-                                        <Button onClick={plusM}>+</Button>
+                                        <i onClick={plusM} className="fa fa-angle-right"/>
                                     </Col>
                                 </Row>
                             </Container>
+
 
                             <br />
                             <Table style={gg}>
@@ -191,7 +192,7 @@ class Attandance extends Component {
                                     <td>Student</td>
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
-                                            <td className={"text-center"}>
+                                            <td className={"text-center attandance-block_table_td__days"}>
                                                 {item} / {days[new Date(year, month,item).getDay()]}
                                             </td>
                                         ) : ''
@@ -199,8 +200,8 @@ class Attandance extends Component {
                                 </tr>
                                 {students ? students.map((item,i) =>
                                     <tr key={i}>
-                                        <td>{i+1}</td>
-                                        <td>{item.fullName}</td>
+                                        <td className={"attandance-block_td"}>{i+1}</td>
+                                        <td className={"attandance-block_td"}>{item.fullName}</td>
                                         {daysOfMonth ? daysOfMonth.map(item2 =>
                                                 <td className={"text-center"}>
                                                     {
@@ -219,9 +220,7 @@ class Attandance extends Component {
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center"}>
-                                                <Button outline color={'primary'} onClick={()=>showHideModal(item)}>
-                                                    Davomat
-                                                </Button>
+                                                <i onClick={()=>showHideModal(item)} className="far fa-calendar-check"/>
                                             </td>
                                         ) : ''
                                     }
