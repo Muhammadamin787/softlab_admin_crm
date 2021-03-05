@@ -42,8 +42,8 @@ public class GroupController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
     @GetMapping("/schedule")
-    public HttpEntity<?> getGroups() {
-        ApiResponse apiResponse = groupService.getGroups();
+    public HttpEntity<?> getGroups(String week) {
+        ApiResponse apiResponse = groupService.getGroups(week);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
