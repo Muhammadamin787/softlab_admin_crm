@@ -31,7 +31,6 @@ public class AttendanceService {
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
-
             // userni teacher yoki superadmin admin roliga tekshirish
             Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
@@ -81,11 +80,12 @@ public class AttendanceService {
 
                 List<Payment> paymentList = new ArrayList<>();
                 for (Attendance attendance : attendances1) {
-                    Payment payment = new Payment();
-                    payment.setAttendance(attendance);
-                    payment.setAmount(attendance.getAttandanceEnum().equals(AttandanceEnum.YES) ? group.getCourse().getPrice() : 0);
-
-                    paymentList.add(payment);
+                    if (attendance.getAttandanceEnum().equals(AttandanceEnum.YES)){
+                        Payment payment = new Payment();
+                        payment.setAttendance(attendance);
+                        payment.setAmount(group.getCourse().getPrice());
+                        paymentList.add(payment);
+                    }
                 }
 
                 paymentRepository.saveAll(paymentList);
