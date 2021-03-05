@@ -253,7 +253,7 @@ class SelectGroup extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <Row>
-                        <Col>
+                        <Col md={4} >
                             <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.name} </h3>
 
@@ -265,7 +265,7 @@ class SelectGroup extends Component {
                             <div className="row">
                         {currentItem && currentItem.id ?
                             <>
-                            <div className={"m-2 p-3 bg-white box-shadow rounded col-md-4 col-10"}>
+                            <div className={"m-2 p-3 bg-white box-shadow rounded col-md-12 col-10"}>
                                 <div className="row">
                                     <div className="col-8">
                                         <hgroup>
@@ -355,7 +355,7 @@ class SelectGroup extends Component {
                             : ""}
                     </div>
                         </Col>
-                        <Col>
+                        <Col md={8}>
                             {currentItem !== "" ?
                                 <>
                                     <Button onClick={minusM}>-</Button>
