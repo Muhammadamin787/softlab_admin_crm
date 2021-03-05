@@ -80,10 +80,11 @@ public class AttendanceService {
 
                 List<Payment> paymentList = new ArrayList<>();
                 for (Attendance attendance : attendances1) {
-                    if (attendance.getAttandanceEnum().equals(AttandanceEnum.YES)){
+                    if (attendance.getAttandanceEnum().equals(AttandanceEnum.YES)) {
                         Payment payment = new Payment();
                         payment.setAttendance(attendance);
                         payment.setAmount(group.getCourse().getPrice());
+                        payment.setAmountTeacher(teachPrice);
                         paymentList.add(payment);
                     }
                 }
