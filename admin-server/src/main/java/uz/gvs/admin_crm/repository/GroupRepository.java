@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.Room;
+import uz.gvs.admin_crm.entity.enums.WeekdayName;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +21,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(nativeQuery = true, value = "select * from groups where id=ANY(select group_id from student_group where id=ANY(select student_group_id from student_student_group where student_id=:ketmon))")
     List<Group> getStudentGroupList(UUID ketmon);
 
-
-
+    @Query(nativeQuery = true, value = "select * from groups where active = true and group_status = 'ACTIVE' and id = (select groups_id from groups_weekdays where weekdays_id = (select weekday.id from weekday where weekday_name =:week))")
+    List<Group> findAllGroups(WeekdayName week);
 }

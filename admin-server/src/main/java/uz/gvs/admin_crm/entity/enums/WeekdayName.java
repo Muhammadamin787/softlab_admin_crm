@@ -3,7 +3,7 @@ package uz.gvs.admin_crm.entity.enums;
 import java.util.List;
 
 public enum WeekdayName {
-    MONDAY("Dush"), TUESDAY("Sesh"), WEDNESDAY("Chor"), THURSDAY("Pay"), FRIDAY("Ju"), SATURDAY("Shan"), SUNDAY("Yak");
+    SUNDAY("Yak"), MONDAY("Dush"), TUESDAY("Sesh"), WEDNESDAY("Chor"), THURSDAY("Pay"), FRIDAY("Ju"), SATURDAY("Shan");
     public String name;
 
     WeekdayName(String name) {

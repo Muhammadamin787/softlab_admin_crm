@@ -259,15 +259,25 @@ public class GroupService {
         }
     }
 
+    public WeekdayName getWeekday(int week){
+        switch (week){
+            case 1 : return WeekdayName.SUNDAY;
+            case 2 : return WeekdayName.MONDAY;
+            case 3 : return WeekdayName.TUESDAY;
+            case 4 : return WeekdayName.WEDNESDAY;
+            case 5 : return WeekdayName.THURSDAY;
+            case 6 : return WeekdayName.FRIDAY;
+            case 7 : return WeekdayName.SATURDAY;
+            default: return  null;
+        }
+    }
+
     public ApiResponse getGroups() {
         try {
-            List<Group> groups = groupRepository.findAll();
-            return apiResponseService.getResponse(
-                    new PageableDto(
-                            all.getTotalPages(),
-                            all.getTotalElements(),
-                            all.getNumber(),
-                            all.getSize(), all.stream().map(this::makeGroupTable).collect(Collectors.toList())));
+            Calendar one = new GregorianCalendar();
+            int week = one.get(Calendar.DAY_OF_WEEK);
+            List<Group> groups = groupRepository.findAllGroups(getWeekday(week));
+            return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
