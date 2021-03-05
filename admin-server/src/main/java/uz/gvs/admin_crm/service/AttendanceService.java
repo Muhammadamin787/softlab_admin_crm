@@ -85,6 +85,7 @@ public class AttendanceService {
                     Payment payment = new Payment();
                     payment.setAttendance(attendance);
                     payment.setAmount(attendance.getAttandanceEnum().equals(AttandanceEnum.YES) ? group.getCourse().getPrice() : 0);
+
                     paymentList.add(payment);
                 }
 
