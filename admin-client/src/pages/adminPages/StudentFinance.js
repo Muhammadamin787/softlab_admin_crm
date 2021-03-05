@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
 import {Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
-    getStudentAction,
-    getStudentPaymentAction,
-    getStudentPaymentCashbacksAction,
-    getStudentPaymentListAction, getStudentPaymentListByDateAction,
+    getFinanceAction,
+
+
+  getStudentPaymentListByDateAction,
     getStudentsAction,
     getTeacherSalaryAppAction
 } from "../../redux/actions/AppActions";
@@ -23,13 +23,8 @@ class StudentFinance extends Component {
     componentDidMount() {
         console.clear()
         let id = 0
-        if (this.props.match && this.props.match.params && this.props.match.params.id) {
-            id = this.props.match.params.id;
-            this.props.dispatch(getStudentAction({id: id}))
-        }
-        this.props.dispatch(getStudentPaymentListAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getStudentPaymentCashbacksAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getTeacherSalaryAppAction())
+        this.props.dispatch(getFinanceAction({page: 0, size: this.props.size, type: "all"}))
+
     }
 
     state = {
@@ -50,18 +45,15 @@ class StudentFinance extends Component {
 
         const {currentObject, activeTab,} = this.state;
         const {
-            dispatch, studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
+            dispatch,page, size, totalElements,studentPaymentFinance
         } = this.props;
-        console.log(studentPayments)
 
+
+        const a = (tab) => {
+            this.setState({activeTab: tab})
+        }
         const toggle = tab => {
-            if (activeTab !== tab)
-                this.setState({activeTab: tab})
-            if (tab === "2") {
-                if (this.props.match && this.props.match.params && this.props.match.params.id) {
-                    dispatch(getStudentPaymentAction(this.props.match.params.id))
-                }
-            }
+            dispatch(getFinanceAction({page: 0, size: this.props.size , type : tab}))
         }
 
         function showHide() {
@@ -96,7 +88,7 @@ class StudentFinance extends Component {
                         <NavItem className={""}>
                             <NavLink
                                 onClick={() => {
-                                    toggle('1');
+                                    toggle('all');
                                 }}
                             >
                                 Barchasi
@@ -105,7 +97,7 @@ class StudentFinance extends Component {
                         <NavItem>
                             <NavLink
                                 onClick={() => {
-                                    toggle('2');
+                                    toggle('byCashbacks');
                                 }}
                             >
                                 Cashbacklar
@@ -114,7 +106,7 @@ class StudentFinance extends Component {
                         <NavItem>
                             <NavLink
                                 onClick={() => {
-                                    toggle('3');
+                                    toggle('getPrice');
                                 }}
                             >
                                 Tushumlar
@@ -138,8 +130,8 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(studentPayments)}
-                                        {studentPayments ? studentPayments.map((item, i) =>
+                                        {console.log(studentPaymentFinance)}
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
                                                 <td>{i + 1}</td>
                                                 <td>
@@ -184,8 +176,7 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(studentPaymentCashbaks)}
-                                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item, i) =>
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
                                                 <td>{i + 1}</td>
                                                 <td>
@@ -226,10 +217,10 @@ StudentFinance.propTypes = {};
 export default connect(({
                             app: {
                                 studentPayments,
-                                page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
+                                page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks,studentPaymentFinance
 
                             },
                         }) => ({
-        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks
+        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks,studentPaymentFinance
     })
 )(StudentFinance);

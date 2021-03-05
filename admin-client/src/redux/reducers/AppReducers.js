@@ -52,7 +52,8 @@ const initState = {
     studentPaymentCashbaks :[],
     teacherSalaryAppApi: [],
     attendanceList : [],
-    teacherSalaryList:[]
+    teacherSalaryList:[],
+    studentPaymentFinance :[]
 };
 
 const reducers = {
@@ -394,7 +395,25 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+    [types.REQUEST_GET_STUDENT_PAYMENT_FINANCE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.studentPaymentFinance = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
 
+    },
+    [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        state.showModal1 = false;
+        state.showPaymentEditModal = false;
+        state.showPaymentEditModal1 = false;
+        state.showPaymentModal = false;
+        state.showModal = false;
+    },
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
         state.showModal = false
@@ -456,13 +475,7 @@ const reducers = {
     },
     // FINISH TEACHER SALARY
 
-    [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
-        state.showModal1 = false;
-        state.showPaymentEditModal = false;
-        state.showPaymentEditModal1 = false;
-        state.showPaymentModal = false;
-        state.showModal = false;
-    },
+
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>

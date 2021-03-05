@@ -302,6 +302,7 @@ export const getStudentGroupsApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/studentGroup/" + data)
 }
 
+
 // FINISH STUDENT API
 
 // START STUDENT PAYMENT API
@@ -327,6 +328,12 @@ export const getStudentPaymentCashbacksApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/paymentCashbacks" + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size : ""))
 }
+
+export const getFinanceStudentApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/finance" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size +"&type=" + data.type : ""))
+}
+
 
 // FINISH STUDENT PAYMENT API
 
