@@ -258,4 +258,18 @@ public class GroupService {
             return apiResponseService.notFoundResponse();
         }
     }
+
+    public ApiResponse getGroups() {
+        try {
+            List<Group> groups = groupRepository.findAll();
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(), all.stream().map(this::makeGroupTable).collect(Collectors.toList())));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }

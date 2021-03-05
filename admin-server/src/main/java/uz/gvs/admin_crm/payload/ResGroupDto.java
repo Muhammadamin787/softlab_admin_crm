@@ -14,7 +14,6 @@ import java.util.UUID;
 @Data
 public class ResGroupDto {
     private Integer id;
-
     private String name;
     private String courseName;
     private UUID teacherId;

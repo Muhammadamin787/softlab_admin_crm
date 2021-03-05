@@ -41,6 +41,11 @@ public class GroupController {
         ApiResponse apiResponse = groupService.getGroupList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+    @GetMapping("/schedule")
+    public HttpEntity<?> getGroups() {
+        ApiResponse apiResponse = groupService.getGroups();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
     @GetMapping("/select")
     public HttpEntity<?> getGroupForSelect() {
