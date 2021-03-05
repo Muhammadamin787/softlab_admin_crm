@@ -9,8 +9,6 @@ import uz.gvs.admin_crm.payload.AttendanceDto;
 import uz.gvs.admin_crm.payload.StudentAttendDto;
 import uz.gvs.admin_crm.repository.*;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +27,9 @@ public class AttendanceService {
     @Autowired
     StudentRepository studentRepository;
     @Autowired
-    StudentAttendancePaymentRepository studentAttendancePaymentRepository;
+    TeacherPaymentRepository teacherPaymentRepository;
     @Autowired
-    TeacherAttendancePaymentRepository teacherAttendancePaymentRepository;
+    PaymentRepository paymentRepository;
 
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
@@ -46,7 +44,7 @@ public class AttendanceService {
                 double dailyPrice = 0;
                 Teacher teacher = optionalTeacher.get();
                 List<Student> studentList = new ArrayList<>();
-                List<StudentAttendancePayment> studentAttendancePaymentList = new ArrayList<>();
+
                 for (StudentAttendDto sadto : attendanceDto.getStudentList()) {
                     Optional<Student> byId = studentRepository.findById(sadto.getStudentId());
                     if (byId.isPresent()) {
@@ -63,32 +61,36 @@ public class AttendanceService {
                             dailyPrice += group.getCourse().getPrice();
                             student.setBalans(student.getBalans() - group.getCourse().getPrice());
                             studentList.add(student);
-                            studentAttendancePaymentList.add(new StudentAttendancePayment(group,teacher,attendanceDto.getDate(),group.getCourse().getPrice()));
                         }
                     }
                 }
 
-                TeacherAttendancePayment attendancePayment = new TeacherAttendancePayment();
-                attendancePayment.setGroup(group);
-                attendancePayment.setTeacher(teacher);
-                attendancePayment.setDate(attendanceDto.getDate());
 
-
+                double teachPrice = 0;
                 if (teacher.isPercent()){
                     double teacherPrice = dailyPrice / 100 * teacher.getSalary();
                     teacher.setBalance(teacher.getBalance() + teacherPrice);
-                    attendancePayment.setPrice(teacherPrice);
+                    teachPrice = dailyPrice / 100 * teacher.getSalary();
                 }else {
                     teacher.setBalance(teacher.getBalance() + teacher.getSalary());
-                    attendancePayment.setPrice(teacher.getSalary());
+                    teachPrice = teacher.getSalary();
                 }
-                List<StudentAttendancePayment> studentAttendancePaymentList1 = studentAttendancePaymentRepository.saveAll(studentAttendancePaymentList);
-                attendancePayment.setStudentList(studentAttendancePaymentList1);
-                teacherAttendancePaymentRepository.save(attendancePayment);
 
                 teacherRepository.save(teacher);
                 studentRepository.saveAll(studentList);
                 List<Attendance> attendances1 = attendanceRepository.saveAll(attendances);
+
+                List<Payment> paymentList = new ArrayList<>();
+                for (Attendance attendance : attendances1) {
+                    Payment payment = new Payment();
+                    payment.setAttendance(attendance);
+                    payment.setAmount(attendance.getAttandanceEnum().equals(AttandanceEnum.YES) ? group.getCourse().getPrice() : 0);
+                    paymentList.add(payment);
+                }
+
+                    List<Payment> paymentList1 = paymentRepository.saveAll(paymentList);
+
+                teacherPaymentRepository.save(new TeacherPayment(paymentList1,teachPrice,attendanceDto.getDate()));
                 //studetent balansidan pul yechib olish
                 return apiResponseService.saveResponse();
             } else {
