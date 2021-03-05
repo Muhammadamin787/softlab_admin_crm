@@ -1688,7 +1688,8 @@ export const editTeacherSalaryListAction = (payload) => (dispatch) => {
 
         toast.success(res.payload.message)
         dispatch({
-            type: {
+            type: "updateState",
+            payload: {
                 showEditSalaryModal: false
             }
         })
