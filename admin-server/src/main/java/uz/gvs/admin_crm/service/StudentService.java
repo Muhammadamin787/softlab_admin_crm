@@ -482,8 +482,8 @@ public class StudentService {
         try {
             String a = data1;
             String b = data2;
-            Date date1=new SimpleDateFormat("dd-MM-yyyy").parse(a);
-            Date date2=new SimpleDateFormat("dd-MM-yyyy").parse(b);
+            Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(a);
+            Date date2 = new SimpleDateFormat("dd-MM-yyyy").parse(b);
             Page<StudentPayment> all = studentPaymentRepository.getByDate(date1, date2, PageRequest.of(page, size));
             return apiResponseService.getResponse(
                     new PageableDto(
@@ -500,8 +500,39 @@ public class StudentService {
     }
 
 
-
-    public ApiResponse getPayments(int page, int size, String all, String byCashbacks, String getPrices) {
-        return  null;
+    public ApiResponse getPayments(int page, int size, String type) {
+        try {
+            switch (type) {
+                case "all" :
+                    Page<StudentPayment> optional = studentPaymentRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    optional.getTotalPages(),
+                                    optional.getTotalElements(),
+                                    optional.getNumber(),
+                                    optional.getSize(),
+                                    optional.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                            )
+                    );
+                case "byCashbacks" :
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getStudentPaymentByCashback(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    byCashback.getTotalPages(),
+                                    byCashback.getTotalElements(),
+                                    byCashback.getNumber(),
+                                    byCashback.getSize(),
+                                    byCashback.get().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                            )
+                    );
+                case "getPrice" : break;
+                default:
+                    System.out.println("Invalid operator!");
+                    break;
+            }
+            return null;
+        } catch (Exception exception) {
+            return apiResponseService.existResponse();
+        }
     }
 }

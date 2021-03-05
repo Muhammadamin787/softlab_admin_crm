@@ -83,22 +83,15 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    @GetMapping("/tolov")
-    public HttpEntity<?> getTolovlar(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        ApiResponse apiResponse = studentService.getTolovlar(page, size);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
 
 
     @GetMapping("/finance")
     public HttpEntity<?> getPayments(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                     @RequestParam(value = "all", defaultValue = "") String all,
-                                     @RequestParam(value = "cashbacks", defaultValue = "") String byCashbacks,
-                                     @RequestParam(value = "getPrices", defaultValue = "") String getPrices) {
-        ApiResponse apiResponse = studentService.getPayments(page, size, all, byCashbacks,getPrices);
+                                     @RequestParam(value = "type", defaultValue = "all") String type
+    ) {
+        ApiResponse apiResponse = studentService.getPayments(page, size, type);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }
-////
+
