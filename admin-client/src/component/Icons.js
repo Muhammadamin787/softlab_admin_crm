@@ -313,5 +313,5 @@ export {
     AddSectionIcon,
     BrandIcon,
     CloseIcon,
-    AddIcon
+    AddIcon,
 };
