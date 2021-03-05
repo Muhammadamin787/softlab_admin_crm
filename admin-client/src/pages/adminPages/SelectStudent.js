@@ -222,7 +222,7 @@ class SelectStudent extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={""}>
+                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -231,7 +231,7 @@ class SelectStudent extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem>
+                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -348,7 +348,7 @@ class SelectStudent extends Component {
                                                 </thead>
                                                 <tbody>
                                                 {studentPayment ? studentPayment.map((item, i) =>
-                                                    <tr key={i + 1}>
+                                                    <tr key={i + 1} className={"table-row-data"}>
                                                         <td>{i + 1}</td>
                                                         <td>{item.sum}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>

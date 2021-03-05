@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+    import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import './adminLayout.scss'
@@ -129,9 +129,8 @@ class AdminLayout extends Component {
                             </Link>
                         </div>
                     </div>
-                    {addMenu}
                     <div
-                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} onClick={addMenu}>
+                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
                         <div className="main-link-div">
                             <Link to="/admin/room" className={
                                 this.props.pathname === "/admin/room" ?
@@ -229,7 +228,7 @@ class AdminLayout extends Component {
                             </Link>
                         </div>
                     </div>
-                    <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} onClick={addMenu1}>
+                    <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
                         <div className={"main-link-div"}>
                             <Link to="/admin/StudentFinance" className={
                                 this.props.pathname === "/admin/" ?

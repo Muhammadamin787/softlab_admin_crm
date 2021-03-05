@@ -150,7 +150,7 @@ class Group extends Component {
                         </Button>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('1');
@@ -159,7 +159,7 @@ class Group extends Component {
                                 Faol Guruhlar
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('2');
@@ -247,7 +247,7 @@ class Group extends Component {
                                 {groups && groups.length > 0 ? groups.map((item, i) =>
                                     item.active ? ""
                                         :
-                                        <tr key={i} className={"table-tr"}>
+                                        <tr key={i} className={"table-row-data"}>
                                             <td>{i + 1}</td>
                                             <td>
                                                 <Link className={"text-dark"} to={"/admin/group/" + (item.id)}>

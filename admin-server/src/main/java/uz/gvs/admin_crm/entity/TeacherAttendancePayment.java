@@ -8,27 +8,28 @@ import uz.gvs.admin_crm.entity.template.AbsEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import java.time.LocalDateTime;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class TeacherSalary extends AbsEntity {
+public class TeacherAttendancePayment extends AbsEntity {
 
-    @OneToOne
+    @ManyToOne(optional = false)
+    private Group group;
+
+    @ManyToOne(optional = false)
     private Teacher teacher;
-    @ManyToOne
-    private PayType payType;
-    private Double amount;
-    private Date amountDate;
-    private String description;
+
+    @OneToMany
+    private List<StudentAttendancePayment> studentList;
+
+    private double price;
+
+    private Date date;
+
 }
-
-
-
-
-

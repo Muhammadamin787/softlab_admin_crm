@@ -81,7 +81,7 @@ class TeacherFinance extends Component {
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('1');
@@ -90,7 +90,7 @@ class TeacherFinance extends Component {
                                 Barchasi
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('2');

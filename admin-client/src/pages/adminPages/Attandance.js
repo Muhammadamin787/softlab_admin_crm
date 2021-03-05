@@ -17,11 +17,21 @@ class Attandance extends Component {
         this.props.dispatch(getGroupsAction({page: 0, size: this.props.size}))
         console.clear()
 
+        let year = new Date().getFullYear()
+        let month = new Date().getMonth()
+        let date = new Date().getDate()
+
+
         let arr = []
         for (let i = 1; i <=new Date(this.state.year, this.state.month+1, 0).getDate();i++){
             arr.push(i)
         }
-        this.setState({daysOfMonth : arr})
+        this.setState({
+            daysOfMonth : arr,
+            year : year,
+            month : month,
+            day : date
+        })
 
 
         let array = []
@@ -34,13 +44,13 @@ class Attandance extends Component {
     }
 
     state = {
-        days : ['Yakshanba','Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'],
+        days : ['Yak','Du', 'Se', 'Chor', 'Pay', 'Juma', 'Shanba'],
         months : ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
 
-        year : 2021,
+        year : '',
         //Bitta kam sanaladi
-        month : 2,
-        day : 2,
+        month : '',
+        day : '',
 
         daysOfMonth : [],
 
@@ -159,20 +169,30 @@ class Attandance extends Component {
                     </Container>
                     <hr />
                     {currentGroup !== "" ?
-                        <>
-                            <Button onClick={minusM}>-</Button>
-                            {" "+year + " - yil, "+ months[month]+" "}
-                            <Button onClick={plusM}>+</Button>
+                        <div className={"position-relative"}>
+                            <Container className={"text-center position-fixed"}>
+                                <Row>
+                                    <Col md={2}>
+                                        <Button onClick={minusM}>-</Button>
+                                    </Col>
+                                    <Col md={8}>
+                                        {" "+year + " - yil, "+ months[month]+" "}
+                                    </Col>
+                                    <Col md={2}>
+                                        <Button onClick={plusM}>+</Button>
+                                    </Col>
+                                </Row>
+                            </Container>
 
                             <br />
                             <Table style={gg}>
                                 <tr>
-                                    <td>Id <hr /> #</td>
-                                    <td>Student<hr />Ism</td>
+                                    <td>#</td>
+                                    <td>Student</td>
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center"}>
-                                                {item}<hr /> {days[new Date(year, month,item).getDay()]}
+                                                {item} / {days[new Date(year, month,item).getDay()]}
                                             </td>
                                         ) : ''
                                     }
@@ -199,8 +219,8 @@ class Attandance extends Component {
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center"}>
-                                                <Button color={'primary'} onClick={()=>showHideModal(item)}>
-                                                    {item+"/"+(month+1)+"/"+year}
+                                                <Button outline color={'primary'} onClick={()=>showHideModal(item)}>
+                                                    Davomat
                                                 </Button>
                                             </td>
                                         ) : ''
@@ -208,7 +228,7 @@ class Attandance extends Component {
                                 </tr>
 
                             </Table>
-                        </>
+                        </div>
                         :
                         ''
                     }
