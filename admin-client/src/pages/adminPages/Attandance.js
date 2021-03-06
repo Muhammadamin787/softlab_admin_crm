@@ -44,7 +44,7 @@ class Attandance extends Component {
     }
 
     state = {
-        days : ['Yak','Du', 'Se', 'Chor', 'Pay', 'Juma', 'Shanba'],
+        days : ['Yak','Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan'],
         months : ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
 
         year : '',
@@ -193,7 +193,7 @@ class Attandance extends Component {
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center attandance-block_table_td__days"}>
-                                                {item} / {days[new Date(year, month,item).getDay()]}
+                                                {item}/{days[new Date(year, month,item).getDay()]}
                                             </td>
                                         ) : ''
                                     }
@@ -201,13 +201,13 @@ class Attandance extends Component {
                                 {students ? students.map((item,i) =>
                                     <tr key={i}>
                                         <td className={"attandance-block_td"}>{i+1}</td>
-                                        <td className={"attandance-block_td"}>{item.fullName}</td>
+                                        <td className={"attandance-block_td py-1"}>{item.fullName}</td>
                                         {daysOfMonth ? daysOfMonth.map(item2 =>
-                                                <td className={"text-center"}>
+                                                <td className={"text-center py-3     p-0"}>
                                                     {
                                                         attendanceList ? attendanceList.map(item3 =>
                                                             (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id  && item3.attandanceEnum === "YES"  ?
-                                                                <Input type={"checkbox"} checked={true} /> : ''
+                                                                <i className="far fa-calendar-check attandance-block_table_td__chacked"/> : ''
                                                         ) : ''
                                                     }
                                                 </td>
@@ -220,7 +220,7 @@ class Attandance extends Component {
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center"}>
-                                                <i onClick={()=>showHideModal(item)} className="far fa-calendar-check"/>
+                                                <i onClick={()=>showHideModal(item)} className="far fa-calendar-plus"/>
                                             </td>
                                         ) : ''
                                     }
