@@ -54,14 +54,14 @@ class SelectGroup extends Component {
 
 
             let arr = []
-            for (let i = 1; i <=new Date(this.state.year, this.state.month+1, 0).getDate();i++){
+            for (let i = 1; i <= new Date(this.state.year, this.state.month + 1, 0).getDate(); i++) {
                 arr.push(i)
             }
             this.setState({
-                daysOfMonth : arr,
-                year : year,
-                month : month,
-                day : date
+                daysOfMonth: arr,
+                year: year,
+                month: month,
+                day: date
             })
         }
     }
@@ -74,24 +74,26 @@ class SelectGroup extends Component {
         groupInput: false,
         newGroup: [],
         days: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan'],
-        months : ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
+        months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
 
-        year : '',
+        year: '',
         //Bitta kam sanaladi
-        month : '',
-        day : '',
+        month: '',
+        day: '',
 
-        daysOfMonth : [],
+        daysOfMonth: [],
 
-        groupSelect : [],
-        currentGroup : "",
-        openModal1 : false,
-        currentDay :''
+        groupSelect: [],
+        currentGroup: "",
+        openModal1: false,
+        currentDay: ''
     }
 
     render() {
-        const {days,months,year,month,daysOfMonth,day,dayName,groupSelect,
-            currentGroup,openModal1,currentDay,currentObject, dropdownOpen, setDropdownOpen} = this.state
+        const {
+            days, months, year, month, daysOfMonth, day, dayName, groupSelect,
+            currentGroup, openModal1, currentDay, currentObject, dropdownOpen, setDropdownOpen
+        } = this.state
         const {
             selectItems,
             changeStatusModal,
@@ -108,36 +110,34 @@ class SelectGroup extends Component {
         } = this.props;
 
         const plusM = () => {
-            if (month === 11)
-            {
-                this.setState({month : 0})
-                this.setState({year : year+1})
-            }else {
-                this.setState({month : month + 1})
+            if (month === 11) {
+                this.setState({month: 0})
+                this.setState({year: year + 1})
+            } else {
+                this.setState({month: month + 1})
             }
 
             let arr = []
-            for (let i = 1; i <=new Date(year, month, 0).getDate();i++){
+            for (let i = 1; i <= new Date(year, month, 0).getDate(); i++) {
                 arr.push(i)
             }
-            this.setState({daysOfMonth : arr})
+            this.setState({daysOfMonth: arr})
 
 
         }
 
         const minusM = () => {
-            if (month === 0)
-            {
-                this.setState({month : 11})
-                this.setState({year : year-1})
-            }else {
-                this.setState({month : month - 1})
+            if (month === 0) {
+                this.setState({month: 11})
+                this.setState({year: year - 1})
+            } else {
+                this.setState({month: month - 1})
             }
             let arr = []
-            for (let i = 1; i <=new Date(year, month, 0).getDate();i++){
+            for (let i = 1; i <= new Date(year, month, 0).getDate(); i++) {
                 arr.push(i)
             }
-            this.setState({daysOfMonth : arr})
+            this.setState({daysOfMonth: arr})
         }
 
         const openModal = (item) => {
@@ -215,13 +215,13 @@ class SelectGroup extends Component {
             }
         }
 
-        const saveAttendance = (e,v) => {
+        const saveAttendance = (e, v) => {
 
             let arr = []
             students.map(item => {
                 arr.push({
-                    studentId:item.id,
-                    active:document.getElementById(item.id).checked
+                    studentId: item.id,
+                    active: document.getElementById(item.id).checked
                 })
             })
             v.studentList = arr
@@ -233,19 +233,20 @@ class SelectGroup extends Component {
         const gg = {
             overflowX: "scroll",
             overflowY: "auto",
-            marginTop : "20px"
+            marginTop: "20px"
         }
 
         const showHideModal = (item) => {
             if (item) {
                 this.setState({
-                    openModal1 : !openModal1,
-                    currentDay: year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item > 9 ? item : "0"+item)
+                    openModal1: !openModal1,
+                    currentDay: year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item > 9 ? item : "0" + item)
                 })
-            }else {
+            } else {
+
                 this.setState({
-                    openModal1 : !openModal1,
-                    currentDay : ""
+                    openModal1: !openModal1,
+                    currentDay: ""
                 })
             }
         }
@@ -253,71 +254,73 @@ class SelectGroup extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <Row>
-                        <Col md={4} >
+                        <Col md={4}>
                             <hgroup className={"course-select-header"}>
-                        <h3>{currentItem && currentItem.name} </h3>
+                                <h3>{currentItem && currentItem.name} </h3>
 
-                        <Link
-                            to={"/admin/groups"} className={"text-decoration-none"}><span
-                            className={""}> Guruhlar</span>
-                        </Link>
-                    </hgroup>
+                                <Link
+                                    to={"/admin/groups"} className={"text-decoration-none"}><span
+                                    className={""}> Guruhlar</span>
+                                </Link>
+                            </hgroup>
                             <div className="row">
-                        {currentItem && currentItem.id ?
-                            <>
-                            <div className={"m-2 p-3 bg-white box-shadow rounded col-md-12 col-10"}>
-                                <div className="row">
-                                    <div className="col-8">
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Nomi</small>
-                                            <h5>{currentItem.name}</h5>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Kurs: </small>
-                                            <h6>{currentItem.course ? currentItem.course.name : ""} </h6>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>O'qituvchi: </small>
-                                            <h6>{currentItem.teacher && currentItem.teacher.user &&
-                                            currentItem.teacher.user.fullName} </h6>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Vaqti: </small>
-                                            <h6>{currentItem.weekdays && currentItem.weekdays.map(i =>
-                                                <span> {i}, </span>)}</h6>
-                                            <h6>{currentItem.startTime + " - " + currentItem.finishTime}</h6>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Guruh muddati: </small>
-                                            <h6>{
-                                                moment(currentItem.startDate).format("DD-MM-yyyy") + " -- " +
-                                                moment(currentItem.finishDate).format("DD-MM-yyyy")
-                                            }</h6>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Xona: </small>
-                                            <h6>{currentItem.room && currentItem.room.name}</h6>
-                                        </hgroup>
-                                        <hgroup>
-                                            <small className={"text-secondary"}>Tavsif: </small>
-                                            <h6>{currentItem.description}</h6>
-                                        </hgroup>
-                                    </div>
-                                    <div className="col-4">
-                                        <Button className="table-icon" onClick={() => openModal(currentItem)}>
-                                            <EditIcon/>
-                                        </Button>
-                                        <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
-                                            <DeleteIcon/>
-                                        </Button>
-                                    </div>
-                                </div>
-                                {/* START GURUHDAGI STUDENTLAR RO'YHATI*/}
-                                <div className={"student-list border-top py-3 px-1"}>
-                                    {students && students.length > 0 && students.map((student, i) =>
-                                        <div key={i} className={"row"}>
-                                            {student.studentGroup ?
-                                                <div className="col-6">
+                                {currentItem && currentItem.id ?
+                                    <>
+                                        <div className={"m-2 p-3 bg-white box-shadow rounded col-md-12 col-10"}>
+                                            <div className="row">
+                                                <div className="col-8">
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Nomi</small>
+                                                        <h5>{currentItem.name}</h5>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Kurs: </small>
+                                                        <h6>{currentItem.course ? currentItem.course.name : ""} </h6>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>O'qituvchi: </small>
+                                                        <h6>{currentItem.teacher && currentItem.teacher.user &&
+                                                        currentItem.teacher.user.fullName} </h6>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Vaqti: </small>
+                                                        <h6>{currentItem.weekdays && currentItem.weekdays.map(i =>
+                                                            <span> {i}, </span>)}</h6>
+                                                        <h6>{currentItem.startTime + " - " + currentItem.finishTime}</h6>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Guruh muddati: </small>
+                                                        <h6>{
+                                                            moment(currentItem.startDate).format("DD-MM-yyyy") + " -- " +
+                                                            moment(currentItem.finishDate).format("DD-MM-yyyy")
+                                                        }</h6>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Xona: </small>
+                                                        <h6>{currentItem.room && currentItem.room.name}</h6>
+                                                    </hgroup>
+                                                    <hgroup>
+                                                        <small className={"text-secondary"}>Tavsif: </small>
+                                                        <h6>{currentItem.description}</h6>
+                                                    </hgroup>
+                                                </div>
+                                                <div className="col-4">
+                                                    <Button className="table-icon"
+                                                            onClick={() => openModal(currentItem)}>
+                                                        <EditIcon/>
+                                                    </Button>
+                                                    <Button className="table-icon"
+                                                            onClick={() => openDeleteModal(currentItem)}>
+                                                        <DeleteIcon/>
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                            {/* START GURUHDAGI STUDENTLAR RO'YHATI*/}
+                                            <div className={"student-list border-top py-3 px-1"}>
+                                                {students && students.length > 0 && students.map((student, i) =>
+                                                        <div key={i} className={"row"}>
+                                                            {student.studentGroup ?
+                                                                <div className="col-6">
                                                     <span
                                                         className={"px-1 " + (student.studentGroup.studentGroupStatus === "TRANSFER" ?
                                                             "bg-light text-secondary" :
@@ -332,92 +335,94 @@ class SelectGroup extends Component {
                                                                             "")}>
                                                 {student.fullName}
                                                 </span>
-                                                </div>
-                                                : ""}
-                                            <div
-                                                className="col-4 small">{formatPhoneNumber(student.phoneNumber)}</div>
-                                            <div className="col-2">
-                                                <Button className="table-icon"
-                                                        onClick={() => changeStatusOpenModal(student)}>
-                                                    <EditIcon/>
-                                                </Button>
+                                                                </div>
+                                                                : ""}
+                                                            <div
+                                                                className="col-4 small">{formatPhoneNumber(student.phoneNumber)}</div>
+                                                            <div className="col-2">
+                                                                <Button className="table-icon"
+                                                                        onClick={() => changeStatusOpenModal(student)}>
+                                                                    <EditIcon/>
+                                                                </Button>
 
+                                                            </div>
+                                                        </div>
+                                                )}
                                             </div>
+                                            {/* FINISH GURUHDAGI STUDENTLAR RO'YHATI*/}
                                         </div>
-                                    )}
-                                </div>
-                                {/* FINISH GURUHDAGI STUDENTLAR RO'YHATI*/}
-                            </div>
-                                <div>
+                                        <div>
 
-                                </div>
-                            </>
-                            : ""}
-                    </div>
+                                        </div>
+                                    </>
+                                    : ""}
+                            </div>
                         </Col>
                         <Col md={8}>
                             {currentItem !== "" ?
                                 <>
                                     <Button onClick={minusM}>-</Button>
-                                    {" "+year + " - yil, "+ months[month]+" "}
+                                    {" " + year + " - yil, " + months[month] + " "}
                                     <Button onClick={plusM}>+</Button>
 
-                                    <br />
-                                    <Table style={gg}>
-                                        <tr>
-                                            <td>#</td>
-                                            <td>Student</td>
-                                            {
-                                                daysOfMonth ? daysOfMonth.map(item =>
-                                                    currentItem ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item).getDay()] ?
-                                                            <td className={"text-center attandance-block_table_td__days"}>
-                                                                {item} / {days[new Date(year, month, item).getDay()]}
-                                                            </td>
-                                                            : ''
+                                    <br/>
+                                    <div style={gg}>
+                                        <Table className={"p-0 m-0"}>
+                                            <tr className={"p-0 m-0"}>
+                                                <td className={"test123"}>#</td>
+                                                <td className={"test123"}>Student</td>
+                                                {
+                                                    daysOfMonth ? daysOfMonth.map(item =>
+                                                        currentItem ? currentItem.weekdays.map(c_item =>
+                                                            c_item === days[new Date(year, month, item).getDay()] ?
+                                                                <td className={"text-center test123 attandance-block_table_td__days"}>
+                                                                    {item}/{days[new Date(year, month, item).getDay()]}
+                                                                </td>
+                                                                : ''
+                                                        ) : ''
                                                     ) : ''
-                                                ) : ''
-                                            }
-                                        </tr>
-                                        {students ? students.map((item, i) =>
-                                            <tr key={i}>
-                                                <td className={"attandance-block_td"}>{i + 1}</td>
-                                                <td className={"attandance-block_td"}>{item.fullName}</td>
-
-                                                {daysOfMonth ? daysOfMonth.map(item2 =>
-                                                    currentItem ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item2).getDay()] ?
-                                                            <td className={"text-center"}>
-                                                                {
-                                                                    attendanceList ? attendanceList.map(item3 =>
-                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                            <Input type={"checkbox"} checked={true}/> : ''
-                                                                    ) : ''
-                                                                }
-                                                            </td>
-                                                            : ''
-                                                    ) : ''
-                                                ) : ''}
+                                                }
                                             </tr>
-                                        ) : ''}
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            {
-                                                daysOfMonth ? daysOfMonth.map(item =>
-                                                    currentItem ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item).getDay()] ?
-                                                            <td className={"text-center"}>
-                                                                <i onClick={() => showHideModal(item)}
-                                                                   className="far fa-calendar-check"/>
-                                                            </td>
-                                                            : ''
-                                                    ) : ''
-                                                ) : ''
-                                            }
-                                        </tr>
+                                            {students ? students.map((item, i) =>
+                                                <tr className={"test123 p-0 m-0"} key={i}>
+                                                    <td className={"attandance-block_td test123"}>{i + 1}</td>
+                                                    <td className={"attandance-block_td test123"}>{item.fullName}</td>
 
-                                    </Table>
+                                                    {daysOfMonth ? daysOfMonth.map(item2 =>
+                                                        currentItem ? currentItem.weekdays.map(c_item =>
+                                                            c_item === days[new Date(year, month, item2).getDay()] ?
+                                                                attendanceList ? attendanceList.map(item3 =>
+                                                                    (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                        <td className={"text-center"}>
+                                                                            <i className={"fa fa-calendar-check my-2"}></i>
+                                                                        </td> : ''
+                                                                ) : ''
+
+
+                                                                : ''
+                                                        ) : ''
+                                                    ) : ''}
+                                                </tr>
+                                            ) : ''}
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                {
+                                                    daysOfMonth ? daysOfMonth.map(item =>
+                                                        currentItem ? currentItem.weekdays.map(c_item =>
+                                                            c_item === days[new Date(year, month, item).getDay()] ?
+                                                                <td className={"text-center"}>
+                                                                    <i onClick={() => showHideModal(item)}
+                                                                       className="far fa-calendar-plus"/>
+                                                                </td>
+                                                                : ''
+                                                        ) : ''
+                                                    ) : ''
+                                                }
+                                            </tr>
+
+                                        </Table>
+                                    </div>
                                 </>
                                 :
                                 ''
@@ -552,16 +557,18 @@ class SelectGroup extends Component {
                     <ModalBody>
                         <AvForm onValidSubmit={saveAttendance}>
                             {/*<AvField type={"date"} name={"date"}/>*/}
-                            <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" />
-                            <AvField type={"hidden"} name={"teacherId"} defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''} />
-                            <AvField type={"hidden"} name={"groupId"} defaultValue={currentItem ? currentItem.id : ''} />
+                            <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''}
+                                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                            <AvField type={"hidden"} name={"teacherId"}
+                                     defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
+                            <AvField type={"hidden"} name={"groupId"} defaultValue={currentItem ? currentItem.id : ''}/>
                             <Table>
-                                {students ? students.map((item,i) =>
+                                {students ? students.map((item, i) =>
                                     <tr key={i}>
-                                        <td>{i+1}</td>
+                                        <td>{i + 1}</td>
                                         <td>{item.fullName}</td>
                                         <td>
-                                            <Input type={"checkbox"} id={item.id} />
+                                            <Input type={"checkbox"} id={item.id}/>
                                         </td>
                                     </tr>
                                 ) : ''}

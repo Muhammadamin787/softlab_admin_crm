@@ -129,7 +129,7 @@ class Attandance extends Component {
         const gg = {
             overflowX: "scroll",
             overflowY: "auto",
-            marginTop: "20px"
+            marginTop: "20px",
         }
 
         const showHideModal = (item) => {
@@ -170,7 +170,7 @@ class Attandance extends Component {
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative"}>
+                        <div className={"position-relative test12345"}>
                             <Container className={"text-center position-fixed"}>
                                 <Row>
                                     <Col md={2}>
@@ -187,7 +187,7 @@ class Attandance extends Component {
 
 
                             <br/>
-                            <Table style={gg}>
+                            <Table style={gg} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -196,7 +196,7 @@ class Attandance extends Component {
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center attandance-block_table_td__days"}>
-                                                        {item} / {days[new Date(year, month, item).getDay()]}
+                                                        {item}/{days[new Date(year, month, item).getDay()]}
                                                     </td>
                                                     : ''
                                             ) : ''
@@ -215,7 +215,7 @@ class Attandance extends Component {
                                                         {
                                                             attendanceList ? attendanceList.map(item3 =>
                                                                 (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                    <Input type={"checkbox"} checked={true}/> : ''
+                                                                    <i className="far fa-calendar-check my-2"/> : ''
                                                             ) : ''
                                                         }
                                                     </td>
@@ -233,7 +233,7 @@ class Attandance extends Component {
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center"}>
                                                         <i onClick={() => showHideModal(item)}
-                                                           className="far fa-calendar-check"/>
+                                                           className="far fa-calendar-plus"/>
                                                     </td>
                                                     : ''
                                             ) : ''
