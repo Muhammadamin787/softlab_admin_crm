@@ -53,7 +53,8 @@ const initState = {
     teacherSalaryAppApi: [],
     attendanceList : [],
     teacherSalaryList:[],
-    studentPaymentFinance :[]
+    studentPaymentFinance :[],
+    teacherPaymentFinance :[]
 };
 
 const reducers = {
@@ -357,12 +358,10 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
         console.clear()
-        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            console.log(payload)
             state.studentPayment = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
@@ -374,7 +373,6 @@ const reducers = {
     },
     [types.REQUEST_GET_STUDENT_PAYMENT_BY_DATE_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            console.log(payload)
             state.studentPayments = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
@@ -472,6 +470,19 @@ const reducers = {
     },
     [types.REQUEST_SAVE_TEACHER_SALARY_SUCCESS](state, payload) {
         state.showOpenSalaryModal1 = false;
+    },
+
+    [types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teacherPaymentFinance = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    console.log(payload)
     },
     // FINISH TEACHER SALARY
 

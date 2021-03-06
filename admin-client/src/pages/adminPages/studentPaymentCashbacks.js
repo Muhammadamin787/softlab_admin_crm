@@ -42,7 +42,7 @@ class studentPaymentCashbacks extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {console.log(studentPaymentCashbaks)}
+
                         {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
                             <tr key={i+1}>
                                 <td>{i+1}</td>

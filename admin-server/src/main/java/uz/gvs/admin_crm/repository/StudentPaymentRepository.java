@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.StudentPayment;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,5 +22,8 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
     Page<StudentPayment> getStudentPaymentByCashback(Pageable pageable);
 
     @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2")
-    Page<StudentPayment> getByDate(Date date1, Date date2, Pageable pageable);
+    Page<StudentPayment> getByDate(Date date1, Date date2,Pageable pageable);
+
+//    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 ")
+//    Integer getByDateCount(Date date1, Date date2);
 }

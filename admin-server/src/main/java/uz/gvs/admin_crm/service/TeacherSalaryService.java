@@ -5,12 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import uz.gvs.admin_crm.entity.Payment;
+import uz.gvs.admin_crm.entity.StudentPayment;
 import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.TeacherSalary;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
+import uz.gvs.admin_crm.payload.PaymentDto;
 import uz.gvs.admin_crm.payload.TeacherSalaryDto;
 import uz.gvs.admin_crm.repository.PayTypeRepository;
+import uz.gvs.admin_crm.repository.PaymentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.TeacherSalaryRepository;
 
@@ -30,6 +34,8 @@ public class TeacherSalaryService {
     ApiResponseService apiResponseService;
     @Autowired
     PayTypeRepository payTypeRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
 
     public ApiResponse minusAmount(TeacherSalaryDto teacherSalaryDto) {
         Optional<Teacher> teacher = teacherRepository.findById(teacherSalaryDto.getTeacherId());
@@ -137,5 +143,45 @@ public class TeacherSalaryService {
                 teacherSalary.getDescription(),
                 teacherSalary.getPayType()
         );
+    }
+
+    public PaymentDto getAllPrices(Payment payment) {
+        return new PaymentDto(
+                payment.getId(),
+                payment.getAttendance(),
+                payment.getAmount()
+        );
+    }
+    public ApiResponse getFinance(int page, int size, String type) {
+        try {
+            switch (type) {
+                case "minusSalary":
+                    Page<TeacherSalary> optional = teacherSalaryRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    optional.getTotalPages(),
+                                    optional.getTotalElements(),
+                                    optional.getNumber(),
+                                    optional.getSize(),
+                                    optional.get().map(this::makeSalaryList).collect(Collectors.toList())
+                            )
+                    );
+                case "plusSalary":
+                    Page<Payment> all = paymentRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return  apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.existResponse();
+        }
     }
 }

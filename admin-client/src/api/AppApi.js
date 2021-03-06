@@ -333,6 +333,10 @@ export const getFinanceStudentApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/finance" + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size +"&type=" + data.type : ""))
 }
+export const getFinanceTeacherApi = (data) => {
+    return HttpClient.doGet(api.teacherSalary + "/finance" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size +"&type=" + data.type : ""))
+}
 
 
 // FINISH STUDENT PAYMENT API

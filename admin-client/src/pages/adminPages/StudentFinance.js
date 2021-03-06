@@ -1,28 +1,25 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
-import {Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
+import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getFinanceAction,
-
-
-  getStudentPaymentListByDateAction,
+    getStudentPaymentListByDateAction,
     getStudentsAction,
     getTeacherSalaryAppAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
+import {AvForm,AvField} from "availity-reactstrap-validation";
 
 class StudentFinance extends Component {
 
     handlePageChange(pageNumber) {
         console.clear()
-        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getFinanceAction({page: (pageNumber - 1), size: this.props.size}))
     }
-
     componentDidMount() {
         console.clear()
-        let id = 0
         this.props.dispatch(getFinanceAction({page: 0, size: this.props.size, type: "all"}))
 
     }
@@ -34,7 +31,7 @@ class StudentFinance extends Component {
         showPaymentEditModal: false,
         currentObject: '',
         addGroup: "",
-        activeTab: "1",
+        activeTab: "all",
         percentOfCash: "",
         sumOfCash: "",
         date1: "",
@@ -43,17 +40,19 @@ class StudentFinance extends Component {
 
     render() {
 
-        const {currentObject, activeTab,} = this.state;
+        const {currentObject, activeTab} = this.state;
         const {
-            dispatch,page, size, totalElements,studentPaymentFinance
+            dispatch, page, size, totalElements, studentPaymentFinance
         } = this.props;
 
 
         const a = (tab) => {
             this.setState({activeTab: tab})
         }
-        const toggle = tab => {
-            dispatch(getFinanceAction({page: 0, size: this.props.size , type : tab}))
+
+        const toggle = (tab) => {
+            this.setState({activeTab: tab})
+            dispatch(getFinanceAction({page: 0, size: this.props.size, type: tab}))
         }
 
         function showHide() {
@@ -61,14 +60,16 @@ class StudentFinance extends Component {
             element.classList.toggle("hide");
         }
 
-        const filtrByDate = (e) => {
-            if(e.nativeEvent.path[0].name === 'date2'){
-                dispatch(getStudentPaymentListByDateAction({page: 0, size: this.props.size, date1: this.state.date1, date2: e.target.value}))
-            }else{
-                this.setState({date1: e.target.value})
-            }
-
+        const filtrByDate = (e,v) => {
+                dispatch(getStudentPaymentListByDateAction({
+                    page: 0,
+                    size: this.props.size,
+                    date1: v.date1,
+                    date2: v.date2,
+                    type: v.type
+                }))
         }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
@@ -76,12 +77,16 @@ class StudentFinance extends Component {
                     <h5 className="mb-3" onClick={showHide}>Filtr</h5>
                     <div id="filtrMenu">
                         <div className="row mb-4">
-                            <div className="col-md-3">
-                                <input type="date" className="form-control" name={"date1"} onChange={filtrByDate}/>
-                            </div>
-                            <div className="col-md-3">
-                                <input type="date" className="form-control" name={"date2"} onChange={filtrByDate}/>
-                            </div>
+                            <Col>
+                                <AvForm onValidSubmit={filtrByDate}>
+                                    <AvField type="date" className="form-control" name={"date1"}/>
+
+                                    <AvField type="date" className="form-control" name={"date2"}/>
+
+                                    <Button type={"submit"}>Saqlash</Button>
+
+                                </AvForm>
+                            </Col>
                         </div>
                     </div>
                     <Nav tabs>
@@ -114,7 +119,7 @@ class StudentFinance extends Component {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="1">
+                        <TabPane tabId="all">
                             <div>
                                 <div className={"flex-column container"}>
                                     <Table className={"table-style w-100"}>
@@ -130,7 +135,6 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(studentPaymentFinance)}
                                         {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
                                                 <td>{i + 1}</td>
@@ -160,7 +164,7 @@ class StudentFinance extends Component {
                                 </div>
                             </div>
                         </TabPane>
-                        <TabPane tabId="2">
+                        <TabPane tabId="byCashbacks">
                             <div>
                                 <div className={"flex-column container"}>
                                     <Table className={"table-style w-100"}>
@@ -205,6 +209,49 @@ class StudentFinance extends Component {
                                 </div>
                             </div>
                         </TabPane>
+                        <TabPane tabId="getPrice">
+                            <div>
+                                <div className={"flex-column container"}>
+                                    <Table className={"table-style w-100"}>
+                                        <thead>
+                                        <tr>
+                                            <td>#</td>
+                                            <td>O'quvchi</td>
+                                            <td>Summa</td>
+                                            <td>Tolov vaqti</td>
+                                            <td>Guruhi</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
+                                                <td>
+                                                    <Link
+                                                        to={"/admin/student/" + (item && item.attendance && item.attendance.student
+                                                            ? item.attendance.student.id : '')}>
+                                                        {item && item.attendance && item.attendance.student && item.attendance.student.user ? item.attendance.student.user.fullName + " / " + item.attendance.student.user.phoneNumber : ''}
+                                                    </Link>
+                                                </td>
+                                                <td>{item.amount}</td>
+                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
+                                                <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
+                                                {console.log(item)}
+                                            </tr>
+                                        ) : 'Malumot topilmadi'}
+                                        </tbody>
+                                    </Table>
+                                    <Pagination
+                                        activePage={page + 1}
+                                        itemsCountPerPage={size}
+                                        totalItemsCount={totalElements}
+                                        pageRangeDisplayed={5}
+                                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                        linkClass="page-link"
+                                    />
+                                </div>
+                            </div>
+                        </TabPane>
                     </TabContent>
                 </div>
             </AdminLayout>
@@ -217,10 +264,15 @@ StudentFinance.propTypes = {};
 export default connect(({
                             app: {
                                 studentPayments,
-                                page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks,studentPaymentFinance
+                                page,
+                                size,
+                                totalElements,
+                                teacherSalaryAppApi,
+                                studentPaymentCashbaks,
+                                studentPaymentFinance
 
                             },
                         }) => ({
-        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks,studentPaymentFinance
+        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks, studentPaymentFinance
     })
 )(StudentFinance);

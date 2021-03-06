@@ -131,7 +131,7 @@ import {
     saveAttendanceAppApi,
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
-    getFinanceStudentApi,
+    getFinanceStudentApi, getFinanceTeacherApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1471,6 +1471,17 @@ export const getFinanceAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_STUDENT_PAYMENT_FINANCE_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getFinanceTeacherAction = (data) => (dispatch) => {
+    dispatch({
+        api: getFinanceTeacherApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data
