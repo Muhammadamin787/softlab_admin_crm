@@ -361,12 +361,10 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
         console.clear()
-        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            console.log(payload)
             state.studentPayment = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
@@ -486,7 +484,8 @@ const reducers = {
     },
     // SCHEDULE
     [types.REQUEST_DAILY_SCHEDULE](state, payload) {
-        console.log(payload.payload.object)
+        state.dailySchedule = null
+        state.dailySchedule = payload.payload.object;
     },
 
 

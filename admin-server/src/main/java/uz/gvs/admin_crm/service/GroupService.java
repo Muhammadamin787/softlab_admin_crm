@@ -103,7 +103,8 @@ public class GroupService {
                     group.getStartDate(),
                     group.getFinishDate(),
                     group.getGroupStatus(),
-                    group.isActive()
+                    group.isActive(),
+                    group.getRoom()
             );
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
@@ -265,6 +266,15 @@ public class GroupService {
         try {
             WeekdayName weekdayName = WeekdayName.valueOf(weekName);
             List<Group> groups = groupRepository.findAllGroups(weekName);
+            return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getAllGroups() {
+        try {
+            List<Group> groups = groupRepository.findAllGroups1();
             return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();

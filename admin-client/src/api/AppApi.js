@@ -422,7 +422,7 @@ export const getTeacherSalaryAppApi = () => {
 // START SCHEDULE
 
 export const getDailyScheduleList = (data) => {
-    return HttpClient.doGet(api.group + "/schedule" + "/MONDAY");
+    return HttpClient.doGet(api.group + "/schedule/" + data);
 }
 
 // END SCHEDULE

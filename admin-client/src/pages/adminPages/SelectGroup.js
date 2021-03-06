@@ -243,7 +243,6 @@ class SelectGroup extends Component {
                     currentDay: year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item > 9 ? item : "0" + item)
                 })
             } else {
-
                 this.setState({
                     openModal1: !openModal1,
                     currentDay: ""
@@ -366,63 +365,62 @@ class SelectGroup extends Component {
                                     <Button onClick={plusM}>+</Button>
 
                                     <br/>
-                                    <div style={gg}>
-                                        <Table className={"p-0 m-0"}>
-                                            <tr className={"p-0 m-0"}>
-                                                <td className={"test123"}>#</td>
-                                                <td className={"test123"}>Student</td>
-                                                {
-                                                    daysOfMonth ? daysOfMonth.map(item =>
-                                                        currentItem ? currentItem.weekdays.map(c_item =>
-                                                            c_item === days[new Date(year, month, item).getDay()] ?
-                                                                <td className={"text-center test123 attandance-block_table_td__days"}>
-                                                                    {item}/{days[new Date(year, month, item).getDay()]}
-                                                                </td>
-                                                                : ''
-                                                        ) : ''
+                                    <Table style={gg}>
+                                        <tr>
+                                            <td>#</td>
+                                            <td>Student</td>
+                                            {
+                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                            <td className={"text-center attandance-block_table_td__days"}>
+                                                                {item} / {days[new Date(year, month, item).getDay()]}
+                                                            </td>
+                                                            : ''
                                                     ) : ''
-                                                }
-                                            </tr>
-                                            {students ? students.map((item, i) =>
-                                                <tr className={"test123 p-0 m-0"} key={i}>
-                                                    <td className={"attandance-block_td test123"}>{i + 1}</td>
-                                                    <td className={"attandance-block_td test123"}>{item.fullName}</td>
+                                                ) : ''
+                                            }
+                                        </tr>
+                                        {students ? students.map((item, i) =>
+                                            <tr key={i}>
+                                                <td className={"attandance-block_td"}>{i + 1}</td>
+                                                <td className={"attandance-block_td"}>{item.fullName}</td>
 
-                                                    {daysOfMonth ? daysOfMonth.map(item2 =>
-                                                        currentItem ? currentItem.weekdays.map(c_item =>
-                                                            c_item === days[new Date(year, month, item2).getDay()] ?
-                                                                attendanceList ? attendanceList.map(item3 =>
-                                                                    (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                        <td className={"text-center"}>
-                                                                            <i className={"fa fa-calendar-check my-2"}></i>
-                                                                        </td> : ''
-                                                                ) : ''
-
-
-                                                                : ''
-                                                        ) : ''
-                                                    ) : ''}
-                                                </tr>
-                                            ) : ''}
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                {
-                                                    daysOfMonth ? daysOfMonth.map(item =>
-                                                        currentItem ? currentItem.weekdays.map(c_item =>
-                                                            c_item === days[new Date(year, month, item).getDay()] ?
-                                                                <td className={"text-center"}>
-                                                                    <i onClick={() => showHideModal(item)}
-                                                                       className="far fa-calendar-plus"/>
-                                                                </td>
-                                                                : ''
-                                                        ) : ''
+                                                {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item2).getDay()] ?
+                                                            <td className={"text-center"}>
+                                                                {
+                                                                    attendanceList ? attendanceList.map(item3 =>
+                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                            <Input type={"checkbox"}
+                                                                                   checked={true}/> : ''
+                                                                    ) : ''
+                                                                }
+                                                            </td>
+                                                            : ''
                                                     ) : ''
-                                                }
+                                                ) : ''}
                                             </tr>
+                                        ) : ''}
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            {
+                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                            <td className={"text-center"}>
+                                                                <i onClick={() => showHideModal(item)}
+                                                                   className="far fa-calendar-check"/>
+                                                            </td>
+                                                            : ''
+                                                    ) : ''
+                                                ) : ''
+                                            }
+                                        </tr>
 
-                                        </Table>
-                                    </div>
+                                    </Table>
                                 </>
                                 :
                                 ''
