@@ -50,7 +50,9 @@ const initState = {
     studentPaymentCashbaks :[],
     teacherSalaryAppApi: [],
     attendanceList : [],
-    teacherSalaryList:[]
+    teacherSalaryList:[],
+    rooms: [],
+    dailySchedule: []
 };
 
 const reducers = {
@@ -102,6 +104,11 @@ const reducers = {
 
     // FINISH CLIENT STATUS REDUCER
     // Room
+
+    [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
+        state.rooms = null
+        state.rooms = payload.object.object
+    },
     [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
         state.rooms = payload.payload.object.sort((a, b) =>
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
@@ -476,6 +483,10 @@ const reducers = {
     },
     [types.REQUEST_GET_ATTENDANCE_SUCCESS](state, payload) {
         state.attendanceList = payload.payload.object
+    },
+    // SCHEDULE
+    [types.REQUEST_DAILY_SCHEDULE](state, payload) {
+        console.log(payload.payload.object)
     },
 
 
