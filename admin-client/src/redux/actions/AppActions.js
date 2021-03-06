@@ -126,7 +126,7 @@ import {
     changeGroupStatusApi,
     changeGroupToArchiveStatusApi,
     changeGroupToActiveStatusApi,
-    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi,
+    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi, getDailyScheduleList,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1740,3 +1740,18 @@ export const getTeacherSalaryAppAction = () => (dispatch) => {
     })
 }
 // FINISH TEACHER SALARY
+
+// START SCHEDULE
+
+export const getDailySchedule = () => (dispatch) => {
+    dispatch({
+        api: getDailyScheduleList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_DAILY_SCHEDULE,
+            types.REQUEST_ERROR
+        ]
+    })
+}
+
+// END SCHEDULE

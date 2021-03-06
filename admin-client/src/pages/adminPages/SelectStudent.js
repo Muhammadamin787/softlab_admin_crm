@@ -158,20 +158,14 @@ class SelectStudent extends Component {
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
-                console.log(currentObject);
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
                     v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
-                    // let a = v.cashbackId.split(',')
-                    // v.cashbackId = a[0];
                     dispatch(saveStudentPaymentAction(v));
-                    console.log(v)
-                    // dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
                     v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
-                    // dispatch(saveStudentAction(v))
                 }
             }
         }

@@ -1,9 +1,23 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
 body {
   overflow: auto !important;
 }
 
 /*START DASHBOARD*/
 
+.schedule-block {
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+
+  &__title {
+    padding: 1.5rem 1rem;
+    color: rgb(33, 33, 33);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+  }
+}
 
 /*END DASHBOARD*/
 
@@ -36,6 +50,7 @@ body {
 
 .tab-item-style-default:not(:first-child) {
   margin-left: 1rem;
+  cursor: pointer;
 }
 .hide{
   display: none;
