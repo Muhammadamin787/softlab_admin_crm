@@ -370,8 +370,8 @@ class SelectGroup extends Component {
                                             <td>#</td>
                                             <td>Student</td>
                                             {
-                                                daysOfMonth ? daysOfMonth.map(item =>
-                                                    currentGroup ? currentGroup.weekdays.map(c_item =>
+                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
                                                         c_item === days[new Date(year, month, item).getDay()] ?
                                                             <td className={"text-center attandance-block_table_td__days"}>
                                                                 {item} / {days[new Date(year, month, item).getDay()]}
@@ -386,8 +386,8 @@ class SelectGroup extends Component {
                                                 <td className={"attandance-block_td"}>{i + 1}</td>
                                                 <td className={"attandance-block_td"}>{item.fullName}</td>
 
-                                                {daysOfMonth ? daysOfMonth.map(item2 =>
-                                                    currentItem ? currentItem.weekdays.map(c_item =>
+                                                {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
                                                         c_item === days[new Date(year, month, item2).getDay()] ?
                                                             <td className={"text-center"}>
                                                                 {
@@ -407,8 +407,8 @@ class SelectGroup extends Component {
                                             <td></td>
                                             <td></td>
                                             {
-                                                daysOfMonth ? daysOfMonth.map(item =>
-                                                    currentItem ? currentItem.weekdays.map(c_item =>
+                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
                                                         c_item === days[new Date(year, month, item).getDay()] ?
                                                             <td className={"text-center"}>
                                                                 <i onClick={() => showHideModal(item)}
@@ -428,7 +428,6 @@ class SelectGroup extends Component {
                         </Col>
                     </Row>
                 </div>
-
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -550,6 +549,7 @@ class SelectGroup extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal isOpen={openModal1}>
                     <ModalHeader>Kunlik davomat</ModalHeader>
                     <ModalBody>
