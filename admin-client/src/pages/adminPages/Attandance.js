@@ -132,7 +132,6 @@ class Attandance extends Component {
             marginTop : "20px"
         }
 
-
         const showHideModal = (item) => {
             if (item) {
                 this.setState({
