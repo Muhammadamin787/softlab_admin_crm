@@ -293,8 +293,15 @@ function BgIcon() {
     );
 }
 
+function calendarIcon() {
+    return (
+        <h1>salom</h1>
+    )
+}
+
 
 export {
+    calendarIcon,
     GlobusIcon,
     LogoMiniIcon,
     ToggleIcon,
