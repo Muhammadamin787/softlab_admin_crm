@@ -263,7 +263,8 @@ public class GroupService {
 
     public ApiResponse getGroups(String weekName) {
         try {
-            List<Group> groups = groupRepository.findAllGroups(WeekdayName.valueOf(weekName));
+            WeekdayName weekdayName = WeekdayName.valueOf(weekName);
+            List<Group> groups = groupRepository.findAllGroups(weekName);
             return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
