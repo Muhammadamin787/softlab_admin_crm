@@ -103,7 +103,8 @@ public class GroupService {
                     group.getStartDate(),
                     group.getFinishDate(),
                     group.getGroupStatus(),
-                    group.isActive()
+                    group.isActive(),
+                    group.getRoom()
             );
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();

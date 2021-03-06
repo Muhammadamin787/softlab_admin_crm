@@ -1743,14 +1743,15 @@ export const getTeacherSalaryAppAction = () => (dispatch) => {
 
 // START SCHEDULE
 
-export const getDailySchedule = () => (dispatch) => {
+export const getDailySchedule = (payload) => (dispatch) => {
     dispatch({
         api: getDailyScheduleList,
         types: [
             types.REQUEST_START,
             types.REQUEST_DAILY_SCHEDULE,
             types.REQUEST_ERROR
-        ]
+        ],
+        data: payload
     })
 }
 
