@@ -92,9 +92,7 @@ class Dashboard extends Component {
             this.props.dispatch(getDailySchedule(e.target.value))
         }
 
-
         console.log(dailySchedule)
-
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -136,7 +134,8 @@ class Dashboard extends Component {
                        </div>
                    </div>
 
-                   <div className={"schedule-block container"}>
+                   <br/>
+                   <div className={"schedule-block container bg-white"}>
                        <p className={"schedule-block__title"}>Schedule</p>
 
                        <Input label={"To'lov turi"}  type={"select"} onChange={l}>
@@ -150,6 +149,7 @@ class Dashboard extends Component {
                        </Input>
 
                        <div className="d-block col-12">
+                           <br/>
                            <Nav tabs>
                                <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                    <NavLink
@@ -205,14 +205,14 @@ class Dashboard extends Component {
                                        {
                                            list ? list.map((item, i) =>
                                                <tr key={i}>
-                                                   <td>{item}</td>
+                                                   <td className={"border-style-table-dashboard"}>{item}</td>
                                                    {rooms ? rooms.map((item2, i) =>
                                                        dailySchedule ? dailySchedule.map((item3, i) =>
                                                            item === item3.startTime ?
                                                                item3 && item3.room && item3.room.id === item2.id ?
                                                                    <>
                                                                        {d(item3.room.id)}
-                                                                       <td rowSpan={c(item3.startTime, item3.finishTime)}>
+                                                                       <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
                                                                            {item3.name}
                                                                        </td>
                                                                    </>
@@ -329,8 +329,10 @@ class Dashboard extends Component {
                                {/*  END TAB PANE  */}
 
                            </TabContent>
+                           <br/>
                        </div>
                    </div>
+                   <br/>
                </div>
             </AdminLayout>
         );
