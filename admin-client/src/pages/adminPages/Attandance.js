@@ -207,7 +207,7 @@ class Attandance extends Component {
                                                     {
                                                         attendanceList ? attendanceList.map(item3 =>
                                                             (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id  && item3.attandanceEnum === "YES"  ?
-                                                                <i className="far fa-calendar-check attandance-block_table_td__chacked"/> : ''
+                                                                <Input type={"checkbox"} checked className="attandance-block_table_td__chacked"/> : ''
                                                         ) : ''
                                                     }
                                                 </td>
@@ -220,7 +220,7 @@ class Attandance extends Component {
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             <td className={"text-center"}>
-                                                <i onClick={()=>showHideModal(item)} className="far fa-calendar-plus"/>
+                                                <Button onClick={()=>showHideModal(item)} className=""/>
                                             </td>
                                         ) : ''
                                     }
