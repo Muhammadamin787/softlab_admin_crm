@@ -11,7 +11,7 @@ import {
     Dropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem, Container, Table, Input
+    DropdownItem, Container, Table, Input, NavItem, NavLink, Nav, TabContent, TabPane
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
@@ -19,7 +19,7 @@ import {
     deleteCourseAction, deleteGroupAction, getAttendanceListAction,
     getCoursesAction,
     getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
-    getRoomListAction, getStudentsByGroupAction,
+    getRoomListAction, getStudentPaymentAction, getStudentsByGroupAction,
     getTeachersForSelectAction, saveAttendanceAction,
     saveGroupAction,
 } from "../../redux/actions/AppActions";
@@ -71,6 +71,7 @@ class SelectGroup extends Component {
         currentObject: "",
         dropdownOpen: false,
         setDropdownOpen: false,
+        activeTab: "1",
         groupInput: false,
         newGroup: [],
         days: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan'],
@@ -91,7 +92,7 @@ class SelectGroup extends Component {
 
     render() {
         const {
-            days, months, year, month, daysOfMonth, day, dayName, groupSelect,
+            days, months, year, month, daysOfMonth, activeTab, day, dayName, groupSelect,
             currentGroup, openModal1, currentDay, currentObject, dropdownOpen, setDropdownOpen
         } = this.state
         const {
@@ -233,7 +234,11 @@ class SelectGroup extends Component {
         const gg = {
             overflowX: "scroll",
             overflowY: "auto",
-            marginTop: "20px"
+            marginTop: "20px",
+            fontSize: "14px"
+        }
+        const tableStyle = {
+            backgroundColor: "white"
         }
 
         const showHideModal = (item) => {
@@ -247,6 +252,15 @@ class SelectGroup extends Component {
                     openModal1: !openModal1,
                     currentDay: ""
                 })
+            }
+        }
+        const toggle = tab => {
+            if (activeTab !== tab)
+                this.setState({activeTab: tab})
+            if (tab === "2") {
+                if (this.props.match && this.props.match.params && this.props.match.params.id) {
+                    dispatch(getStudentPaymentAction(this.props.match.params.id))
+                }
             }
         }
         return (
@@ -359,69 +373,106 @@ class SelectGroup extends Component {
                         </Col>
                         <Col md={8}>
                             {currentItem !== "" ?
-                                <>
-                                    <Button onClick={minusM}>-</Button>
-                                    {" " + year + " - yil, " + months[month] + " "}
-                                    <Button onClick={plusM}>+</Button>
+                                <div className={"mt-5"}>
+                                    <Nav tabs>
+                                        <NavItem className={activeTab === '1' ? "tab-item-style-active1" : "tab-item-style-default1"}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('1');
+                                                }}
+                                            >
+                                                Davomat
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem className={activeTab === '2' ? "tab-item-style-active1" : "tab-item-style-default1"}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    toggle('2');
+                                                }}
+                                            >
+                                                Chegirmalar
+                                            </NavLink>
+                                        </NavItem>
+                                    </Nav>
+                                    <TabContent activeTab={activeTab}>
+                                        <TabPane tabId="1">
+                                            <div style={tableStyle} className={"p-4"} >
+                                                <div className={"text-center position-fixed"}>
+                                                    <Row>
+                                                        <Col md={2}>
+                                                            <i onClick={minusM} className="fas fa-angle-left"/>
+                                                        </Col>
+                                                        <Col md={8}>
+                                                            {" " + year + " - yil, " + months[month] + " "}
+                                                        </Col>
+                                                        <Col md={2}>
+                                                            <i onClick={plusM} className="fa fa-angle-right"/>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
 
-                                    <br/>
-                                    <Table style={gg}>
-                                        <tr>
-                                            <td>#</td>
-                                            <td>Student</td>
-                                            {
-                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
-                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item).getDay()] ?
-                                                            <td className={"text-center attandance-block_table_td__days"}>
-                                                                {item} / {days[new Date(year, month, item).getDay()]}
-                                                            </td>
-                                                            : ''
-                                                    ) : ''
-                                                ) : ''
-                                            }
-                                        </tr>
-                                        {students ? students.map((item, i) =>
-                                            <tr key={i}>
-                                                <td className={"attandance-block_td"}>{i + 1}</td>
-                                                <td className={"attandance-block_td"}>{item.fullName}</td>
-
-                                                {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
-                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item2).getDay()] ?
-                                                            <td className={"text-center"}>
-                                                                {
-                                                                    attendanceList ? attendanceList.map(item3 =>
-                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                            <Input type={"checkbox"}
-                                                                                   checked={true}/> : ''
+                                                <br/>
+                                                <div style={gg}>
+                                                    <Table>
+                                                        <tr>
+                                                            <td className={"py-2"}>#</td>
+                                                            <td className={"py-2"}>Student</td>
+                                                            {
+                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                                            <td className={"text-center py-2 attandance-block_table_td__days"}>
+                                                                                {item}/{days[new Date(year, month, item).getDay()]}
+                                                                            </td>
+                                                                            : ''
                                                                     ) : ''
-                                                                }
-                                                            </td>
-                                                            : ''
-                                                    ) : ''
-                                                ) : ''}
-                                            </tr>
-                                        ) : ''}
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            {
-                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
-                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                        c_item === days[new Date(year, month, item).getDay()] ?
-                                                            <td className={"text-center"}>
-                                                                <i onClick={() => showHideModal(item)}
-                                                                   className="far fa-calendar-check"/>
-                                                            </td>
-                                                            : ''
-                                                    ) : ''
-                                                ) : ''
-                                            }
-                                        </tr>
+                                                                ) : ''
+                                                            }
+                                                        </tr>
+                                                        {students ? students.map((item, i) =>
+                                                            <tr key={i}>
+                                                                <td className={"attandance-block_td py-3"}>{i + 1}</td>
+                                                                <td className={"attandance-block_td py-2"}>{item.fullName}</td>
 
-                                    </Table>
-                                </>
+                                                                {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
+                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                        c_item === days[new Date(year, month, item2).getDay()] ?
+                                                                            <td className={"text-center py-2"}>
+                                                                                {
+                                                                                    attendanceList ? attendanceList.map(item3 =>
+                                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                                            <i className="fa fa-calendar-check my-2"/> : ''
+                                                                                    ) : ''
+                                                                                }
+                                                                            </td>
+                                                                            : ''
+                                                                    ) : ''
+                                                                ) : ''}
+                                                            </tr>
+                                                        ) : ''}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            {
+                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
+                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                                            <td className={"text-center"}>
+                                                                                <i onClick={() => showHideModal(item)}
+                                                                                   className="far fa-calendar-plus"/>
+                                                                            </td>
+                                                                            : ''
+                                                                    ) : ''
+                                                                ) : ''
+                                                            }
+                                                        </tr>
+
+                                                    </Table>
+                                                </div>
+                                            </div>
+                                        </TabPane>
+                                    </TabContent>
+                                </div>
                                 :
                                 ''
                             }
