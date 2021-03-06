@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
