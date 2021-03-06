@@ -54,7 +54,9 @@ const initState = {
     attendanceList : [],
     teacherSalaryList:[],
     studentPaymentFinance :[],
-    teacherPaymentFinance :[]
+    teacherPaymentFinance :[],
+    rooms: [],
+    dailySchedule: []
 };
 
 const reducers = {
@@ -106,6 +108,11 @@ const reducers = {
 
     // FINISH CLIENT STATUS REDUCER
     // Room
+
+    [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
+        state.rooms = null
+        state.rooms = payload.object.object
+    },
     [types.REQUEST_GET_ROOM_SUCCESS](state, payload) {
         state.rooms = payload.payload.object.sort((a, b) =>
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
@@ -358,10 +365,12 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
         console.clear()
+        console.log(payload)
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            console.log(payload)
             state.studentPayment = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
@@ -371,17 +380,7 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-    [types.REQUEST_GET_STUDENT_PAYMENT_BY_DATE_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.studentPayments = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-    },
+
     [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.studentPayments = payload.payload.object.object.sort((a, b) =>
@@ -393,25 +392,7 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-    [types.REQUEST_GET_STUDENT_PAYMENT_FINANCE_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.studentPaymentFinance = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
 
-    },
-    [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
-        state.showModal1 = false;
-        state.showPaymentEditModal = false;
-        state.showPaymentEditModal1 = false;
-        state.showPaymentModal = false;
-        state.showModal = false;
-    },
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
         state.showModal = false
@@ -471,22 +452,15 @@ const reducers = {
     [types.REQUEST_SAVE_TEACHER_SALARY_SUCCESS](state, payload) {
         state.showOpenSalaryModal1 = false;
     },
-
-    [types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.teacherPaymentFinance = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-    console.log(payload)
-    },
     // FINISH TEACHER SALARY
 
-
+    [types.REQUEST_SAVE_STUDENT_PAYMENT_SUCCESS](state, payload) {
+        state.showModal1 = false;
+        state.showPaymentEditModal = false;
+        state.showPaymentEditModal1 = false;
+        state.showPaymentModal = false;
+        state.showModal = false;
+    },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
@@ -513,6 +487,10 @@ const reducers = {
     },
     [types.REQUEST_GET_ATTENDANCE_SUCCESS](state, payload) {
         state.attendanceList = payload.payload.object
+    },
+    // SCHEDULE
+    [types.REQUEST_DAILY_SCHEDULE](state, payload) {
+        console.log(payload.payload.object)
     },
 
 
