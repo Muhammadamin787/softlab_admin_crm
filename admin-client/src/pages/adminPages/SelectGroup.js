@@ -73,7 +73,7 @@ class SelectGroup extends Component {
         setDropdownOpen: false,
         groupInput: false,
         newGroup: [],
-        days : ['Yak','Du', 'Se', 'Chor', 'Pay', 'Juma', 'Shanba'],
+        days: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan'],
         months : ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
 
         year : '',
@@ -369,25 +369,34 @@ class SelectGroup extends Component {
                                             <td>Student</td>
                                             {
                                                 daysOfMonth ? daysOfMonth.map(item =>
-                                                    <td className={"text-center"}>
-                                                        {item} / {days[new Date(year, month,item).getDay()]}
-                                                    </td>
+                                                    currentItem ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                            <td className={"text-center attandance-block_table_td__days"}>
+                                                                {item} / {days[new Date(year, month, item).getDay()]}
+                                                            </td>
+                                                            : ''
+                                                    ) : ''
                                                 ) : ''
                                             }
                                         </tr>
-                                        {students ? students.map((item,i) =>
+                                        {students ? students.map((item, i) =>
                                             <tr key={i}>
-                                                <td>{i+1}</td>
-                                                <td>{item.fullName}</td>
+                                                <td className={"attandance-block_td"}>{i + 1}</td>
+                                                <td className={"attandance-block_td"}>{item.fullName}</td>
+
                                                 {daysOfMonth ? daysOfMonth.map(item2 =>
-                                                    <td className={"text-center"}>
-                                                        {
-                                                            attendanceList ? attendanceList.map(item3 =>
-                                                                (year+"-"+((month) > 9 ? (month) : "0"+(month))+"-"+(item2 > 9 ? item2 : "0"+item2)) ===  moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id  && item3.attandanceEnum === "YES"  ?
-                                                                    <Input type={"checkbox"} checked={true} /> : ''
-                                                            ) : ''
-                                                        }
-                                                    </td>
+                                                    currentItem ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item2).getDay()] ?
+                                                            <td className={"text-center"}>
+                                                                {
+                                                                    attendanceList ? attendanceList.map(item3 =>
+                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                            <Input type={"checkbox"} checked={true}/> : ''
+                                                                    ) : ''
+                                                                }
+                                                            </td>
+                                                            : ''
+                                                    ) : ''
                                                 ) : ''}
                                             </tr>
                                         ) : ''}
@@ -396,11 +405,14 @@ class SelectGroup extends Component {
                                             <td></td>
                                             {
                                                 daysOfMonth ? daysOfMonth.map(item =>
-                                                    <td className={"text-center"}>
-                                                        <Button outline color={'primary'} onClick={()=>showHideModal(item)}>
-                                                            Davomat
-                                                        </Button>
-                                                    </td>
+                                                    currentItem ? currentItem.weekdays.map(c_item =>
+                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                            <td className={"text-center"}>
+                                                                <i onClick={() => showHideModal(item)}
+                                                                   className="far fa-calendar-check"/>
+                                                            </td>
+                                                            : ''
+                                                    ) : ''
                                                 ) : ''
                                             }
                                         </tr>
