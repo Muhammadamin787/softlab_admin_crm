@@ -3,7 +3,7 @@ import {api} from './api'
 
 
 export const getAttendanceListAppApi = (data) => {
-    return HttpClient.doGet(api.attendance +"/"+ data)
+    return HttpClient.doGet(api.attendance + "/" + data)
 }
 export const saveAttendanceAppApi = (data) => {
     return HttpClient.doPost(api.attendance, data)
@@ -302,6 +302,7 @@ export const getStudentGroupsApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/studentGroup/" + data)
 }
 
+
 // FINISH STUDENT API
 
 // START STUDENT PAYMENT API
@@ -315,14 +316,24 @@ export const deleteStudentPaymentApi = (data) => {
     return HttpClient.doDelete(api.studentPayment + "/" + data.id)
 }
 
-export const getStudentPaymentListApi = (data) => {
-    return HttpClient.doGet(api.studentPayment + "/list" + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size : ""))
+export const getStudentPaymentListByDateApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/byDate" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size + "&date1=" + data.date1 + "&date2=" + data.date2 + "&type=" + data.type : ""))
 }
-export const getStudentPaymentCashbacksApi = (data) => {
-    return HttpClient.doGet(api.studentPayment + "/paymentCashbacks" + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size : ""))
+export const getTeacherPaymentListByDateApi = (data) => {
+    return HttpClient.doGet(api.teacherSalary + "/byDate" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size + "&date1=" + data.date1 + "&date2=" + data.date2 + "&type=" + data.type : ""))
 }
+
+export const getFinanceStudentApi = (data) => {
+    return HttpClient.doGet(api.studentPayment + "/finance" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size + "&type=" + data.type : ""))
+}
+export const getFinanceTeacherApi = (data) => {
+    return HttpClient.doGet(api.teacherSalary + "/finance" + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size + "&type=" + data.type : ""))
+}
+
 
 // FINISH STUDENT PAYMENT API
 
@@ -402,10 +413,10 @@ export const giveSalaryApi = (data) => {
     return HttpClient.doPost(api.teacherSalary, data)
 }
 export const giveTeacherSalaryApi = (data) => {
-    return HttpClient.doPost(api.salary + "/" +data.teacherId, data)
+    return HttpClient.doPost(api.salary + "/" + data.teacherId, data)
 }
 export const getTeacherSalaryApi = (data) => {
-    return HttpClient.doGet(api.teacherSalary + "/" +data.id + "?page=" + data.page + "&size=" + data.size)
+    return HttpClient.doGet(api.teacherSalary + "/" + data.id + "?page=" + data.page + "&size=" + data.size)
 }
 export const editTeacherSalaryApi = (data) => {
     return HttpClient.doPut(api.teacherSalary + "/" + data.id, data)
