@@ -132,7 +132,7 @@ import {
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
     getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi,
+    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -145,7 +145,7 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
             types.REQUEST_GET_ATTENDANCE_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data : payload
+        data: payload
     })
 }
 export const getStudentsByGroupAction = (data) => (dispatch) => {
@@ -1433,7 +1433,7 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
     })
 }
 
-export const getStudentPaymentListByDateAction= (data) => (dispatch) => {
+export const getStudentPaymentListByDateAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentPaymentListByDateApi,
         types: [
@@ -1467,7 +1467,7 @@ export const getFinanceTeacherAction = (data) => (dispatch) => {
         data
     })
 }
-export const getTeacherPaymentListByDateAction= (data) => (dispatch) => {
+export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
     dispatch({
         api: getTeacherPaymentListByDateApi,
         types: [
@@ -1478,8 +1478,6 @@ export const getTeacherPaymentListByDateAction= (data) => (dispatch) => {
         data
     })
 }
-
-
 
 
 // FINISH STUDENT PAYMENT ACTIONS
@@ -1711,9 +1709,9 @@ export const editTeacherSalaryListAction = (payload) => (dispatch) => {
         data: payload
     }).then(res => {
         dispatch(getTeacherSalaryListAction({
-            id : payload.teacherId,
-            page:0,
-            size:20
+            id: payload.teacherId,
+            page: 0,
+            size: 20
         }))
 
         toast.success(res.payload.message)
@@ -1742,9 +1740,9 @@ export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
         console.log(res)
 
         dispatch(getTeacherSalaryListAction({
-            id : payload.teacher.id,
-            page:0,
-            size:20
+            id: payload.teacher.id,
+            page: 0,
+            size: 20
         }))
 
         dispatch({
@@ -1786,3 +1784,17 @@ export const getDailySchedule = (payload) => (dispatch) => {
 
 // END SCHEDULE
 // FINISH TEACHER SALARY
+
+// START DASHBOARD
+export const getDashboardStatAction = () => (dispatch) => {
+    dispatch({
+        api: getDashboardStatApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_DASHBOARD_STAT_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+
+// FINISH DASHBOARD
