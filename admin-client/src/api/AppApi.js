@@ -445,3 +445,11 @@ export const getDashboardStatApi = () => {
     return HttpClient.doGet(api.dashboard + "/stat")
 }
 //  FINISH DASHBOARD API
+
+// START GET GROUPS OF COURSE
+
+export const getByCourseApi = (data) => {
+    return HttpClient.doGet(api.byCourse + "/" + data.id)
+}
+
+// FINISH GET GROUPS OF COURSE
