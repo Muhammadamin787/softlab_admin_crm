@@ -437,3 +437,9 @@ export const getDailyScheduleList = (data) => {
 }
 
 // END SCHEDULE
+
+// START DASHBOARD API
+export const getDashboardStatApi = () => {
+    return HttpClient.doGet(api.dashboard + "/stat")
+}
+//  FINISH DASHBOARD API
