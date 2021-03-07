@@ -126,7 +126,7 @@ import {
     changeGroupStatusApi,
     changeGroupToArchiveStatusApi,
     changeGroupToActiveStatusApi,
-    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi, getDailyScheduleList,
+    getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi, getDailyScheduleList, getAppealListAllApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -400,7 +400,6 @@ export const getClientStatusListAction = (data) => (dispatch) => {
             types.REQUEST_GET_CLIENT_STATUS_LIST_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data
     })
 }
 export const getClientStatusListForSelectAction = (data) => (dispatch) => {
@@ -1531,6 +1530,20 @@ export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
         ],
         data
     })
+}
+
+export const getAppealListAllAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListAllApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+
+
 }
 export const getOneAppeal = (data) => (dispatch) => {
     dispatch({
