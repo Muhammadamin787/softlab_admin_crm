@@ -10,4 +10,11 @@ import lombok.NoArgsConstructor;
 public class DashboardDto {
     private String label;
     private Integer data;
+    private Integer data2;
+
+
+    public DashboardDto(String label, Integer data) {
+        this.label = label;
+        this.data = data;
+    }
 }

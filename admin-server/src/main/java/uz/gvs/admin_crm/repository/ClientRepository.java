@@ -102,7 +102,7 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     List<Object> getClientAppealHistoryList(UUID client_id);
 
 
-    @Query(nativeQuery = true, value = "select" +
+    @Query(nativeQuery = true, value = "select " +
             "    (select count(*) from client_appeal ca where ca.status_enum='REQUEST') as sorov_soni, " +
             "    (select count(*) from client_appeal ca where ca.status_enum='WAITING' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and (csc.toplam=false and cast(csc.status_id as integer)=(select cs.id from client_status cs where  cast(csc.status_id as integer)=cs.id and cs.client_status_enum<>'REQUEST') or csc.toplam=true and cast(csc.status_id as integer)=(select tl.id  from toplam tl where cast(csc.status_id as integer)=tl.id)))) as kutish_soni,    (select count(*) from client_appeal ca where ca.status_enum='COLLECTION' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and csc.toplam=true)) as toplam_soni, " +
             "    (select count(*) from student) as guruh_student, " +
@@ -112,6 +112,9 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
             "    (select count(*) from groups where start_date<=now() and finish_date>=now()) as active_group, " +
             "    (select count(*) from student where balans<0) as debtor_students")
     List<Object> getStatForFunnel();
+
+    @Query(nativeQuery = true, value = "select to_char(cast(st.created_at as date), 'dd-mm-yyyy') as vaqt, count(*) as barcha, sum(case when st.id=(select ssg.student_id from student_student_group ssg where ssg.student_id=st.id limit 1) then 1 else 0 end)  as faol from student st where st.created_at is not null group by vaqt order by vaqt")
+    List<Object> getStudentStat();
 
 
 }

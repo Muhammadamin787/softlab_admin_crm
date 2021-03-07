@@ -132,7 +132,7 @@ import {
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
     getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi,
+    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getDashboardStudentStatApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1792,6 +1792,16 @@ export const getDashboardStatAction = () => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_DASHBOARD_STAT_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+export const getDashboardStudentStatAction = () => (dispatch) => {
+    dispatch({
+        api: getDashboardStudentStatApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS,
             types.REQUEST_ERROR,
         ]
     })

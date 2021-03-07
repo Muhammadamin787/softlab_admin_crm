@@ -59,6 +59,9 @@ const initState = {
     rooms: [],
     dailySchedule: [],
     dashboardStat: [],
+    studentStat: [],
+    sana: [],
+    multiLineStat: [],
 };
 
 const reducers = {
@@ -523,6 +526,30 @@ const reducers = {
     // START DASHBOARD REDUCERS TYPES
     [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
         state.dashboardStat = payload.payload.object
+    },
+    [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
+        let data = payload.payload.object;
+        let date = [];
+        let allCount = [];
+        let activeCount = [];
+        for (let i = 0; i < data.length; i++) {
+            date.push(data[i].label)
+            allCount.push(data[i].data)
+            activeCount.push(data[i].data2)
+        }
+        state.sana = date
+        state.multiLineStat = [
+            {
+                name: "Umumiy talabalar",
+                data: allCount
+            },
+            {
+                name: "Faol talabalar",
+                data: activeCount
+            }
+        ]
+        console.log(state.multiLineStat);
+        console.log(state.sana);
     },
     // START DASHBOARD REDUCERS TYPES
     updateState(state, {payload}) {

@@ -51,5 +51,24 @@ public class DashboardService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+    public ApiResponse getStudentStat() {
+        try {
+            List<Object> objects = clientRepository.getStudentStat();
+            List<DashboardDto> dashboardDtos = new ArrayList<>();
+            int allCount = 0;
+            int faolCount = 0;
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                String vaqt = client[0].toString();
+                allCount += Integer.parseInt(client[1].toString());
+                faolCount += Integer.parseInt(client[2].toString());
+                dashboardDtos.add(new DashboardDto(vaqt, allCount, faolCount));
+            }
+            return apiResponseService.getResponse(dashboardDtos);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }
 

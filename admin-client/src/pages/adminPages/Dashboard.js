@@ -6,18 +6,20 @@ import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {
     getDailySchedule,
-    getDashboardStatAction,
+    getDashboardStatAction, getDashboardStudentStatAction,
     getRoomListAction,
     getTeacherSalaryListAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Funnel} from 'funnel-react';
+import MultiLine from "../../component/dashboard/MultiLine";
 
 class Dashboard extends Component {
 
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getDashboardStatAction())
+        this.props.dispatch(getDashboardStudentStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         let arr = []
         for (let i = startHour; i < endHour; i++) {
@@ -56,9 +58,10 @@ class Dashboard extends Component {
     render() {
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         const {
+            studentStat,
             dispatch,
             teacherSalaryList,
-            page, size, totalElements,
+            size,
             rooms,
             dailySchedule,
             dashboardStat
@@ -77,7 +80,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
 
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
@@ -134,7 +136,6 @@ class Dashboard extends Component {
                                                 {dashboardStat[7].data}
                                             </h2>
                                             <h6>{dashboardStat[7].label}</h6>
-
                                         </hgroup>
                                     </div>
                                 </div>
@@ -149,8 +150,10 @@ class Dashboard extends Component {
                                         </hgroup>
                                     </div>
                                 </div>
-
-                                <div className={"col-md-6 bg-white p-3"}>
+                                <div className="col-md-5 bg-white p-3">
+                                    <MultiLine/>
+                                </div>
+                                <div className={"col-md-6 bg-white p-3 offset-1"}>
                                     <h5>Sotuv voronkasi</h5>
                                     <Funnel
                                         labelKey='label'
@@ -158,7 +161,7 @@ class Dashboard extends Component {
                                         colors={{
                                             graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
                                             percent: 'red',
-                                            label: 'black',
+                                            label: 'secondary',
                                             value: 'orange'
                                         }}
                                         valueKey='quantity'
@@ -397,6 +400,7 @@ Dashboard.propTypes = {};
 
 export default connect(({
                             app: {
+                                studentStat,
                                 groups,
                                 payTypes,
                                 currentItem,
@@ -420,6 +424,7 @@ export default connect(({
                                 dashboardStat
                             },
                         }) => ({
+        studentStat,
         groups,
         payTypes,
         currentItem,
