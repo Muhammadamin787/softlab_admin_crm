@@ -39,6 +39,8 @@ public class StudentService {
     StudentGroupRepository studentGroupRepository;
     @Autowired
     CashbackRepository cashbackRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -191,7 +193,7 @@ public class StudentService {
         try {
             Optional<Student> byId = studentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -280,17 +282,25 @@ public class StudentService {
     }
 
     public StudentPaymentDto makeStudentPaymentCashbacks(StudentPayment studentPayment) {
-            return new StudentPaymentDto(
-                    studentPayment.getId(),
-                    studentPayment.getPayType(),
-                    studentPayment.getStudent(),
-                    studentPayment.getCashback(),
-                    studentPayment.getCashSum(),
-                    studentPayment.getSum(),
-                    studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
-                    studentPayment.getComment(),
-                    studentPayment.getGroup()
-            );
+        return new StudentPaymentDto(
+                studentPayment.getId(),
+                studentPayment.getPayType(),
+                studentPayment.getStudent(),
+                studentPayment.getCashback(),
+                studentPayment.getCashSum(),
+                studentPayment.getSum(),
+                studentPayment.getPayDate() != null ? studentPayment.getPayDate().toString() : null,
+                studentPayment.getComment(),
+                studentPayment.getGroup()
+        );
+    }
+
+    public PaymentDto getAllPrices(Payment payment) {
+        return new PaymentDto(
+                payment.getId(),
+                payment.getAttendance(),
+                payment.getAmount()
+        );
     }
 
     public ApiResponse getStudentPaymentList(int page, int size) {
@@ -477,5 +487,95 @@ public class StudentService {
         }
     }
 
+//
+    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2,String type) {
+        try {
+            Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            switch (type) {
+                case "all" :
+                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                            )
+                    );
+                case "byCashbacks" :
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    byCashback.getTotalPages(),
+                                    byCashback.getTotalElements(),
+                                    byCashback.getNumber(),
+                                    byCashback.getSize(),
+                                    byCashback.get().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                            )
+                    );
+                case "getPrice":
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    getPrice.getTotalPages(),
+                                    getPrice.getTotalElements(),
+                                    getPrice.getNumber(),
+                                    getPrice.getSize(),
+                                    getPrice.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
+
+    public ApiResponse getPayments(int page, int size, String type) {
+        try {
+            switch (type) {
+                case "all":
+                    Page<StudentPayment> optional = studentPaymentRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    optional.getTotalPages(),
+                                    optional.getTotalElements(),
+                                    optional.getNumber(),
+                                    optional.getSize(),
+                                    optional.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                            )
+                    );
+                case "byCashbacks":
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getStudentPaymentByCashback(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    byCashback.getTotalPages(),
+                                    byCashback.getTotalElements(),
+                                    byCashback.getNumber(),
+                                    byCashback.getSize(),
+                                    byCashback.get().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                            )
+                    );
+                case "getPrice":
+                    Page<Payment> all = paymentRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return  apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.existResponse();
+        }
+    }
 }

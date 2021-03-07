@@ -129,7 +129,7 @@ class Attandance extends Component {
         const gg = {
             overflowX: "scroll",
             overflowY: "auto",
-            marginTop: "20px"
+            marginTop: "20px",
         }
 
         const showHideModal = (item) => {
@@ -164,30 +164,26 @@ class Attandance extends Component {
                                 />
                             </Col>
                             <Col>
-
                             </Col>
                         </Row>
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative"}>
-                            <Container className={"text-center position-fixed"}>
+                        <div className={"position-relative test12345 p-3 mr-3"}>
+                            <div>
                                 <Row>
-                                    <Col md={2}>
+                                    <Col md={1}>
                                         <i onClick={minusM} className="fas fa-angle-left"/>
                                     </Col>
-                                    <Col md={8}>
+                                    <Col md={2}>
                                         {" " + year + " - yil, " + months[month] + " "}
                                     </Col>
-                                    <Col md={2}>
+                                    <Col md={1}>
                                         <i onClick={plusM} className="fa fa-angle-right"/>
                                     </Col>
                                 </Row>
-                            </Container>
-
-
-                            <br/>
-                            <Table style={gg}>
+                            </div>
+                            <Table style={gg} className={"mb-0"} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -196,7 +192,7 @@ class Attandance extends Component {
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center attandance-block_table_td__days"}>
-                                                        {item} / {days[new Date(year, month, item).getDay()]}
+                                                        {item}/{days[new Date(year, month, item).getDay()]}
                                                     </td>
                                                     : ''
                                             ) : ''
@@ -207,7 +203,6 @@ class Attandance extends Component {
                                     <tr key={i}>
                                         <td className={"attandance-block_td"}>{i + 1}</td>
                                         <td className={"attandance-block_td"}>{item.fullName}</td>
-
                                         {daysOfMonth ? daysOfMonth.map(item2 =>
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item2).getDay()] ?
@@ -215,7 +210,7 @@ class Attandance extends Component {
                                                         {
                                                             attendanceList ? attendanceList.map(item3 =>
                                                                 (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                    <Input type={"checkbox"} checked={true}/> : ''
+                                                                    <i className="far fa-calendar-check my-2"/> : ''
                                                             ) : ''
                                                         }
                                                     </td>
@@ -225,29 +220,26 @@ class Attandance extends Component {
                                     </tr>
                                 ) : ''}
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td/>
+                                    <td/>
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center"}>
                                                         <i onClick={() => showHideModal(item)}
-                                                           className="far fa-calendar-check"/>
+                                                           className="far fa-calendar-plus"/>
                                                     </td>
                                                     : ''
                                             ) : ''
                                         ) : ''
                                     }
                                 </tr>
-
                             </Table>
                         </div>
                         :
                         ''
                     }
-
-
                     <Modal isOpen={openModal}>
                         <ModalHeader>Kunlik davomat</ModalHeader>
                         <ModalBody>
@@ -270,14 +262,12 @@ class Attandance extends Component {
                                         </tr>
                                     ) : ''}
                                 </Table>
-
                                 <ModalFooter>
                                     <Button outline onClick={showHideModal}>Bekor qilish</Button>
                                     <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
                                 </ModalFooter>
                             </AvForm>
                         </ModalBody>
-
                     </Modal>
                 </AdminLayout>
             </div>
