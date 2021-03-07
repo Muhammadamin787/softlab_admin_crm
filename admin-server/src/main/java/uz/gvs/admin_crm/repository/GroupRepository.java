@@ -2,6 +2,7 @@ package uz.gvs.admin_crm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.Room;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
@@ -26,4 +27,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Query(nativeQuery = true, value = "select * from groups gr where gr.active = true and gr.group_status = 'ACTIVE'")
     List<Group> findAllGroups1();
+
+    @Query(nativeQuery = true, value = "select * from groups gr where gr.course_id = (select id from course cr where cr.id=:courseId)")
+    List<Group> findGroupByCource(Integer courseId);
 }

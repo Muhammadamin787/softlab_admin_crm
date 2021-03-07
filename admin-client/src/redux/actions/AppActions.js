@@ -1769,6 +1769,7 @@ export const getTeacherSalaryAppAction = () => (dispatch) => {
         ]
     })
 }
+// FINISH TEACHER SALARY
 
 // START SCHEDULE
 
@@ -1785,4 +1786,3 @@ export const getDailySchedule = (payload) => (dispatch) => {
 }
 
 // END SCHEDULE
-// FINISH TEACHER SALARY
