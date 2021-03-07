@@ -4,14 +4,21 @@ import './adminPages.scss';
 import {Button, Col, Input, Nav, NavItem, NavLink, Row, TabContent, Table, TabPane} from "reactstrap";
 import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
-import {getDailySchedule, getRoomListAction, getTeacherSalaryListAction} from "../../redux/actions/AppActions";
+import {
+    getDailySchedule,
+    getDashboardStatAction,
+    getRoomListAction,
+    getTeacherSalaryListAction
+} from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
+import {Funnel} from 'funnel-react';
 
 class Dashboard extends Component {
 
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
+        this.props.dispatch(getDashboardStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
             let arr = []
             for(let i = startHour; i < endHour; i++) {
@@ -46,17 +53,14 @@ class Dashboard extends Component {
     }
 
     render() {
-
-
-
-
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         const {
             dispatch,
             teacherSalaryList,
             page, size, totalElements,
             rooms,
-            dailySchedule
+            dailySchedule,
+            dashboardStat
         } = this.props;
 
         const toggle = tab => {
@@ -74,7 +78,6 @@ class Dashboard extends Component {
         }
 
 
-
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
             let finish = list.findIndex(finish => finish === finishTime)
@@ -84,14 +87,14 @@ class Dashboard extends Component {
         const d = (id) => {
             let roomsIndex = rooms.findIndex(r => r.id === id)
             let arr = []
-            for (let i = 0;i < roomsIndex;i++) {
+            for (let i = 0; i < roomsIndex; i++) {
                 arr.push(
                     <td></td>
                 )
             }
             return arr;
         }
-        const  l = (e) => {
+        const l = (e) => {
             this.props.dispatch(getDailySchedule(e.target.value))
         }
 
@@ -100,57 +103,102 @@ class Dashboard extends Component {
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
-               <div>
-                   <div className={"flex-column container"}>
-                       <div className={"row dashboard-style"}>
-                           <div className="col-md-3 col-analytics-dashboard">
-                               <div className="card">
-                                   <hgroup>
-                                       <h4>Faol talabalar</h4>
-                                       <h2 className="text-warning">5</h2>
-                                   </hgroup>
-                               </div>
-                           </div>
-                           <div className="col-md-3 col-analytics-dashboard">
-                               <div className="card">
-                                   <hgroup>
-                                       <h4>Faol talabalar</h4>
-                                       <h2 className="text-warning">5</h2>
-                                   </hgroup>
-                               </div>
-                           </div>
-                           <div className="col-md-3 col-analytics-dashboard">
-                               <div className="card">
-                                   <hgroup>
-                                       <h4>Faol talabalar</h4>
-                                       <h2 className="text-warning">5</h2>
-                                   </hgroup>
-                               </div>
-                           </div>
-                           <div className="col-md-3 col-analytics-dashboard">
-                               <div className="card">
-                                   <hgroup>
-                                       <h4>Faol talabalar</h4>
-                                       <h2 className="text-warning">5</h2>
-                                   </hgroup>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
+                <div>
+                    <div className={"flex-column container"}>
+                        {dashboardStat && dashboardStat.length > 7 ?
+                            <div className={"row dashboard-style"}>
+                                <div className="col-md-3 col-analytics-dashboard">
+                                    <div className="card">
+                                        <hgroup>
+                                            <h2 className="text-warning">
+                                                {dashboardStat[5].data}
+                                            </h2>
+                                            <h6>{dashboardStat[5].label}</h6>
 
-                   <br/>
-                   <div className={"schedule-block container bg-white"}>
-                       <p className={"schedule-block__title"}>Schedule</p>
+                                        </hgroup>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-analytics-dashboard">
+                                    <div className="card">
+                                        <hgroup>
+                                            <h2 className="text-warning">
+                                                {dashboardStat[6].data}
+                                            </h2>
+                                            <h6>{dashboardStat[6].label}</h6>
 
-                       <Input label={"To'lov turi"}  type={"select"} onChange={l}>
-                           <option value={"MONDAY"}>Dushanba</option>
-                           <option value={"TUESDAY"}>Seshanba</option>
-                           <option value={"WEDNESDAY"}>Chorshanba</option>
-                           <option value={"THURSDAY"}>Payshanba</option>
-                           <option value={"FRIDAY"}>Juma</option>
-                           <option value={"SATURDAY"}>Shanba</option>
-                           <option value={"SUNDAY"}>Yakshanba</option>
-                       </Input>
+                                        </hgroup>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-analytics-dashboard">
+                                    <div className="card">
+                                        <hgroup>
+                                            <h2 className="text-warning">
+                                                {dashboardStat[7].data}
+                                            </h2>
+                                            <h6>{dashboardStat[7].label}</h6>
+
+                                        </hgroup>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-analytics-dashboard">
+                                    <div className="card">
+                                        <hgroup>
+                                            <h2 className="text-warning">
+                                                {dashboardStat[8].data}
+                                            </h2>
+                                            <h6>{dashboardStat[8].label}</h6>
+
+                                        </hgroup>
+                                    </div>
+                                </div>
+
+                                <div className={"col-md-6 bg-white p-3"}>
+                                    <h5>Sotuv voronkasi</h5>
+                                    <Funnel
+                                        labelKey='label'
+                                        height={250}
+                                        colors={{
+                                            graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
+                                            percent: 'red',
+                                            label: 'black',
+                                            value: 'orange'
+                                        }}
+                                        valueKey='quantity'
+                                        displayPercent={true}
+                                        data={[{
+                                            "label": dashboardStat[0].label,
+                                            "quantity": dashboardStat[0].data
+                                        }, {
+                                            "label": dashboardStat[1].label,
+                                            "quantity": dashboardStat[1].data
+                                        }, {
+                                            "label": dashboardStat[2].label,
+                                            "quantity": dashboardStat[2].data
+                                        }, {
+                                            "label": dashboardStat[3].label,
+                                            "quantity": dashboardStat[3].data
+                                        }, {
+                                            "label": dashboardStat[4].label,
+                                            "quantity": dashboardStat[4].data
+                                        },
+                                        ]}/>
+                                </div>
+                            </div>
+                            : ""}
+                    </div>
+
+                    <br/>
+                    <div className={"schedule-block container bg-white"}>
+                        <p className={"schedule-block__title"}>Schedule</p>
+                        <Input label={"To'lov turi"} type={"select"} onChange={l}>
+                            <option value={"MONDAY"}>Dushanba</option>
+                            <option value={"TUESDAY"}>Seshanba</option>
+                            <option value={"WEDNESDAY"}>Chorshanba</option>
+                            <option value={"THURSDAY"}>Payshanba</option>
+                            <option value={"FRIDAY"}>Juma</option>
+                            <option value={"SATURDAY"}>Shanba</option>
+                            <option value={"SUNDAY"}>Yakshanba</option>
+                        </Input>
 
                        <div className="d-block col-12">
                            <br/>
@@ -259,119 +307,119 @@ class Dashboard extends Component {
                                                        ) : ''
                                                    ) : ''}
 
-                                               </tr>
-                                           ) : ''
-                                       }
-                                       </tbody>
-                                   </Table>
-                               </TabPane>
+                                                </tr>
+                                            ) : ''
+                                        }
+                                        </tbody>
+                                    </Table>
+                                </TabPane>
 
-                               <TabPane tabId="2" className={"teacher-salary-block"}>
-                                   <Table>
-                                       <thead>
-                                       <tr>
-                                           <td></td>
-                                           <td>iii</td>
-                                           <td>Super Dispatch</td>
-                                           <td>Kpi.com</td>
-                                           <td>Workly</td>
-                                       </tr>
-                                       </thead>
-                                       <tbody>
-                                       {teacherSalaryList ? teacherSalaryList.map((item, i) =>
-                                           <tr key={i + 1} className={"table-row-data"}>
-                                               <td>{i + 1}</td>
-                                               <td>{item.amount}</td>
-                                               <td>{item.payType ? item.payType.name : ''}</td>
-                                               <td>{item.description}</td>
-                                               <td>{moment(item.amountDate).format('LLL').toString()}</td>
-                                               <td>
-                                                   <Button className="table-icon">
-                                                       <EditIcon/>
-                                                   </Button>
-                                                   <Button className="table-icon">
-                                                       <DeleteIcon/>
-                                                   </Button>
-                                               </td>
-                                           </tr>
-                                       ) : 'Malumot topilmadi'}
-                                       </tbody>
-                                   </Table>
-                               </TabPane>
+                                <TabPane tabId="2" className={"teacher-salary-block"}>
+                                    <Table>
+                                        <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>iii</td>
+                                            <td>Super Dispatch</td>
+                                            <td>Kpi.com</td>
+                                            <td>Workly</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {teacherSalaryList ? teacherSalaryList.map((item, i) =>
+                                            <tr key={i + 1} className={"table-row-data"}>
+                                                <td>{i + 1}</td>
+                                                <td>{item.amount}</td>
+                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item.description}</td>
+                                                <td>{moment(item.amountDate).format('LLL').toString()}</td>
+                                                <td>
+                                                    <Button className="table-icon">
+                                                        <EditIcon/>
+                                                    </Button>
+                                                    <Button className="table-icon">
+                                                        <DeleteIcon/>
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ) : 'Malumot topilmadi'}
+                                        </tbody>
+                                    </Table>
+                                </TabPane>
 
-                               <TabPane tabId="3" className={"teacher-salary-block"}>
-                                   <Table>
-                                       <thead>
-                                       <tr>
-                                           <td></td>
-                                           <td>iii</td>
-                                           <td>Super Dispatch</td>
-                                           <td>Kpi.com</td>
-                                           <td>Workly</td>
-                                       </tr>
-                                       </thead>
-                                       <tbody>
-                                       {teacherSalaryList ? teacherSalaryList.map((item, i) =>
-                                           <tr key={i + 1} className={"table-row-data"}>
-                                               <td>{i + 1}</td>
-                                               <td>{item.amount}</td>
-                                               <td>{item.payType ? item.payType.name : ''}</td>
-                                               <td>{item.description}</td>
-                                               <td>{moment(item.amountDate).format('LLL').toString()}</td>
-                                               <td>
-                                                   <Button className="table-icon">
-                                                       <EditIcon/>
-                                                   </Button>
-                                                   <Button className="table-icon">
-                                                       <DeleteIcon/>
-                                                   </Button>
-                                               </td>
-                                           </tr>
-                                       ) : 'Malumot topilmadi'}
-                                       </tbody>
-                                   </Table>
-                               </TabPane>
+                                <TabPane tabId="3" className={"teacher-salary-block"}>
+                                    <Table>
+                                        <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>iii</td>
+                                            <td>Super Dispatch</td>
+                                            <td>Kpi.com</td>
+                                            <td>Workly</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {teacherSalaryList ? teacherSalaryList.map((item, i) =>
+                                            <tr key={i + 1} className={"table-row-data"}>
+                                                <td>{i + 1}</td>
+                                                <td>{item.amount}</td>
+                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item.description}</td>
+                                                <td>{moment(item.amountDate).format('LLL').toString()}</td>
+                                                <td>
+                                                    <Button className="table-icon">
+                                                        <EditIcon/>
+                                                    </Button>
+                                                    <Button className="table-icon">
+                                                        <DeleteIcon/>
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ) : 'Malumot topilmadi'}
+                                        </tbody>
+                                    </Table>
+                                </TabPane>
 
-                               <TabPane tabId="4" className={"teacher-salary-block"}>
-                                   <Table>
-                                       <thead>
-                                       <tr>
-                                           <td></td>
-                                           <td>iii</td>
-                                           <td>Super Dispatch</td>
-                                           <td>Kpi.com</td>
-                                           <td>Workly</td>
-                                       </tr>
-                                       </thead>
-                                       <tbody>
-                                       {teacherSalaryList ? teacherSalaryList.map((item, i) =>
-                                           <tr key={i + 1} className={"table-row-data"}>
-                                               <td>{i + 1}</td>
-                                               <td>{item.amount}</td>
-                                               <td>{item.payType ? item.payType.name : ''}</td>
-                                               <td>{item.description}</td>
-                                               <td>{moment(item.amountDate).format('LLL').toString()}</td>
-                                               <td>
-                                                   <Button className="table-icon">
-                                                       <EditIcon/>
-                                                   </Button>
-                                                   <Button className="table-icon">
-                                                       <DeleteIcon/>
-                                                   </Button>
-                                               </td>
-                                           </tr>
-                                       ) : 'Malumot topilmadi'}
-                                       </tbody>
-                                   </Table>
-                               </TabPane>
-                               {/*  END TAB PANE  */}
+                                <TabPane tabId="4" className={"teacher-salary-block"}>
+                                    <Table>
+                                        <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>iii</td>
+                                            <td>Super Dispatch</td>
+                                            <td>Kpi.com</td>
+                                            <td>Workly</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {teacherSalaryList ? teacherSalaryList.map((item, i) =>
+                                            <tr key={i + 1} className={"table-row-data"}>
+                                                <td>{i + 1}</td>
+                                                <td>{item.amount}</td>
+                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item.description}</td>
+                                                <td>{moment(item.amountDate).format('LLL').toString()}</td>
+                                                <td>
+                                                    <Button className="table-icon">
+                                                        <EditIcon/>
+                                                    </Button>
+                                                    <Button className="table-icon">
+                                                        <DeleteIcon/>
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ) : 'Malumot topilmadi'}
+                                        </tbody>
+                                    </Table>
+                                </TabPane>
+                                {/*  END TAB PANE  */}
 
-                           </TabContent>
-                           <br/>
-                       </div>
-                   </div>
-                   <br/>
-               </div>
+                            </TabContent>
+                            <br/>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
             </AdminLayout>
         );
     }
@@ -400,7 +448,8 @@ export default connect(({
                                 deleteSalaryModal,
                                 page, size, totalElements,
                                 rooms,
-                                dailySchedule
+                                dailySchedule,
+                                dashboardStat
                             },
                         }) => ({
         groups,
@@ -422,6 +471,7 @@ export default connect(({
         deleteSalaryModal,
         page, size, totalElements,
         rooms,
-        dailySchedule
+        dailySchedule,
+        dashboardStat
     })
 )(Dashboard);

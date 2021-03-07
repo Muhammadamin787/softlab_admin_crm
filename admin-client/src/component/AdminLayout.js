@@ -50,6 +50,16 @@ class AdminLayout extends Component {
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
                         <div className="main-link-div">
+                            <Link to="/admin/card" className={
+                                this.props.pathname === "/admin/card" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-dashboard"/>
+                                <div className="main-link">
+                                    Card
+                                </div>
+                            </Link>
+
                             <Link to="/admin" className={
                                 this.props.pathname === "/admin" ?
                                     "active-link" : "default-link"
@@ -215,26 +225,7 @@ class AdminLayout extends Component {
                                     Xodimlar
                                 </Link>
                             </Link>
-                            <Link to="/admin/staff" className={
-                                this.props.pathname === "/admin/studentPaymentList" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <Link to="/admin/studentPayment"
-                                      className="main-link">
-                                    StudentPaymentlar
-                                </Link>
-                            </Link>
-                            <Link to="/admin/staff" className={
-                                this.props.pathname === "/admin/studentPaymentCashbacks" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <Link to="/admin/studentPaymentCashbacks"
-                                      className="main-link">
-                                    StudentPayment Cashbacklar
-                                </Link>
-                            </Link>
+
                         </div>
                     </div>
                     <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
@@ -257,6 +248,15 @@ class AdminLayout extends Component {
                                     Teacher Moliya
                                 </div>
                             </Link>
+                            {/*<Link to="/admin/AllPayments" className={*/}
+                            {/*    this.props.pathname === "/admin/reklama" ?*/}
+                            {/*        "active-link" : "default-link"*/}
+                            {/*}>*/}
+                            {/*    <span className="icon icon-teacher"/>*/}
+                            {/*    <div className="main-link">*/}
+                            {/*        Barcha Tolovlar*/}
+                            {/*    </div>*/}
+                            {/*</Link>*/}
                         </div>
                     </div>
 

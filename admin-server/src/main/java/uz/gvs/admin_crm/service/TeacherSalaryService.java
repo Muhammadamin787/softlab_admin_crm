@@ -5,17 +5,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import uz.gvs.admin_crm.entity.Payment;
+import uz.gvs.admin_crm.entity.StudentPayment;
 import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.TeacherSalary;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
+import uz.gvs.admin_crm.payload.PaymentDto;
 import uz.gvs.admin_crm.payload.TeacherSalaryDto;
 import uz.gvs.admin_crm.repository.PayTypeRepository;
+import uz.gvs.admin_crm.repository.PaymentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.TeacherSalaryRepository;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,6 +34,8 @@ public class TeacherSalaryService {
     ApiResponseService apiResponseService;
     @Autowired
     PayTypeRepository payTypeRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
 
     public ApiResponse minusAmount(TeacherSalaryDto teacherSalaryDto) {
         Optional<Teacher> teacher = teacherRepository.findById(teacherSalaryDto.getTeacherId());
@@ -54,7 +60,7 @@ public class TeacherSalaryService {
             teacherSalary.setTeacher(teacherRepository.findById(teacherSalaryDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get Teacher")));
             teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")));
             teacherSalary.setAmount(teacherSalaryDto.getAmount());
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
             teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
             teacherSalary.setDescription(teacherSalaryDto.getDescription());
             return teacherSalaryRepository.save(teacherSalary);
@@ -137,5 +143,81 @@ public class TeacherSalaryService {
                 teacherSalary.getDescription(),
                 teacherSalary.getPayType()
         );
+    }
+
+    public PaymentDto getAllPrices(Payment payment) {
+        return new PaymentDto(
+                payment.getId(),
+                payment.getAttendance(),
+                payment.getAmount(),
+                payment.getAmountTeacher()
+        );
+    }
+    public ApiResponse getFinance(int page, int size, String type) {
+        try {
+            switch (type) {
+                case "minusSalary":
+                    Page<TeacherSalary> optional = teacherSalaryRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    optional.getTotalPages(),
+                                    optional.getTotalElements(),
+                                    optional.getNumber(),
+                                    optional.getSize(),
+                                    optional.get().map(this::makeSalaryList).collect(Collectors.toList())
+                            )
+                    );
+                case "plusSalary":
+                    Page<Payment> all = paymentRepository.findAll(PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return  apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.existResponse();
+        }
+    }
+
+    public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
+        try {
+            java.util.Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            switch (type) {
+                case "minusSalary" :
+                    Page<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::makeSalaryList).collect(Collectors.toList())
+                            )
+                    );
+                case "plusSalary" :
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    getPrice.getTotalPages(),
+                                    getPrice.getTotalElements(),
+                                    getPrice.getNumber(),
+                                    getPrice.getSize(),
+                                    getPrice.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 }
