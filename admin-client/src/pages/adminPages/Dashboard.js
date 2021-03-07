@@ -6,6 +6,7 @@ import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {getDailySchedule, getRoomListAction, getTeacherSalaryListAction} from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
+import {setBg} from "../../utils/addFunctions";
 
 class Dashboard extends Component {
 
@@ -33,8 +34,6 @@ class Dashboard extends Component {
             this.setState({
                 list: arr
             })
-
-
     }
 
     state = {
@@ -47,6 +46,10 @@ class Dashboard extends Component {
     }
 
     render() {
+
+
+
+
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         const {
             dispatch,
@@ -93,6 +96,7 @@ class Dashboard extends Component {
         }
 
         console.log(dailySchedule)
+        let startDate, finishDate;
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -212,8 +216,42 @@ class Dashboard extends Component {
                                                                item3 && item3.room && item3.room.id === item2.id ?
                                                                    <>
                                                                        {d(item3.room.id)}
-                                                                       <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
-                                                                           {item3.name}
+                                                                       <td rowSpan={c(item3.startTime, item3.finishTime) + 1} className={"table-group-style"}>
+                                                                           <div style={{backgroundColor: setBg()}} className={"inside-td-block container"}>
+                                                                               <div className={"row"}>
+                                                                                   <span className={"group-name-style-dash"}>
+                                                                                       #{item3.name}
+                                                                                   </span>
+                                                                                   &nbsp;&nbsp;
+                                                                                   <span>
+                                                                                       {item3.courseName}
+                                                                                   </span>
+                                                                                   &nbsp;&nbsp;
+                                                                                   <span>
+                                                                                       {item3.teacherName}
+                                                                                   </span>
+                                                                               </div>
+                                                                               <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startTime}
+                                                                                   </span>--
+                                                                                   <span>
+                                                                                       {item3.finishTime}
+                                                                                   </span>
+                                                                                   <span className={"ml-auto group-name-style-dash"}>
+                                                                                       ST:{item3.countStudent}
+                                                                                   </span>
+                                                                               </div>
+                                                                               <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startDates.substring(0,10)}
+                                                                                   </span>
+                                                                                   --
+                                                                                   <span>
+                                                                                       {item3.finishDates.substring(0,10)}
+                                                                                   </span>
+                                                                               </div>
+                                                                           </div>
                                                                        </td>
                                                                    </>
                                                                    : ''
