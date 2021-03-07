@@ -18,8 +18,8 @@ import uz.gvs.admin_crm.repository.PaymentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.repository.TeacherSalaryRepository;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ public class TeacherSalaryService {
             teacherSalary.setTeacher(teacherRepository.findById(teacherSalaryDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get Teacher")));
             teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")));
             teacherSalary.setAmount(teacherSalaryDto.getAmount());
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
             teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
             teacherSalary.setDescription(teacherSalaryDto.getDescription());
             return teacherSalaryRepository.save(teacherSalary);
@@ -149,7 +149,8 @@ public class TeacherSalaryService {
         return new PaymentDto(
                 payment.getId(),
                 payment.getAttendance(),
-                payment.getAmount()
+                payment.getAmount(),
+                payment.getAmountTeacher()
         );
     }
     public ApiResponse getFinance(int page, int size, String type) {
@@ -182,6 +183,41 @@ public class TeacherSalaryService {
             }
         } catch (Exception exception) {
             return apiResponseService.existResponse();
+        }
+    }
+
+    public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
+        try {
+            java.util.Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            switch (type) {
+                case "minusSalary" :
+                    Page<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    all.getTotalPages(),
+                                    all.getTotalElements(),
+                                    all.getNumber(),
+                                    all.getSize(),
+                                    all.get().map(this::makeSalaryList).collect(Collectors.toList())
+                            )
+                    );
+                case "plusSalary" :
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    return apiResponseService.getResponse(
+                            new PageableDto(
+                                    getPrice.getTotalPages(),
+                                    getPrice.getTotalElements(),
+                                    getPrice.getNumber(),
+                                    getPrice.getSize(),
+                                    getPrice.get().map(this::getAllPrices).collect(Collectors.toList())
+                            )
+                    );
+                default:
+                    return apiResponseService.errorResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 }

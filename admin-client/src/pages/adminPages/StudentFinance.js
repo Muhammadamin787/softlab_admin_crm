@@ -4,13 +4,13 @@ import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "re
 import {
     getFinanceAction,
     getStudentPaymentListByDateAction,
-    getStudentsAction,
-    getTeacherSalaryAppAction
+
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import {AvForm,AvField} from "availity-reactstrap-validation";
+import {login} from "../../redux/actions/AuthActions";
 
 class StudentFinance extends Component {
 
@@ -31,6 +31,7 @@ class StudentFinance extends Component {
         showPaymentEditModal: false,
         currentObject: '',
         addGroup: "",
+        type: '',
         activeTab: "all",
         percentOfCash: "",
         sumOfCash: "",
@@ -49,9 +50,9 @@ class StudentFinance extends Component {
         const a = (tab) => {
             this.setState({activeTab: tab})
         }
-
         const toggle = (tab) => {
             this.setState({activeTab: tab})
+            this.setState({type: tab})
             dispatch(getFinanceAction({page: 0, size: this.props.size, type: tab}))
         }
 
@@ -61,12 +62,12 @@ class StudentFinance extends Component {
         }
 
         const filtrByDate = (e,v) => {
-                dispatch(getStudentPaymentListByDateAction({
+            dispatch(getStudentPaymentListByDateAction({
                     page: 0,
                     size: this.props.size,
                     date1: v.date1,
                     date2: v.date2,
-                    type: v.type
+                    type: this.state.type
                 }))
         }
 
@@ -236,7 +237,6 @@ class StudentFinance extends Component {
                                                 <td>{item.amount}</td>
                                                 <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
-                                                {console.log(item)}
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>

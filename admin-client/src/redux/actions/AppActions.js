@@ -132,7 +132,7 @@ import {
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
     getFinanceStudentApi, getFinanceTeacherApi,
-     getDailyScheduleList,
+    getDailyScheduleList, getTeacherPaymentListByDateApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1433,39 +1433,18 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
     })
 }
 
-export const getStudentPaymentListAction= (data) => (dispatch) => {
-    dispatch({
-        api: getStudentPaymentListApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS,
-            types.REQUEST_ERROR,
-        ],
-        data
-    })
-}
 export const getStudentPaymentListByDateAction= (data) => (dispatch) => {
     dispatch({
         api: getStudentPaymentListByDateApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_STUDENT_PAYMENT_BY_DATE_SUCCESS,
+            types.REQUEST_GET_STUDENT_PAYMENT_FINANCE_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data
     })
 }
-export const getStudentPaymentCashbacksAction = (data) => (dispatch) => {
-    dispatch({
-        api: getStudentPaymentCashbacksApi,
-        types: [
-            types.REQUEST_START,
-            types.REQUEST_GET_STUDENT_PAYMENT_CASHBACKS_SUCCESS,
-            types.REQUEST_ERROR,
-        ],
-        data
-    })
-}
+
 export const getFinanceAction = (data) => (dispatch) => {
     dispatch({
         api: getFinanceStudentApi,
@@ -1480,6 +1459,17 @@ export const getFinanceAction = (data) => (dispatch) => {
 export const getFinanceTeacherAction = (data) => (dispatch) => {
     dispatch({
         api: getFinanceTeacherApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getTeacherPaymentListByDateAction= (data) => (dispatch) => {
+    dispatch({
+        api: getTeacherPaymentListByDateApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS,
@@ -1779,4 +1769,19 @@ export const getTeacherSalaryAppAction = () => (dispatch) => {
         ]
     })
 }
+
+// START SCHEDULE
+
+export const getDailySchedule = () => (dispatch) => {
+    dispatch({
+        api: getDailyScheduleList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_DAILY_SCHEDULE,
+            types.REQUEST_ERROR
+        ]
+    })
+}
+
+// END SCHEDULE
 // FINISH TEACHER SALARY

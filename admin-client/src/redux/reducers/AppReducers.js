@@ -24,6 +24,7 @@ const initState = {
     page: 0,
     date1: '',
     date2: '',
+    type: '',
     totalElements: 0,
     totalPages: 0,
     parentItems: [],
@@ -390,6 +391,29 @@ const reducers = {
             state.size = payload.payload.object.size
             state.totalElements = payload.payload.object.totalElements
             state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    [types.REQUEST_GET_STUDENT_PAYMENT_FINANCE_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.studentPaymentFinance = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    [types.REQUEST_GET_TEACHER_PAYMENTS_SELECT_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teacherPaymentFinance = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+
         }
     },
 

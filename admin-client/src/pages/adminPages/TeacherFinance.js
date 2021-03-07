@@ -4,7 +4,7 @@ import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "re
 import {
     getFinanceAction, getFinanceTeacherAction, getStudentPaymentListByDateAction,
 
-    getStudentsAction,
+    getStudentsAction, getTeacherPaymentListByDateAction,
 
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -29,6 +29,7 @@ class TeacherFinance extends Component {
         showPaymentEditModal: false,
         currentObject: '',
         addGroup: "",
+        type: '',
         activeTab: "minusSalary",
         percentOfCash: "",
         sumOfCash: "",
@@ -48,6 +49,7 @@ class TeacherFinance extends Component {
 
         const toggle = (tab) => {
             this.setState({activeTab: tab})
+            this.setState({type: tab})
             dispatch(getFinanceTeacherAction({page: 0, size: this.props.size, type: tab}))
             console.log(tab);
         }
@@ -58,12 +60,12 @@ class TeacherFinance extends Component {
         }
 
         const filtrByDate = (e, v) => {
-            dispatch(getStudentPaymentListByDateAction({
+            dispatch(getTeacherPaymentListByDateAction({
                 page: 0,
                 size: this.props.size,
                 date1: v.date1,
                 date2: v.date2,
-                type: v.type
+                type: this.state.type
             }))
         }
 
@@ -101,7 +103,7 @@ class TeacherFinance extends Component {
                                     toggle('plusSalary');
                                 }}
                             >
-                                Tushgan Summar
+                                Tushgan Summalar
                             </NavLink>
                         </NavItem>
 
@@ -126,8 +128,9 @@ class TeacherFinance extends Component {
                                             <tr key={i + 1}>
                                                 <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/teacher/"+ (item  && item.teacherId ? item.teacherId:'')}>
-                                                        {item  ? item.teacherName: ''}
+                                                    <Link
+                                                        to={"/admin/teacher/" + (item && item.teacherId ? item.teacherId : '')}>
+                                                        {item ? item.teacherName : ''}
                                                     </Link>
                                                 </td>
                                                 <td>{item && item.amount ? item.amount : ""}</td>
@@ -159,8 +162,8 @@ class TeacherFinance extends Component {
                                             <td>O'qituvchi</td>
                                             <td>O'quvchi</td>
                                             <td>Summa</td>
-                                            <td>Guruh</td>
                                             <td>Tolov vaqti</td>
+                                            <td>Guruh</td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -168,16 +171,23 @@ class TeacherFinance extends Component {
                                             <tr key={i + 1}>
                                                 <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/" + (item && item.student
-                                                        ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
+                                                    <Link to={"/admin/teacher/" + (item && item.attendance && item.attendance.teacher
+                                                        ? item.attendance.teacher.id : '')}>
+                                                        {item && item.attendance && item.attendance.teacher && item.attendance.teacher.user ? item.attendance.teacher.user.fullName + " / " + item.attendance.teacher.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item.sum + " / " + item.cashSum}</td>
-                                                <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
-                                                <td>{item.payType ? item.payType.name : ''}</td>
-                                                <td>{item.comment}</td>
+                                                <td>
+                                                    <Link
+                                                        to={"/admin/student/" + (item && item.attendance && item.attendance.student
+                                                            ? item.attendance.student.id : '')}>
+                                                        {item && item.attendance && item.attendance.student && item.attendance.student.user ? item.attendance.student.user.fullName + " / " + item.attendance.student.user.phoneNumber : ''}
+                                                    </Link>
+                                                </td>
+                                                <td>{item.amountTeacher}</td>
+                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
                                                 <td>{item.payDate}</td>
+                                                <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
+
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>

@@ -20,4 +20,11 @@ public class PaymentDto {
         this.attendance = attendance;
         this.amount = amount;
     }
+
+    public PaymentDto(UUID id, Attendance attendance, double amount, double amountTeacher) {
+        this.id = id;
+        this.attendance = attendance;
+        this.amount = amount;
+        this.amountTeacher = amountTeacher;
+    }
 }

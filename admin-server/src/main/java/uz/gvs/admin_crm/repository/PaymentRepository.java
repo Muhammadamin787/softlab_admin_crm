@@ -17,6 +17,6 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 //            "limit :size offset (:size*:page)")
 //    List<Payment> getByDate(Date date1, Date date2, int page, int size);
 
-    @Query(nativeQuery = true, value = "select * from payment pt where pt.attendance_id = (select att.id from attendance att where att.attend_date ) >= :date1 and pt.attendance_id = (select att.id from attendance att where att.attend_date ) < :date2 ")
+    @Query(nativeQuery = true, value = "select * from payment pt where pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  >= :date1) and pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  < :date2)")
     Page<Payment> getByDate(Date date1, Date date2, Pageable pageable);
 }
