@@ -176,7 +176,7 @@ class SelectStudent extends Component {
                     v.id = currentObject.id
                     v.groupId = addGroup;
                     v.studentId = this.props.match.params.id;
-                    v.payDate = moment(v.payDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('dd/MM/yyyy hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
                 }
             }

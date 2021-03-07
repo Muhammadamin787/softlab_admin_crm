@@ -1,30 +1,27 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
-import {Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
+import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
-    getStudentAction,
-    getStudentPaymentAction, getStudentPaymentListAction, getStudentsAction, getTeacherSalaryAppAction
+    getFinanceAction,
+    getStudentPaymentListByDateAction,
+
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
+import {AvForm,AvField} from "availity-reactstrap-validation";
+import {login} from "../../redux/actions/AuthActions";
 
 class StudentFinance extends Component {
 
     handlePageChange(pageNumber) {
         console.clear()
-        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getFinanceAction({page: (pageNumber - 1), size: this.props.size}))
     }
-
     componentDidMount() {
         console.clear()
-        let id = 0
-        if (this.props.match && this.props.match.params && this.props.match.params.id) {
-            id = this.props.match.params.id;
-            this.props.dispatch(getStudentAction({id: id}))
-        }
-        this.props.dispatch(getStudentPaymentListAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getTeacherSalaryAppAction())
+        this.props.dispatch(getFinanceAction({page: 0, size: this.props.size, type: "all"}))
+
     }
 
     state = {
@@ -34,33 +31,46 @@ class StudentFinance extends Component {
         showPaymentEditModal: false,
         currentObject: '',
         addGroup: "",
-        activeTab: "1",
+        type: '',
+        activeTab: "all",
         percentOfCash: "",
         sumOfCash: "",
-        cashBackSumm : 0,
+        date1: "",
+        cashBackSumm: 0,
     }
 
     render() {
 
-        const {currentObject, activeTab,} = this.state;
+        const {currentObject, activeTab} = this.state;
         const {
-            dispatch,studentPayments,page,size,totalElements, teacherSalaryAppApi, studentPaymentCashbaks
+            dispatch, page, size, totalElements, studentPaymentFinance
         } = this.props;
-        console.log(studentPayments)
 
-        const toggle = tab => {
-            if (activeTab !== tab)
-                this.setState({activeTab: tab})
-            if (tab === "2") {
-                if (this.props.match && this.props.match.params && this.props.match.params.id) {
-                    dispatch(getStudentPaymentAction(this.props.match.params.id))
-                }
-            }
+
+        const a = (tab) => {
+            this.setState({activeTab: tab})
         }
+        const toggle = (tab) => {
+            this.setState({activeTab: tab})
+            this.setState({type: tab})
+            dispatch(getFinanceAction({page: 0, size: this.props.size, type: tab}))
+        }
+
         function showHide() {
             var element = document.getElementById("filtrMenu");
             element.classList.toggle("hide");
         }
+
+        const filtrByDate = (e,v) => {
+            dispatch(getStudentPaymentListByDateAction({
+                    page: 0,
+                    size: this.props.size,
+                    date1: v.date1,
+                    date2: v.date2,
+                    type: this.state.type
+                }))
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
@@ -68,40 +78,41 @@ class StudentFinance extends Component {
                     <h5 className="mb-3" onClick={showHide}>Filtr</h5>
                     <div id="filtrMenu">
                         <div className="row mb-4">
-                            <div className="col-md-3">
-                                <input type="date" className="form-control"/>
-                            </div>
-                            <div className="col-md-3">
-                                <input type="date" className="form-control"/>
-                            </div>
-                            <div className="col-md-3">
-                                <button className="btn btn-primary">Filtrlash</button>
-                            </div>
+                            <Col>
+                                <AvForm onValidSubmit={filtrByDate}>
+                                    <AvField type="date" className="form-control" name={"date1"}/>
+
+                                    <AvField type="date" className="form-control" name={"date2"}/>
+
+                                    <Button type={"submit"}>Saqlash</Button>
+
+                                </AvForm>
+                            </Col>
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem className={""}>
                             <NavLink
                                 onClick={() => {
-                                    toggle('1');
+                                    toggle('all');
                                 }}
                             >
                                 Barchasi
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem>
                             <NavLink
                                 onClick={() => {
-                                    toggle('2');
+                                    toggle('byCashbacks');
                                 }}
                             >
                                 Cashbacklar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem>
                             <NavLink
                                 onClick={() => {
-                                    toggle('3');
+                                    toggle('getPrice');
                                 }}
                             >
                                 Tushumlar
@@ -109,7 +120,7 @@ class StudentFinance extends Component {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="1">
+                        <TabPane tabId="all">
                             <div>
                                 <div className={"flex-column container"}>
                                     <Table className={"table-style w-100"}>
@@ -125,17 +136,16 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(studentPayments)}
-                                        {studentPayments ? studentPayments.map((item,i)=>
-                                            <tr key={i+1} className={"table-row-data"}>
-                                                <td>{i+1}</td>
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                    <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
+                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item.sum +" / " + item.cashSum}</td>
+                                                <td>{item.sum + " / " + item.cashSum}</td>
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : "0%"}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
@@ -155,7 +165,7 @@ class StudentFinance extends Component {
                                 </div>
                             </div>
                         </TabPane>
-                        <TabPane tabId="2">
+                        <TabPane tabId="byCashbacks">
                             <div>
                                 <div className={"flex-column container"}>
                                     <Table className={"table-style w-100"}>
@@ -171,21 +181,62 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {console.log(studentPaymentCashbaks)}
-                                        {studentPaymentCashbaks ? studentPaymentCashbaks.map((item,i)=>
-                                            <tr key={i+1}>
-                                                <td>{i+1}</td>
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/"+ (item && item.student
+                                                    <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " +item.student.user.phoneNumber : ''}
+                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item.sum +" / " + item.cashSum}</td>
+                                                <td>{item.sum + " / " + item.cashSum}</td>
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
                                                 <td>{item.payDate}</td>
+                                            </tr>
+                                        ) : 'Malumot topilmadi'}
+                                        </tbody>
+                                    </Table>
+                                    <Pagination
+                                        activePage={page + 1}
+                                        itemsCountPerPage={size}
+                                        totalItemsCount={totalElements}
+                                        pageRangeDisplayed={5}
+                                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                        linkClass="page-link"
+                                    />
+                                </div>
+                            </div>
+                        </TabPane>
+                        <TabPane tabId="getPrice">
+                            <div>
+                                <div className={"flex-column container"}>
+                                    <Table className={"table-style w-100"}>
+                                        <thead>
+                                        <tr>
+                                            <td>#</td>
+                                            <td>O'quvchi</td>
+                                            <td>Summa</td>
+                                            <td>Tolov vaqti</td>
+                                            <td>Guruhi</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
+                                            <tr key={i + 1}>
+                                                <td>{i + 1}</td>
+                                                <td>
+                                                    <Link
+                                                        to={"/admin/student/" + (item && item.attendance && item.attendance.student
+                                                            ? item.attendance.student.id : '')}>
+                                                        {item && item.attendance && item.attendance.student && item.attendance.student.user ? item.attendance.student.user.fullName + " / " + item.attendance.student.user.phoneNumber : ''}
+                                                    </Link>
+                                                </td>
+                                                <td>{item.amount}</td>
+                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
+                                                <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>
@@ -213,10 +264,15 @@ StudentFinance.propTypes = {};
 export default connect(({
                             app: {
                                 studentPayments,
-                                page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
+                                page,
+                                size,
+                                totalElements,
+                                teacherSalaryAppApi,
+                                studentPaymentCashbaks,
+                                studentPaymentFinance
 
                             },
                         }) => ({
-        studentPayments,page,size,totalElements,teacherSalaryAppApi, studentPaymentCashbaks
+        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks, studentPaymentFinance
     })
 )(StudentFinance);

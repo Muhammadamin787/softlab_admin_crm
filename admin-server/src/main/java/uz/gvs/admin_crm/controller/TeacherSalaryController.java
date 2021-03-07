@@ -60,4 +60,23 @@ public class TeacherSalaryController {
             return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
         }
     }
+
+    @GetMapping("/finance")
+    public HttpEntity<?> getPayments(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                     @RequestParam(value = "type", defaultValue = "minusSalary") String type
+    ) {
+        ApiResponse apiResponse = service.getFinance(page, size, type);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/byDate")
+    public HttpEntity<?> getStudentPaymentByDate(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                                 @RequestParam(value = "date1", defaultValue = "") String data1,
+                                                 @RequestParam(value = "date2", defaultValue = "") String data2,
+                                                 @RequestParam(value = "type", defaultValue = "minusSalary")String type) {
+        ApiResponse apiResponse = service.getTeacherPaymentByDate(page, size, data1, data2,type);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }
