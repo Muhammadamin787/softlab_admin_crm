@@ -170,7 +170,7 @@ class Attandance extends Component {
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative test12345"}>
+                        <div className={"position-relative test12345 p-3 mr-3"}>
                             <Container className={"text-center position-fixed"}>
                                 <Row>
                                     <Col md={2}>
@@ -187,7 +187,7 @@ class Attandance extends Component {
 
 
                             <br/>
-                            <Table style={gg} >
+                            <Table style={gg} className={"mb-0"} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -225,8 +225,8 @@ class Attandance extends Component {
                                     </tr>
                                 ) : ''}
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td/>
+                                    <td/>
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             currentGroup ? currentGroup.weekdays.map(c_item =>

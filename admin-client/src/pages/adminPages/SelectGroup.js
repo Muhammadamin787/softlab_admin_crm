@@ -233,9 +233,10 @@ class SelectGroup extends Component {
 
         const gg = {
             overflowX: "scroll",
-            overflowY: "auto",
+            overflowY: "scroll",
             marginTop: "20px",
-            fontSize: "14px"
+            fontSize: "14px",
+            height: "280px"
         }
         const tableStyle = {
             backgroundColor: "white"
@@ -397,7 +398,7 @@ class SelectGroup extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div style={tableStyle} className={"p-4"} >
-                                                <div className={"text-center position-fixed"}>
+                                                <div className={"text-center"}>
                                                     <Row>
                                                         <Col md={2}>
                                                             <i onClick={minusM} className="fas fa-angle-left"/>
@@ -410,8 +411,6 @@ class SelectGroup extends Component {
                                                         </Col>
                                                     </Row>
                                                 </div>
-
-                                                <br/>
                                                 <div style={gg}>
                                                     <Table>
                                                         <tr>
@@ -431,13 +430,13 @@ class SelectGroup extends Component {
                                                         </tr>
                                                         {students ? students.map((item, i) =>
                                                             <tr key={i}>
-                                                                <td className={"attandance-block_td py-3"}>{i + 1}</td>
-                                                                <td className={"attandance-block_td py-2"}>{item.fullName}</td>
+                                                                <td className={"attandance-block_td py-auto"}>{i + 1}</td>
+                                                                <td className={"attandance-block_td py-auto"}>{item.fullName}</td>
 
                                                                 {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
                                                                     currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
                                                                         c_item === days[new Date(year, month, item2).getDay()] ?
-                                                                            <td className={"text-center py-2"}>
+                                                                            <td className={"text-center py-auto"}>
                                                                                 {
                                                                                     attendanceList ? attendanceList.map(item3 =>
                                                                                         (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
@@ -466,7 +465,6 @@ class SelectGroup extends Component {
                                                                 ) : ''
                                                             }
                                                         </tr>
-
                                                     </Table>
                                                 </div>
                                             </div>
