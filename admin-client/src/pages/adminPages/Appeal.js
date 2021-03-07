@@ -15,7 +15,6 @@ import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import Select from "react-select";
 import {Link} from "react-router-dom";
-import {toast} from "react-toastify";
 
 class Appeal extends Component {
     componentDidMount() {
