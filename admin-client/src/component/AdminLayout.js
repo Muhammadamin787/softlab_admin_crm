@@ -50,6 +50,16 @@ class AdminLayout extends Component {
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
                         <div className="main-link-div">
+                            <Link to="/admin/card" className={
+                                this.props.pathname === "/admin/card" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-dashboard"/>
+                                <div className="main-link">
+                                    Card
+                                </div>
+                            </Link>
+
                             <Link to="/admin" className={
                                 this.props.pathname === "/admin" ?
                                     "active-link" : "default-link"

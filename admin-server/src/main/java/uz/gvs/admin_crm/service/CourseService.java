@@ -7,6 +7,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.CourseCategory;
+import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.CourseDto;
@@ -14,6 +15,7 @@ import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.ResSelect;
 import uz.gvs.admin_crm.repository.CourseCategoryRepository;
 import uz.gvs.admin_crm.repository.CourseRepository;
+import uz.gvs.admin_crm.repository.GroupRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,10 @@ public class CourseService {
     CourseRepository courseRepository;
     @Autowired
     CourseCategoryRepository courseCategoryRepository;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    GroupService groupService;
 
     public ApiResponse saveCourse(CourseDto courseDto) {
         try {
@@ -129,6 +135,16 @@ public class CourseService {
                 return apiResponseService.updatedResponse();
             }
             return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    public ApiResponse getGroupsOfCourse(Integer id) {
+        try {
+            List<Group> groups = groupRepository.findGroupByCource(id);
+            return apiResponseService.getResponse(groups.stream().map(courseRepository -> groupService.makeGroupTable(courseRepository)).collect(Collectors.toList()));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
