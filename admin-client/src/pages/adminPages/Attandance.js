@@ -169,7 +169,7 @@ class Attandance extends Component {
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative test12345 p-3 mr-3"}>
+                        <div className={"position-relative test12345 px-3 pt-3 p-0 mr-3"}>
                             <div>
                                 <Row>
                                     <Col md={1}>
@@ -183,7 +183,8 @@ class Attandance extends Component {
                                     </Col>
                                 </Row>
                             </div>
-                            <Table style={gg} className={"mb-0"} >
+                            <div style={gg}>
+                                <Table className={"mb-0"} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -236,6 +237,7 @@ class Attandance extends Component {
                                     }
                                 </tr>
                             </Table>
+                            </div>
                         </div>
                         :
                         ''
