@@ -3,6 +3,7 @@ package uz.gvs.admin_crm.payload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.Room;
 import uz.gvs.admin_crm.entity.enums.GroupStatus;
 
 import java.util.Date;
@@ -25,4 +26,5 @@ public class ResGroupDto {
     private Date finishDate;
     private GroupStatus groupStatus;
     private boolean active;
+    private Room room;
 }
