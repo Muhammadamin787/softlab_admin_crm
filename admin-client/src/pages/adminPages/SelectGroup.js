@@ -233,10 +233,9 @@ class SelectGroup extends Component {
 
         const gg = {
             overflowX: "scroll",
-            overflowY: "scroll",
+            overflowY: "auto",
             marginTop: "20px",
             fontSize: "14px",
-            height: "280px"
         }
         const tableStyle = {
             backgroundColor: "white"
@@ -274,7 +273,7 @@ class SelectGroup extends Component {
 
                                 <Link
                                     to={"/admin/groups"} className={"text-decoration-none"}><span
-                                    className={""}> Guruhlar</span>
+                                    className={""}>Guruhlar</span>
                                 </Link>
                             </hgroup>
                             <div className="row">
@@ -382,7 +381,7 @@ class SelectGroup extends Component {
                                                     toggle('1');
                                                 }}
                                             >
-                                                Davomat
+                                                Davomat &#128467;
                                             </NavLink>
                                         </NavItem>
                                         <NavItem className={activeTab === '2' ? "tab-item-style-active1" : "tab-item-style-default1"}>
@@ -398,15 +397,15 @@ class SelectGroup extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div style={tableStyle} className={"p-4"} >
-                                                <div className={"text-center"}>
+                                                <div className={""}>
                                                     <Row>
-                                                        <Col md={2}>
+                                                        <Col md={1}>
                                                             <i onClick={minusM} className="fas fa-angle-left"/>
                                                         </Col>
-                                                        <Col md={8}>
+                                                        <Col md={3}>
                                                             {" " + year + " - yil, " + months[month] + " "}
                                                         </Col>
-                                                        <Col md={2}>
+                                                        <Col md={1}>
                                                             <i onClick={plusM} className="fa fa-angle-right"/>
                                                         </Col>
                                                     </Row>
