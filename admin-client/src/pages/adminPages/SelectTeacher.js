@@ -31,6 +31,7 @@ import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
 import Pagination from "react-js-pagination";
+import {FcCurrencyExchange, GiReceiveMoney, MdAttachMoney} from "react-icons/all";
 
 class SelectTeacher extends Component {
     componentDidMount() {
@@ -301,12 +302,12 @@ class SelectTeacher extends Component {
                                                                     <Button className="table-icon px-2"
                                                                             onClick={() => openSalaryModal(currentItem)}
                                                                     >
-                                                                        <span className="icon icon-wallet bg-primary "/>
+                                                                        <span className="icon icon-wallet bg-success "/>
                                                                     </Button>
                                                                     <Button className="table-icon px-2"
                                                                             onClick={() => openSalaryModal1(currentItem)}
                                                                     >
-                                                                        <span className="icon icon-wallet bg-primary "/>
+                                                                        <FcCurrencyExchange/>
                                                                     </Button>
                                                                 </div>
                                                             </hgroup>
