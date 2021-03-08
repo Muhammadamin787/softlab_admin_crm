@@ -4,13 +4,14 @@ import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseAction, getCourseAction, getCourseCategoriesAction,
     getCoursesAction,
-    getDurationTypesAction, saveCourseAction,
+    getDurationTypesAction, getGroupsByCourseAction, saveCourseAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import {DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
+import moment from "moment";
 
 class SelectCourse extends Component {
     componentDidMount() {
@@ -20,6 +21,7 @@ class SelectCourse extends Component {
             this.props.dispatch(getCourseAction({id: id}))
         }
         this.props.dispatch(getCourseCategoriesAction())
+        this.props.dispatch(getGroupsByCourseAction(id))
     }
 
     state = {
@@ -36,6 +38,7 @@ class SelectCourse extends Component {
             deleteModal,
             currentItem,
             courseCategories,
+            byCource,
         } = this.props;
         const openModal = (item) => {
             if (item && item.id) {
@@ -92,7 +95,7 @@ class SelectCourse extends Component {
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
-                            <div className={"m-2 p-3 bg-white rounded col-md-4 col-10"}>
+                            <div className={"m-2 p-3 bg-white rounded col-md-4"}>
                                 <div className="row">
                                     <div className="col-8">
                                         <hgroup>
@@ -123,6 +126,46 @@ class SelectCourse extends Component {
                                 </div>
                             </div>
                             : ""}
+                        {byCource ? byCource.map((item, i) =>
+                            <div className="m-2 p-3 bg-white rounded col-md-3">
+                                {item.id ?
+                                    <div>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Guruh Nomi</small>
+                                            <p>{item.name}</p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Holati</small>
+                                            {item.groupStatus === "ACTIVE" ?
+                                                <p>Aktiv</p>
+                                                : ""}
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Xona nomi</small>
+                                            <p>{item.room.name}</p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Xona nomi</small>
+                                            <p>
+                                                <Link to={"/admin/teacher/" + item.teacherId}>{item.teacherName}</Link>
+                                            </p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Boshlangan sana</small>
+                                            <p>
+                                                {moment(item.startDate).format("DD-MM-yyyy")}
+                                            </p>
+                                        </hgroup>
+                                        <hgroup>
+                                            <small className={"text-secondary"}>Tugaydigan sana</small>
+                                            <p>
+                                                {moment(item.finishDate).format("DD-MM-yyyy")}
+                                            </p>
+                                        </hgroup>
+                                    </div>
+                                    : ""}
+                            </div>
+                            ) : ""}
                     </div>
                 </div>
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
@@ -182,6 +225,7 @@ SelectCourse.propTypes = {};
 export default connect(({
                             app: {
                                 currentItem,
+                                byCource,
                                 loading,
                                 showModal,
                                 deleteModal,
@@ -193,6 +237,6 @@ export default connect(({
                             },
                         }) => ({
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, getItems, readModal
+        loading, durationTypes, byCource, showModal, deleteModal, parentItems, courseCategories, getItems, readModal
     })
 )(SelectCourse);

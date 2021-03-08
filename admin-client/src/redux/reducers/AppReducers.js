@@ -59,6 +59,7 @@ const initState = {
     rooms: [],
     dailySchedule: [],
     dashboardStat: [],
+    byCource: []
 };
 
 const reducers = {
@@ -523,6 +524,10 @@ const reducers = {
     // START DASHBOARD REDUCERS TYPES
     [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
         state.dashboardStat = payload.payload.object
+    },
+    [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
+        console.log(payload)
+        state.byCource = payload.payload.object
     },
     // START DASHBOARD REDUCERS TYPES
     updateState(state, {payload}) {

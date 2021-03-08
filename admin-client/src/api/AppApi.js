@@ -449,7 +449,7 @@ export const getDashboardStatApi = () => {
 // START GET GROUPS OF COURSE
 
 export const getByCourseApi = (data) => {
-    return HttpClient.doGet(api.byCourse + "/" + data.id)
+    return HttpClient.doGet(api.course + "/byCource/" + data)
 }
 
 // FINISH GET GROUPS OF COURSE
