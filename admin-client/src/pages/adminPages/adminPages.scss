@@ -60,6 +60,21 @@ body {
   display: none;
 }
 
-.border-style-table-dashboard {
+.table-group-style {
+  color: #fff;
+  height: auto !important;
+  position: relative;
+}
 
+.group-name-style-dash {
+  border-radius: 3px;
+  background-color: #F9FAFB;
+  color: #007BFF;
+}
+
+.inside-td-block {
+  padding: 2rem !important;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+  color: #000;
+  border-radius: 5px;
 }

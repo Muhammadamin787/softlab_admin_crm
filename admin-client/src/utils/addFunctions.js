@@ -49,3 +49,11 @@ export function normalizeInput(value, previousValue) {
         return `(${currentValue.slice(0, 3)}) ${currentValue.slice(3, 6)}-${currentValue.slice(6, 10)}`;
     }
 }
+
+export function setBg() {
+    let ketmon = '0'
+    while (ketmon.substring(0, 1) < 5 && ketmon.substring(0, 1) < 9) {
+        ketmon = Math.floor(Math.random() * 16777215).toString(16);
+    }
+    return "#" + ketmon;
+}

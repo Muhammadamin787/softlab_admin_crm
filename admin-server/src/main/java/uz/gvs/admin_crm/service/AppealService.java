@@ -1,6 +1,8 @@
 package uz.gvs.admin_crm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AppealService {
@@ -245,4 +248,32 @@ public class AppealService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+
+    public ApiResponse getAppealListAll(Integer typeId, int page, int size){
+        try {
+            Page<ClientStatusConnect> all = clientStatusConnectRepository.findAll(PageRequest.of(page, size));
+
+            return apiResponseService.getResponse(new PageableDto(
+                    all.getTotalPages(),
+                    all.getTotalElements(),
+                    all.getNumber(),
+                    all.getSize(),
+                    all.get().map(this::makeClient).collect(Collectors.toList())
+            ));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ClientStatusConnectDto makeClient(ClientStatusConnect client){
+        return new ClientStatusConnectDto(
+                client.getClient(),
+                clientStatusRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status")),
+                client.getId(),
+                client.isToplam()
+        );
+    }
+
+
 }

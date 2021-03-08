@@ -90,9 +90,8 @@ export const getReklamaForSelectApi = () => {
     return HttpClient.doGet(api.reklama + "/select")
 }
 //START CLIENT STATUS
-export const getClientStatusListApi = (data) => {
-    if (data && data.type)
-        return HttpClient.doGet(api.clientStatus + "/list?type=" + data.type)
+export const getClientStatusListApi = () => {
+        return HttpClient.doGet(api.clientStatus + "/list")
 }
 export const saveClientStatusApi = (data) => {
     return HttpClient.doPost(api.clientStatus, data)
@@ -379,6 +378,9 @@ export const changeAppealEnumTypeApi = (data) => {
 export const getAppealListByEnumTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
 }
+export const getAppealListAllApi = (data) => {
+    return HttpClient.doGet(api.appeal + "/all?page=" + data.page + "&size=" + data.size)
+}
 export const getOneAppealApi = (data) => {
     return HttpClient.doGet(api.appeal + "/" + data.id)
 }
@@ -446,3 +448,11 @@ export const getDashboardStudentStatApi = () => {
     return HttpClient.doGet(api.dashboard + "/student")
 }
 //  FINISH DASHBOARD API
+
+// START GET GROUPS OF COURSE
+
+export const getByCourseApi = (data) => {
+    return HttpClient.doGet(api.byCourse + "/" + data.id)
+}
+
+// FINISH GET GROUPS OF COURSE

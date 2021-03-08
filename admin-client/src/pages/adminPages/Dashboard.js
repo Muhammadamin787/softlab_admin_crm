@@ -11,6 +11,7 @@ import {
     getTeacherSalaryListAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
+import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
 import MultiLine from "../../component/dashboard/MultiLine";
 
@@ -21,29 +22,27 @@ class Dashboard extends Component {
         this.props.dispatch(getDashboardStatAction())
         this.props.dispatch(getDashboardStudentStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
-        let arr = []
-        for (let i = startHour; i < endHour; i++) {
-            for (let g = 0; g < 2; g++) {
-                if (g === 0) {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "00")
+            let arr = []
+            for(let i = startHour; i < endHour; i++) {
+                for (let g = 0; g < 2; g++ ) {
+                    if (g === 0) {
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "00")
+                        } else {
+                            arr.push(i + ":" + "00")
+                        }
                     } else {
-                        arr.push(i + ":" + "00")
-                    }
-                } else {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "30")
-                    } else {
-                        arr.push(i + ":" + "30")
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "30")
+                        } else {
+                            arr.push(i + ":" + "30")
+                        }
                     }
                 }
             }
-        }
-        this.setState({
-            list: arr
-        })
-
-
+            this.setState({
+                list: arr
+            })
     }
 
     state = {
@@ -100,6 +99,9 @@ class Dashboard extends Component {
         const l = (e) => {
             this.props.dispatch(getDailySchedule(e.target.value))
         }
+
+        console.log(dailySchedule)
+        let startDate, finishDate;
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -201,82 +203,112 @@ class Dashboard extends Component {
                             <option value={"SUNDAY"}>Yakshanba</option>
                         </Input>
 
-                        <div className="d-block col-12">
-                            <br/>
-                            <Nav tabs>
-                                <NavItem
-                                    className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                    <NavLink
-                                        onClick={() => {
-                                            toggle('1');
-                                        }}
-                                    >
-                                        Odd days
-                                    </NavLink>
-                                </NavItem>
-                                <NavItem
-                                    className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                    <NavLink
-                                        onClick={() => {
-                                            toggle('2');
-                                        }}
-                                    >
-                                        Weekend days
-                                    </NavLink>
-                                </NavItem>
-                                <NavItem
-                                    className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                    <NavLink
-                                        onClick={() => {
-                                            toggle('3');
-                                        }}
-                                    >
-                                        Every day
-                                    </NavLink>
-                                </NavItem>
-                                <NavItem
-                                    className={activeTab === '4' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                    <NavLink
-                                        onClick={() => {
-                                            toggle('4');
-                                        }}
-                                    >
-                                        Other
-                                    </NavLink>
-                                </NavItem>
-                            </Nav>
-                            <TabContent activeTab={activeTab}>
-                                <TabPane tabId="1">
-                                    <Table bordered>
-                                        <thead>
-                                        <tr>
-                                            <td>Time</td>
-                                            {rooms ? rooms.map((item, i) =>
-                                                <td>
-                                                    {item.name}
-                                                </td>
-                                            ) : ''}
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {
-                                            list ? list.map((item, i) =>
-                                                <tr key={i}>
-                                                    <td className={"border-style-table-dashboard"}>{item}</td>
-                                                    {rooms ? rooms.map((item2, i) =>
-                                                        dailySchedule ? dailySchedule.map((item3, i) =>
-                                                            item === item3.startTime ?
-                                                                item3 && item3.room && item3.room.id === item2.id ?
-                                                                    <>
-                                                                        {d(item3.room.id)}
-                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
-                                                                            {item3.name}
-                                                                        </td>
-                                                                    </>
-                                                                    : ''
-                                                                : ''
-                                                        ) : ''
-                                                    ) : ''}
+                       <div className="d-block col-12">
+                           <br/>
+                           <Nav tabs>
+                               <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                   <NavLink
+                                       onClick={() => {
+                                           toggle('1');
+                                       }}
+                                   >
+                                       Odd days
+                                   </NavLink>
+                               </NavItem>
+                               <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                   <NavLink
+                                       onClick={() => {
+                                           toggle('2');
+                                       }}
+                                   >
+                                       Weekend days
+                                   </NavLink>
+                               </NavItem>
+                               <NavItem className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                   <NavLink
+                                       onClick={() => {
+                                           toggle('3');
+                                       }}
+                                   >
+                                       Every day
+                                   </NavLink>
+                               </NavItem>
+                               <NavItem className={activeTab === '4' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                   <NavLink
+                                       onClick={() => {
+                                           toggle('4');
+                                       }}
+                                   >
+                                       Other
+                                   </NavLink>
+                               </NavItem>
+                           </Nav>
+                           <TabContent activeTab={activeTab}>
+                               <TabPane tabId="1">
+                                   <Table bordered>
+                                       <thead>
+                                       <tr>
+                                           <td>Time</td>
+                                           {rooms ? rooms.map((item, i) =>
+                                               <td>
+                                                   {item.name}
+                                               </td>
+                                           ) : ''}
+                                       </tr>
+                                       </thead>
+                                       <tbody>
+                                       {
+                                           list ? list.map((item, i) =>
+                                               <tr key={i}>
+                                                   <td className={"border-style-table-dashboard"}>{item}</td>
+                                                   {rooms ? rooms.map((item2, i) =>
+                                                       dailySchedule ? dailySchedule.map((item3, i) =>
+                                                           item === item3.startTime ?
+                                                               item3 && item3.room && item3.room.id === item2.id ?
+                                                                   <>
+                                                                       {d(item3.room.id)}
+                                                                       <td rowSpan={c(item3.startTime, item3.finishTime) + 1} className={"table-group-style"}>
+                                                                           <div style={{backgroundColor: setBg()}} className={"inside-td-block container"}>
+                                                                               <div className={"row"}>
+                                                                                   <span className={"group-name-style-dash"}>
+                                                                                       #{item3.name}
+                                                                                   </span>
+                                                                                   &nbsp;&nbsp;
+                                                                                   <span>
+                                                                                       {item3.courseName}
+                                                                                   </span>
+                                                                                   &nbsp;&nbsp;
+                                                                                   <span>
+                                                                                       {item3.teacherName}
+                                                                                   </span>
+                                                                               </div>
+                                                                               <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startTime}
+                                                                                   </span>--
+                                                                                   <span>
+                                                                                       {item3.finishTime}
+                                                                                   </span>
+                                                                                   <span className={"ml-auto group-name-style-dash"}>
+                                                                                       ST:{item3.countStudent}
+                                                                                   </span>
+                                                                               </div>
+                                                                               <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startDates.substring(0,10)}
+                                                                                   </span>
+                                                                                   --
+                                                                                   <span>
+                                                                                       {item3.finishDates.substring(0,10)}
+                                                                                   </span>
+                                                                               </div>
+                                                                           </div>
+                                                                       </td>
+                                                                   </>
+                                                                   : ''
+                                                               : ''
+                                                       ) : ''
+                                                   ) : ''}
 
                                                 </tr>
                                             ) : ''

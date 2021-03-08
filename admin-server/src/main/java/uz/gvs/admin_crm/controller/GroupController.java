@@ -43,7 +43,7 @@ public class GroupController {
     }
     @GetMapping("/schedule/{week}")
     public HttpEntity<?> getGroups(@PathVariable String week) {
-        ApiResponse apiResponse = groupService.getGroups(week);
+        ApiResponse apiResponse = groupService.getGroupsByWeekDayForSchedule(week);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
     @GetMapping("/schedule")

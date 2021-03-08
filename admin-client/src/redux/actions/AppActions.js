@@ -132,7 +132,7 @@ import {
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
     getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getDashboardStudentStatApi,
+    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getDashboardStudentStatApi,getAppealListAllApi
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1560,6 +1560,17 @@ export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
         data
     })
 }
+export const getAppealListAllAction = (data) => (dispatch) => {
+    dispatch({
+        api: getAppealListAllApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_LIST_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
 export const getOneAppeal = (data) => (dispatch) => {
     dispatch({
         api: getOneAppealApi,
@@ -1767,6 +1778,7 @@ export const getTeacherSalaryAppAction = () => (dispatch) => {
         ]
     })
 }
+// FINISH TEACHER SALARY
 
 // START SCHEDULE
 
