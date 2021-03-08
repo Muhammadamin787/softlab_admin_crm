@@ -18,7 +18,7 @@ import uz.gvs.admin_crm.utils.AppConstants;
 
 @RestController
 @RequestMapping("api/course")
-public class CourseController {
+public class  CourseController {
     @Autowired
     ApiResponseService apiResponseService;
     @Autowired

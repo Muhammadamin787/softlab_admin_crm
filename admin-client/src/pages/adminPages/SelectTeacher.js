@@ -45,7 +45,11 @@ class SelectTeacher extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getTeacherSalaryListAction({ id: this.props.match.params.id,page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getTeacherSalaryListAction({
+            id: this.props.match.params.id,
+            page: (pageNumber - 1),
+            size: this.props.size
+        }))
     }
 
     state = {
@@ -55,12 +59,12 @@ class SelectTeacher extends Component {
         currentItem: "",
         showOpenSalaryModal: false,
         showOpenSalaryModal1: false,
-        activeTab : "1"
+        activeTab: "1"
 
     }
 
     render() {
-        const {currentObject,activeTab} = this.state;
+        const {currentObject, activeTab} = this.state;
         const {
             groups,
             history,
@@ -76,7 +80,7 @@ class SelectTeacher extends Component {
             teacherSalaryList,
             showEditSalaryModal,
             deleteSalaryModal,
-            page,size,totalElements
+            page, size, totalElements
         } = this.props;
 
 
@@ -155,14 +159,14 @@ class SelectTeacher extends Component {
         const saveSalary = (e, v) => {
             if (currentObject) {
                 v.teacherId = currentObject.id;
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD').toString()
+                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
                 dispatch(giveSalaryAction(v));
             }
         }
         const saveSalaryItem = (e, v) => {
             if (currentObject) {
-                if (currentObject.salary !== null){
-                    if(v.percent === ""){
+                if (currentObject.salary !== null) {
+                    if (v.percent === "") {
                         v.percent = currentObject.percent
                     }
                 }
@@ -180,15 +184,15 @@ class SelectTeacher extends Component {
                 if (this.props.match && this.props.match.params && this.props.match.params.id) {
                     dispatch(getTeacherSalaryListAction({
                         id: this.props.match.params.id,
-                        page:0,
-                        size:size
+                        page: 0,
+                        size: size
                     }))
                 }
             }
         }
 
         const openDeleteSalaryModal = (item) => {
-            this.setState({currentItem : item})
+            this.setState({currentItem: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -197,10 +201,11 @@ class SelectTeacher extends Component {
             })
         }
 
-        const editSalary = (e,v) => {
+        const editSalary = (e, v) => {
             v.teacherId = currentItem.id
-            if (v.payTypeId === ""){
+            if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
+                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
             }
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
@@ -208,8 +213,8 @@ class SelectTeacher extends Component {
 
         const deleteSalary = () => {
             this.props.dispatch(deleteTeacherSalaryAction({
-                id:this.state.currentItem,
-                teacher:currentItem
+                id: this.state.currentItem,
+                teacher: currentItem
             }))
         }
 
@@ -231,7 +236,8 @@ class SelectTeacher extends Component {
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -240,7 +246,8 @@ class SelectTeacher extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -253,7 +260,8 @@ class SelectTeacher extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div className={"row"}>
-                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                <div
+                                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                                     <div className="row">
                                                         <div className="col-8">
                                                             <hgroup>
@@ -261,11 +269,13 @@ class SelectTeacher extends Component {
                                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
                                                             </hgroup>
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Telefon raqam: </small>
+                                                                <small className={"text-secondary"}>Telefon
+                                                                    raqam: </small>
                                                                 <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Tug'ilgan sana: </small>
+                                                                <small className={"text-secondary"}>Tug'ilgan
+                                                                    sana: </small>
                                                                 <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
                                                             </hgroup>
                                                             <hgroup>
@@ -282,7 +292,7 @@ class SelectTeacher extends Component {
                                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
                                                             </hgroup>
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Maosh :  </small>
+                                                                <small className={"text-secondary"}>Maosh : </small>
                                                                 <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
@@ -372,10 +382,12 @@ class SelectTeacher extends Component {
                                                         <td>{item.description}</td>
                                                         <td>{moment(item.amountDate).format('LLL').toString()}</td>
                                                         <td>
-                                                            <Button className="table-icon" onClick={() => openSalaryEditModal(item)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openSalaryEditModal(item)}>
                                                                 <EditIcon/>
                                                             </Button>
-                                                            <Button className="table-icon" onClick={() => openDeleteSalaryModal(item.id)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteSalaryModal(item.id)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -393,7 +405,7 @@ class SelectTeacher extends Component {
                                             />
                                         </TabPane>
 
-                                    {/*  END TAB PANE  */}
+                                        {/*  END TAB PANE  */}
 
                                     </TabContent>
                                 </div>
@@ -405,35 +417,40 @@ class SelectTeacher extends Component {
                 {/*MODAL EDIT*/}
 
                 <Modal id={"allModalStyle"} isOpen={showEditSalaryModal} toggle={openSalaryEditModal} className={""}>
-                        <ModalHeader toggle={openSalaryEditModal}  charCode={"X"}>
-                            Tahrirlash
-                        </ModalHeader>
-                        <ModalBody>
-                            <div className={"w-100 modal-form"}>
-                                <AvForm method={"post"} onValidSubmit={editSalary}>
-                                    <AvField name={"id"} type={"hidden"} defaultValue={currentObject ? currentObject.id : ''}/>
-                                    <AvField label={"Miqdor"} name={"amount"} type={"text"} defaultValue={currentObject ? currentObject.amount : ''}/>
-                                    <AvField label={"To'lov turi"} name={"payTypeId"} type={"select"}>
-                                        {currentObject && currentObject.payType ? <option value={currentObject.payType.id}>{currentObject.payType.name}</option> : '' }
-                                        {payTypes ? payTypes.map((item,i) =>
-                                            currentObject && currentObject.payType && currentObject.payType.id !== item.id ? <option value={item.id}>{item.name}</option> : ''
-                                        ):''}
-                                    </AvField>
-                                    <AvField label={"Izoh"} name={"description"} type={"text"} defaultValue={currentObject ? currentObject.description : ''}/>
-                                    {/*<AvField name={"payDate"} type={"date"}/>*/}
-                                    <AvField
-                                        type={"date"}
-                                        defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
-                                        label={"To'langan vaqti"} name={"amountDate2"} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                                        required/>
-                                    {console.log(currentObject)}
-                                    <ModalFooter>
-                                        <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
-                                        <Button color={"primary"} type={"submit"}>Saqlash</Button>
-                                    </ModalFooter>
-                                </AvForm>
-                            </div>
-                        </ModalBody>
+                    <ModalHeader toggle={openSalaryEditModal} charCode={"X"}>
+                        Tahrirlash
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className={"w-100 modal-form"}>
+                            <AvForm method={"post"} onValidSubmit={editSalary}>
+                                <AvField name={"id"} type={"hidden"}
+                                         defaultValue={currentObject ? currentObject.id : ''}/>
+                                <AvField label={"Miqdor"} name={"amount"} type={"text"}
+                                         defaultValue={currentObject ? currentObject.amount : ''}/>
+                                <AvField label={"To'lov turi"} name={"payTypeId"} type={"select"}>
+                                    {currentObject && currentObject.payType ? <option
+                                        value={currentObject.payType.id}>{currentObject.payType.name}</option> : ''}
+                                    {payTypes ? payTypes.map((item, i) =>
+                                        currentObject && currentObject.payType && currentObject.payType.id !== item.id ?
+                                            <option key={i} value={item.id}>{item.name}</option> : ''
+                                    ) : ''}
+                                </AvField>
+                                <AvField label={"Izoh"} name={"description"} type={"text"}
+                                         defaultValue={currentObject ? currentObject.description : ''}/>
+                                {/*<AvField name={"payDate"} type={"date"}/>*/}
+                                <AvField
+                                    type={"datetime-local"}
+                                    defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
+                                    label={"To'langan vaqti"} name={"amountDate"}
+                                    required/>
+                                {console.log(currentObject)}
+                                <ModalFooter>
+                                    <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
+                                    <Button color={"primary"} type={"submit"}>Saqlash</Button>
+                                </ModalFooter>
+                            </AvForm>
+                        </div>
+                    </ModalBody>
                 </Modal>
 
 
@@ -560,7 +577,7 @@ class SelectTeacher extends Component {
                                     ) : ""}
                                 </AvRadioGroup>
                                 <AvField
-                                    type={"date"}
+                                    type={"datetime-local"}
                                     defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
                                         : ""}
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
@@ -587,7 +604,7 @@ class SelectTeacher extends Component {
                             <Row>
                                 <Col md={7} className={"pr-0"}>
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.salary  : ""}
+                                        defaultValue={currentObject ? currentObject.salary : ""}
                                         type={"number"} name={"salary"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                 </Col>
@@ -597,7 +614,8 @@ class SelectTeacher extends Component {
                                         {currentObject.salary === null ?
                                             <option>Tanlang</option>
                                             :
-                                            <option value={currentObject.percent} selected>{currentObject && currentObject.percent ? "Foiz %"  : "Sum "}</option>
+                                            <option value={currentObject.percent}
+                                                    selected>{currentObject && currentObject.percent ? "Foiz %" : "Sum "}</option>
                                         }
                                         {currentObject.salary === null ?
                                             <>
@@ -646,7 +664,7 @@ export default connect(({
                                 teacherSalaryList,
                                 showEditSalaryModal,
                                 deleteSalaryModal,
-                                page,size,totalElements
+                                page, size, totalElements
                             },
                         }) => ({
         groups,
@@ -663,9 +681,9 @@ export default connect(({
         showOpenSalaryModal,
         showOpenSalaryModal1,
         teacherSalary,
-    teacherSalaryList,
-    showEditSalaryModal,
-    deleteSalaryModal,
-    page,size,totalElements
+        teacherSalaryList,
+        showEditSalaryModal,
+        deleteSalaryModal,
+        page, size, totalElements
     })
 )(SelectTeacher);

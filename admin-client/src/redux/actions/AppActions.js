@@ -131,8 +131,13 @@ import {
     saveAttendanceAppApi,
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
-    getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getDashboardStudentStatApi,getAppealListAllApi
+    getFinanceStudentApi,
+    getFinanceTeacherApi,
+    getDailyScheduleList,
+    getTeacherPaymentListByDateApi,
+    getDashboardStatApi,
+    getDashboardStudentStatApi,
+    getAppealListAllApi
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1396,6 +1401,7 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
+        dispatch(getStudentPaymentAction(data.studentId))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1420,7 +1426,7 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
         if (data && data.history) {
             data.history.go(-1)
         }
-        dispatch(getStudentPaymentAction())
+        dispatch(getStudentPaymentAction(data.studentId))
 
     }).catch((err) => {
         toast.error("Xatolik")

@@ -53,12 +53,8 @@ public class TeacherSalaryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteSalary(@PathVariable UUID id) {
-        try {
-            teacherSalaryRepository.deleteById(id);
-            return ResponseEntity.status(204).body(apiResponseService.deleteResponse());
-        } catch (Exception e) {
-            return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
-        }
+        ApiResponse apiResponse = service.deleteTeacherPayment(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
     }
 
     @GetMapping("/finance")
