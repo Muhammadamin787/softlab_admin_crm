@@ -34,6 +34,7 @@ public class AppealDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer clientStatusId;
 
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reklama reklama;
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -41,74 +41,77 @@ public class AttendanceService {
 
                 Teacher teacher = optionalTeacher.get();
                 Group group = optionalGroup.get();
-                for (StudentAttendDto studentAttendDto : attendanceDto.getStudentList()) {
-                    Student get_student = studentRepository.findById(studentAttendDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Get Student"));
-                    Optional<Attendance> optionalAttendance = attendanceRepository.findByGroup_IdAndTeacher_IdAndStudent_IdAndAttendDate(group.getId(), teacher.getId(), studentAttendDto.getStudentId(), attendanceDto.getDate());
+                if (teacher.getSalary() != null){
+                    for (StudentAttendDto studentAttendDto : attendanceDto.getStudentList()) {
+                        Student get_student = studentRepository.findById(studentAttendDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Get Student"));
+                        Optional<Attendance> optionalAttendance = attendanceRepository.findByGroup_IdAndTeacher_IdAndStudent_IdAndAttendDate(group.getId(), teacher.getId(), studentAttendDto.getStudentId(), attendanceDto.getDate());
 
-                    if (optionalAttendance.isPresent()) {
-                        Attendance attendance1 = optionalAttendance.get();
-                        if (attendance1.getAttandanceEnum().equals(AttandanceEnum.YES)) {
-                            if (studentAttendDto.isActive()) {
+                        if (optionalAttendance.isPresent()) {
+                            Attendance attendance1 = optionalAttendance.get();
+                            if (attendance1.getAttandanceEnum().equals(AttandanceEnum.YES)) {
+                                if (studentAttendDto.isActive()) {
 
-                            } else {
-                                get_student.setBalans(get_student.getBalans() + group.getCourse().getPrice());
-                                if (teacher.isPercent()) {
-                                    teacher.setBalance(teacher.getBalance() - (group.getCourse().getPrice() / 100 * teacher.getSalary()));
                                 } else {
-                                    teacher.setBalance(teacher.getBalance() - teacher.getSalary());
+                                    get_student.setBalans(get_student.getBalans() + group.getCourse().getPrice());
+                                    if (teacher.isPercent()) {
+                                        teacher.setBalance(teacher.getBalance() - (group.getCourse().getPrice() / 100 * teacher.getSalary()));
+                                    } else {
+                                        teacher.setBalance(teacher.getBalance() - teacher.getSalary());
+                                    }
+                                }
+                            } else {
+                                if (studentAttendDto.isActive()) {
+                                    get_student.setBalans(get_student.getBalans() - group.getCourse().getPrice());
+                                    if (teacher.isPercent()) {
+                                        teacher.setBalance(teacher.getBalance() + (group.getCourse().getPrice() / 100 * teacher.getSalary()));
+                                    } else {
+                                        teacher.setBalance(teacher.getBalance() + teacher.getSalary());
+                                    }
                                 }
                             }
-                        } else {
+                            teacherRepository.save(teacher);
+                            studentRepository.save(get_student);
+                            if (studentAttendDto.isActive()){
+                                attendance1.setAttandanceEnum(AttandanceEnum.YES);
+                            }else {
+                                attendance1.setAttandanceEnum(AttandanceEnum.NO);
+                            }
+
+
+                            attendanceRepository.save(attendance1);
+                        }
+                        else {
                             if (studentAttendDto.isActive()) {
+                                Attendance attendance2 = new Attendance();
+                                attendance2.setGroup(group);
+                                attendance2.setTeacher(teacher);
+                                attendance2.setStudent(get_student);
+                                attendance2.setAttandanceEnum(studentAttendDto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
+                                attendance2.setAttendDate(attendanceDto.getDate());
+                                Attendance savedAttendance = attendanceRepository.save(attendance2);
+
+                                paymentRepository.save(new Payment(
+                                        savedAttendance,
+                                        group.getCourse().getPrice(),
+                                        (teacher.isPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                ));
                                 get_student.setBalans(get_student.getBalans() - group.getCourse().getPrice());
                                 if (teacher.isPercent()) {
                                     teacher.setBalance(teacher.getBalance() + (group.getCourse().getPrice() / 100 * teacher.getSalary()));
                                 } else {
                                     teacher.setBalance(teacher.getBalance() + teacher.getSalary());
                                 }
-                            }
-                        }
-                        teacherRepository.save(teacher);
-                        studentRepository.save(get_student);
-                        if (studentAttendDto.isActive()){
-                            attendance1.setAttandanceEnum(AttandanceEnum.YES);
-                        }else {
-                            attendance1.setAttandanceEnum(AttandanceEnum.NO);
-                        }
-
-
-                        attendanceRepository.save(attendance1);
-                    } else {
-                        if (studentAttendDto.isActive()) {
-                            Attendance attendance2 = new Attendance();
-                            attendance2.setGroup(group);
-                            attendance2.setTeacher(teacher);
-                            attendance2.setStudent(get_student);
-                            attendance2.setAttandanceEnum(studentAttendDto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
-                            attendance2.setAttendDate(attendanceDto.getDate());
-                            Attendance savedAttendance = attendanceRepository.save(attendance2);
-
-                            paymentRepository.save(new Payment(
-                                    savedAttendance,
-                                    group.getCourse().getPrice(),
-                                    (teacher.isPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
-                            ));
-                            get_student.setBalans(get_student.getBalans() - group.getCourse().getPrice());
-                            if (teacher.isPercent()) {
-                                teacher.setBalance(teacher.getBalance() + (group.getCourse().getPrice() / 100 * teacher.getSalary()));
+                                studentRepository.save(get_student);
+                                teacherRepository.save(teacher);
                             } else {
-                                teacher.setBalance(teacher.getBalance() + teacher.getSalary());
+                                Attendance attendance3 = new Attendance();
+                                attendance3.setGroup(group);
+                                attendance3.setTeacher(teacher);
+                                attendance3.setStudent(get_student);
+                                attendance3.setAttandanceEnum(studentAttendDto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
+                                attendance3.setAttendDate(attendanceDto.getDate());
+                                attendanceRepository.save(attendance3);
                             }
-                            studentRepository.save(get_student);
-                            teacherRepository.save(teacher);
-                        } else {
-                            Attendance attendance3 = new Attendance();
-                            attendance3.setGroup(group);
-                            attendance3.setTeacher(teacher);
-                            attendance3.setStudent(get_student);
-                            attendance3.setAttandanceEnum(studentAttendDto.isActive() ? AttandanceEnum.YES : AttandanceEnum.NO);
-                            attendance3.setAttendDate(attendanceDto.getDate());
-                            attendanceRepository.save(attendance3);
                         }
                     }
                 }

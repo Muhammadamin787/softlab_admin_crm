@@ -21,4 +21,10 @@ public class DashboardController {
         ApiResponse apiResponse = dashboardService.getStatForFunnel();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @GetMapping("/student")
+    public HttpEntity<?> getStudentStat() {
+        ApiResponse apiResponse = dashboardService.getStudentStat();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }
