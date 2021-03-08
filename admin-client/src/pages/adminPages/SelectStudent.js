@@ -58,7 +58,7 @@ class SelectStudent extends Component {
         activeTab: "1",
         percentOfCash: "",
         sumOfCash: "",
-        cashBackSumm : 0
+        cashBackSumm: 0
     }
 
     render() {
@@ -166,6 +166,7 @@ class SelectStudent extends Component {
                 } else {
                     v.id = currentObject.id
                     v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    dispatch(saveStudentAction(v))
                 }
             }
         }
@@ -182,14 +183,14 @@ class SelectStudent extends Component {
             }
         }
 
-        const calc =(e)=> {
+        const calc = (e) => {
             let price = document.getElementById("price").value * 1
             let array = e.target.value.split(',');
 
-            if ((array[0] * 1) < price ){
+            if ((array[0] * 1) < price) {
                 price = (price) / 100 * (array[1] * 1)
-                this.setState({cashBackSumm : price})
-            }else {
+                this.setState({cashBackSumm: price})
+            } else {
                 console.log("NO")
             }
         }
@@ -209,14 +210,16 @@ class SelectStudent extends Component {
                 <div className={"flex-column container pl-md-5"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.fullName} </h3>
-                        <Link to={"/admin/students"} className={"text-decoration-none"}><span className={""}> Talabalar</span></Link>
+                        <Link to={"/admin/students"} className={"text-decoration-none"}><span
+                            className={""}> Talabalar</span></Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -225,7 +228,8 @@ class SelectStudent extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -238,7 +242,8 @@ class SelectStudent extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div className="row">
-                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                <div
+                                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                                     <div className="row">
                                                         <div className="col-8">
                                                             <hgroup>

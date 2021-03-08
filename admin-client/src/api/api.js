@@ -22,6 +22,7 @@ export const api = {
     teacherSalary: 'teacherSalary',
     teacherSalaryApi: '/teacherSalary',
     salary: '/salary',
-    attendance: "/attendance",
+    attendance : "/attendance",
+    byCourse : "/byCourse",
     dashboard: "/dashboard"
 };
