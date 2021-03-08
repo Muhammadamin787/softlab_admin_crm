@@ -100,7 +100,7 @@ class LineGraph extends Component {
                         dashArray: [0, 3]
                     },
                     title: {
-                        text: 'Рўйхатдан ўтганлар статистикаси',
+                        text: 'Talablar soni',
                         align: 'left',
                     },
                     legend: {
