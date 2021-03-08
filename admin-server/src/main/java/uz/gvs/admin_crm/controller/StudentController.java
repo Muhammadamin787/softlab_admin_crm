@@ -92,5 +92,10 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/search/{id}")
+    public HttpEntity<?> searchStudent(@PathVariable ResSelect resSelect){
+        ApiResponse apiResponse = studentService.searchStudent(resSelect);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
 }

@@ -487,14 +487,14 @@ public class StudentService {
         }
     }
 
-//
-    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2,String type) {
+    //
+    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
             Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
             Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
             switch (type) {
-                case "all" :
-                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "all":
+                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     all.getTotalPages(),
@@ -504,8 +504,8 @@ public class StudentService {
                                     all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
                             )
                     );
-                case "byCashbacks" :
-                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "byCashbacks":
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     byCashback.getTotalPages(),
@@ -516,7 +516,7 @@ public class StudentService {
                             )
                     );
                 case "getPrice":
-                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     getPrice.getTotalPages(),
@@ -572,10 +572,30 @@ public class StudentService {
                             )
                     );
                 default:
-                    return  apiResponseService.errorResponse();
+                    return apiResponseService.errorResponse();
             }
         } catch (Exception exception) {
             return apiResponseService.existResponse();
         }
     }
+
+    public ApiResponse searchStudent(ResSelect resSelect) {
+        try {
+            List<Object> objects = studentRepository.searchStudent(resSelect.getName());
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] student = (Object[]) obj;
+                UUID id = UUID.fromString(student[0].toString());
+                String name = student[1].toString();
+                ResSelect resSelectDto = new ResSelect(name, id);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+
 }
