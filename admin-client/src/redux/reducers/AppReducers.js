@@ -62,6 +62,7 @@ const initState = {
     studentStat: [],
     sana: [],
     multiLineStat: [],
+    sortAges: [],
 };
 
 const reducers = {
@@ -528,28 +529,42 @@ const reducers = {
         state.dashboardStat = payload.payload.object
     },
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
-        let data = payload.payload.object;
-        let date = [];
-        let allCount = [];
-        let activeCount = [];
-        for (let i = 0; i < data.length; i++) {
-            date.push(data[i].label)
-            allCount.push(data[i].data)
-            activeCount.push(data[i].data2)
-        }
-        state.sana = date
-        state.multiLineStat = [
-            {
-                name: "Umumiy talabalar",
-                data: allCount
-            },
-            {
-                name: "Faol talabalar",
-                data: activeCount
+        if (payload.payload && payload.payload.object) {
+            if (payload.payload.object.countSortList) {
+                let data = payload.payload.object.countSortList;
+                let date = [];
+                let allCount = [];
+                let activeCount = [];
+                for (let i = 0; i < data.length; i++) {
+                    date.push(data[i].label)
+                    allCount.push(data[i].data)
+                    activeCount.push(data[i].data2)
+                }
+                state.sana = date
+                state.multiLineStat = [
+                    {
+                        name: "Umumiy talabalar",
+                        data: allCount
+                    },
+                    {
+                        name: "Faol talabalar",
+                        data: activeCount
+                    }
+                ]
             }
-        ]
-        console.log(state.multiLineStat);
-        console.log(state.sana);
+            if (payload.payload.object.ageSortList) {
+                let series = [];
+                let labels = [];
+                let agesList = payload.payload.object.ageSortList;
+                for (let i = 0; i < agesList.length; i++) {
+                    series.push(agesList[i].data);
+                    labels.push(agesList[i].label);
+                }
+                state.sortAges = []
+                state.sortAges.labels = labels;
+                state.sortAges.series = series;
+            }
+        }
     },
     // START DASHBOARD REDUCERS TYPES
     updateState(state, {payload}) {

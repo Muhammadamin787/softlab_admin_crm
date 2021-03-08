@@ -2,15 +2,12 @@ package uz.gvs.admin_crm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.enums.ClientStatusEnum;
 import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.AppealDto;
 import uz.gvs.admin_crm.payload.DashboardDto;
 import uz.gvs.admin_crm.repository.ClientRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class DashboardService {
@@ -52,7 +49,7 @@ public class DashboardService {
         }
     }
 
-    public ApiResponse getStudentStat() {
+    public List<DashboardDto> getStudentSortByCount() {
         try {
             List<Object> objects = clientRepository.getStudentStat();
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -65,7 +62,52 @@ public class DashboardService {
                 faolCount += Integer.parseInt(client[2].toString());
                 dashboardDtos.add(new DashboardDto(vaqt, allCount, faolCount));
             }
-            return apiResponseService.getResponse(dashboardDtos);
+            return dashboardDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<DashboardDto> getStudentStatByAge() {
+        try {
+            List<DashboardDto> dashboardDtos = new ArrayList<>();
+            Object[] objects = clientRepository.getStudentSortByAge();
+            Object[] client = (Object[]) objects[0];
+            Integer count = Integer.valueOf(client[0].toString());
+            dashboardDtos.add(new DashboardDto("12 yoshdan kichiklar", count));
+            Integer count2 = Integer.valueOf(client[1].toString());
+            dashboardDtos.add(new DashboardDto("12-17 yosh", count2));
+            Integer count3 = Integer.valueOf(client[2].toString());
+            dashboardDtos.add(new DashboardDto("17-20 yosh", count3));
+            Integer count4 = Integer.valueOf(client[3].toString());
+            dashboardDtos.add(new DashboardDto("20 yoshdan kattalar", count4));
+            return dashboardDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<DashboardDto> getStudentStatByGender() {
+        try {
+            List<DashboardDto> dashboardDtos = new ArrayList<>();
+            List<Object[]> objects = clientRepository.getStudentSortByGender();
+            for (Object[] client : objects) {
+                Integer count = Integer.valueOf(client[0].toString());
+                dashboardDtos.add(new DashboardDto(client[1].toString(), count));
+            }
+
+            return dashboardDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public ApiResponse getStudentStat() {
+        try {
+            List<DashboardDto> studentStatByAge = getStudentStatByAge();
+            List<DashboardDto> studentStatByGender = getStudentStatByGender();
+            List<DashboardDto> studentSortByCount = getStudentSortByCount();
+            return apiResponseService.getResponse(new DashboardDto(studentStatByAge, studentStatByGender, studentSortByCount));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

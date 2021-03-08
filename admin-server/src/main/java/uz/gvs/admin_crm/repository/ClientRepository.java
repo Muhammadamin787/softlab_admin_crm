@@ -116,5 +116,11 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Query(nativeQuery = true, value = "select to_char(cast(st.created_at as date), 'dd-mm-yyyy') as vaqt, count(*) as barcha, sum(case when st.id=(select ssg.student_id from student_student_group ssg where ssg.student_id=st.id limit 1) then 1 else 0 end)  as faol from student st where st.created_at is not null group by vaqt order by vaqt")
     List<Object> getStudentStat();
 
+    @Query(nativeQuery = true, value = "select (select count(*) from users u inner join student s on u.id = s.user_id where EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))<12) as yosh_12_kichik, (select count(*) from users u inner join student s on u.id = s.user_id where EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))>=12 and EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))<17) as yosh_12_17, (select count(*) from users u inner join student s on u.id = s.user_id where EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))>=17 and EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))<20) as yosh_17_20, (select count(*) from users u inner join student s on u.id = s.user_id where EXTRACT(YEAR FROM age(cast(now() as timestamp), cast(u.birth_date as timestamp)))>=20) as yosh_20")
+    Object[] getStudentSortByAge();
+
+    @Query(nativeQuery = true, value = "select count(*), u.gender from student st inner join users u on st.user_id=u.id where u.gender is not null group by u.gender")
+    List<Object[]> getStudentSortByGender();
+
 
 }
