@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ModalHeader, Modal, Button, Col, ModalBody, Row, Table, ModalFooter} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteTeacherAction,
+    deleteTeacherAction, downloadTeacherFileAction,
     getCourseCategoriesAction,
     getRegionsAction, getStudentsAction,
     getTeacherAction, getTeachersAction,
@@ -103,15 +103,19 @@ class Teacher extends Component {
         const uploadImg = (e) => {
             this.props.dispatch(uploadFileAction(e.target.files[0]))
         }
+        const downloadTecherFile = (e,v) => {
+            dispatch(downloadTeacherFileAction(v))
+        }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>O'qituvchilar</h1>
                     <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                        <Button size={"lg"} color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
+                        <Button variant={"info"} size={"lg"} onClick={downloadTecherFile}>O`qituvchilar haqida malumot</Button>
                     </div>
                     <Table className={"table-style w-75"}>
                         <thead className={""}>

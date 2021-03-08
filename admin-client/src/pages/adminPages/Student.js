@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ModalHeader, Modal, Button, ModalBody, Table, ModalFooter} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, getDebtorsAction,
+    deleteStudentAction, downloadFileAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction,
     saveStudentAction,
     uploadFileAction
@@ -59,12 +59,13 @@ class Student extends Component {
         const openFiltrDebtors = (item) => {
             this.setState({currentObject: item})
             this.setState({secondPage: !this.state.secondPage})
-            // dispatch({
-            //     type: 'updateState',
-            //     payload:{
-            //         secondPage: !this.state.secondPage
-            //     }
-            // })
+        }
+        const openStudentInfo = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: 'updateState',
+                payload: {}
+            })
         }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
@@ -106,17 +107,19 @@ class Student extends Component {
         const uploadImg = (e) => {
             this.props.dispatch(uploadFileAction(e.target.files[0]))
         }
+        const downloadExcel = (e, v) => {
+            dispatch(downloadStudentFileAction(v))
+        }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 {this.state.secondPage ?
                     <div className={"flex-column container"}>
                         <h1>Talablar</h1>
-                        <div align={"right"}><Button color={"success"} onClick={openModal}
-                                                     className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
-                        </div>
-                        <Button color={"primary"} onClick={openFiltrDebtors}>Qarzdorlar</Button>
-                        <br/>
+                        <Button color={"success"} size={"lg"} onClick={openModal} >Yangisini qo'shish</Button>{'     '}
+                        <Button variant={"info"} size={"lg"} onClick={downloadExcel} >O`quvchilar malumotlari</Button>{'     '}
+                        <Button color={"primary"} size={"lg"} onClick={openFiltrDebtors}>Qarzdorlar</Button>{'      '}
+
                         <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>
@@ -447,13 +450,14 @@ class Student extends Component {
 
 }
 
-Student.propTypes = {}
+Student.propTypes = {
+}
 
 
 export default connect((
-    {
-        app: {
-            page,
+{
+    app: {
+        page,
             size,
             totalElements,
             students,
@@ -471,29 +475,29 @@ export default connect((
             teachers,
             readModal,
             teacherDto,
-        }
-        ,
     }
-    ) => (
-        {
-            page,
-            size,
-            selectDebtors,
-            totalElements,
-            students,
-            specializationDto,
-            loading,
-            courseCategories,
-            showModal,
-            deleteModal,
-            selectItems,
-            spec,
-            selectItemsFromSpec,
-            regions,
-            attachmentId,
-            readModal,
-            teachers,
-            teacherDto
-        }
-    )
+,
+}
+) => (
+{
+    page,
+        size,
+        selectDebtors,
+        totalElements,
+        students,
+        specializationDto,
+        loading,
+        courseCategories,
+        showModal,
+        deleteModal,
+        selectItems,
+        spec,
+        selectItemsFromSpec,
+        regions,
+        attachmentId,
+        readModal,
+        teachers,
+        teacherDto
+}
+)
 )(Student);

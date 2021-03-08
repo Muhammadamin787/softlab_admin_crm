@@ -3,6 +3,8 @@ import * as app from "../../api/AppApi";
 
 import {
 
+    getExcelInfoApi,
+
     getClientList,
     editClientApi,
     saveClientApi,
@@ -129,6 +131,7 @@ import {
     getAttendanceListAppApi, saveAttendanceAppApi, getStudentByGroupApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+import {config} from "../../utils/config";
 
 
 export const getAttendanceListAction = (payload) => (dispatch) => {
@@ -182,6 +185,22 @@ export const getDebtorsAction = () => (dispatch) => {
         ]
     })
 }
+
+export const downloadStudentFileAction = () => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/student")
+    link.setAttribute("download","student.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+export const downloadTeacherFileAction = () => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/teacher")
+    link.setAttribute("download","teacher.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+
 
 export const getClientAction = (data) => (dispatch) => {
     console.log(data);
