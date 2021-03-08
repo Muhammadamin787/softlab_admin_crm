@@ -168,6 +168,23 @@ public class TeacherService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+    public ApiResponse searchTeacher(String name) {
+        try {
+            List<Object> objects = teacherRepository.searchTeacher(name);
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] teacher = (Object[]) obj;
+                UUID id = UUID.fromString(teacher[0].toString());
+                String name1 = teacher[1].toString();
+                ResSelect resSelectDto = new ResSelect(name1, id);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }
 
 

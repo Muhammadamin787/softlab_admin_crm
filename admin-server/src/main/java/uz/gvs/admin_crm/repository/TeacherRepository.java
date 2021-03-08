@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
+    @Query(nativeQuery = true, value = "select tr.id, ur.full_name from teacher tr inner join users ur on tr.user_id = ur.id" +
+            " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
+    List<Object> searchTeacher(String objName);
 
-//    @Query(nativeQuery = true, value = "select u.full_name, t.id from teacher t inner join users u on t.user_id = u.id")
-//    List<Object[]> getTeacherForSelect(       );
 
 }

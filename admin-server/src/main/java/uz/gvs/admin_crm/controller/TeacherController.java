@@ -66,4 +66,10 @@ public class TeacherController {
         ApiResponse apiResponse = teacherService.deleteTeacher(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
     }
+
+    @GetMapping("/search")
+    public HttpEntity<?> searchTeacher(@RequestParam(value = "name") String name){
+        ApiResponse apiResponse = teacherService.searchTeacher(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }

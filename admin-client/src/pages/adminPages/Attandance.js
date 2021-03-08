@@ -194,6 +194,7 @@ class Attandance extends Component {
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center attandance-block_table_td__days"}>
+                                                        {console.log(currentGroup)}
                                                         {item}/{days[new Date(year, month, item).getDay()]}
                                                     </td>
                                                     : ''

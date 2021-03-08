@@ -97,9 +97,9 @@ StudentController {
 //        byte[] file=
 //    }
 
-    @GetMapping("/search/{id}")
-    public HttpEntity<?> searchStudent(@PathVariable ResSelect resSelect){
-        ApiResponse apiResponse = studentService.searchStudent(resSelect);
+    @GetMapping("/search")
+    public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name){
+        ApiResponse apiResponse = studentService.searchStudent(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
