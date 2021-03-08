@@ -5,6 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Student;
+import uz.gvs.admin_crm.entity.StudentGroup;
 import uz.gvs.admin_crm.entity.Teacher;
 
 import java.io.ByteArrayOutputStream;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExcelService {
@@ -88,28 +90,40 @@ public class ExcelService {
 
         // Creating data rows for each customer
         for (int i = 0; i < students.size(); i++) {
-            CellStyle headerCellStyle1 = workbook.createCellStyle();
-            headerCellStyle1.setBorderBottom(BorderStyle.MEDIUM);
-            headerCellStyle1.setBorderLeft(BorderStyle.MEDIUM);
-            headerCellStyle1.setBorderRight(BorderStyle.MEDIUM);
-            headerCellStyle1.setBorderTop(BorderStyle.MEDIUM);
+            String[] s = students.get(i).getUser().getBirthDate().toString().split(" ");
+            String[] split = s[0].split("-");
+            int i1 = Integer.parseInt(split[0]);
+            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date(System.currentTimeMillis());
+            String[] s1 = formatter.format(date).split(" ");
+            String[] split2 = s1[0].split("-");
+            int i2 = Integer.parseInt(split2[0]);
+            int age = i2-i1;
+
+            String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
+            String[] a=s2[0].split("-");
+            int studentStartDate=Integer.parseInt(a[0]);
+
+            String getGropuName = "" ;
+            Set<StudentGroup> studentGroup = students.get(i).getStudentGroup();
+            for (StudentGroup studentGroup1: studentGroup) {
+                if (studentGroup.size() > 1) {
+                    getGropuName += studentGroup1.getGroup().getName() + ", ";
+                }else {
+                    getGropuName += studentGroup1.getGroup().getName();
+                }
+            }
 
             Row dataRow = sheet.createRow(i + 1);
             dataRow.createCell(0).setCellValue(students.get(i).getUser().getFullName());
-            dataRow.createCell(1).setCellValue(students.get(i).getUser().getPhoneNumber());
-            dataRow.createCell(2).setCellValue(students.get(i).getUser().getRegion().getId() != 0 ?
+            dataRow.createCell(1).setCellValue(age);
+            dataRow.createCell(2).setCellValue(students.get(i).getUser().getPhoneNumber());
+            dataRow.createCell(3).setCellValue(getGropuName);
+            dataRow.createCell(4).setCellValue(students.get(i).getUser().getRegion().getId() != 0 ?
                     students.get(i).getUser().getRegion().getName() : null);
-            dataRow.createCell(3).setCellValue(students.get(i).getUser().getGender().toString());
-            dataRow.createCell(4).setCellValue(students.get(i).getUser().getDescription());
-            dataRow.createCell(5).setCellValue(students.get(i).getUser().getBirthDate());
-//                dataRow.createCell(0).setCellValue(students.get(i).getFullName());
-//                dataRow.createCell(1).setCellValue(students.get(i).getPhoneNumber());
-//                dataRow.createCell(2).setCellValue(students.get(i).getAge());
-//                dataRow.createCell(3).setCellValue(students.get(i).getAddress());
-//                dataRow.createCell(4).setCellValue(students.get(i).getBalans());
-//                dataRow.createCell(5).setCellValue(students.get(i).getGroupName());
-//                dataRow.createCell(6).setCellValue(students.get(i).getStarttime());
-//                dataRow.createCell(7).setCellValue(students.get(i).getParentPhone());
+            dataRow.createCell(5).setCellValue(students.get(i).getBalans());
+            dataRow.createCell(6).setCellValue(studentStartDate);
+            dataRow.createCell(7).setCellValue(students.get(i).getParentPhone());
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
