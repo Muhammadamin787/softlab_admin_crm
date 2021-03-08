@@ -6,18 +6,22 @@ import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {
     getDailySchedule,
-    getDashboardStatAction,
+    getDashboardStatAction, getDashboardStudentStatAction,
     getRoomListAction,
     getTeacherSalaryListAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
+import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
+import MultiLine from "../../component/dashboard/MultiLine";
+import Donut from "../../component/dashboard/Donut";
 
 class Dashboard extends Component {
 
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getDashboardStatAction())
+        this.props.dispatch(getDashboardStudentStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         let arr = []
         for (let i = startHour; i < endHour; i++) {
@@ -40,8 +44,6 @@ class Dashboard extends Component {
         this.setState({
             list: arr
         })
-
-
     }
 
     state = {
@@ -56,9 +58,11 @@ class Dashboard extends Component {
     render() {
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         const {
+            sortAges,
+            studentStat,
             dispatch,
             teacherSalaryList,
-            page, size, totalElements,
+            size,
             rooms,
             dailySchedule,
             dashboardStat
@@ -77,7 +81,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
 
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
@@ -98,6 +101,9 @@ class Dashboard extends Component {
         const l = (e) => {
             this.props.dispatch(getDailySchedule(e.target.value))
         }
+
+        console.log(dailySchedule)
+        let startDate, finishDate;
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
@@ -134,7 +140,6 @@ class Dashboard extends Component {
                                                 {dashboardStat[7].data}
                                             </h2>
                                             <h6>{dashboardStat[7].label}</h6>
-
                                         </hgroup>
                                     </div>
                                 </div>
@@ -149,7 +154,6 @@ class Dashboard extends Component {
                                         </hgroup>
                                     </div>
                                 </div>
-
                                 <div className={"col-md-6 bg-white p-3"}>
                                     <h5>Sotuv voronkasi</h5>
                                     <Funnel
@@ -158,7 +162,7 @@ class Dashboard extends Component {
                                         colors={{
                                             graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
                                             percent: 'red',
-                                            label: 'black',
+                                            label: 'secondary',
                                             value: 'orange'
                                         }}
                                         valueKey='quantity'
@@ -180,6 +184,21 @@ class Dashboard extends Component {
                                             "quantity": dashboardStat[4].data
                                         },
                                         ]}/>
+                                </div>
+                                <div className="col-md-12 my-2">
+                                    <h4>O'quvchilar statistikasi</h4>
+                                    <div className="row">
+                                        <div className="col-md-7 bg-white border-right  ">
+                                            <MultiLine/>
+                                        </div>
+                                        <div className="col-md-5 bg-white">
+                                            <Donut
+                                                title={"Yosh bo'yichas"}
+                                                labels={sortAges ? sortAges.labels : []}
+                                                series={sortAges ? sortAges.series : []}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             : ""}
@@ -266,8 +285,46 @@ class Dashboard extends Component {
                                                                 item3 && item3.room && item3.room.id === item2.id ?
                                                                     <>
                                                                         {d(item3.room.id)}
-                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
-                                                                            {item3.name}
+                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}
+                                                                            className={"table-group-style"}>
+                                                                            <div style={{backgroundColor: setBg()}}
+                                                                                 className={"inside-td-block container"}>
+                                                                                <div className={"row"}>
+                                                                                   <span
+                                                                                       className={"group-name-style-dash"}>
+                                                                                       #{item3.name}
+                                                                                   </span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
+                                                                                       {item3.courseName}
+                                                                                   </span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
+                                                                                       {item3.teacherName}
+                                                                                   </span>
+                                                                                </div>
+                                                                                <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startTime}
+                                                                                   </span>--
+                                                                                    <span>
+                                                                                       {item3.finishTime}
+                                                                                   </span>
+                                                                                    <span
+                                                                                        className={"ml-auto group-name-style-dash"}>
+                                                                                       ST:{item3.countStudent}
+                                                                                   </span>
+                                                                                </div>
+                                                                                <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startDates.substring(0, 10)}
+                                                                                   </span>
+                                                                                    --
+                                                                                    <span>
+                                                                                       {item3.finishDates.substring(0, 10)}
+                                                                                   </span>
+                                                                                </div>
+                                                                            </div>
                                                                         </td>
                                                                     </>
                                                                     : ''
@@ -397,6 +454,8 @@ Dashboard.propTypes = {};
 
 export default connect(({
                             app: {
+                                sortAges,
+                                studentStat,
                                 groups,
                                 payTypes,
                                 currentItem,
@@ -420,6 +479,8 @@ export default connect(({
                                 dashboardStat
                             },
                         }) => ({
+        sortAges,
+        studentStat,
         groups,
         payTypes,
         currentItem,
