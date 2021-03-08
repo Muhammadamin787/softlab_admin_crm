@@ -131,8 +131,13 @@ import {
     saveAttendanceAppApi,
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
-    getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getAppealListAllApi,
+    getFinanceStudentApi,
+    getFinanceTeacherApi,
+    getDailyScheduleList,
+    getTeacherPaymentListByDateApi,
+    getDashboardStatApi,
+    getAppealListAllApi,
+    getWeeklyScheduleList,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 
@@ -1791,6 +1796,17 @@ export const getDailySchedule = (payload) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data: payload
+    })
+}
+
+export const getWeeklySchedule = () => (dispatch) => {
+    dispatch({
+        api: getWeeklyScheduleList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_WEEKLY_SCHEDULE,
+            types.REQUEST_ERROR
+        ]
     })
 }
 
