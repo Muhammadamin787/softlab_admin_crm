@@ -58,7 +58,7 @@ class SelectStudent extends Component {
         activeTab: "1",
         percentOfCash: "",
         sumOfCash: "",
-        cashBackSumm : 0
+        cashBackSumm: 0
     }
 
     render() {
@@ -158,20 +158,15 @@ class SelectStudent extends Component {
         }
         const saveItem = (e, v) => {
             if (currentObject && currentObject.id) {
-                console.log(currentObject);
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
                     v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
-                    // let a = v.cashbackId.split(',')
-                    // v.cashbackId = a[0];
                     dispatch(saveStudentPaymentAction(v));
-                    console.log(v)
-                    // dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
                     v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
-                    // dispatch(saveStudentAction(v))
+                    dispatch(saveStudentAction(v))
                 }
             }
         }
@@ -182,20 +177,20 @@ class SelectStudent extends Component {
                     v.id = currentObject.id
                     v.groupId = addGroup;
                     v.studentId = this.props.match.params.id;
-                    v.payDate = moment(v.payDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('dd/MM/yyyy hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
                 }
             }
         }
 
-        const calc =(e)=> {
+        const calc = (e) => {
             let price = document.getElementById("price").value * 1
             let array = e.target.value.split(',');
 
-            if ((array[0] * 1) < price ){
+            if ((array[0] * 1) < price) {
                 price = (price) / 100 * (array[1] * 1)
-                this.setState({cashBackSumm : price})
-            }else {
+                this.setState({cashBackSumm: price})
+            } else {
                 console.log("NO")
             }
         }
@@ -215,14 +210,16 @@ class SelectStudent extends Component {
                 <div className={"flex-column container pl-md-5"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.fullName} </h3>
-                        <Link to={"/admin/students"} className={"text-decoration-none"}><span className={""}> Talabalar</span></Link>
+                        <Link to={"/admin/students"} className={"text-decoration-none"}><span
+                            className={""}> Talabalar</span></Link>
                     </hgroup>
                     <div className="row">
                         {currentItem && currentItem.id ?
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
-                                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -231,7 +228,8 @@ class SelectStudent extends Component {
                                                 Profil
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                        <NavItem
+                                            className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -244,7 +242,8 @@ class SelectStudent extends Component {
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
                                             <div className="row">
-                                                <div className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
+                                                <div
+                                                    className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                                     <div className="row">
                                                         <div className="col-8">
                                                             <hgroup>
@@ -274,6 +273,10 @@ class SelectStudent extends Component {
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Manzil: </small>
                                                                 <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Jinsi: </small>
+                                                                <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
@@ -436,12 +439,18 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
                                             label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                            validate={{
+                                                required: {value: true},
+                                                pattern: {value: "^[0-9]+$", errorMessage: "faqat raqam yozing"},
+                                                minLength: {value: 9},
+                                                maxLength: {value: 9}
+                                            }}
                                             placeholer={"nomi"} required/>
                                         <AvField
                                             defaultValue={currentObject ? currentObject.parentPhone : ""}
                                             type={"number"}
                                             label={"Ota-onasi tel:"} name={"parentPhone"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
+                                            placeholer={"nomi"}/>
                                         <AvField
                                             type={"date"}
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')

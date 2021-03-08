@@ -103,7 +103,8 @@ public class GroupService {
                     group.getStartDate(),
                     group.getFinishDate(),
                     group.getGroupStatus(),
-                    group.isActive()
+                    group.isActive(),
+                    group.getRoom()
             );
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
@@ -256,6 +257,56 @@ public class GroupService {
             return apiResponseService.updatedResponse();
         } else {
             return apiResponseService.notFoundResponse();
+        }
+    }
+
+
+    public ApiResponse getGroups(String weekName) {
+        try {
+            WeekdayName weekdayName = WeekdayName.valueOf(weekName);
+            List<Group> groups = groupRepository.findAllGroups(weekName);
+            return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse getAllGroups() {
+        try {
+            List<Group> groups = groupRepository.findAllGroups1();
+            return apiResponseService.getResponse(groups.stream().map(this::makeGroupTable).collect(Collectors.toList()));
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    public ApiResponse getGroupsByWeekDayForSchedule(String weekday) {
+        try {
+            List<Object> objects = groupRepository.getGroupsByWeekDay(weekday);
+            List<ResGroupDto> groupDtos = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] group = (Object[]) obj;
+                Integer id = Integer.valueOf(group[0].toString());
+                String name = group[1].toString();
+                String start_muddat = group[2].toString();
+                String fnish_muddat = group[3].toString();
+                String start_vaqt = group[4].toString();
+                String finsh_vaqt = group[5].toString();
+                String kurs = group[6].toString();
+                Integer xona_id = Integer.valueOf(group[7].toString());
+                String xona = group[8].toString();
+                Room room = new Room();
+                room.setId(xona_id);
+                room.setName(xona);
+                String oqituvchi = group[9].toString();
+                Integer student_count = Integer.valueOf(group[10].toString());
+                ResGroupDto groupDto = new ResGroupDto(id, name, kurs, oqituvchi, start_vaqt, finsh_vaqt, start_muddat, fnish_muddat, student_count, room);
+                groupDtos.add(groupDto);
+            }
+            return apiResponseService.getResponse(groupDtos);
+        } catch (Exception e) {
+            return apiResponseService.errorResponse();
         }
     }
 }

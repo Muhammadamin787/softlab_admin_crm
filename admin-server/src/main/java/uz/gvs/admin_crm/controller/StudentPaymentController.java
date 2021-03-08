@@ -1,6 +1,7 @@
 package uz.gvs.admin_crm.controller;
 
 
+import org.hibernate.type.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.StudentService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -40,12 +42,6 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    @GetMapping("/list")
-    public HttpEntity<?> getStudentPaymentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        ApiResponse apiResponse = studentService.getStudentPaymentList(page, size);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
     @GetMapping("/{id}")
     public HttpEntity<?> getStudentPayment(@PathVariable UUID id, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
@@ -54,16 +50,9 @@ public class StudentPaymentController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteStudentPayment(@PathVariable UUID id){
+    public HttpEntity<?> deleteStudentPayment(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.deleteStudentPayment(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
-    }
-
-    @GetMapping("/paymentCashbacks")
-    public HttpEntity<?> getStudentPaymentCashbacks(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        ApiResponse apiResponse = studentService.getStudentPaymentCashbacks(page, size);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping("/studentGroup/{id}")
@@ -72,7 +61,25 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @GetMapping("/byDate")
+    public HttpEntity<?> getStudentPaymentByDate(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                                 @RequestParam(value = "date1", defaultValue = "") String data1,
+                                                 @RequestParam(value = "date2", defaultValue = "") String data2,
+                                                 @RequestParam(value = "type", defaultValue = "all")String type) {
+        ApiResponse apiResponse = studentService.getStudentPaymentByDate(page, size, data1, data2,type);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
 
+
+    @GetMapping("/finance")
+    public HttpEntity<?> getPayments(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                     @RequestParam(value = "type", defaultValue = "all") String type
+    ) {
+        ApiResponse apiResponse = studentService.getPayments(page, size, type);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }
-////
+

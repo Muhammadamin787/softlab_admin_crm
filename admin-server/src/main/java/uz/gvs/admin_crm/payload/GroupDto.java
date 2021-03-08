@@ -34,12 +34,19 @@ public class GroupDto {
     private Room room;
     private GroupStatus groupStatus;
 
-//    public CourseDto(Integer id, String name, String description, boolean active, double price, CourseCategory courseCategory){
-//        this.id = id;
-//        this.name = name;
-//        this.description = description;
-//        this.active = active;
-//        this.price = price;
-//        this.courseCategory = courseCategory;
-//    }
+    public GroupDto(Integer id, String name, String description, boolean active, String startTime, String finishTime, String startDate, String finishDate, Set<String> weekdays, Teacher teacher, Course course, Room room, GroupStatus groupStatus) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.active = active;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.startDate = startDate;
+        this.finishDate = finishDate;
+        this.weekdays = weekdays;
+        this.teacher = teacher;
+        this.course = course;
+        this.room = room;
+        this.groupStatus = groupStatus;
+    }
 }

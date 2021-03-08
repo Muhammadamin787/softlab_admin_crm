@@ -8,9 +8,18 @@ import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
 import {config} from "../utils/config";
 
+
 class AdminLayout extends Component {
+
+    state = {
+        addMenu: false,
+        addMenu1: false
+    }
+
     render() {
-        const {currentUser, addMenu, addMenu1, menuHidden, dispatch} = this.props;
+        const {currentUser, menuHidden, dispatch} = this.props;
+        const {addMenu, addMenu1} = this.state
+
         const changeMenu = () => {
             dispatch({
                 type: "updateState",
@@ -19,28 +28,38 @@ class AdminLayout extends Component {
                 }
             })
         }
+
+        const closeFun = () =>{
+            if (addMenu || addMenu1){
+                this.setState({addMenu: false})
+                this.setState({addMenu1: false})
+            }
+        }
+
         const secondMenu = () => {
-            dispatch({
-                type: "updateState",
-                payload: {
-                    addMenu: !addMenu,
-                }
-            })
+            this.setState({addMenu: !addMenu})
         }
+
         const thirdMenu = () => {
-            dispatch({
-                type: "updateState",
-                payload: {
-                    addMenu1: !addMenu1,
-                }
-            })
+            this.setState({addMenu1: !addMenu1})
         }
+
         return (
-            <div className={"admin-layout-page"}>
+            <div className={"admin-layout-page"} onClick={closeFun}>
                 <div className={"main-layout"}>
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
                         <div className="main-link-div">
+                            <Link to="/admin/card" className={
+                                this.props.pathname === "/admin/card" ?
+                                    "active-link" : "default-link"
+                            }>
+                                <span className="icon icon-dashboard"/>
+                                <div className="main-link">
+                                    Card
+                                </div>
+                            </Link>
+
                             <Link to="/admin" className={
                                 this.props.pathname === "/admin" ?
                                     "active-link" : "default-link"
@@ -130,7 +149,7 @@ class AdminLayout extends Component {
                         </div>
                     </div>
                     <div
-                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
+                        className={"additional-menu " + (addMenu ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")} id={"test1234"}>
                         <div className="main-link-div">
                             <Link to="/admin/room" className={
                                 this.props.pathname === "/admin/room" ?
@@ -206,26 +225,7 @@ class AdminLayout extends Component {
                                     Xodimlar
                                 </Link>
                             </Link>
-                            <Link to="/admin/staff" className={
-                                this.props.pathname === "/admin/studentPaymentList" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <Link to="/admin/studentPayment"
-                                      className="main-link">
-                                    StudentPaymentlar
-                                </Link>
-                            </Link>
-                            <Link to="/admin/staff" className={
-                                this.props.pathname === "/admin/studentPaymentCashbacks" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <Link to="/admin/studentPaymentCashbacks"
-                                      className="main-link">
-                                    StudentPayment Cashbacklar
-                                </Link>
-                            </Link>
+
                         </div>
                     </div>
                     <div className={"additional-menu " + (addMenu1 ? menuHidden ? " additional-menu-small" : " open-add-menu" : " additional-menu-hidden")}>
@@ -248,6 +248,15 @@ class AdminLayout extends Component {
                                     Teacher Moliya
                                 </div>
                             </Link>
+                            {/*<Link to="/admin/AllPayments" className={*/}
+                            {/*    this.props.pathname === "/admin/reklama" ?*/}
+                            {/*        "active-link" : "default-link"*/}
+                            {/*}>*/}
+                            {/*    <span className="icon icon-teacher"/>*/}
+                            {/*    <div className="main-link">*/}
+                            {/*        Barcha Tolovlar*/}
+                            {/*    </div>*/}
+                            {/*</Link>*/}
                         </div>
                     </div>
 

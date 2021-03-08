@@ -21,7 +21,7 @@ import java.util.Set;
 public class Student extends AbsEntity {
     @ManyToOne
     private User user;
-    private double balans;
+    private double balans = 0.0;
     private String parentPhone;
     @OneToMany
     private Set<StudentGroup> studentGroup;
