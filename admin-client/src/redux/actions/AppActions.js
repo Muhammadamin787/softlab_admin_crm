@@ -1494,7 +1494,7 @@ export const saveAppealAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         if (res && res.payload && res.payload.message)
-            toast.success(res.payload.message)
+            // toast.success(res.payload.message)
             dispatch(getAppealListAllAction({page: 0, size: 20}))
     })
 }
@@ -1509,7 +1509,7 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         if (res && res.payload && res.payload.message) {
-            toast.success(res.payload.message)
+            // toast.success(res.payload.message)
             dispatch(getAppealListByStatusTypeAction({page: 0, size: 20}))
         }
     })
