@@ -150,10 +150,10 @@ class Dashboard extends Component {
                                         </hgroup>
                                     </div>
                                 </div>
-                                <div className="col-md-5 bg-white p-3">
+                                <div className="col-md-5 bg-white p-3 mr-2">
                                     <MultiLine/>
                                 </div>
-                                <div className={"col-md-6 bg-white p-3 offset-1"}>
+                                <div className={"col-md-6 bg-white p-3"}>
                                     <h5>Sotuv voronkasi</h5>
                                     <Funnel
                                         labelKey='label'
