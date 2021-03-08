@@ -95,7 +95,7 @@ public class AppealService {
                 return apiResponseService.notFoundResponse();
             // clientni saqlash
             Client client = byId.get();
-            ClientStatus clientStatus = clientStatusRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get client status"));
+
 
             Optional<ClientStatusConnect> byClient_id = clientStatusConnectRepository.findByClient_id(client.getId());
 
@@ -123,6 +123,7 @@ public class AppealService {
                 if (appealDto.getStatusEnum().equals("COLLECTION")) {
                     clientAppeal.setStatusEnum(ClientStatusEnum.COLLECTION);
                 } else {
+                    ClientStatus clientStatus = clientStatusRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get client status"));
                     clientAppeal.setStatusEnum(clientStatus.getClientStatusEnum());
                 }
                 clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
@@ -269,7 +270,8 @@ public class AppealService {
     public ClientStatusConnectDto makeClient(ClientStatusConnect client){
         return new ClientStatusConnectDto(
                 client.getClient(),
-                clientStatusRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status")),
+                (client.isToplam() ? null : clientStatusRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status"))),
+                (client.isToplam() ? toplamRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status")) : null),
                 client.getId(),
                 client.isToplam()
         );
