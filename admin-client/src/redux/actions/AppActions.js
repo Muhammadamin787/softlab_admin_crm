@@ -1495,17 +1495,7 @@ export const saveAppealAction = (data) => (dispatch) => {
     }).then((res) => {
         if (res && res.payload && res.payload.message)
             toast.success(res.payload.message)
-        if (data && data.enumType)
-            if (data.typeId)
-                dispatch(getAppealListByStatusTypeAction({
-                    enumType: data.enumType,
-                    typeId: data.typeId,
-                    page: 0,
-                    size: 20
-                }))
-            else
-                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
-
+            dispatch(getAppealListAllAction({page: 0, size: 20}))
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1518,18 +1508,10 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res && res.payload && res.payload.message)
+        if (res && res.payload && res.payload.message) {
             toast.success(res.payload.message)
-        if (data && data.enumType)
-            if (data.typeId)
-                dispatch(getAppealListByStatusTypeAction({
-                    enumType: data.enumType,
-                    typeId: data.typeId,
-                    page: 0,
-                    size: 20
-                }))
-            else
-                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
+            dispatch(getAppealListByStatusTypeAction({page: 0, size: 20}))
+        }
     })
 }
 export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
