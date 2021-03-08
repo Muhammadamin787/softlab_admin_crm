@@ -275,6 +275,10 @@ class SelectStudent extends Component {
                                                                 <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
                                                             </hgroup>
                                                             <hgroup>
+                                                                <small className={"text-secondary"}>Jinsi: </small>
+                                                                <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                                            </hgroup>
+                                                            <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
                                                                 <p className={"d-inline"}> {currentItem.description}</p>
                                                             </hgroup>
@@ -435,12 +439,18 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
                                             label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                            validate={{
+                                                required: {value: true},
+                                                pattern: {value: "^[0-9]+$", errorMessage: "faqat raqam yozing"},
+                                                minLength: {value: 9},
+                                                maxLength: {value: 9}
+                                            }}
                                             placeholer={"nomi"} required/>
                                         <AvField
                                             defaultValue={currentObject ? currentObject.parentPhone : ""}
                                             type={"number"}
                                             label={"Ota-onasi tel:"} name={"parentPhone"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
+                                            placeholer={"nomi"}/>
                                         <AvField
                                             type={"date"}
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
