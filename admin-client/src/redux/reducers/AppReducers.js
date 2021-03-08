@@ -9,7 +9,7 @@ const initState = {
     showModal: false,
     showModal1: false,
     showChangeModal: false,
-    debtorsModal:false,
+    debtorsModal: false,
     deleteModal: false,
     profession: [],
     regions: [],
@@ -47,17 +47,22 @@ const initState = {
     getClientStatusList: [],
     appealList: [],
     toplamList: [],
-    cashbacks : [],
+    cashbacks: [],
     selectDebtors: [],
-    studentPayments :[],
-    studentPaymentCashbaks :[],
+    studentPayments: [],
+    studentPaymentCashbaks: [],
     teacherSalaryAppApi: [],
-    attendanceList : [],
-    teacherSalaryList:[],
-    studentPaymentFinance :[],
-    teacherPaymentFinance :[],
+    attendanceList: [],
+    teacherSalaryList: [],
+    studentPaymentFinance: [],
+    teacherPaymentFinance: [],
     rooms: [],
-    dailySchedule: []
+    dailySchedule: [],
+    dashboardStat: [],
+    studentStat: [],
+    sana: [],
+    multiLineStat: [],
+    sortAges: [],
 };
 
 const reducers = {
@@ -74,7 +79,7 @@ const reducers = {
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
-            state.selectDebtors = payload.payload.object.object
+        state.selectDebtors = payload.payload.object.object
     },
 
 
@@ -515,12 +520,53 @@ const reducers = {
         state.dailySchedule = null
         state.dailySchedule = payload.payload.object;
     },
-
-
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
         state.attachmentId = payload
     },
+    // START DASHBOARD REDUCERS TYPES
+    [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
+        state.dashboardStat = payload.payload.object
+    },
+    [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
+        if (payload.payload && payload.payload.object) {
+            if (payload.payload.object.countSortList) {
+                let data = payload.payload.object.countSortList;
+                let date = [];
+                let allCount = [];
+                let activeCount = [];
+                for (let i = 0; i < data.length; i++) {
+                    date.push(data[i].label)
+                    allCount.push(data[i].data)
+                    activeCount.push(data[i].data2)
+                }
+                state.sana = date
+                state.multiLineStat = [
+                    {
+                        name: "Umumiy talabalar",
+                        data: allCount
+                    },
+                    {
+                        name: "Faol talabalar",
+                        data: activeCount
+                    }
+                ]
+            }
+            if (payload.payload.object.ageSortList) {
+                let series = [];
+                let labels = [];
+                let agesList = payload.payload.object.ageSortList;
+                for (let i = 0; i < agesList.length; i++) {
+                    series.push(agesList[i].data);
+                    labels.push(agesList[i].label);
+                }
+                state.sortAges = []
+                state.sortAges.labels = labels;
+                state.sortAges.series = series;
+            }
+        }
+    },
+    // START DASHBOARD REDUCERS TYPES
     updateState(state, {payload}) {
         return {
             ...state,

@@ -164,30 +164,26 @@ class Attandance extends Component {
                                 />
                             </Col>
                             <Col>
-
                             </Col>
                         </Row>
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative test12345"}>
-                            <Container className={"text-center position-fixed"}>
+                        <div className={"position-relative test12345 p-3 mr-3"}>
+                            <div>
                                 <Row>
-                                    <Col md={2}>
+                                    <Col md={1}>
                                         <i onClick={minusM} className="fas fa-angle-left"/>
                                     </Col>
-                                    <Col md={8}>
+                                    <Col md={2}>
                                         {" " + year + " - yil, " + months[month] + " "}
                                     </Col>
-                                    <Col md={2}>
+                                    <Col md={1}>
                                         <i onClick={plusM} className="fa fa-angle-right"/>
                                     </Col>
                                 </Row>
-                            </Container>
-
-
-                            <br/>
-                            <Table style={gg} >
+                            </div>
+                            <Table style={gg} className={"mb-0"} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -207,7 +203,6 @@ class Attandance extends Component {
                                     <tr key={i}>
                                         <td className={"attandance-block_td"}>{i + 1}</td>
                                         <td className={"attandance-block_td"}>{item.fullName}</td>
-
                                         {daysOfMonth ? daysOfMonth.map(item2 =>
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item2).getDay()] ?
@@ -225,8 +220,8 @@ class Attandance extends Component {
                                     </tr>
                                 ) : ''}
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td/>
+                                    <td/>
                                     {
                                         daysOfMonth ? daysOfMonth.map(item =>
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
@@ -240,14 +235,11 @@ class Attandance extends Component {
                                         ) : ''
                                     }
                                 </tr>
-
                             </Table>
                         </div>
                         :
                         ''
                     }
-
-
                     <Modal isOpen={openModal}>
                         <ModalHeader>Kunlik davomat</ModalHeader>
                         <ModalBody>
@@ -270,14 +262,12 @@ class Attandance extends Component {
                                         </tr>
                                     ) : ''}
                                 </Table>
-
                                 <ModalFooter>
                                     <Button outline onClick={showHideModal}>Bekor qilish</Button>
                                     <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
                                 </ModalFooter>
                             </AvForm>
                         </ModalBody>
-
                     </Modal>
                 </AdminLayout>
             </div>
