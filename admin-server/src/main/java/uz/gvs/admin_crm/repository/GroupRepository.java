@@ -38,6 +38,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
             "(select id from student_student_group ssg where  ssg.student_group_id=:groupId)")
     Integer countStudent(Integer groupId);
 
-
-
+    @Query(nativeQuery = true, value = "select gr.id, gr.name from groups gr" +
+            " where LOWER(gr.name) like LOWER(concat('%', :objName, '%')) limit 10")
+    List<Object> searchGroup(String objName);
 }
