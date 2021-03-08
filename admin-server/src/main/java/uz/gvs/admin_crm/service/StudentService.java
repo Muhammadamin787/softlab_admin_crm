@@ -538,10 +538,30 @@ public class StudentService {
                             )
                     );
                 default:
-                    return  apiResponseService.errorResponse();
+                    return apiResponseService.errorResponse();
             }
         } catch (Exception exception) {
             return apiResponseService.existResponse();
         }
     }
+
+    public ApiResponse searchStudent(ResSelect resSelect) {
+        try {
+            List<Object> objects = studentRepository.searchStudent(resSelect.getName());
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] student = (Object[]) obj;
+                UUID id = UUID.fromString(student[0].toString());
+                String name = student[1].toString();
+                ResSelect resSelectDto = new ResSelect(name, id);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+
 }

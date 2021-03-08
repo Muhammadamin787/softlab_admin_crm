@@ -33,6 +33,7 @@ import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
+import {AiOutlineUsergroupAdd} from "react-icons/all";
 
 class SelectStudent extends Component {
     componentDidMount() {
@@ -275,13 +276,19 @@ class SelectStudent extends Component {
                                                                 <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
                                                             </hgroup>
                                                             <hgroup>
+                                                                <small className={"text-secondary"}>Jinsi: </small>
+                                                                <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                                            </hgroup>
+                                                            <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
                                                                 <p className={"d-inline"}> {currentItem.description}</p>
                                                             </hgroup>
                                                             <div className="button-block">
                                                                 <Button className="table-icon px-2"
                                                                         onClick={() => openAddGroupModal(currentItem)}>
-                                                                    <span className="icon icon-wallet bg-primary "/>
+                                                                    <AiOutlineUsergroupAdd
+                                                                        color={"black"}
+                                                                    />
                                                                 </Button>
                                                                 <Button className="table-icon px-2"
                                                                         onClick={() => openPaymentModal(currentItem)}>
@@ -435,12 +442,18 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                             type={"number"}
                                             label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                            validate={{
+                                                required: {value: true},
+                                                pattern: {value: "^[0-9]+$", errorMessage: "faqat raqam yozing"},
+                                                minLength: {value: 9},
+                                                maxLength: {value: 9}
+                                            }}
                                             placeholer={"nomi"} required/>
                                         <AvField
                                             defaultValue={currentObject ? currentObject.parentPhone : ""}
                                             type={"number"}
                                             label={"Ota-onasi tel:"} name={"parentPhone"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
+                                            placeholer={"nomi"}/>
                                         <AvField
                                             type={"date"}
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')

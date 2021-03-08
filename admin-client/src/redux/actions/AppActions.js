@@ -3,6 +3,8 @@ import * as app from "../../api/AppApi";
 
 import {
 
+    getExcelInfoApi,
+
     getClientList,
     editClientApi,
     saveClientApi,
@@ -134,12 +136,13 @@ import {
     getFinanceStudentApi,
     getFinanceTeacherApi,
     getDailyScheduleList,
-    getTeacherPaymentListByDateApi,
     getDashboardStatApi,
     getDashboardStudentStatApi,
-    getAppealListAllApi
+    getAppealListAllApi ,
+    getByCourseApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
+import {config} from "../../utils/config";
 
 
 export const getAttendanceListAction = (payload) => (dispatch) => {
@@ -193,6 +196,22 @@ export const getDebtorsAction = () => (dispatch) => {
         ]
     })
 }
+
+export const downloadStudentFileAction = () => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/student")
+    link.setAttribute("download","student.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+export const downloadTeacherFileAction = () => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/teacher")
+    link.setAttribute("download","teacher.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+
 
 export const getClientAction = (data) => (dispatch) => {
     console.log(data);
@@ -1401,7 +1420,6 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
-        dispatch(getStudentPaymentAction(data.studentId))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1426,7 +1444,7 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
         if (data && data.history) {
             data.history.go(-1)
         }
-        dispatch(getStudentPaymentAction(data.studentId))
+        dispatch(getStudentPaymentAction())
 
     }).catch((err) => {
         toast.error("Xatolik")
@@ -1500,18 +1518,8 @@ export const saveAppealAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         if (res && res.payload && res.payload.message)
-            toast.success(res.payload.message)
-        if (data && data.enumType)
-            if (data.typeId)
-                dispatch(getAppealListByStatusTypeAction({
-                    enumType: data.enumType,
-                    typeId: data.typeId,
-                    page: 0,
-                    size: 20
-                }))
-            else
-                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
-
+            // toast.success(res.payload.message)
+            dispatch(getAppealListAllAction({page: 0, size: 20}))
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1524,18 +1532,10 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res && res.payload && res.payload.message)
-            toast.success(res.payload.message)
-        if (data && data.enumType)
-            if (data.typeId)
-                dispatch(getAppealListByStatusTypeAction({
-                    enumType: data.enumType,
-                    typeId: data.typeId,
-                    page: 0,
-                    size: 20
-                }))
-            else
-                dispatch(getAppealListByEnumTypeAction({enumType: data.enumType, page: 0, size: 20}))
+        if (res && res.payload && res.payload.message) {
+            // toast.success(res.payload.message)
+            dispatch(getAppealListByStatusTypeAction({page: 0, size: 20}))
+        }
     })
 }
 export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
@@ -1822,6 +1822,18 @@ export const getDashboardStudentStatAction = () => (dispatch) => {
             types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS,
             types.REQUEST_ERROR,
         ]
+    })
+}
+export const getGroupsByCourseAction = (data) => (dispatch) => {
+    console.log(data)
+    dispatch({
+        api: getByCourseApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
     })
 }
 

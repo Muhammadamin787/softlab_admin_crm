@@ -9996,6 +9996,11 @@ react-funnel-pipeline@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-funnel-pipeline/-/react-funnel-pipeline-0.1.0.tgz#41013b7a8bb3a6b1ee1246ad7c70c5003ae71a27"
   integrity sha512-8d2TGVEBaVKrld7Xv80ICxSC+8ozF0YK4zK7XrAiO6vQoYK2qhTCY1LTP91k7gE9eV2j3Gd+AiuqkO4Zl4Z41g==
 
+react-icons@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.2.0.tgz#6dda80c8a8f338ff96a1851424d63083282630d0"
+  integrity sha512-rmzEDFt+AVXRzD7zDE21gcxyBizD/3NqjbX6cmViAgdqfJ2UiLer8927/QhhrXQV7dEj/1EGuOTPp7JnLYVJKQ==
+
 react-input-autosize@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/react-input-autosize/-/react-input-autosize-3.0.0.tgz"

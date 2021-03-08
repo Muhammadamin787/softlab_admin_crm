@@ -15,6 +15,7 @@ import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
 import MultiLine from "../../component/dashboard/MultiLine";
 import Donut from "../../component/dashboard/Donut";
+import ApexChart from "../../component/dashboard/ApexChart";
 
 class Dashboard extends Component {
 
@@ -188,12 +189,15 @@ class Dashboard extends Component {
                                 <div className="col-md-12 my-2">
                                     <h4>O'quvchilar statistikasi</h4>
                                     <div className="row">
-                                        <div className="col-md-7 bg-white border-right  ">
+                                        <div className="col-md-7 bg-white border-right">
+                                            <ApexChart/>
+                                        </div>
+                                        <div className="col-md-7 bg-white border-right">
                                             <MultiLine/>
                                         </div>
                                         <div className="col-md-5 bg-white">
                                             <Donut
-                                                title={"Yosh bo'yicha"}
+                                                title={"Yosh bo'yichas"}
                                                 labels={sortAges ? sortAges.labels : []}
                                                 series={sortAges ? sortAges.series : []}
                                             />

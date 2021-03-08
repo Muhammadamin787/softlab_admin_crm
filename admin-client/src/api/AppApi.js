@@ -2,6 +2,14 @@ import HttpClient from "../utils/HttpClient";
 import {api} from './api'
 
 
+// export const downloadFileAction = (data) => () => {
+//     let link = document.createElement("a")
+//     link.href = (config.BASE_URL + "/excel/download/student.xlsx")
+//     // link.setAttribute("download", "student.xlsx")
+//     document.body.appendChild(link)
+//     link.click();
+// }
+
 export const getAttendanceListAppApi = (data) => {
     return HttpClient.doGet(api.attendance + "/" + data)
 }
@@ -272,6 +280,9 @@ export const getFileAppApi = (data) => {
 export const getDebtorsAPI = (data) => {
     return HttpClient.doGet(api.debtors)
 }
+// e
+
+
 export const saveStudentApi = (data) => {
     return HttpClient.doPost(api.student, data)
 }
@@ -452,7 +463,7 @@ export const getDashboardStudentStatApi = () => {
 // START GET GROUPS OF COURSE
 
 export const getByCourseApi = (data) => {
-    return HttpClient.doGet(api.byCourse + "/" + data.id)
+    return HttpClient.doGet(api.course + "/byCource/" + data)
 }
 
 // FINISH GET GROUPS OF COURSE

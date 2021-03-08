@@ -192,7 +192,7 @@ class SelectTeacher extends Component {
         }
 
         const openDeleteSalaryModal = (item) => {
-            this.setState({currentItem: item})
+            this.setState({currentItem : item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -284,8 +284,12 @@ class SelectTeacher extends Component {
                                                             </hgroup>
 
                                                             <hgroup>
-                                                                <small className={"text-secondary"}>Manzil: </small>
-                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender}</p>
+                                                                <small className={"text-secondary"}>Jinsi: </small>
+                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                                            </hgroup>
+                                                            <hgroup>
+                                                                <small className={"text-secondary"}>Maosh : </small>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
@@ -502,6 +506,12 @@ class SelectTeacher extends Component {
                                     defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
                                     type={"text"}
                                     label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                    validate={{
+                                        required: {value: true},
+                                        pattern: {value: "^[0-9]+$", errorMessage: "faqat raqam yozing"},
+                                        minLength: {value: 9},
+                                        maxLength: {value: 9}
+                                    }}
                                     placeholer={"nomi"} required/>
                                 <AvField
                                     type={"date"}
