@@ -42,3 +42,4 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
             " where LOWER(gr.name) like LOWER(concat('%', :objName, '%')) limit 10")
     List<Object> searchGroup(String objName);
 }
+//

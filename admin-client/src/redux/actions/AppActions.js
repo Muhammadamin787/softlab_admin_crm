@@ -133,8 +133,13 @@ import {
     saveAttendanceAppApi,
     getStudentByGroupApi,
     getStudentPaymentListByDateApi,
-    getFinanceStudentApi, getFinanceTeacherApi,
-    getDailyScheduleList, getTeacherPaymentListByDateApi, getDashboardStatApi, getDashboardStudentStatApi,getAppealListAllApi , getByCourseApi,
+    getFinanceStudentApi,
+    getFinanceTeacherApi,
+    getDailyScheduleList,
+    getDashboardStatApi,
+    getDashboardStudentStatApi,
+    getAppealListAllApi ,
+    getByCourseApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";

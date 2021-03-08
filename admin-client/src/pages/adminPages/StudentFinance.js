@@ -11,6 +11,7 @@ import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import {AvForm,AvField} from "availity-reactstrap-validation";
 import {login} from "../../redux/actions/AuthActions";
+import moment from "moment";
 
 class StudentFinance extends Component {
 
@@ -149,7 +150,7 @@ class StudentFinance extends Component {
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : "0%"}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
-                                                <td>{item.payDate}</td>
+                                                <td>{moment(item.payDate).format('LLL').toString()}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>
@@ -194,7 +195,7 @@ class StudentFinance extends Component {
                                                 <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.comment}</td>
-                                                <td>{item.payDate}</td>
+                                                <td>{moment(item.payDate).format('LLL').toString()}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>
@@ -235,7 +236,7 @@ class StudentFinance extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{item.amount}</td>
-                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
+                                                <td>{moment(item && item.attendance ? item.attendance.attendDate : "").format('LLL').toString()}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
