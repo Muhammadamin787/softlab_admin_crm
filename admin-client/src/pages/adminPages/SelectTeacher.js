@@ -160,7 +160,7 @@ class SelectTeacher extends Component {
         const saveSalary = (e, v) => {
             if (currentObject) {
                 v.teacherId = currentObject.id;
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD').toString()
+                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
                 dispatch(giveSalaryAction(v));
             }
         }
@@ -193,7 +193,7 @@ class SelectTeacher extends Component {
         }
 
         const openDeleteSalaryModal = (item) => {
-            this.setState({currentItem: item})
+            this.setState({currentItem : item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -206,6 +206,7 @@ class SelectTeacher extends Component {
             v.teacherId = currentItem.id
             if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
+                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
             }
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
@@ -296,6 +297,10 @@ class SelectTeacher extends Component {
                                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
                                                             </hgroup>
                                                             <hgroup>
+                                                                <small className={"text-secondary"}>Maosh : </small>
+                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
+                                                            </hgroup>
+                                                            <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
                                                                 <p className={"d-inline"}> {currentItem.balance}</p>
                                                                 <div className="button-block">
@@ -358,6 +363,9 @@ class SelectTeacher extends Component {
                                         {/*  START TAB PANE  */}
 
                                         <TabPane tabId="2" className={"teacher-salary-block"}>
+                                            <p className={"teacher-salary-block__title"}>
+                                                To'lovlar
+                                            </p>
                                             <Table>
                                                 <thead>
                                                 <tr>
@@ -429,16 +437,16 @@ class SelectTeacher extends Component {
                                         value={currentObject.payType.id}>{currentObject.payType.name}</option> : ''}
                                     {payTypes ? payTypes.map((item, i) =>
                                         currentObject && currentObject.payType && currentObject.payType.id !== item.id ?
-                                            <option value={item.id}>{item.name}</option> : ''
+                                            <option key={i} value={item.id}>{item.name}</option> : ''
                                     ) : ''}
                                 </AvField>
                                 <AvField label={"Izoh"} name={"description"} type={"text"}
                                          defaultValue={currentObject ? currentObject.description : ''}/>
                                 {/*<AvField name={"payDate"} type={"date"}/>*/}
                                 <AvField
-                                    type={"date"}
+                                    type={"datetime-local"}
                                     defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
-                                    label={"To'langan vaqti"} name={"amountDate2"} pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                                    label={"To'langan vaqti"} name={"amountDate"}
                                     required/>
                                 {console.log(currentObject)}
                                 <ModalFooter>
@@ -580,7 +588,7 @@ class SelectTeacher extends Component {
                                     ) : ""}
                                 </AvRadioGroup>
                                 <AvField
-                                    type={"date"}
+                                    type={"datetime-local"}
                                     defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
                                         : ""}
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
