@@ -63,7 +63,7 @@ const initState = {
     sana: [],
     multiLineStat: [],
     sortAges: [],
-    selectExcel:[]
+    selectExcel:[],
     byCource: []
 };
 
