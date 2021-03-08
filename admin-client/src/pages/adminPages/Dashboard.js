@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import $ from 'jquery';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
 import {Button, Col, Input, Nav, NavItem, NavLink, Row, TabContent, Table, TabPane} from "reactstrap";
@@ -8,13 +6,16 @@ import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {
     getDailySchedule,
-    getDashboardStatAction,
+    getDashboardStatAction, getDashboardStudentStatAction,
     getRoomListAction,
     getTeacherSalaryListAction, getWeeklySchedule
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
+import MultiLine from "../../component/dashboard/MultiLine";
+import Donut from "../../component/dashboard/Donut";
+import ApexChart from "../../component/dashboard/ApexChart";
 
 class Dashboard extends Component {
 
@@ -24,6 +25,7 @@ class Dashboard extends Component {
         this.props.dispatch(getWeeklySchedule())
         console.clear()
 
+        this.props.dispatch(getDashboardStudentStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
 
 
@@ -72,9 +74,11 @@ class Dashboard extends Component {
             list
         } = this.state;
         const {
+            sortAges,
+            studentStat,
             dispatch,
             teacherSalaryList,
-            page, size, totalElements,
+            size,
             rooms,
             dailySchedule,
             dashboardStat,
@@ -96,7 +100,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
 
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
@@ -153,7 +156,6 @@ class Dashboard extends Component {
                                                 {dashboardStat[7].data}
                                             </h2>
                                             <h6>{dashboardStat[7].label}</h6>
-
                                         </hgroup>
                                     </div>
                                 </div>
@@ -168,7 +170,6 @@ class Dashboard extends Component {
                                         </hgroup>
                                     </div>
                                 </div>
-
                                 <div className={"col-md-6 bg-white p-3"}>
                                     <h5>Sotuv voronkasi</h5>
                                     <Funnel
@@ -177,7 +178,7 @@ class Dashboard extends Component {
                                         colors={{
                                             graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
                                             percent: 'red',
-                                            label: 'black',
+                                            label: 'secondary',
                                             value: 'orange'
                                         }}
                                         valueKey='quantity'
@@ -200,6 +201,24 @@ class Dashboard extends Component {
                                         },
                                         ]}/>
                                 </div>
+                                <div className="col-md-12 my-2">
+                                    <h4>O'quvchilar statistikasi</h4>
+                                    <div className="row">
+                                        <div className="col-md-7 bg-white border-right">
+                                            <ApexChart/>
+                                        </div>
+                                        <div className="col-md-7 bg-white border-right">
+                                            <MultiLine/>
+                                        </div>
+                                        <div className="col-md-5 bg-white">
+                                            <Donut
+                                                title={"Yosh bo'yichas"}
+                                                labels={sortAges ? sortAges.labels : []}
+                                                series={sortAges ? sortAges.series : []}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             : ""}
                     </div>
@@ -207,6 +226,15 @@ class Dashboard extends Component {
                     <br/>
                     <div className={"schedule-block container bg-white"}>
                         <p className={"schedule-block__title"}>Schedule</p>
+                        <Input label={"To'lov turi"} type={"select"} onChange={l}>
+                            <option value={"MONDAY"}>Dushanba</option>
+                            <option value={"TUESDAY"}>Seshanba</option>
+                            <option value={"WEDNESDAY"}>Chorshanba</option>
+                            <option value={"THURSDAY"}>Payshanba</option>
+                            <option value={"FRIDAY"}>Juma</option>
+                            <option value={"SATURDAY"}>Shanba</option>
+                            <option value={"SUNDAY"}>Yakshanba</option>
+                        </Input>
 
                         <div className="d-block col-12">
                             <br/>
@@ -405,6 +433,8 @@ Dashboard.propTypes = {};
 
 export default connect(({
                             app: {
+                                sortAges,
+                                studentStat,
                                 groups,
                                 payTypes,
                                 currentItem,
@@ -429,6 +459,8 @@ export default connect(({
                                 weeklySchedule
                             },
                         }) => ({
+        sortAges,
+        studentStat,
         groups,
         payTypes,
         currentItem,

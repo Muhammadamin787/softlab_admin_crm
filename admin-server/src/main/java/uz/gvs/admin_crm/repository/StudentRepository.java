@@ -19,5 +19,8 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     boolean deleteByBalans(double balans);
 
+    @Query(nativeQuery = true, value = "select st.id, ur.full_name from student st inner join users ur on st.user_id = ur.id" +
+            " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
+    List<Object> searchStudent(String objName);
 
 }

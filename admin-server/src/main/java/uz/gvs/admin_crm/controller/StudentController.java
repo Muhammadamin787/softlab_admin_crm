@@ -4,16 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.*;
-import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.security.CurrentUser;
 import uz.gvs.admin_crm.service.ApiResponseService;
-import uz.gvs.admin_crm.service.RegionService;
 import uz.gvs.admin_crm.service.StudentService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
-import javax.swing.text.html.parser.Entity;
+import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 
@@ -92,5 +91,16 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+//    @GetMapping("/download/student.xlsx")
+//    public ByteArrayInputStream getStudentsInfor(@RequestBody  Student student) {
+////        return StudentService.contactListToExcelFile(student);
+//        byte[] file=
+//    }
+
+    @GetMapping("/search")
+    public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name){
+        ApiResponse apiResponse = studentService.searchStudent(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
 }

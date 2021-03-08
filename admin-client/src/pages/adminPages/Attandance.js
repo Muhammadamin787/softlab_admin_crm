@@ -11,6 +11,7 @@ import {
 import Select from "react-select";
 import {AvForm, AvField} from "availity-reactstrap-validation"
 import moment from "moment";
+import {FaRegCalendarCheck, FaRegCalendarPlus} from "react-icons/all";
 
 class Attandance extends Component {
     componentDidMount() {
@@ -169,7 +170,7 @@ class Attandance extends Component {
                     </Container>
                     <hr/>
                     {currentGroup !== "" ?
-                        <div className={"position-relative test12345 p-3 mr-3"}>
+                        <div className={"position-relative test12345 px-3 pt-3 p-0 mr-3"}>
                             <div>
                                 <Row>
                                     <Col md={1}>
@@ -183,7 +184,8 @@ class Attandance extends Component {
                                     </Col>
                                 </Row>
                             </div>
-                            <Table style={gg} className={"mb-0"} >
+                            <div style={gg}>
+                                <Table className={"mb-0"} >
                                 <tr>
                                     <td>#</td>
                                     <td>Student</td>
@@ -211,7 +213,10 @@ class Attandance extends Component {
                                                         {
                                                             attendanceList ? attendanceList.map(item3 =>
                                                                 (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                    <i className="far fa-calendar-check my-2"/> : ''
+                                                                    <FaRegCalendarCheck
+                                                                        color={"#33cc33"}
+                                                                        className={"my-2"}
+                                                                    /> : ''
                                                             ) : ''
                                                         }
                                                     </td>
@@ -228,8 +233,10 @@ class Attandance extends Component {
                                             currentGroup ? currentGroup.weekdays.map(c_item =>
                                                 c_item === days[new Date(year, month, item).getDay()] ?
                                                     <td className={"text-center"}>
-                                                        <i onClick={() => showHideModal(item)}
-                                                           className="far fa-calendar-plus"/>
+                                                        <FaRegCalendarPlus
+                                                            color={"#EE8033"}
+                                                            onClick={() => showHideModal(item)}
+                                                           />
                                                     </td>
                                                     : ''
                                             ) : ''
@@ -237,6 +244,7 @@ class Attandance extends Component {
                                     }
                                 </tr>
                             </Table>
+                            </div>
                         </div>
                         :
                         ''

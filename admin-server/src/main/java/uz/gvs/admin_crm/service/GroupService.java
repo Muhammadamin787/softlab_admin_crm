@@ -309,4 +309,21 @@ public class GroupService {
             return apiResponseService.errorResponse();
         }
     }
+
+    public ApiResponse searchGroup(String name) {
+        try {
+            List<Object> objects = groupRepository.searchGroup(name);
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] group = (Object[]) obj;
+                Integer id = Integer.valueOf(group[0].toString());
+                String name1 = group[1].toString();
+                ResSelect resSelectDto = new ResSelect(id, name1);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }

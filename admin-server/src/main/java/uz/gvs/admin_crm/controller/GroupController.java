@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.gvs.admin_crm.payload.AddGroupDto;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.GroupDto;
-import uz.gvs.admin_crm.payload.SituationDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.GroupService;
@@ -55,6 +52,11 @@ public class GroupController {
     @GetMapping("/select")
     public HttpEntity<?> getGroupForSelect() {
         ApiResponse apiResponse = groupService.getGroupsForSelect();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+    @GetMapping("/search")
+    public HttpEntity<?> searchGroup(@RequestParam(value = "name") String name) {
+        ApiResponse apiResponse = groupService.searchGroup(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 

@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import {AvField, AvForm} from "availity-reactstrap-validation";
+import moment from "moment";
 
 class TeacherFinance extends Component {
 
@@ -136,7 +137,7 @@ class TeacherFinance extends Component {
                                                 <td>{item && item.amount ? item.amount : ""}</td>
                                                 <td>{item.payType ? item.payType.name : ''}</td>
                                                 <td>{item.description}</td>
-                                                <td>{item.amountDate}</td>
+                                                <td>{moment(item.amountDate).format('LLL').toString()}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>
@@ -185,7 +186,7 @@ class TeacherFinance extends Component {
                                                 </td>
                                                 <td>{item.amountTeacher}</td>
                                                 <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
-                                                <td>{item.payDate}</td>
+                                                <td>{moment(item.payDate).format('LLL').toString()}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
 
                                             </tr>

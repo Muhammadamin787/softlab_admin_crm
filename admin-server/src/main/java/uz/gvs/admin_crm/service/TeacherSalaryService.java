@@ -5,10 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Payment;
-import uz.gvs.admin_crm.entity.StudentPayment;
-import uz.gvs.admin_crm.entity.Teacher;
-import uz.gvs.admin_crm.entity.TeacherSalary;
+import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.PaymentDto;
@@ -60,7 +57,7 @@ public class TeacherSalaryService {
             teacherSalary.setTeacher(teacherRepository.findById(teacherSalaryDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get Teacher")));
             teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")));
             teacherSalary.setAmount(teacherSalaryDto.getAmount());
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
             teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
             teacherSalary.setDescription(teacherSalaryDto.getDescription());
             return teacherSalaryRepository.save(teacherSalary);
@@ -98,16 +95,26 @@ public class TeacherSalaryService {
         try {
             Optional<TeacherSalary> optional = teacherSalaryRepository.findById(id);
             if (optional.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
-                if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate2() != null) {
+                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate() != null) {
                     TeacherSalary teacherSalary = optional.get();
                     if (teacherSalaryDto.getTeacherId().equals(teacherSalary.getTeacher().getId())) {
+                        double oldAmount = teacherSalary.getAmount();
                         teacherSalary.setAmount(teacherSalaryDto.getAmount());
                         teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get Pay Type")));
-
-                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate2());
-
+                        teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
                         teacherSalary.setDescription(teacherSalaryDto.getDescription());
+                        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherSalaryDto.getTeacherId());
+                        Teacher teacher = optionalTeacher.get();
+
+                        double newAmount = teacherSalaryDto.getAmount();
+
+                        if (optionalTeacher.isPresent()){
+                            if (newAmount != oldAmount){
+                                teacher.setBalance((teacher.getBalance()+(oldAmount-newAmount)));
+                            }
+                        }
+                        teacherRepository.save(teacher);
                         teacherSalaryRepository.save(teacherSalary);
                         return apiResponseService.updatedResponse();
                     }
@@ -188,8 +195,8 @@ public class TeacherSalaryService {
 
     public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            java.util.Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
-            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
+            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
                 case "minusSalary" :
                     Page<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
@@ -216,6 +223,24 @@ public class TeacherSalaryService {
                 default:
                     return apiResponseService.errorResponse();
             }
+        } catch (Exception exception) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse deleteTeacherPayment(UUID id) {
+        try {
+            Optional<TeacherSalary> teacherSalaryOptional = teacherSalaryRepository.findById(id);
+            if (teacherSalaryOptional.isPresent()) {
+                TeacherSalary teacherSalary = teacherSalaryOptional.get();
+                teacherSalaryRepository.deleteById(teacherSalary.getId());
+                Optional<Teacher> byId = teacherRepository.findById(teacherSalary.getTeacher().getId());
+                Teacher teacher = byId.get();
+                teacher.setBalance(teacher.getBalance()+teacherSalary.getAmount());
+                teacherRepository.save(teacher);
+                return apiResponseService.deleteResponse();
+            }
+            return apiResponseService.notFoundResponse();
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
