@@ -471,3 +471,9 @@ export const getByCourseApi = (data) => {
 }
 
 // FINISH GET GROUPS OF COURSE
+
+// START SEARCH STUDENT
+export const searchStudentApi = (data) => {
+    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name : ""))
+}
+// FINISH SEARCH STUDENT
