@@ -33,6 +33,7 @@ import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
+import {AiOutlineUsergroupAdd} from "react-icons/all";
 
 class SelectStudent extends Component {
     componentDidMount() {
@@ -285,7 +286,9 @@ class SelectStudent extends Component {
                                                             <div className="button-block">
                                                                 <Button className="table-icon px-2"
                                                                         onClick={() => openAddGroupModal(currentItem)}>
-                                                                    <span className="icon icon-wallet bg-primary "/>
+                                                                    <AiOutlineUsergroupAdd
+                                                                        color={"black"}
+                                                                    />
                                                                 </Button>
                                                                 <Button className="table-icon px-2"
                                                                         onClick={() => openPaymentModal(currentItem)}>

@@ -63,6 +63,7 @@ const initState = {
     sana: [],
     multiLineStat: [],
     sortAges: [],
+    byCource: []
 };
 
 const reducers = {
@@ -527,6 +528,10 @@ const reducers = {
     // START DASHBOARD REDUCERS TYPES
     [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
         state.dashboardStat = payload.payload.object
+    },
+    [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
+        console.log(payload)
+        state.byCource = payload.payload.object
     },
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
         if (payload.payload && payload.payload.object) {
