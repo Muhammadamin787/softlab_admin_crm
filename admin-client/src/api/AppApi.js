@@ -444,6 +444,9 @@ export const getDailyScheduleList = (data) => {
 export const getDashboardStatApi = () => {
     return HttpClient.doGet(api.dashboard + "/stat")
 }
+export const getDashboardStudentStatApi = () => {
+    return HttpClient.doGet(api.dashboard + "/student")
+}
 //  FINISH DASHBOARD API
 
 // START GET GROUPS OF COURSE

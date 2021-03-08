@@ -6,41 +6,44 @@ import moment from "moment";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {
     getDailySchedule,
-    getDashboardStatAction,
+    getDashboardStatAction, getDashboardStudentStatAction,
     getRoomListAction,
     getTeacherSalaryListAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
+import MultiLine from "../../component/dashboard/MultiLine";
+import Donut from "../../component/dashboard/Donut";
 
 class Dashboard extends Component {
 
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getDashboardStatAction())
+        this.props.dispatch(getDashboardStudentStatAction())
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
-            let arr = []
-            for(let i = startHour; i < endHour; i++) {
-                for (let g = 0; g < 2; g++ ) {
-                    if (g === 0) {
-                        if (i < 10) {
-                            arr.push("0" + i + ":" + "00")
-                        } else {
-                            arr.push(i + ":" + "00")
-                        }
+        let arr = []
+        for (let i = startHour; i < endHour; i++) {
+            for (let g = 0; g < 2; g++) {
+                if (g === 0) {
+                    if (i < 10) {
+                        arr.push("0" + i + ":" + "00")
                     } else {
-                        if (i < 10) {
-                            arr.push("0" + i + ":" + "30")
-                        } else {
-                            arr.push(i + ":" + "30")
-                        }
+                        arr.push(i + ":" + "00")
+                    }
+                } else {
+                    if (i < 10) {
+                        arr.push("0" + i + ":" + "30")
+                    } else {
+                        arr.push(i + ":" + "30")
                     }
                 }
             }
-            this.setState({
-                list: arr
-            })
+        }
+        this.setState({
+            list: arr
+        })
     }
 
     state = {
@@ -55,9 +58,11 @@ class Dashboard extends Component {
     render() {
         const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
         const {
+            sortAges,
+            studentStat,
             dispatch,
             teacherSalaryList,
-            page, size, totalElements,
+            size,
             rooms,
             dailySchedule,
             dashboardStat
@@ -76,7 +81,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
 
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
@@ -136,7 +140,6 @@ class Dashboard extends Component {
                                                 {dashboardStat[7].data}
                                             </h2>
                                             <h6>{dashboardStat[7].label}</h6>
-
                                         </hgroup>
                                     </div>
                                 </div>
@@ -151,7 +154,6 @@ class Dashboard extends Component {
                                         </hgroup>
                                     </div>
                                 </div>
-
                                 <div className={"col-md-6 bg-white p-3"}>
                                     <h5>Sotuv voronkasi</h5>
                                     <Funnel
@@ -160,7 +162,7 @@ class Dashboard extends Component {
                                         colors={{
                                             graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
                                             percent: 'red',
-                                            label: 'black',
+                                            label: 'secondary',
                                             value: 'orange'
                                         }}
                                         valueKey='quantity'
@@ -183,6 +185,21 @@ class Dashboard extends Component {
                                         },
                                         ]}/>
                                 </div>
+                                <div className="col-md-12 my-2">
+                                    <h4>O'quvchilar statistikasi</h4>
+                                    <div className="row">
+                                        <div className="col-md-7 bg-white border-right">
+                                            <MultiLine/>
+                                        </div>
+                                        <div className="col-md-5 bg-white">
+                                            <Donut
+                                                title={"Ro'yhatdan o'tganlar yosh statistikasi"}
+                                                labels={sortAges ? sortAges.labels : []}
+                                                series={sortAges ? sortAges.series : []}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             : ""}
                     </div>
@@ -200,112 +217,120 @@ class Dashboard extends Component {
                             <option value={"SUNDAY"}>Yakshanba</option>
                         </Input>
 
-                       <div className="d-block col-12">
-                           <br/>
-                           <Nav tabs>
-                               <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                   <NavLink
-                                       onClick={() => {
-                                           toggle('1');
-                                       }}
-                                   >
-                                       Odd days
-                                   </NavLink>
-                               </NavItem>
-                               <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                   <NavLink
-                                       onClick={() => {
-                                           toggle('2');
-                                       }}
-                                   >
-                                       Weekend days
-                                   </NavLink>
-                               </NavItem>
-                               <NavItem className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                   <NavLink
-                                       onClick={() => {
-                                           toggle('3');
-                                       }}
-                                   >
-                                       Every day
-                                   </NavLink>
-                               </NavItem>
-                               <NavItem className={activeTab === '4' ? "tab-item-style-active" : "tab-item-style-default"}>
-                                   <NavLink
-                                       onClick={() => {
-                                           toggle('4');
-                                       }}
-                                   >
-                                       Other
-                                   </NavLink>
-                               </NavItem>
-                           </Nav>
-                           <TabContent activeTab={activeTab}>
-                               <TabPane tabId="1">
-                                   <Table bordered>
-                                       <thead>
-                                       <tr>
-                                           <td>Time</td>
-                                           {rooms ? rooms.map((item, i) =>
-                                               <td>
-                                                   {item.name}
-                                               </td>
-                                           ) : ''}
-                                       </tr>
-                                       </thead>
-                                       <tbody>
-                                       {
-                                           list ? list.map((item, i) =>
-                                               <tr key={i}>
-                                                   <td className={"border-style-table-dashboard"}>{item}</td>
-                                                   {rooms ? rooms.map((item2, i) =>
-                                                       dailySchedule ? dailySchedule.map((item3, i) =>
-                                                           item === item3.startTime ?
-                                                               item3 && item3.room && item3.room.id === item2.id ?
-                                                                   <>
-                                                                       {d(item3.room.id)}
-                                                                       <td rowSpan={c(item3.startTime, item3.finishTime) + 1} className={"table-group-style"}>
-                                                                           <div style={{backgroundColor: setBg()}} className={"inside-td-block container"}>
-                                                                               <div className={"row"}>
-                                                                                   <span className={"group-name-style-dash"}>
+                        <div className="d-block col-12">
+                            <br/>
+                            <Nav tabs>
+                                <NavItem
+                                    className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                    <NavLink
+                                        onClick={() => {
+                                            toggle('1');
+                                        }}
+                                    >
+                                        Odd days
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem
+                                    className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                    <NavLink
+                                        onClick={() => {
+                                            toggle('2');
+                                        }}
+                                    >
+                                        Weekend days
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem
+                                    className={activeTab === '3' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                    <NavLink
+                                        onClick={() => {
+                                            toggle('3');
+                                        }}
+                                    >
+                                        Every day
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem
+                                    className={activeTab === '4' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                    <NavLink
+                                        onClick={() => {
+                                            toggle('4');
+                                        }}
+                                    >
+                                        Other
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={activeTab}>
+                                <TabPane tabId="1">
+                                    <Table bordered>
+                                        <thead>
+                                        <tr>
+                                            <td>Time</td>
+                                            {rooms ? rooms.map((item, i) =>
+                                                <td>
+                                                    {item.name}
+                                                </td>
+                                            ) : ''}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {
+                                            list ? list.map((item, i) =>
+                                                <tr key={i}>
+                                                    <td className={"border-style-table-dashboard"}>{item}</td>
+                                                    {rooms ? rooms.map((item2, i) =>
+                                                        dailySchedule ? dailySchedule.map((item3, i) =>
+                                                            item === item3.startTime ?
+                                                                item3 && item3.room && item3.room.id === item2.id ?
+                                                                    <>
+                                                                        {d(item3.room.id)}
+                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}
+                                                                            className={"table-group-style"}>
+                                                                            <div style={{backgroundColor: setBg()}}
+                                                                                 className={"inside-td-block container"}>
+                                                                                <div className={"row"}>
+                                                                                   <span
+                                                                                       className={"group-name-style-dash"}>
                                                                                        #{item3.name}
                                                                                    </span>
-                                                                                   &nbsp;&nbsp;
-                                                                                   <span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
                                                                                        {item3.courseName}
                                                                                    </span>
-                                                                                   &nbsp;&nbsp;
-                                                                                   <span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
                                                                                        {item3.teacherName}
                                                                                    </span>
-                                                                               </div>
-                                                                               <div className={"row"}>
+                                                                                </div>
+                                                                                <div className={"row"}>
                                                                                    <span>
                                                                                        {item3.startTime}
                                                                                    </span>--
-                                                                                   <span>
+                                                                                    <span>
                                                                                        {item3.finishTime}
                                                                                    </span>
-                                                                                   <span className={"ml-auto group-name-style-dash"}>
+                                                                                    <span
+                                                                                        className={"ml-auto group-name-style-dash"}>
                                                                                        ST:{item3.countStudent}
                                                                                    </span>
-                                                                               </div>
-                                                                               <div className={"row"}>
+                                                                                </div>
+                                                                                <div className={"row"}>
                                                                                    <span>
-                                                                                       {item3.startDates.substring(0,10)}
+                                                                                       {item3.startDates.substring(0, 10)}
                                                                                    </span>
-                                                                                   --
-                                                                                   <span>
-                                                                                       {item3.finishDates.substring(0,10)}
+                                                                                    --
+                                                                                    <span>
+                                                                                       {item3.finishDates.substring(0, 10)}
                                                                                    </span>
-                                                                               </div>
-                                                                           </div>
-                                                                       </td>
-                                                                   </>
-                                                                   : ''
-                                                               : ''
-                                                       ) : ''
-                                                   ) : ''}
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </>
+                                                                    : ''
+                                                                : ''
+                                                        ) : ''
+                                                    ) : ''}
 
                                                 </tr>
                                             ) : ''
@@ -429,6 +454,8 @@ Dashboard.propTypes = {};
 
 export default connect(({
                             app: {
+                                sortAges,
+                                studentStat,
                                 groups,
                                 payTypes,
                                 currentItem,
@@ -452,6 +479,8 @@ export default connect(({
                                 dashboardStat
                             },
                         }) => ({
+        sortAges,
+        studentStat,
         groups,
         payTypes,
         currentItem,
