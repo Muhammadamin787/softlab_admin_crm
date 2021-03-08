@@ -545,15 +545,15 @@ public class StudentService {
         }
     }
 
-    public ApiResponse searchStudent(ResSelect resSelect) {
+    public ApiResponse searchStudent(String name) {
         try {
-            List<Object> objects = studentRepository.searchStudent(resSelect.getName());
+            List<Object> objects = studentRepository.searchStudent(name);
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] student = (Object[]) obj;
                 UUID id = UUID.fromString(student[0].toString());
-                String name = student[1].toString();
-                ResSelect resSelectDto = new ResSelect(name, id);
+                String name1 = student[1].toString();
+                ResSelect resSelectDto = new ResSelect(name1, id);
                 resSelects.add(resSelectDto);
             }
             return apiResponseService.getResponse(resSelects);

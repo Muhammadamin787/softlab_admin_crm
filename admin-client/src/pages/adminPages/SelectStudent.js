@@ -287,7 +287,7 @@ class SelectStudent extends Component {
                                                                 <Button className="table-icon px-2"
                                                                         onClick={() => openAddGroupModal(currentItem)}>
                                                                     <AiOutlineUsergroupAdd
-                                                                        color={"black"}
+                                                                        color={"#EE8033"}
                                                                     />
                                                                 </Button>
                                                                 <Button className="table-icon px-2"
