@@ -89,7 +89,7 @@ class TeacherFinance extends Component {
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === 'minusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('minusSalary');
@@ -98,7 +98,7 @@ class TeacherFinance extends Component {
                                 Olingan Summalar
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === 'plusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('plusSalary');

@@ -92,7 +92,7 @@ class StudentFinance extends Component {
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === 'all' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('all');
@@ -101,7 +101,7 @@ class StudentFinance extends Component {
                                 Barchasi
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === 'byCashbacks' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('byCashbacks');
@@ -110,7 +110,7 @@ class StudentFinance extends Component {
                                 Cashbacklar
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === 'getPrice' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('getPrice');

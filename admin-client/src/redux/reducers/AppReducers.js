@@ -58,6 +58,7 @@ const initState = {
     teacherPaymentFinance: [],
     rooms: [],
     dailySchedule: [],
+    weeklySchedule: [],
     dashboardStat: [],
     studentStat: [],
     sana: [],
@@ -524,6 +525,10 @@ const reducers = {
     [types.REQUEST_DAILY_SCHEDULE](state, payload) {
         state.dailySchedule = null
         state.dailySchedule = payload.payload.object;
+    },
+    [types.REQUEST_WEEKLY_SCHEDULE](state, payload) {
+        state.weekdays = null
+        state.weeklySchedule = payload.payload.object
     },
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {

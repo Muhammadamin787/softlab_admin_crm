@@ -449,6 +449,10 @@ export const getDailyScheduleList = (data) => {
     return HttpClient.doGet(api.group + "/schedule/" + data);
 }
 
+export const getWeeklyScheduleList = () => {
+    return HttpClient.doGet(api.group + "/schedule");
+}
+
 // END SCHEDULE
 
 // START DASHBOARD API
