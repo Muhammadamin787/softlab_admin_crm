@@ -193,7 +193,7 @@ class Dashboard extends Component {
                                         </div>
                                         <div className="col-md-5 bg-white">
                                             <Donut
-                                                title={"Yosh bo'yicha"}
+                                                title={"Yosh bo'yichas"}
                                                 labels={sortAges ? sortAges.labels : []}
                                                 series={sortAges ? sortAges.series : []}
                                             />
