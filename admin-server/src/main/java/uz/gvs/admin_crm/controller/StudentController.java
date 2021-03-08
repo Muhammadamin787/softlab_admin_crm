@@ -90,11 +90,17 @@ StudentController {
         ApiResponse apiResponse = studentService.getDebtorStudents(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-    
+
 //    @GetMapping("/download/student.xlsx")
 //    public ByteArrayInputStream getStudentsInfor(@RequestBody  Student student) {
 ////        return StudentService.contactListToExcelFile(student);
 //        byte[] file=
 //    }
+
+    @GetMapping("/search/{id}")
+    public HttpEntity<?> searchStudent(@PathVariable ResSelect resSelect){
+        ApiResponse apiResponse = studentService.searchStudent(resSelect);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 
 }

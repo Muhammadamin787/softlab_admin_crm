@@ -7,10 +7,11 @@ import java.util.UUID;
 
 @Data
 public class ResSelect {
-    private int id;
-    private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID uuid;
+    private int id;
+    private String name;
+
 
     public ResSelect() {
     }
