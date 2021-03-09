@@ -30,4 +30,11 @@ public interface ClientAppealRepository extends JpaRepository<ClientAppeal, UUID
             "inner join toplam t on cast(ca.status_id as integer)=t.id " +
             "where cl.id=:mijoz and ca.status_enum='COLLECTION'")
     List<Object> getClientAppealListByToplam(UUID mijoz);
+
+
+    @Query(nativeQuery = true, value = "select cs.id as holat_id, cs.name holat_nomi, c.full_name mijoz_ismi, c.phone_number mijoz_tel, cast(c.id as varchar) mijoz_id, cs.client_status_enum mijoz_holati from client c inner join client_status_connect csc on c.id = csc.client_id inner join client_status cs on cast(csc.status_id as integer) = cs.id where client_status_enum is not null and client_status_enum=:client_holati_enum group by cs.name, c.id, c.full_name, cs.id order by cs.id")
+    List<Object> getClientAppealsListByAppealType(String client_holati_enum);
+
+    @Query(nativeQuery = true, value = "select  t.id, concat(t.name,' • ', (select cr.name from course cr where t.course_id=cr.id),' • ', (select u.full_name from teacher tch inner join users u on u.id = tch.user_id where t.teacher_id=tch.id),' • ', t.time) as t_nomi, c.full_name as mijoz_ismi, c.phone_number as tel, cast(c.id as varchar) as mijoz_id from client c inner join client_status_connect csc on c.id = csc.client_id inner join toplam t on t.id=cast(csc.status_id as integer) where csc.toplam=true")
+    List<Object> getClientAppealsListByAppealToplam();
 }

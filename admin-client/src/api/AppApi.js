@@ -390,7 +390,7 @@ export const getAppealListByEnumTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
 }
 export const getAppealListAllApi = (data) => {
-    return HttpClient.doGet(api.appeal + "/all?page=" + data.page + "&size=" + data.size)
+    return HttpClient.doGet(api.appeal + "/all")
 }
 export const getOneAppealApi = (data) => {
     return HttpClient.doGet(api.appeal + "/" + data.id)

@@ -23,6 +23,7 @@ import java.util.Set;
 public class User extends AbsEntity implements UserDetails {//test
 
     private String fullName;
+    @Column(unique = true)
     private String phoneNumber;
     @Column(columnDefinition = "text")
     private String description;

@@ -1532,7 +1532,9 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        dispatch(getAppealListByStatusTypeAction({page: 0, size: 20}))
+        dispatch(getAppealListAllAction())
+    }).catch((err) => {
+        dispatch(getAppealListAllAction())
     })
 }
 export const changeAppalTypeByToplamAction = (data) => (dispatch) => {

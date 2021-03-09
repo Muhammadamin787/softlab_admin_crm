@@ -39,7 +39,8 @@
     background-color: #f2f2f2;
   }
 }
-.SelectCourse-block_Col_p{
+
+.SelectCourse-block_Col_p {
   font-size: 0.85rem;
 }
 
@@ -120,7 +121,8 @@
   font-weight: lighter;
   border: none;
 }
-.select-student-style_buttonsGroup{
+
+.select-student-style_buttonsGroup {
   margin-left: 240px;
   margin-top: 14px;
 }
@@ -143,10 +145,11 @@
         height: 30px !important;
       }
     }
-    .table-icon:hover, .table-icon:active, .table-icon:focus{
-      background-color: white!important;
+
+    .table-icon:hover, .table-icon:active, .table-icon:focus {
+      background-color: white !important;
       border: 1px solid #cccccc;
-      box-shadow: none!important;
+      box-shadow: none !important;
     }
   }
 
@@ -336,29 +339,66 @@
 .appeal-drag {
   cursor: pointer;
 }
-.attandance-block_td{
+
+.attandance-block_td {
   font-size: 0.9rem;
 }
-.fa-angle-right{
-  width: 20px!important;
+
+.fa-angle-right {
+  width: 20px !important;
 }
-.attandance-block_table_td__days{
+
+.attandance-block_table_td__days {
   font-size: 0.9rem;
 }
-.attandance-block_table_td__chacked{
-  color: #33cc33!important;
+
+.attandance-block_table_td__chacked {
+  color: #33cc33 !important;
 }
-.fa-calendar-check{
-  color: #33cc33!important;
+
+.fa-calendar-check {
+  color: #33cc33 !important;
 }
-.fa-calendar-plus{
+
+.fa-calendar-plus {
   color: #ff9c34;
 }
-.test12345{
+
+.test12345 {
   background-color: white;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 1px #cccccc;
 }
-.test123{
-  font-size: 0.7rem!important;
+
+.test123 {
+  font-size: 0.7rem !important;
+}
+
+// START APPEAL CARD CSS
+.select-element {
+
+}
+
+.drop-section {
+  padding-bottom: 40px !important;
+
+  .element {
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+}
+
+.drop-element {
+  margin-bottom: 40px !important;
+}
+
+.select-section {
+  padding-bottom: 0px !important;
+
+  .element {
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+    margin-bottom: 2px !important;
+    margin-top: 2px !important;
+  }
 }
