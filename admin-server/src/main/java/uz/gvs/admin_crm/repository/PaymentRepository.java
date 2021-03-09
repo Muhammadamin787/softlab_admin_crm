@@ -19,4 +19,6 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     @Query(nativeQuery = true, value = "select * from payment pt where pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  >= :date1) and pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  < :date2)")
     Page<Payment> getByDate(Date date1, Date date2, Pageable pageable);
+    @Query(nativeQuery = true, value = "select cast(p.id as varchar) from payment p where attendance_id=:attendanceId")
+    String getPaymentIdForDelete(UUID attendanceId);
 }

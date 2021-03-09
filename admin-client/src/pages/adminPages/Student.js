@@ -200,7 +200,7 @@ class Student extends Component {
                 }}
                     label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
                     className={"form-control"}
-                    placeholer={"991234567"} required/>
+                    placeholer={"991234567"}/>
                     <AvField
                     type={"date"}
                     defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')

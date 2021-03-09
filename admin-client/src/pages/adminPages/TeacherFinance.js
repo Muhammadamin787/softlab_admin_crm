@@ -185,7 +185,6 @@ class TeacherFinance extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{item.amountTeacher}</td>
-                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
                                                 <td>{moment(item.payDate).format('LLL').toString()}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
 

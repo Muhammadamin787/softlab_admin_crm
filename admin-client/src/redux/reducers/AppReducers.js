@@ -64,7 +64,7 @@ const initState = {
     sana: [],
     multiLineStat: [],
     sortAges: [],
-    selectExcel:[],
+    selectExcel: [],
     byCource: []
 };
 
@@ -80,7 +80,7 @@ const reducers = {
         state.changeToArchiveModal = false
         state.changeToActiveModal = false
     },
-    [types.REQUEST_GET_INFO_IN_EXCEL](state,payload){
+    [types.REQUEST_GET_INFO_IN_EXCEL](state, payload) {
         state.selectExcel = payload.payload.object.object
     },
 
@@ -539,12 +539,11 @@ const reducers = {
         state.dashboardStat = payload.payload.object
     },
     [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
-        console.log(payload)
         state.byCource = payload.payload.object
     },
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
         if (payload.payload && payload.payload.object) {
-            if (payload.payload.object.countSortList) {
+            if (payload.payload.object.countSortList && payload.payload.object.countSortList.length > 0) {
                 let data = payload.payload.object.countSortList;
                 let date = [];
                 let allCount = [];
@@ -566,7 +565,7 @@ const reducers = {
                     }
                 ]
             }
-            if (payload.payload.object.ageSortList) {
+            if (payload.payload.object.ageSortList && payload.payload.object.ageSortList.length > 0) {
                 let series = [];
                 let labels = [];
                 let agesList = payload.payload.object.ageSortList;
