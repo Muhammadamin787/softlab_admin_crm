@@ -9,7 +9,7 @@ import {
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
-import {AvForm,AvField} from "availity-reactstrap-validation";
+import {AvForm, AvField} from "availity-reactstrap-validation";
 import {login} from "../../redux/actions/AuthActions";
 import moment from "moment";
 
@@ -17,8 +17,9 @@ class StudentFinance extends Component {
 
     handlePageChange(pageNumber) {
         console.clear()
-        this.props.dispatch(getFinanceAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getFinanceAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
+
     componentDidMount() {
         console.clear()
         this.props.dispatch(getFinanceAction({page: 0, size: this.props.size, type: "all"}))
@@ -62,14 +63,14 @@ class StudentFinance extends Component {
             element.classList.toggle("hide");
         }
 
-        const filtrByDate = (e,v) => {
+        const filtrByDate = (e, v) => {
             dispatch(getStudentPaymentListByDateAction({
-                    page: 0,
-                    size: this.props.size,
-                    date1: v.date1,
-                    date2: v.date2,
-                    type: this.state.type
-                }))
+                page: 0,
+                size: this.props.size,
+                date1: v.date1,
+                date2: v.date2,
+                type: this.state.type
+            }))
         }
 
         return (
@@ -101,7 +102,8 @@ class StudentFinance extends Component {
                                 Barchasi
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === 'byCashbacks' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'byCashbacks' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('byCashbacks');
@@ -110,7 +112,8 @@ class StudentFinance extends Component {
                                 Cashbacklar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === 'getPrice' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'getPrice' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('getPrice');
@@ -139,7 +142,7 @@ class StudentFinance extends Component {
                                         <tbody>
                                         {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
@@ -184,7 +187,7 @@ class StudentFinance extends Component {
                                         <tbody>
                                         {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link to={"/admin/student/" + (item && item.student
                                                         ? item.student.id : '')}>
@@ -227,7 +230,7 @@ class StudentFinance extends Component {
                                         <tbody>
                                         {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link
                                                         to={"/admin/student/" + (item && item.attendance && item.attendance.student

@@ -194,19 +194,18 @@ class Student extends Component {
                                                 minLength: {value: 9},
                                                 maxLength: {value: 9}
                                             }}
-                                            label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
+                                            label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                             placeholer={"991234567"} required/>
                                         <AvField
                                             defaultValue={currentObject ? currentObject.parentPhone : ""}
                                             type={"number"}
                                             errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
                                             validate={{
-                                                required: {value: true},
                                                 pattern: {value: "^[0-9]+$"},
                                                 minLength: {value: 9},
                                                 maxLength: {value: 9}
                                             }}
-                                            label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
+                                            label={"Ota-onasining telefon raqami"} name={"parentPhone"}
                                             className={"form-control"}
                                             placeholer={"991234567"}/>
                                         <AvField
