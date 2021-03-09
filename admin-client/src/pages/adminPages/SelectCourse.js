@@ -126,64 +126,67 @@ class SelectCourse extends Component {
                                 </div>
                             </div>
                             : ""}
-                            <div className={"col-md-8"}>
-                                {byCource ? byCource.map((item, i) =>
-                                    <div className="p-3 mb-2 bg-white rounded">
-                                        {item.id ?
-                                            <Row>
-                                                <Col md={3}>
-                                                    <p className={"mb-0 SelectCourse-block_Col_p"}>{item.name}</p>
-                                                </Col>
-                                                <Col md={7}>
-                                                    <p className={"mb-0 SelectCourse-block_Col_p"}>
-                                                        <Link to={"/admin/teacher/" + item.teacherId}>{item.teacherName}</Link>
-                                                    </p>
-                                                </Col>
-                                                <Col md={2}>
-                                                    <Row>
-                                                        <Col md={6}>
-                                                            <p className={"mb-0 SelectCourse-block_Col_p"}>
-                                                                {item.startTime}
-                                                            </p>
-                                                        </Col>
-                                                        <Col md={6}>
-                                                            <p className={"mb-0 SelectCourse-block_Col_p"}>
-                                                                {item.finishTime}
-                                                            </p>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                            // <div className={"col-md-6"}>
-                                            //     <h4>Guruhlar</h4>
-                                            //     <div className={" ml-2 bg-white student-group-block"}>
-                                            //         {groups && groups.length > 0 ? groups.map((item, i) =>
-                                            //             <Row key={i} className={"p-2"}>
-                                            //                 <Col md={3} className={"text-center"}>
-                                            //                 <span
-                                            //                     className={"group-name"}> {item.name}</span>
-                                            //                 </Col>
-                                            //                 <Col md={4}>
-                                            //                 <span
-                                            //                     className={"text-left"}>{item.course && item.course.name}</span>
-                                            //                 </Col>
-                                            //                 <Col md={2}>
-                                            //                     <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
-                                            //                 </Col>
-                                            //                 <Col md={3}>
-                                            //                                     <span
-                                            //                                         className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
-                                            //                                         <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
-                                            //                                     </span>
-                                            //                 </Col>
-                                            //             </Row>
-                                            //         ) : "Guruhlar topilmadi"}
-                                            //     </div>
-                                            // </div>
-                                            : ""}
-                                    </div>
-                                    ) : ""}
-                            </div>
+                        <div className={"col-md-8"}>
+                            {byCource ? byCource.map((item, i) =>
+                                <div className="p-3 mb-2 bg-white rounded">
+                                    {item.id ?
+                                        <Row>
+                                            <Col md={3}>
+                                                <p className={"mb-0 SelectCourse-block_Col_p"}>
+                                                    <Link to={"/admin/group/" + item.id}>{item.name}</Link>
+                                                </p>
+                                            </Col>
+                                            <Col md={7}>
+                                                <p className={"mb-0 SelectCourse-block_Col_p"}>
+                                                    <Link
+                                                        to={"/admin/teacher/" + item.teacherId}>{item.teacherName}</Link>
+                                                </p>
+                                            </Col>
+                                            <Col md={2}>
+                                                <Row>
+                                                    <Col md={6}>
+                                                        <p className={"mb-0 SelectCourse-block_Col_p"}>
+                                                            {item.startTime}
+                                                        </p>
+                                                    </Col>
+                                                    <Col md={6}>
+                                                        <p className={"mb-0 SelectCourse-block_Col_p"}>
+                                                            {item.finishTime}
+                                                        </p>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                        // <div className={"col-md-6"}>
+                                        //     <h4>Guruhlar</h4>
+                                        //     <div className={" ml-2 bg-white student-group-block"}>
+                                        //         {groups && groups.length > 0 ? groups.map((item, i) =>
+                                        //             <Row key={i} className={"p-2"}>
+                                        //                 <Col md={3} className={"text-center"}>
+                                        //                 <span
+                                        //                     className={"group-name"}> {item.name}</span>
+                                        //                 </Col>
+                                        //                 <Col md={4}>
+                                        //                 <span
+                                        //                     className={"text-left"}>{item.course && item.course.name}</span>
+                                        //                 </Col>
+                                        //                 <Col md={2}>
+                                        //                     <p className={"text-secondary"}>{item.startTime + " - " + item.finishTime}</p>
+                                        //                 </Col>
+                                        //                 <Col md={3}>
+                                        //                                     <span
+                                        //                                         className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
+                                        //                                         <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                        //                                     </span>
+                                        //                 </Col>
+                                        //             </Row>
+                                        //         ) : "Guruhlar topilmadi"}
+                                        //     </div>
+                                        // </div>
+                                        : ""}
+                                </div>
+                            ) : ""}
+                        </div>
                     </div>
                 </div>
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
