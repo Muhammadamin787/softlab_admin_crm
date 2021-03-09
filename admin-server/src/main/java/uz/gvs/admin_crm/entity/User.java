@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.gvs.admin_crm.entity.enums.Gender;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class User extends AbsEntity implements UserDetails {//test
     private Attachment avatar;
 
     private Date birthDate;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatusEnum status;
 
     @ManyToMany
     @JoinTable(name = "user_roles",

@@ -121,8 +121,6 @@ import {
     giveSalaryApi,
     deleteStudentPaymentApi,
     getTeacherSalaryApi,
-    getStudentPaymentListApi,
-    getStudentPaymentCashbacksApi,
     getTeacherSalaryAppApi,
     deleteTeacherSalaryApi,
     giveTeacherSalaryApi,
@@ -138,8 +136,13 @@ import {
     getDailyScheduleList,
     getDashboardStatApi,
     getDashboardStudentStatApi,
-    getAppealListAllApi ,
+    getAppealListAllApi,
     getByCourseApi,
+    ToArchiveStatusApi,
+    ToActiveStatusApi,
+    getTeacherPaymentListByDateApi,
+    ToChangeStatusApi,
+    ChangeStatusApi, changeStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -200,14 +203,14 @@ export const getDebtorsAction = () => (dispatch) => {
 export const downloadStudentFileAction = () => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/student")
-    link.setAttribute("download","student.xlsx")
+    link.setAttribute("download", "student.xlsx")
     document.body.appendChild(link)
     link.click();
 }
 export const downloadTeacherFileAction = () => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/teacher")
-    link.setAttribute("download","teacher.xlsx")
+    link.setAttribute("download", "teacher.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -1253,6 +1256,33 @@ export const deleteStudentAction = (data) => (dispatch) => {
         })
     })
 }
+
+export const toChangeStatusAction = (data) => (dispatch) => {
+    console.log(45);
+    dispatch({
+        api: changeStatusApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                toArchiveModal: false,
+                toActiveModal:false
+            }
+        })
+        toast.success(res.payload.message)
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status}))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+
+
 export const studentAddGroupAction = (data) => (dispatch) => {
     dispatch({
         api: studentAddGroup,

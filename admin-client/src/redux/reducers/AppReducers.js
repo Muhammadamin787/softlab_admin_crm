@@ -63,7 +63,7 @@ const initState = {
     sana: [],
     multiLineStat: [],
     sortAges: [],
-    selectExcel:[],
+    selectExcel: [],
     byCource: []
 };
 
@@ -78,8 +78,10 @@ const reducers = {
         state.deleteModal = false
         state.changeToArchiveModal = false
         state.changeToActiveModal = false
+        state.toArchiveModal = false
+        state.toActiveModal = false
     },
-    [types.REQUEST_GET_INFO_IN_EXCEL](state,payload){
+    [types.REQUEST_GET_INFO_IN_EXCEL](state, payload) {
         state.selectExcel = payload.payload.object.object
     },
 

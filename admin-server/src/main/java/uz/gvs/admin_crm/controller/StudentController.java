@@ -39,27 +39,18 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
-    //    //  GETOne
     @GetMapping("/{id}")
     public HttpEntity<?> getStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.getStudent(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //
-//    //  get search
-//    @GetMapping("/search")
-//    public HttpEntity<?> getSearchRegion(@RequestParam(value = "key", defaultValue = "") String key) {
-//        ApiResponse apiResponse = regionService.getSearchRegion(key);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
-//
     @GetMapping
     public HttpEntity<?> getStudentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                        @RequestParam(value = "status", defaultValue = "DEFAULT") String status,
                                         @CurrentUser User user) {
-        ApiResponse apiResponse = studentService.getStudents(page, size);
+        ApiResponse apiResponse = studentService.getStudents(page, size, status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
@@ -69,13 +60,11 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //    //Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.deleteStudent(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
     }
-
 
     @PatchMapping("/changeGroupStatus")
     public HttpEntity<?> makeSituation(@RequestBody SituationDto situationDto) {
@@ -85,22 +74,26 @@ StudentController {
 
     @GetMapping("/debtors")
     public HttpEntity<?> getDebtorStudents(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                        @CurrentUser User user) {
+                                           @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                           @CurrentUser User user) {
         ApiResponse apiResponse = studentService.getDebtorStudents(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-//    @GetMapping("/download/student.xlsx")
-//    public ByteArrayInputStream getStudentsInfor(@RequestBody  Student student) {
-////        return StudentService.contactListToExcelFile(student);
-//        byte[] file=
-//    }
-
     @GetMapping("/search")
-    public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name){
+    public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name) {
         ApiResponse apiResponse = studentService.searchStudent(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    //// Change Status
+    @GetMapping("/changeStatus")
+    public HttpEntity<?> ToArchiveStatus(@RequestParam(value = "studentId") UUID studentId,
+                                         @RequestParam(value = "status") String status) {
+        ApiResponse apiResponse = studentService.ToArchiveStatus(studentId, status);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+
 
 }

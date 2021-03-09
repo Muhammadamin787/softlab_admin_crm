@@ -10,6 +10,7 @@ import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
@@ -123,9 +124,9 @@ public class StudentService {
         );
     }
 
-    public ApiResponse getStudents(int page, int size) {
+    public ApiResponse getStudents(int page, int size, String type) {
         try {
-            Page<Student> all = studentRepository.findAll(PageRequest.of(page, size));
+            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
@@ -265,8 +266,6 @@ public class StudentService {
         }
     }
 
-
-    //
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
@@ -302,8 +301,6 @@ public class StudentService {
                 payment.getAmount()
         );
     }
-
-
 
     public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
         try {
@@ -423,7 +420,6 @@ public class StudentService {
         }
     }
 
-
     public ApiResponse getDebtorStudents(int page, int size) {
         Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
         return apiResponseService.getResponse(
@@ -453,14 +449,13 @@ public class StudentService {
         return null;
     }
 
-//
-    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2,String type) {
+    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
             Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
             Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
-                case "all" :
-                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "all":
+                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     all.getTotalPages(),
@@ -470,8 +465,8 @@ public class StudentService {
                                     all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
                             )
                     );
-                case "byCashbacks" :
-                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "byCashbacks":
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     byCashback.getTotalPages(),
@@ -482,7 +477,7 @@ public class StudentService {
                             )
                     );
                 case "getPrice":
-                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     getPrice.getTotalPages(),
@@ -499,7 +494,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getPayments(int page, int size, String type) {
         try {
@@ -563,5 +557,21 @@ public class StudentService {
     }
 
 
+    public ApiResponse ToArchiveStatus(UUID studentId ,String status) {
+        try {
+            Optional<Student> studentOptional = studentRepository.findById(studentId);
+            if (studentOptional.isPresent()) {
+                Student student = studentOptional.get();
+                student.getUser().setEnabled(!student.getUser().isEnabled());
+                student.getUser().setStatus(UserStatusEnum.valueOf(status));
+                studentRepository.save(student);
+                return apiResponseService.updatedResponse();
+            } else {
+                return apiResponseService.existResponse();
+            }
+        }catch (Exception exception){
+            return apiResponseService.errorResponse();
+        }
+    }
 
 }

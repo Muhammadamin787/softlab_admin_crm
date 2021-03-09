@@ -260,7 +260,6 @@ public class GroupService {
         }
     }
 
-
     public ApiResponse getGroups(String weekName) {
         try {
             WeekdayName weekdayName = WeekdayName.valueOf(weekName);
@@ -279,7 +278,6 @@ public class GroupService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getGroupsByWeekDayForSchedule(String weekday) {
         try {
