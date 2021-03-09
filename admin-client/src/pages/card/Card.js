@@ -104,9 +104,10 @@ class Card extends Component {
                 statusId = e.target.parentElement.id.substring(0, e.target.parentElement.id.indexOf(enumStatus))
             }
             let v = {}
-            v.id = this.state.object
+            v.id = data
             v.clientStatusId = statusId
             v.statusEnum = enumStatus;
+            console.log(v);
             dispatch(changeAppalTypeAction(v))
         }
 
@@ -139,8 +140,8 @@ class Card extends Component {
                                                 <div className={"element"} draggable={true}
                                                      onDrop={false} onDragStart={drag}
                                                      id={appeal.id}>
-                                                    <Link onDrop={false}
-                                                          to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
+                                                    <Link
+                                                        to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
                                                 </div>
                                             ) : ''}
                                         </div>
