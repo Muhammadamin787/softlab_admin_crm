@@ -104,8 +104,8 @@
   }
 
   &.icon-download {
-    //mask-image: url("../../public/assets/icons/download.svg");
-    //-webkit-mask-image: url("../../public/assets/icons/download.svg");
+    mask-image: url("icons/download.svg");
+    -webkit-mask-image: url("icons/download.svg");
   }
 
   &.icon-sharing {

@@ -13,6 +13,7 @@ import uz.gvs.admin_crm.repository.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AttendanceService {
@@ -41,7 +42,7 @@ public class AttendanceService {
 
                 Teacher teacher = optionalTeacher.get();
                 Group group = optionalGroup.get();
-                if (teacher.getSalary() != null){
+                if (teacher.getSalary() != null) {
                     for (StudentAttendDto studentAttendDto : attendanceDto.getStudentList()) {
                         Student get_student = studentRepository.findById(studentAttendDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Get Student"));
                         Optional<Attendance> optionalAttendance = attendanceRepository.findByGroup_IdAndTeacher_IdAndStudent_IdAndAttendDate(group.getId(), teacher.getId(), studentAttendDto.getStudentId(), attendanceDto.getDate());
@@ -58,6 +59,7 @@ public class AttendanceService {
                                     } else {
                                         teacher.setBalance(teacher.getBalance() - teacher.getSalary());
                                     }
+                                    paymentRepository.deleteById(UUID.fromString(paymentRepository.getPaymentIdForDelete(attendance1.getId())));
                                 }
                             } else {
                                 if (studentAttendDto.isActive()) {
@@ -67,20 +69,22 @@ public class AttendanceService {
                                     } else {
                                         teacher.setBalance(teacher.getBalance() + teacher.getSalary());
                                     }
+                                    paymentRepository.save(new Payment(
+                                            attendance1,
+                                            group.getCourse().getPrice(),
+                                            (teacher.isPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                    ));
                                 }
                             }
                             teacherRepository.save(teacher);
                             studentRepository.save(get_student);
-                            if (studentAttendDto.isActive()){
+                            if (studentAttendDto.isActive()) {
                                 attendance1.setAttandanceEnum(AttandanceEnum.YES);
-                            }else {
+                            } else {
                                 attendance1.setAttandanceEnum(AttandanceEnum.NO);
                             }
-
-
                             attendanceRepository.save(attendance1);
-                        }
-                        else {
+                        } else {
                             if (studentAttendDto.isActive()) {
                                 Attendance attendance2 = new Attendance();
                                 attendance2.setGroup(group);
@@ -115,7 +119,6 @@ public class AttendanceService {
                         }
                     }
                 }
-
                 return apiResponseService.saveResponse();
             } else {
                 return apiResponseService.notFoundResponse();

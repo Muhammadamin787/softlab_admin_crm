@@ -17,6 +17,7 @@ import AdminLayout from "../../component/AdminLayout";
 import moment from "moment";
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class Teacher extends Component {
     componentDidMount() {
@@ -103,7 +104,7 @@ class Teacher extends Component {
         const uploadImg = (e) => {
             this.props.dispatch(uploadFileAction(e.target.files[0]))
         }
-        const downloadTecherFile = (e,v) => {
+        const downloadTecherFile = (e, v) => {
             dispatch(downloadTeacherFileAction(v))
         }
 
@@ -115,44 +116,52 @@ class Teacher extends Component {
                         <Button size={"lg"} color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
-                        <Button variant={"info"} size={"lg"} onClick={downloadTecherFile}>O`qituvchilar haqida malumot</Button>
                     </div>
-                    <Table className={"table-style w-75"}>
-                        <thead className={""}>
-                        <tr className={""}>
-                            <th>No</th>
-                            <th>Ism</th>
-                            <th>Telefon</th>
-                            <th colSpan="2">Amal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {teachers ? teachers.map((item, i) =>
-                            <tr key={i} className={"table-tr"}>
-                                <td>{i + 1}</td>
-                                <td>
-                                    <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                        {item.userDto && item.userDto.fullName}
-                                    </Link>
-                                </td>
-                                <td>{item.userDto && item.userDto.phoneNumber}</td>
-                                <td>
-                                    <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                        <DeleteIcon/>
-                                    </Button>
-                                </td>
+                    <div className="w-75">
+                        <div align={"right"} className="mb-1">
+                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
+                                    className={"btn mx-2 border-none rounded"}
+                                    onClick={downloadTecherFile}>
+                                <span className={"icon icon-download"}></span>
+                            </Button>
+                        </div>
+                        <Table className={"table-style w-100"}>
+                            <thead className={""}>
+                            <tr className={""}>
+                                <th>No</th>
+                                <th>Ism</th>
+                                <th>Telefon</th>
+                                <th colSpan="2">Amal</th>
                             </tr>
-                        ) : ''}
-                        </tbody>
-                    </Table>
-                    <Pagination
-                        activePage={page + 1}
-                        itemsCountPerPage={size}
-                        totalItemsCount={totalElements}
-                        pageRangeDisplayed={5}
-                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                        linkClass="page-link"
-                    />
+                            </thead>
+                            <tbody>
+                            {teachers ? teachers.map((item, i) =>
+                                <tr key={i} className={"table-tr"}>
+                                    <td>{i + 1}</td>
+                                    <td>
+                                        <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
+                                            {item.userDto && item.userDto.fullName}
+                                        </Link>
+                                    </td>
+                                    <td>{item.userDto && item.userDto.phoneNumber && formatPhoneNumber(item.userDto.phoneNumber)}</td>
+                                    <td>
+                                        <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                            <DeleteIcon/>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ) : ''}
+                            </tbody>
+                        </Table>
+                        <Pagination
+                            activePage={page + 1}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalElements}
+                            pageRangeDisplayed={5}
+                            onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                            linkClass="page-link"
+                        />
+                    </div>
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">

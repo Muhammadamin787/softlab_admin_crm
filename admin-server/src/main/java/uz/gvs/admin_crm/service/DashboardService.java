@@ -3,6 +3,7 @@ package uz.gvs.admin_crm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.Dashboard2Dto;
 import uz.gvs.admin_crm.payload.DashboardDto;
 import uz.gvs.admin_crm.repository.ClientRepository;
 
@@ -67,7 +68,6 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
-
     public List<DashboardDto> getStudentStatByAge() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -86,7 +86,6 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
-
     public List<DashboardDto> getStudentStatByGender() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -101,16 +100,34 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+    public List<DashboardDto> getReklamaSortByClient() {
+        try {
+            List<Object> objects = clientRepository.getReklamaSortByClient();
+            List<DashboardDto> dashboardDtos = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                String nomi = client[0].toString();
+                Integer count = Integer.valueOf(client[1].toString());
+                dashboardDtos.add(new DashboardDto(nomi, count));
+            }
+            return dashboardDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
 
     public ApiResponse getStudentStat() {
         try {
             List<DashboardDto> studentStatByAge = getStudentStatByAge();
             List<DashboardDto> studentStatByGender = getStudentStatByGender();
             List<DashboardDto> studentSortByCount = getStudentSortByCount();
-            return apiResponseService.getResponse(new DashboardDto(studentStatByAge, studentStatByGender, studentSortByCount));
+            List<DashboardDto> reklamaSortByClient = getReklamaSortByClient();
+            return apiResponseService.getResponse(new Dashboard2Dto(studentStatByAge, studentStatByGender, studentSortByCount, reklamaSortByClient));
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+
 }
 
