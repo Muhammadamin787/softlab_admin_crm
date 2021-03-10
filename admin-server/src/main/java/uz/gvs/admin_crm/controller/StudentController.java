@@ -94,4 +94,10 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+    @DeleteMapping("/individualPrice")
+    public HttpEntity<?> deleteIndividualPrice(@RequestParam(value = "studentId") UUID studentId , @RequestParam(value = "groupId") Integer groupId){
+        ApiResponse apiResponse = studentService.deleteIndividualPrice(studentId, groupId);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
 }
