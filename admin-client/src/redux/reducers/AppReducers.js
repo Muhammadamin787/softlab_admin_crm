@@ -435,12 +435,8 @@ const reducers = {
         state.currentItem = payload.payload.object
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.appealList = payload.payload.object.object
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
+        if (payload && payload.payload && payload.payload.object) {
+            state.appealList = payload.payload.object
         }
     },
     // FINISH APPEAL REDUCERS

@@ -11,10 +11,7 @@ import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,10 +92,7 @@ public class AppealService {
                 return apiResponseService.notFoundResponse();
             // clientni saqlash
             Client client = byId.get();
-
-
             Optional<ClientStatusConnect> byClient_id = clientStatusConnectRepository.findByClient_id(client.getId());
-
             ClientStatusConnect clientStatusConnect = byClient_id.get();
             if (appealDto.getStatusEnum().equals("COLLECTION")) {
                 Toplam getToplam = toplamRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
@@ -251,7 +245,7 @@ public class AppealService {
     }
 
 
-    public ApiResponse getAppealListAll(Integer typeId, int page, int size){
+    public ApiResponse getAppealListAll(Integer typeId, int page, int size) {
         try {
             Page<ClientStatusConnect> all = clientStatusConnectRepository.findAll(PageRequest.of(page, size));
 
@@ -267,7 +261,7 @@ public class AppealService {
         }
     }
 
-    public ClientStatusConnectDto makeClient(ClientStatusConnect client){
+    public ClientStatusConnectDto makeClient(ClientStatusConnect client) {
         return new ClientStatusConnectDto(
                 client.getClient(),
                 (client.isToplam() ? null : clientStatusRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status"))),
@@ -275,6 +269,104 @@ public class AppealService {
                 client.getId(),
                 client.isToplam()
         );
+    }
+
+    public ApiResponse getAppealList() {
+        try {
+            List<LeadDto> leadDtos = new ArrayList<>();
+            List<SectionDto> sectionDtos = new ArrayList<>();
+
+            List<Object> objects = clientAppealRepository.getClientAppealsListByAppealType("REQUEST");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = client[5].toString();
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            leadDtos.add(new LeadDto("REQUEST", sectionDtos));
+            sectionDtos = new ArrayList<>();
+            objects = clientAppealRepository.getClientAppealsListByAppealType("WAITING");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = client[5].toString();
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            leadDtos.add(new LeadDto("WAITING", sectionDtos));
+            sectionDtos = new ArrayList<>();
+            objects = clientAppealRepository.getClientAppealsListByAppealToplam();
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = "COLLECTION";
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            leadDtos.add(new LeadDto("COLLECTION", sectionDtos));
+
+            return apiResponseService.getResponse(leadDtos);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 
 

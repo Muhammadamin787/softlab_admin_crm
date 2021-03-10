@@ -19,7 +19,7 @@ public class StudentGroup extends AbsEntity {
     private Group group;
     @Enumerated(EnumType.STRING)
     private StudentGroupStatus studentGroupStatus;
-    private boolean isPercent;
+    private Boolean isPercent;
     private double individualPrice;
     @Column(columnDefinition = "text")
     private String description;
