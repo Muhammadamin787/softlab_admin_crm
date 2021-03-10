@@ -12,7 +12,7 @@ public class ResSelect {
     private int id;
     private String name;
     private Double individualPrice;
-    private boolean isPercent;
+    private Boolean isPercent;
 
     public ResSelect(UUID uuid, Integer id, Double individualPrice, boolean isPercent) {
         this.uuid = uuid;

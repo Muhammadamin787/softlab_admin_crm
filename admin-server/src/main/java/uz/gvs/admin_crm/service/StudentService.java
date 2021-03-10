@@ -565,12 +565,12 @@ public class StudentService {
     public ApiResponse addIndividualPrice(UUID id, ResSelect resSelect) {
         try {
             Optional<Student> optional = studentRepository.findById(id);
-            if (optional.isPresent()) {
+            if (optional.isPresent() && resSelect.getIsPercent() != null && resSelect.getIndividualPrice() != null) {
                 Student student = optional.get();
                 for (StudentGroup studentGroup : student.getStudentGroup()) {
                     if (studentGroup.getGroup().getId() == resSelect.getId()) {
                         studentGroup.setIndividualPrice(resSelect.getIndividualPrice());
-                        studentGroup.setPercent(resSelect.isPercent());
+                        studentGroup.setIsPercent(resSelect.getIsPercent());
                         studentGroupRepository.save(studentGroup);
                         return apiResponseService.saveResponse();
                     }
