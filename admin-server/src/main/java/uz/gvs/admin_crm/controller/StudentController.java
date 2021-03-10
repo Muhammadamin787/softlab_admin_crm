@@ -39,22 +39,13 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
-    //    //  GETOne
     @GetMapping("/{id}")
     public HttpEntity<?> getStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.getStudent(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //
-//    //  get search
-//    @GetMapping("/search")
-//    public HttpEntity<?> getSearchRegion(@RequestParam(value = "key", defaultValue = "") String key) {
-//        ApiResponse apiResponse = regionService.getSearchRegion(key);
-//        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-//    }
-//
-//
+
     @GetMapping
     public HttpEntity<?> getStudentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
@@ -69,7 +60,6 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //    //Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteStudent(@PathVariable UUID id) {
         ApiResponse apiResponse = studentService.deleteStudent(id);
@@ -91,15 +81,16 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-//    @GetMapping("/download/student.xlsx")
-//    public ByteArrayInputStream getStudentsInfor(@RequestBody  Student student) {
-////        return StudentService.contactListToExcelFile(student);
-//        byte[] file=
-//    }
 
     @GetMapping("/search")
     public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name){
         ApiResponse apiResponse = studentService.searchStudent(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PostMapping("/individualPrice/{id}")
+    public HttpEntity<?> addIndividualPrice(@PathVariable UUID id, @RequestBody ResSelect resSelect){
+        ApiResponse apiResponse = studentService.addIndividualPrice(id, resSelect);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
