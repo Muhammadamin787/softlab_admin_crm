@@ -14,7 +14,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import Select from "react-select";
-import {formatSelectList, sortList} from "../../utils/addFunctions";
+import {formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
 import LoaderMini from "../../component/LoaderMini";
 
 class Card extends Component {
@@ -47,13 +47,9 @@ class Card extends Component {
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId, currentPage} = this.state
 
-        const openModal = (item, collection) => {
-            if (collection) {
-                this.setState({currentPage: item})
-            } else {
-                this.setState({currentPage: ""})
-                this.setState({currentObject: item})
-            }
+        const openModal = (item) => {
+            console.log(item);
+            this.setState({currentPage: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -77,7 +73,7 @@ class Card extends Component {
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             v.statusEnum = currentPage
-            v.enumType = currentPage
+            console.log(v);
             dispatch(saveAppealAction(v));
         }
 
@@ -108,31 +104,24 @@ class Card extends Component {
             v.id = data
             v.clientStatusId = statusId
             v.statusEnum = enumStatus;
-            console.log(v);
             dispatch(changeAppalTypeAction(v))
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
-                <div className={"container bg-white p-5"}>
-                    <h3>Murojaatlar</h3>
-                    <hr/>
-                    <Container className={"pt-5"}>
-                        {/*{loading ?*/}
-                        {/*    <h1>salom</h1>*/}
-                        {/*    :*/}
+                <div className={"container p-1"}>
+                    <h2>Murojaatlar</h2>
+                    <Container className={"py-3 bg-white px-5"}>
                         <Row id={""}>
-                            {appealList && !loading ? appealList.map(item =>
+                            {appealList && !loading && appealList.length > 0 ? appealList.map(item =>
                                 <Col id={item.title}>
                                     <h4>
-                                        {item.title}
-                                        {item.id === "COLLECTION" ?
-                                            "" :
-                                            <Button color={"primary"} className={"ml-5"}
-                                                    onClick={() => openModal(item.id, true)}>Qo'shish</Button>
-                                        }
+                                        {item.title === "COLLECTION" ? "To'plamlar" : item.title === "WAITING" ? "Kutish" : "So'rovlar"}
                                     </h4>
+                                    <button className={"btn btn-default btn-sm rounded-circle border-secondary"}
+                                            onClick={() => openModal(item.title)}>+
+                                    </button>
                                     <hr/>
                                     {item.sectionDtos && item.sectionDtos.length > 0 ? sortList(item.sectionDtos).map(section =>
                                         <div className={"section"} onDrop={(e) => drop(e, item.id)}
@@ -154,7 +143,6 @@ class Card extends Component {
                                 </Col>
                             ) : ''}
                         </Row>
-                        {/*}*/}
                     </Container>
                 </div>
 
@@ -190,7 +178,7 @@ class Card extends Component {
                                         placeholder="Bo'limni tanlang..."
                                         name="groupId"
                                         isSearchable={true}
-                                        options={clientStatusList && clientStatusList.length > 0 && formatSelectList(clientStatusList)}
+                                        options={clientStatusList && clientStatusList.length > 0 && sortByEnumType(clientStatusList, currentPage)}
                                         onChange={setClientStatus}
                                         className="basic-multi-select"
                                         classNamePrefix="select"

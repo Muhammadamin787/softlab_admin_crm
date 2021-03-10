@@ -8,6 +8,18 @@ export function formatSelectList(list) {
     } else return []
 }
 
+export function sortByEnumType(list, enumType) {
+    if (list && list.length > 0) {
+        let newSelectList = []
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].clientStatusEnum === enumType) {
+                newSelectList.push({value: list[i].id, label: list[i].name})
+            }
+        }
+        return newSelectList;
+    } else return []
+}
+
 export function formatPhoneNumber(phoneNumberString) {
     if (phoneNumberString && phoneNumberString.length > 8) {
         let phoneNumber = phoneNumberString.substring(0, 9)
