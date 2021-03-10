@@ -142,7 +142,7 @@ import {
     ToActiveStatusApi,
     getTeacherPaymentListByDateApi,
     ToChangeStatusApi,
-    ChangeStatusApi, changeStatusApi,
+    ChangeStatusApi, changeStatusApi, changeTeacherStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1277,6 +1277,29 @@ export const toChangeStatusAction = (data) => (dispatch) => {
         })
         toast.success(res.payload.message)
         dispatch(getStudentsAction({page: 0, size: 20, type: data.status}))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+export const toChangeTeacherStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeTeacherStatusApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                archiveModal: false,
+                activeModal:false
+            }
+        })
+        toast.success(res.payload.message)
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })

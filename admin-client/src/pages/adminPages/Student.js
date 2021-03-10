@@ -191,7 +191,7 @@ class Student extends Component {
                                     Faol Talabalar
                                 </NavLink>
                             </NavItem>
-                            <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                                 <NavLink
                                     onClick={() => {
                                         toggle('ARCHIVE');
@@ -202,7 +202,6 @@ class Student extends Component {
                             </NavItem>
                         </Nav>
                         <TabContent activeTab={activeTab}>
-
                             <TabPane tabId="DEFAULT">
                                 <Table className={"table-style w-75"}>
                                     <thead className={""}>
@@ -214,7 +213,6 @@ class Student extends Component {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {console.log(students)}
                                     {students && students.length > 0 ? students.map((item, i) =>
                                         <tr key={i} className={"table-tr"}>
                                             <td>{i + 1}</td>

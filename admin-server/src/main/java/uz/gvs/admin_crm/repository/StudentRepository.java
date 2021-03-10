@@ -17,6 +17,7 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     Page<Student> getDebtorStudents(Pageable pageable);
 
     List<Student> findAllByStudentGroup_Group_id(Integer studentGroup_group_id);
+
     Page<Student> findAllByUser_status(UserStatusEnum user_status,Pageable pageable);
 
     boolean deleteByBalans(double balans);

@@ -45,7 +45,7 @@ public class UserService {
             user.setDescription(userDto.getDescription());
             user.setRegion(userDto.getRegionId() != null ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
             user.setGender(Gender.valueOf(userDto.getGender()));
-            user.setStatus(roleName.equals(RoleName.STUDENT) ? UserStatusEnum.DEFAULT : UserStatusEnum.ACTIVE);
+            user.setStatus(roleName.equals(RoleName.STUDENT) && roleName.equals(RoleName.TEACHER) ? UserStatusEnum.DEFAULT : UserStatusEnum.ACTIVE);
             user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
             user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
             return userRepository.save(user);

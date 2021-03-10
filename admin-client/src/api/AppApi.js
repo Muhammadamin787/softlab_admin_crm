@@ -314,6 +314,9 @@ export const getStudentGroupsApi = (data) => {
 export const changeStatusApi = (data) => {
     return HttpClient.doGet(api.student + "/changeStatus?studentId=" + data.studentId + "&status=" + data.status)
 }
+export const changeTeacherStatusApi = (data) => {
+    return HttpClient.doGet(api.teacher + "/changeStatus?teacherId=" + data.teacherId + "&status=" + data.status)
+}
 
 
 // FINISH STUDENT API
@@ -360,7 +363,7 @@ export const editTeacherApi = (data) => {
 
 export const getTeachersApi = (data) => {
     return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size : ""))
+        + "&size=" + data.size + "&status=" + data.type : ""))
 }
 export const getTeachersForSelectApi = () => {
     return HttpClient.doGet(api.teacher + "/select")
