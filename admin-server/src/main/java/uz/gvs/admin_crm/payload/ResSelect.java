@@ -11,7 +11,15 @@ public class ResSelect {
     private UUID uuid;
     private int id;
     private String name;
+    private Double individualPrice;
+    private boolean isPercent;
 
+    public ResSelect(UUID uuid, Integer id, Double individualPrice, boolean isPercent) {
+        this.uuid = uuid;
+        this.id = id;
+        this.individualPrice = individualPrice;
+        this.isPercent = isPercent;
+    }
 
     public ResSelect() {
     }
