@@ -171,7 +171,6 @@ class SelectTeacher extends Component {
                         v.percent = currentObject.percent
                     }
                 }
-                console.log(currentObject)
                 v.teacherId = currentObject.id
                 dispatch(saveTeacherSalaryAction(v));
             }

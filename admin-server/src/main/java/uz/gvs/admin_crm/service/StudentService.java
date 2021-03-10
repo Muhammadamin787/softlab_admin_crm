@@ -304,7 +304,6 @@ public class StudentService {
     }
 
 
-
     public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
         try {
             Sort sort;
@@ -453,14 +452,14 @@ public class StudentService {
         return null;
     }
 
-//
-    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2,String type) {
+    //
+    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
             Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
             Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
-                case "all" :
-                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "all":
+                    Page<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     all.getTotalPages(),
@@ -470,8 +469,8 @@ public class StudentService {
                                     all.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
                             )
                     );
-                case "byCashbacks" :
-                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "byCashbacks":
+                    Page<StudentPayment> byCashback = studentPaymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     byCashback.getTotalPages(),
@@ -482,7 +481,7 @@ public class StudentService {
                             )
                     );
                 case "getPrice":
-                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, PageRequest.of(page, size));
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     getPrice.getTotalPages(),
@@ -562,6 +561,27 @@ public class StudentService {
         }
     }
 
+
+    public ApiResponse addIndividualPrice(UUID id, ResSelect resSelect) {
+        try {
+            Optional<Student> optional = studentRepository.findById(id);
+            if (optional.isPresent()) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId() == resSelect.getId()) {
+                        studentGroup.setIndividualPrice(resSelect.getIndividualPrice());
+                        studentGroup.setPercent(resSelect.isPercent());
+                        studentGroupRepository.save(studentGroup);
+                        return apiResponseService.saveResponse();
+                    }
+                    return apiResponseService.existResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 
 
 }
