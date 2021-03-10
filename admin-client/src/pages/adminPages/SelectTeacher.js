@@ -171,7 +171,6 @@ class SelectTeacher extends Component {
                         v.percent = currentObject.percent
                     }
                 }
-                console.log(currentObject)
                 v.teacherId = currentObject.id
                 dispatch(saveTeacherSalaryAction(v));
             }
@@ -193,7 +192,7 @@ class SelectTeacher extends Component {
         }
 
         const openDeleteSalaryModal = (item) => {
-            this.setState({currentItem : item})
+            this.setState({currentItem: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -295,10 +294,6 @@ class SelectTeacher extends Component {
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
                                                                 <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
-                                                            </hgroup>
-                                                            <hgroup>
-                                                                <small className={"text-secondary"}>Maosh : </small>
-                                                                <p className={"d-inline"}> {currentItem.salary}{currentItem.salary ? (currentItem.percent ? " %" : " so'm") : ''}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>

@@ -120,7 +120,13 @@ public class StudentService {
                 student.getId(),
                 student.getUser().getFullName(),
                 student.getUser().getPhoneNumber(),
-                studentGroupRepository.findById(id).get()
+                new StudentGroupDto(studentGroupRepository.findById(id).get().getId(),
+                        studentGroupRepository.findById(id).get().getGroup().getId(),
+                        studentGroupRepository.findById(id).get().getGroup().getName(),
+                        studentGroupRepository.findById(id).get().getStudentGroupStatus(),
+                        studentGroupRepository.findById(id).get().getIsPercent(),
+                        studentGroupRepository.findById(id).get().getIndividualPrice(),
+                        studentGroupRepository.findById(id).get().getDescription())
         );
     }
 
@@ -154,6 +160,17 @@ public class StudentService {
     }
 
     public StudentDto makeStudentDto(Student student) {
+        List<StudentGroupDto> studentGroupDtos = new ArrayList<>();
+        for (StudentGroup studentGroup : student.getStudentGroup()) {
+            StudentGroupDto studentGroupDto = new StudentGroupDto(studentGroup.getId(),
+                    studentGroup.getGroup().getId(),
+                    studentGroup.getGroup().getName(),
+                    studentGroup.getStudentGroupStatus(),
+                    studentGroup.getIsPercent(),
+                    studentGroup.getIndividualPrice(),
+                    studentGroup.getDescription());
+            studentGroupDtos.add(studentGroupDto);
+        }
         return new StudentDto(
                 student.getId(),
                 student.getUser().getId(),
@@ -167,7 +184,7 @@ public class StudentService {
                 student.getUser().getBirthDate() != null ? student.getUser().getBirthDate().toString() : "",
                 student.getUser().getRoles(),
                 student.getBalans(),
-                student.getStudentGroup()
+                studentGroupDtos
         );
     }
 
@@ -574,4 +591,46 @@ public class StudentService {
         }
     }
 
+    public ApiResponse addIndividualPrice(UUID id, ResSelect resSelect) {
+        try {
+            Optional<Student> optional = studentRepository.findById(id);
+            if (optional.isPresent() && resSelect.getIsPercent() != null && resSelect.getIndividualPrice() != null) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId() == resSelect.getId()) {
+                        studentGroup.setIndividualPrice(resSelect.getIndividualPrice());
+                        studentGroup.setIsPercent(resSelect.getIsPercent());
+                        studentGroupRepository.save(studentGroup);
+                        return apiResponseService.saveResponse();
+                    }
+                    return apiResponseService.existResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
+
+    public ApiResponse deleteIndividualPrice(UUID studentId, Integer groupId) {
+        try {
+            Optional<Student> optional = studentRepository.findById(studentId);
+            if (optional.isPresent()) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId() == groupId) {
+                        studentGroup.setIndividualPrice(0.0);
+                        studentGroup.setIsPercent(null);
+                        studentGroupRepository.save(studentGroup);
+                        return apiResponseService.saveResponse();
+                    }
+                    return apiResponseService.existResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }

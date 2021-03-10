@@ -58,6 +58,7 @@ const initState = {
     teacherPaymentFinance: [],
     rooms: [],
     dailySchedule: [],
+    weeklySchedule: [],
     dashboardStat: [],
     studentStat: [],
     sana: [],
@@ -69,6 +70,7 @@ const initState = {
 
 const reducers = {
     [types.REQUEST_START](state) {
+        state.loading = true;
     },
     [types.REQUEST_ERROR](state) {
     },
@@ -433,18 +435,15 @@ const reducers = {
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
         state.showModal = false
+        state.loading = false
         state.showChangeModal = false
     },
     [types.REQUEST_GET_APPEAL_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.appealList = payload.payload.object.object
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
+        if (payload && payload.payload && payload.payload.object) {
+            state.appealList = payload.payload.object
         }
     },
     // FINISH APPEAL REDUCERS
@@ -530,6 +529,10 @@ const reducers = {
         state.dailySchedule = null
         state.dailySchedule = payload.payload.object;
     },
+    [types.REQUEST_WEEKLY_SCHEDULE](state, payload) {
+        state.weekdays = null
+        state.weeklySchedule = payload.payload.object
+    },
     // Attachment
     [types.REQUEST_ATTACHMENT_SUCCESS](state, payload) {
         state.attachmentId = payload
@@ -539,12 +542,11 @@ const reducers = {
         state.dashboardStat = payload.payload.object
     },
     [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
-        console.log(payload)
         state.byCource = payload.payload.object
     },
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
         if (payload.payload && payload.payload.object) {
-            if (payload.payload.object.countSortList) {
+            if (payload.payload.object.countSortList && payload.payload.object.countSortList.length > 0) {
                 let data = payload.payload.object.countSortList;
                 let date = [];
                 let allCount = [];
@@ -566,7 +568,7 @@ const reducers = {
                     }
                 ]
             }
-            if (payload.payload.object.ageSortList) {
+            if (payload.payload.object.ageSortList && payload.payload.object.ageSortList.length > 0) {
                 let series = [];
                 let labels = [];
                 let agesList = payload.payload.object.ageSortList;

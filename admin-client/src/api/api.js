@@ -14,7 +14,7 @@ export const api = {
     client: '/client',
     studentPayment: '/studentPayment',
     reklama: '/reklama',
-    cashback: 'cashback',
+    cashback: '/cashback',
     debtors: '/student/debtors',
     clientStatus: '/clientStatus',
     appeal: 'appeal',
@@ -23,5 +23,6 @@ export const api = {
     teacherSalaryApi: '/teacherSalary',
     salary: '/salary',
     attendance : "/attendance",
-    dashboard: "/dashboard"
+    dashboard: "/dashboard",
+    searchStudent: '/student/search'
 };

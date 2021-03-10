@@ -45,6 +45,7 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+
     @GetMapping
     public HttpEntity<?> getStudentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
@@ -80,9 +81,22 @@ StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
+
     @GetMapping("/search")
     public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name) {
         ApiResponse apiResponse = studentService.searchStudent(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PostMapping("/individualPrice/{id}")
+    public HttpEntity<?> addIndividualPrice(@PathVariable UUID id, @RequestBody ResSelect resSelect){
+        ApiResponse apiResponse = studentService.addIndividualPrice(id, resSelect);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @DeleteMapping("/individualPrice")
+    public HttpEntity<?> deleteIndividualPrice(@RequestParam(value = "studentId") UUID studentId , @RequestParam(value = "groupId") Integer groupId){
+        ApiResponse apiResponse = studentService.deleteIndividualPrice(studentId, groupId);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 

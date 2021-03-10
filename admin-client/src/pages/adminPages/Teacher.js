@@ -369,6 +369,7 @@ class Teacher extends Component {
                             <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
+
                 </div>
             </AdminLayout>
         );
@@ -397,9 +398,7 @@ export default connect((
             attachmentId,
             teachers,
             readModal,
-            teacherDto,
-            archiveModal,
-            activeModal,
+            teacherDto
         },
     }) => ({
         page,
@@ -419,9 +418,6 @@ export default connect((
         attachmentId,
         readModal,
         teachers,
-        teacherDto,
-        archiveModal,
-        activeModal,
-
+        teacherDto
     })
 )(Teacher);

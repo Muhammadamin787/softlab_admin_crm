@@ -14,13 +14,14 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import Select from "react-select";
-import {formatSelectList} from "../../utils/addFunctions";
+import {formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
+import LoaderMini from "../../component/LoaderMini";
 
 class Card extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getReklamaAction())
-        this.props.dispatch(getAppealListAllAction({page: 0, size: 20}))
+        this.props.dispatch(getAppealListAllAction())
         this.props.dispatch(getClientStatusListAction())
         this.props.dispatch(getToplamListForSelectAction())
         console.clear()
@@ -28,20 +29,6 @@ class Card extends Component {
 
     state = {
         object: '',
-        columns: [
-            {
-                title: "So'rovlar",
-                id : "REQUEST"
-            },
-            {
-                title: "Kutish",
-                id : "WAITING"
-            },
-            {
-                title: "To'plam",
-                id : "COLLECTION"
-            }
-        ],
         showModal: false,
         currentObject: "",
         reklamaId: "",
@@ -49,21 +36,20 @@ class Card extends Component {
         statusTypeId: "",
         newTypeId: "",
         changeLocationType: "",
-        currentPage : '',
+        currentPage: '',
+        enumType: '',
     }
 
     render() {
-        const {appealList,clientStatusList,size, page, totalElements, dispatch, showModal, regions, deleteModal,
-            reklamas, selectItems, showChangeModal, toplamList} = this.props
-        const {columns,currentObject, reklamaId, regionId, statusTypeId,currentPage} = this.state
+        const {
+            appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
+            reklamas, selectItems, showChangeModal, toplamList, loading
+        } = this.props
+        const {currentObject, reklamaId, regionId, statusTypeId, currentPage} = this.state
 
-        const openModal = (item,collection) => {
-            if (collection){
-                this.setState({currentPage : item})
-            }else {
-                this.setState({currentPage : ""})
-                this.setState({currentObject: item})
-            }
+        const openModal = (item) => {
+            console.log(item);
+            this.setState({currentPage: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -87,7 +73,7 @@ class Card extends Component {
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             v.statusEnum = currentPage
-            v.enumType = currentPage
+            console.log(v);
             dispatch(saveAppealAction(v));
         }
 
@@ -97,78 +83,64 @@ class Card extends Component {
 
         const drag = (e) => {
             this.setState({object: e.target.id})
+            this.setState({enumType: e.target.offsetParent.id})
             e.dataTransfer.setData("text", e.target.id);
         }
-
-        const drop = (e, collection) => {
+        const drop = (e) => {
             e.preventDefault();
+            let data = ''
+            let statusId = ''
+            let enumStatus = e.target.offsetParent.id
             if (e.target.classList.contains("section")) {
-                let data = e.dataTransfer.getData("text");
+                data = e.dataTransfer.getData("text");
                 e.target.appendChild(document.getElementById(data));
-
-                let v = {}
-                v.id = this.state.object
-                v.clientStatusId = e.target.id
-                v.statusEnum = collection
-                dispatch(changeAppalTypeAction(v))
-
+                statusId = e.target.id.substring(0, e.target.id.indexOf(enumStatus));
+            } else {
+                e.target.parentElement.appendChild(document.getElementById(this.state.object));
+                data = this.state.object;
+                statusId = e.target.parentElement.id.substring(0, e.target.parentElement.id.indexOf(enumStatus))
             }
+            let v = {}
+            v.id = data
+            v.clientStatusId = statusId
+            v.statusEnum = enumStatus;
+            dispatch(changeAppalTypeAction(v))
+            this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
-
-        console.log(toplamList)
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
-                <div className={"container bg-white p-5"}>
-                    <h3>Murojaatlar</h3>
-                    <hr/>
-                    <Container className={"pt-5"}>
-                        <Row>
-                            {columns ? columns.map(item =>
-                                    <Col id={item.id}>
-                                        <h4>
-                                            {item.title}
-                                            {item.id === "COLLECTION" ?
-                                                "" :
-                                                <Button color={"primary"} className={"ml-5"}
-                                                        onClick={() => openModal(item.id, true)}>Qo'shish</Button>
-                                            }
-
-                                        </h4>
-                                        <hr />
-                                        {item.id !== "COLLECTION" ?
-                                                clientStatusList ? clientStatusList.map(item2 =>
-                                                    item2.clientStatusEnum === item.id ?
-                                                        <div className={"section"} onDrop={(e)=>drop(e,item.id)} onDragOver={allowDrop}
-                                                             draggable={false} id={item2.id}>
-                                                            <h6>{item2.name}</h6>
-                                                            <hr/>
-                                                            {appealList ? appealList.map(item3 =>
-                                                                item3.clientStatus && item3.client && item2.id === item3.clientStatus.id ?
-                                                                    <div className={"element"} draggable={true}
-                                                                         onDrop={false} onDragStart={drag}
-                                                                         id={item3.client ? item3.client.id : ''}>
-                                                                        <Link
-                                                                            to={"/admin/appeal/" + (item3.client ? item3.client.id : '')}>{item3.client.fullName} </Link> / {item3.client.phoneNumber}
-                                                                    </div>
-                                                                    : ''
-                                                            ) : ''}
-                                                        </div>
-                                                        : ''
-                                                ) : ''
-                                            :
-                                            toplamList ? toplamList.map(itemt =>
-                                                <div className={"section"} onDrop={(e)=>drop(e, item.id)} onDragOver={allowDrop}
-                                                     draggable={false} id={itemt.id}>
-                                                    <h6><Link to={"/admin/appeal/toplam/"+itemt.id}>{itemt.name}</Link> - {itemt.courseName +" - " + itemt.time}</h6>
-                                                    <hr />
-                                                    Ustoz : {itemt.teacherName} <br />
-                                                    Dars kunlari : {itemt.weekdays ? itemt.weekdays.map(item => item +", ") : ''} <br />
-                                                    Murojaatlar : {itemt.soni} <br />
+                <div className={"container p-1"}>
+                    <h2>Murojaatlar</h2>
+                    <Container className={"py-3 bg-white px-5"}>
+                        <Row id={""}>
+                            {appealList && !loading && appealList.length > 0 ? appealList.map(item =>
+                                <Col id={item.title}>
+                                    <h4>
+                                        {item.title === "COLLECTION" ? "To'plamlar" : item.title === "WAITING" ? "Kutish" : "So'rovlar"}
+                                    </h4>
+                                    <button className={"btn btn-default btn-sm rounded-circle border-secondary"}
+                                            onClick={() => openModal(item.title)}>+
+                                    </button>
+                                    <hr/>
+                                    {item.sectionDtos && item.sectionDtos.length > 0 ? sortList(item.sectionDtos).map(section =>
+                                        <div className={"section"} onDrop={(e) => drop(e, item.id)}
+                                             onDragOver={allowDrop}
+                                             draggable={false} id={section.id + item.title}>
+                                            <h6>{section.name}</h6>
+                                            <hr/>
+                                            {section.appealDtos ? section.appealDtos.map(appeal =>
+                                                <div className={"element"} draggable={true}
+                                                    // onDrop={(e) => drop(e, item.id)}
+                                                     onDragStart={drag}
+                                                     id={appeal.id}>
+                                                    <Link
+                                                        to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
                                                 </div>
-                                            ): ''
-                                        }
-                                    </Col>
+                                            ) : ''}
+                                        </div>
+                                    ) : ''}
+                                </Col>
                             ) : ''}
                         </Row>
                     </Container>
@@ -177,7 +149,7 @@ class Card extends Component {
 
                 <Modal id={""} isOpen={showModal} toggle={openModal} className={""} size={"md"}>
                     <AvForm className={""} onValidSubmit={saveItem}>
-                        <ModalHeader isOpen={showModal} toggle={()=>openModal("",false)} charCode="X">
+                        <ModalHeader isOpen={showModal} toggle={() => openModal("", false)} charCode="X">
                             {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
                         </ModalHeader>
                         <ModalBody>
@@ -206,7 +178,7 @@ class Card extends Component {
                                         placeholder="Bo'limni tanlang..."
                                         name="groupId"
                                         isSearchable={true}
-                                        options={clientStatusList && clientStatusList.length > 0 && formatSelectList(clientStatusList)}
+                                        options={clientStatusList && clientStatusList.length > 0 && sortByEnumType(clientStatusList, currentPage)}
                                         onChange={setClientStatus}
                                         className="basic-multi-select"
                                         classNamePrefix="select"
@@ -276,7 +248,7 @@ class Card extends Component {
 
 export default connect(({
                             app: {
-                                appealList,clientStatusList,
+                                appealList, clientStatusList,
                                 toplamList,
                                 selectItems,
                                 showChangeModal,
@@ -291,19 +263,19 @@ export default connect(({
                                 deleteModal
                             },
                         }) => ({
-        appealList,clientStatusList,
-    toplamList,
-    selectItems,
-    showChangeModal,
-    size,
-    page,
-    totalElements,
-    currentPage,
-    regions,
-    loading,
-    reklamas,
-    showModal,
-    deleteModal
+        appealList, clientStatusList,
+        toplamList,
+        selectItems,
+        showChangeModal,
+        size,
+        page,
+        totalElements,
+        currentPage,
+        regions,
+        loading,
+        reklamas,
+        showModal,
+        deleteModal
     })
 )(Card);
 

@@ -53,12 +53,14 @@ public class AppealController {
     }
 
     @GetMapping("/all")
-    public HttpEntity<?> getAppealListAll(
-            @RequestParam(value = "typeId", defaultValue = "0") int typeId,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size
-    ) {
-        ApiResponse apiResponse = appealService.getAppealListAll(typeId,page, size);
+    public HttpEntity<?> getAppealListAll() {
+        ApiResponse apiResponse = appealService.getAppealList();
+//        ApiResponse apiResponse = appealService.getAppealListAll(typeId, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/s")
+    public HttpEntity<?> getAppeals() {
+        return null;
     }
 }

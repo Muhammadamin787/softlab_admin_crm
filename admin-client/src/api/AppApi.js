@@ -396,7 +396,7 @@ export const getAppealListByEnumTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&page=" + data.page + "&size=" + data.size)
 }
 export const getAppealListAllApi = (data) => {
-    return HttpClient.doGet(api.appeal + "/all?page=" + data.page + "&size=" + data.size)
+    return HttpClient.doGet(api.appeal + "/all")
 }
 export const getOneAppealApi = (data) => {
     return HttpClient.doGet(api.appeal + "/" + data.id)
@@ -455,6 +455,10 @@ export const getDailyScheduleList = (data) => {
     return HttpClient.doGet(api.group + "/schedule/" + data);
 }
 
+export const getWeeklyScheduleList = () => {
+    return HttpClient.doGet(api.group + "/schedule");
+}
+
 // END SCHEDULE
 
 // START DASHBOARD API
@@ -473,3 +477,9 @@ export const getByCourseApi = (data) => {
 }
 
 // FINISH GET GROUPS OF COURSE
+
+// START SEARCH STUDENT
+export const searchStudentApi = (data) => {
+    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name : ""))
+}
+// FINISH SEARCH STUDENT

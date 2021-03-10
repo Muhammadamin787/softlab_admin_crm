@@ -89,7 +89,7 @@ class TeacherFinance extends Component {
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={""}>
+                        <NavItem className={activeTab === 'minusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('minusSalary');
@@ -98,7 +98,7 @@ class TeacherFinance extends Component {
                                 Olingan Summalar
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={activeTab === 'plusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('plusSalary');
@@ -185,7 +185,6 @@ class TeacherFinance extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{item.amountTeacher}</td>
-                                                <td>{item && item.attendance ? item.attendance.attendDate : ""}</td>
                                                 <td>{moment(item.payDate).format('LLL').toString()}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
 

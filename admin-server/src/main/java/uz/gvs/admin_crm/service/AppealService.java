@@ -11,10 +11,7 @@ import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,44 +88,39 @@ public class AppealService {
     public ApiResponse changeStatus(UUID id, AppealDto appealDto) {
         try {
             Optional<Client> byId = clientRepository.findById(id);
-            if (!byId.isPresent())
+            if (byId.isEmpty())
                 return apiResponseService.notFoundResponse();
-            // clientni saqlash
+            if (ClientStatusEnum.valueOf(appealDto.getStatusEnum()).equals(ClientStatusEnum.COLLECTION)) {
+                Optional<Toplam> byId1 = toplamRepository.findById(appealDto.getClientStatusId());
+                if (byId1.isEmpty())
+                    return apiResponseService.notFoundResponse();
+            } else {
+                Optional<ClientStatus> byId1 = clientStatusRepository.findById(appealDto.getClientStatusId());
+                if (byId1.isEmpty())
+                    return apiResponseService.notFoundResponse();
+            }
             Client client = byId.get();
+            Optional<ClientStatusConnect> clientId = clientStatusConnectRepository.findByClient_id(client.getId());
+            if (clientId.isEmpty())
+                return apiResponseService.notFoundResponse();
 
+            ClientStatusConnect clientStatusConnect = clientId.get();
+            clientStatusConnect.setStatusId(appealDto.getClientStatusId().toString());
+            clientStatusConnect.setToplam(appealDto.getStatusEnum().equals("COLLECTION"));
+            clientStatusConnectRepository.save(clientStatusConnect);
 
-            Optional<ClientStatusConnect> byClient_id = clientStatusConnectRepository.findByClient_id(client.getId());
-
-            ClientStatusConnect clientStatusConnect = byClient_id.get();
-            if (appealDto.getStatusEnum().equals("COLLECTION")) {
-                Toplam getToplam = toplamRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get toplam"));
-                clientStatusConnect.setStatusId(getToplam.getId().toString());
-                clientStatusConnect.setToplam(true);
-            } else {
-                clientStatusConnect.setToplam(false);
-                clientStatusConnect.setStatusId(appealDto.getClientStatusId().toString());
-            }
-            ClientStatusConnect saveClientStatusConnect = clientStatusConnectRepository.save(clientStatusConnect);
-
-            // statistika murojaat voronkasi uchun murojaatni saqlab olish
-            ClientAppeal clientAppeal = null;
-            Optional<ClientAppeal> optionalClientAppeal = clientAppealRepository.findByClient_idAndStatusEnum(client.getId(),
-                    ClientStatusEnum.valueOf(appealDto.getStatusEnum()));
+            Optional<ClientAppeal> optionalClientAppeal = clientAppealRepository.findByClient_idAndStatusEnum(client.getId(), ClientStatusEnum.valueOf(appealDto.getStatusEnum()));
             if (optionalClientAppeal.isPresent()) {
-                clientAppeal = optionalClientAppeal.get();
-                clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
+                ClientAppeal clientAppeal = optionalClientAppeal.get();
+                clientAppeal.setStatusId(appealDto.getClientStatusId().toString());
+                clientAppealRepository.save(clientAppeal);
             } else {
-                clientAppeal = new ClientAppeal();
+                ClientAppeal clientAppeal = new ClientAppeal();
                 clientAppeal.setClient(client);
-                if (appealDto.getStatusEnum().equals("COLLECTION")) {
-                    clientAppeal.setStatusEnum(ClientStatusEnum.COLLECTION);
-                } else {
-                    ClientStatus clientStatus = clientStatusRepository.findById(appealDto.getClientStatusId()).orElseThrow(() -> new ResourceNotFoundException("get client status"));
-                    clientAppeal.setStatusEnum(clientStatus.getClientStatusEnum());
-                }
-                clientAppeal.setStatusId(saveClientStatusConnect.getStatusId());
+                clientAppeal.setStatusEnum(ClientStatusEnum.valueOf(appealDto.getStatusEnum()));
+                clientAppeal.setStatusId(appealDto.getClientStatusId().toString());
+                clientAppealRepository.save(clientAppeal);
             }
-            clientAppealRepository.save(clientAppeal);
             return apiResponseService.updatedResponse();
         } catch (Exception e) {
             return apiResponseService.errorResponse();
@@ -251,7 +243,7 @@ public class AppealService {
     }
 
 
-    public ApiResponse getAppealListAll(Integer typeId, int page, int size){
+    public ApiResponse getAppealListAll(Integer typeId, int page, int size) {
         try {
             Page<ClientStatusConnect> all = clientStatusConnectRepository.findAll(PageRequest.of(page, size));
 
@@ -267,7 +259,7 @@ public class AppealService {
         }
     }
 
-    public ClientStatusConnectDto makeClient(ClientStatusConnect client){
+    public ClientStatusConnectDto makeClient(ClientStatusConnect client) {
         return new ClientStatusConnectDto(
                 client.getClient(),
                 (client.isToplam() ? null : clientStatusRepository.findById(Integer.valueOf(client.getStatusId())).orElseThrow(() -> new ResourceNotFoundException("get Status"))),
@@ -275,6 +267,127 @@ public class AppealService {
                 client.getId(),
                 client.isToplam()
         );
+    }
+
+    public ApiResponse getAppealList() {
+        try {
+            List<LeadDto> leadDtos = new ArrayList<>();
+            List<SectionDto> sectionDtos = new ArrayList<>();
+
+            List<Object> objects = clientAppealRepository.getClientAppealsListByAppealType("REQUEST");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = client[5].toString();
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            objects = clientAppealRepository.getClientAppealsListByOtherAppealType("REQUEST");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                sectionDtos.add(new SectionDto(statusId, statusName, new ArrayList<>()));
+            }
+            leadDtos.add(new LeadDto("REQUEST", sectionDtos));
+
+            sectionDtos = new ArrayList<>();
+            objects = clientAppealRepository.getClientAppealsListByAppealType("WAITING");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = client[5].toString();
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            objects = clientAppealRepository.getClientAppealsListByOtherAppealType("WAITING");
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                sectionDtos.add(new SectionDto(statusId, statusName, new ArrayList<>()));
+            }
+            leadDtos.add(new LeadDto("WAITING", sectionDtos));
+
+            sectionDtos = new ArrayList<>();
+            objects = clientAppealRepository.getClientAppealsListByAppealToplam();
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                String clientName = client[2].toString();
+                String clientPhone = client[3].toString();
+                UUID clientId = UUID.fromString(client[4].toString());
+                String statusEnum = "COLLECTION";
+                boolean isHave = false;
+
+                for (SectionDto sectionDto : sectionDtos) {
+                    if (sectionDto.getId().equals(statusId)) {
+                        List<AppealDto> oldAppealDtos = sectionDto.getAppealDtos();
+                        List<AppealDto> appealDtos = new ArrayList<>();
+                        appealDtos.add(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId));
+                        appealDtos.addAll(oldAppealDtos);
+                        sectionDto.setAppealDtos(appealDtos);
+                        isHave = true;
+                        break;
+                    }
+                }
+
+                if (!isHave) {
+                    sectionDtos.add(new SectionDto(statusId, statusName, Collections.singletonList(new AppealDto(clientId, clientName, clientPhone, statusName, statusEnum, statusId))));
+                }
+            }
+            objects = clientAppealRepository.getClientAppealsListByAppealOtherToplam();
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                Integer statusId = Integer.valueOf(client[0].toString());
+                String statusName = client[1].toString();
+                sectionDtos.add(new SectionDto(statusId, statusName, new ArrayList<>()));
+            }
+            leadDtos.add(new LeadDto("COLLECTION", sectionDtos));
+
+            return apiResponseService.getResponse(leadDtos);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 
 

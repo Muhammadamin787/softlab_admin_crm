@@ -75,4 +75,10 @@ public class TeacherController {
         ApiResponse apiResponse = teacherService.ToArchiveStatus(teacherId, status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @GetMapping("/search")
+    public HttpEntity<?> searchTeacher(@RequestParam(value = "name") String name){
+        ApiResponse apiResponse = teacherService.searchTeacher(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }

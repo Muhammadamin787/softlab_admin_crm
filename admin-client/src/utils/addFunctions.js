@@ -8,6 +8,18 @@ export function formatSelectList(list) {
     } else return []
 }
 
+export function sortByEnumType(list, enumType) {
+    if (list && list.length > 0) {
+        let newSelectList = []
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].clientStatusEnum === enumType) {
+                newSelectList.push({value: list[i].id, label: list[i].name})
+            }
+        }
+        return newSelectList;
+    } else return []
+}
+
 export function formatPhoneNumber(phoneNumberString) {
     if (phoneNumberString && phoneNumberString.length > 8) {
         let phoneNumber = phoneNumberString.substring(0, 9)
@@ -19,6 +31,24 @@ export function formatPhoneNumber(phoneNumberString) {
     }
 
     return null
+}
+
+export function sortList(list) {
+    let items = [...list]
+    items.sort(function (a, b) {
+        var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+
+        // names must be equal
+        return 0;
+    });
+    return items;
 }
 
 export function formatParentPhone(parrentsPhoneString) {
