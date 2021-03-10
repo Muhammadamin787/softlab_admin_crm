@@ -584,4 +584,24 @@ public class StudentService {
     }
 
 
+    public ApiResponse deleteIndividualPrice(UUID studentId, Integer groupId) {
+        try {
+            Optional<Student> optional = studentRepository.findById(studentId);
+            if (optional.isPresent()) {
+                Student student = optional.get();
+                for (StudentGroup studentGroup : student.getStudentGroup()) {
+                    if (studentGroup.getGroup().getId() == groupId) {
+                        studentGroup.setIndividualPrice(0.0);
+                        studentGroup.setIsPercent(null);
+                        studentGroupRepository.save(studentGroup);
+                        return apiResponseService.saveResponse();
+                    }
+                    return apiResponseService.existResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
 }
