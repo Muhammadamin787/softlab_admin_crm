@@ -1519,7 +1519,7 @@ export const saveAppealAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        dispatch(getAppealListAllAction({page: 0, size: 20}))
+        dispatch(getAppealListAllAction())
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {

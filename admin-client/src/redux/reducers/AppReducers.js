@@ -70,6 +70,7 @@ const initState = {
 
 const reducers = {
     [types.REQUEST_START](state) {
+        state.loading = true;
     },
     [types.REQUEST_ERROR](state) {
     },
@@ -429,6 +430,7 @@ const reducers = {
     // START APPEAL REDUCERS
     [types.REQUEST_SAVE_APPEAL_SUCCESS](state, payload) {
         state.showModal = false
+        state.loading = false
         state.showChangeModal = false
     },
     [types.REQUEST_GET_APPEAL_SUCCESS](state, payload) {
