@@ -111,11 +111,8 @@ class Card extends Component {
                 v.clientStatusId = e.target.id
                 v.statusEnum = collection
                 dispatch(changeAppalTypeAction(v))
-
             }
         }
-
-        console.log(toplamList)
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>

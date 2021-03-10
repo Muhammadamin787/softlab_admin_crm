@@ -103,14 +103,14 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
 
 
     @Query(nativeQuery = true, value = "select " +
-            "    (select count(*) from client_appeal ca where ca.status_enum='REQUEST') as sorov_soni, " +
-            "    (select count(*) from client_appeal ca where ca.status_enum='WAITING' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and (csc.toplam=false and cast(csc.status_id as integer)=(select cs.id from client_status cs where  cast(csc.status_id as integer)=cs.id and cs.client_status_enum<>'REQUEST') or csc.toplam=true and cast(csc.status_id as integer)=(select tl.id  from toplam tl where cast(csc.status_id as integer)=tl.id)))) as kutish_soni,    (select count(*) from client_appeal ca where ca.status_enum='COLLECTION' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and csc.toplam=true)) as toplam_soni, " +
-            "    (select count(*) from student) as guruh_student, " +
-            "    (select count(*) from student inner join student_payment sp on student.id = sp.student_id group by student_id limit 1) as tolov, " +
-            "    (select count(*) from client_status cs where cs.id=(select cast(c.status_id as integer) from client_status_connect c where cs.id = cast(c.status_id as integer) and c.toplam=false group by c.status_id limit 1)) as faol_lid, " +
-            "    (select count(*) from student st where st.id = (select ssg.student_id from student_student_group ssg where st.id=ssg.student_id and ssg.student_group_id =(select sg.id from student_group sg where sg.id=ssg.student_group_id and sg.student_group_status='ACTIVE' group by sg.id limit 1) group by ssg.student_id limit 1)) as active_student, " +
-            "    (select count(*) from groups where start_date<=now() and finish_date>=now()) as active_group, " +
-            "    (select count(*) from student where balans<0) as debtor_students")
+            "    COALESCE((select count(*) from client_appeal ca where ca.status_enum='REQUEST'),0) as sorov_soni, " +
+            "    COALESCE((select count(*) from client_appeal ca where ca.status_enum='WAITING' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and (csc.toplam=false and cast(csc.status_id as integer)=(select cs.id from client_status cs where  cast(csc.status_id as integer)=cs.id and cs.client_status_enum<>'REQUEST') or csc.toplam=true and cast(csc.status_id as integer)=(select tl.id  from toplam tl where cast(csc.status_id as integer)=tl.id)))),0) as kutish_soni,    COALESCE((select count(*) from client_appeal ca where ca.status_enum='COLLECTION' and ca.client_id=(select csc.client_id from client_status_connect csc where ca.client_id=csc.client_id and csc.toplam=true)),0) as toplam_soni, " +
+            "    COALESCE((select count(*) from student),0) as guruh_student, " +
+            "    COALESCE((select count(*) from student inner join student_payment sp on student.id = sp.student_id group by student_id limit 1),0) as tolov, " +
+            "    COALESCE((select count(*) from client_status cs where cs.id=(select cast(c.status_id as integer) from client_status_connect c where cs.id = cast(c.status_id as integer) and c.toplam=false group by c.status_id limit 1)),0) as faol_lid, " +
+            "    COALESCE((select count(*) from student st where st.id = (select ssg.student_id from student_student_group ssg where st.id=ssg.student_id and ssg.student_group_id =(select sg.id from student_group sg where sg.id=ssg.student_group_id and sg.student_group_status='ACTIVE' group by sg.id limit 1) group by ssg.student_id limit 1)),0) as active_student, " +
+            "    COALESCE((select count(*) from groups where start_date<=now() and finish_date>=now()),0) as active_group, " +
+            "    COALESCE((select count(*) from student where balans<0),0) as debtor_students")
     List<Object> getStatForFunnel();
 
     @Query(nativeQuery = true, value = "select to_char(cast(st.created_at as date), 'dd-mm-yyyy') as vaqt, count(*) as barcha, sum(case when st.id=(select ssg.student_id from student_student_group ssg where ssg.student_id=st.id limit 1) then 1 else 0 end)  as faol from student st where st.created_at is not null group by vaqt order by vaqt")
@@ -122,5 +122,7 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Query(nativeQuery = true, value = "select count(*), u.gender from student st inner join users u on st.user_id=u.id where u.gender is not null group by u.gender")
     List<Object[]> getStudentSortByGender();
 
+    @Query(nativeQuery = true, value = "select r.name, sum(case when r.id=(select cl.reklama_id from client cl where cl.reklama_id=r.id limit 1) then (select count(*)  from client cl where cl.reklama_id=r.id) else 0 end) as soni from reklama r  group by r.name")
+    List<Object> getReklamaSortByClient();
 
 }
