@@ -21,6 +21,24 @@ export function formatPhoneNumber(phoneNumberString) {
     return null
 }
 
+export function sortList(list) {
+    let items = [...list]
+    items.sort(function (a, b) {
+        var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+
+        // names must be equal
+        return 0;
+    });
+    return items;
+}
+
 export function formatParentPhone(parrentsPhoneString) {
     var cleaned = ('' + parrentsPhoneString).replace(/\D/g, '')
     var match = cleaned.match(/^(\d{2})(\d{3})(\d{2})(\d{2})$/)
