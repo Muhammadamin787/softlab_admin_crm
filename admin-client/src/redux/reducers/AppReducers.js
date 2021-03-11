@@ -80,11 +80,6 @@ const reducers = {
         state.deleteModal = false
         state.changeToArchiveModal = false
         state.changeToActiveModal = false
-        state.toArchiveModal = false
-        state.toActiveModal = false
-        state.archiveModal = false
-        state.activeModal = false
-
     },
     [types.REQUEST_GET_INFO_IN_EXCEL](state, payload) {
         state.selectExcel = payload.payload.object.object

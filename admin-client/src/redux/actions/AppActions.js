@@ -121,6 +121,8 @@ import {
     giveSalaryApi,
     deleteStudentPaymentApi,
     getTeacherSalaryApi,
+    getStudentPaymentListApi,
+    getStudentPaymentCashbacksApi,
     getTeacherSalaryAppApi,
     deleteTeacherSalaryApi,
     giveTeacherSalaryApi,
@@ -134,16 +136,12 @@ import {
     getFinanceStudentApi,
     getFinanceTeacherApi,
     getDailyScheduleList,
+    getTeacherPaymentListByDateApi,
     getDashboardStatApi,
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
     getByCourseApi,
-    ToArchiveStatusApi,
-    ToActiveStatusApi,
-    getTeacherPaymentListByDateApi,
-    ToChangeStatusApi,
-    ChangeStatusApi, changeStatusApi, changeTeacherStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1257,56 +1255,6 @@ export const deleteStudentAction = (data) => (dispatch) => {
         })
     })
 }
-
-export const toChangeStatusAction = (data) => (dispatch) => {
-    console.log(45);
-    dispatch({
-        api: changeStatusApi,
-        types: [
-            types.REQUEST_START,
-            "",
-            types.REQUEST_ERROR
-        ],
-        data: data
-    }).then((res) => {
-        dispatch({
-            type: "updateState",
-            payload: {
-                toArchiveModal: false,
-                toActiveModal:false
-            }
-        })
-        toast.success(res.payload.message)
-        dispatch(getStudentsAction({page: 0, size: 20, type: data.status}))
-    }).catch((err) => {
-        toast.error("Xatolik!")
-    })
-}
-export const toChangeTeacherStatusAction = (data) => (dispatch) => {
-    dispatch({
-        api: changeTeacherStatusApi,
-        types: [
-            types.REQUEST_START,
-            "",
-            types.REQUEST_ERROR
-        ],
-        data: data
-    }).then((res) => {
-        dispatch({
-            type: "updateState",
-            payload: {
-                archiveModal: false,
-                activeModal:false
-            }
-        })
-        toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status}))
-    }).catch((err) => {
-        toast.error("Xatolik!")
-    })
-}
-
-
 export const studentAddGroupAction = (data) => (dispatch) => {
     dispatch({
         api: studentAddGroup,
@@ -1571,9 +1519,7 @@ export const saveAppealAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res && res.payload && res.payload.message)
-            // toast.success(res.payload.message)
-            dispatch(getAppealListAllAction({page: 0, size: 20}))
+        dispatch(getAppealListAllAction())
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1586,10 +1532,9 @@ export const changeAppalTypeAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res && res.payload && res.payload.message) {
-            // toast.success(res.payload.message)
-            dispatch(getAppealListByStatusTypeAction({page: 0, size: 20}))
-        }
+        dispatch(getAppealListAllAction())
+    }).catch((err) => {
+        dispatch(getAppealListAllAction())
     })
 }
 export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
@@ -1853,6 +1798,7 @@ export const getDailySchedule = (payload) => (dispatch) => {
         data: payload
     })
 }
+
 export const getWeeklySchedule = () => (dispatch) => {
     dispatch({
         api: getWeeklyScheduleList,
@@ -1884,12 +1830,11 @@ export const getDashboardStudentStatAction = () => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS,
-            types.REQUEST_ERROR,
+            types.REQUEST_ERROR
         ]
     })
 }
 export const getGroupsByCourseAction = (data) => (dispatch) => {
-    console.log(data)
     dispatch({
         api: getByCourseApi,
         types: [

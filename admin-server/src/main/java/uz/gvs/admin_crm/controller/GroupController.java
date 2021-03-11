@@ -43,7 +43,6 @@ public class GroupController {
         ApiResponse apiResponse = groupService.getGroupsByWeekDayForSchedule(week);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
     @GetMapping("/schedule")
     public HttpEntity<?> getAllGroups() {
         ApiResponse apiResponse = groupService.getAllGroups();
@@ -55,7 +54,6 @@ public class GroupController {
         ApiResponse apiResponse = groupService.getGroupsForSelect();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
     @GetMapping("/search")
     public HttpEntity<?> searchGroup(@RequestParam(value = "name") String name) {
         ApiResponse apiResponse = groupService.searchGroup(name);
@@ -79,7 +77,6 @@ public class GroupController {
         ApiResponse apiResponse = groupService.changeToArchiveStatus(groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
     @PatchMapping("/changeToActiveStatus")
     public HttpEntity<?> changeToActiveStatus(@RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = groupService.changeToActiveStatus(groupDto);

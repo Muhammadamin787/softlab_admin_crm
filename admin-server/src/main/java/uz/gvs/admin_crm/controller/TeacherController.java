@@ -38,9 +38,8 @@ public class TeacherController {
     @GetMapping
     public HttpEntity<?> getTeacherList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                        @RequestParam(value = "status", defaultValue = "DEFAULT") String status,
                                         @CurrentUser User user) {
-        ApiResponse apiResponse = teacherService.getTeacherList(page, size,status);
+        ApiResponse apiResponse = teacherService.getTeacherList(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
@@ -66,14 +65,6 @@ public class TeacherController {
     public HttpEntity<?> deleteTeacher(@PathVariable UUID id) {
         ApiResponse apiResponse = teacherService.deleteTeacher(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
-    }
-
-    //// Change Status
-    @GetMapping("/changeStatus")
-    public HttpEntity<?> ToArchiveStatus(@RequestParam(value = "teacherId") UUID teacherId,
-                                         @RequestParam(value = "status") String status) {
-        ApiResponse apiResponse = teacherService.ToArchiveStatus(teacherId, status);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @GetMapping("/search")
