@@ -1550,8 +1550,6 @@ export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
         if (res && res.payload && res.payload.message)
             toast.success(res.payload.message)
         dispatch(getOneToplamAction({id: data.toplamId}))
-
-
     })
 }
 export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
