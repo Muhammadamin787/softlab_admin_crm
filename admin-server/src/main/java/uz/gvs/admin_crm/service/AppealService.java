@@ -234,6 +234,32 @@ public class AppealService {
         }
     }
 
+    public ApiResponse getOneAppealForEdit(UUID id) {
+        try {
+            List<Object> objects = clientStatusConnectRepository.getClientStatusConnectForEdit(id);
+            for (Object obj : objects) {
+                Object[] client = (Object[]) obj;
+                UUID clientId = UUID.fromString(client[0].toString());
+                String clientFullName = client[1].toString();
+                String clientPhone = client[2].toString();
+                String gender = client[3].toString();
+                Integer age = Integer.valueOf(client[4].toString());
+                String izoh = client[5].toString();
+                Integer regionId = Integer.valueOf(client[6].toString());
+                String regionName = client[7].toString();
+                Integer reklamaId = Integer.valueOf(client[8].toString());
+                String reklamaName = client[9].toString();
+                String statusName = client[10].toString();
+                Integer statusId = Integer.valueOf(client[11].toString());
+                String statusEnum = client[12].toString();
+                return apiResponseService.getResponse(new AppealDto(clientId, clientFullName, clientPhone, gender, izoh, regionId, reklamaId, age, statusEnum, statusId, statusName, reklamaName, regionName));
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
+    }
+
     public ApiResponse deleteAppeal(UUID id) {
         try {
             return apiResponseService.deleteResponse();

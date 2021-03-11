@@ -141,7 +141,7 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi,
+    getByCourseApi, getOneAppealForEditApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1580,6 +1580,17 @@ export const getOneAppeal = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getOneAppealForEdit = (data) => (dispatch) => {
+    dispatch({
+        api: getOneAppealForEditApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data

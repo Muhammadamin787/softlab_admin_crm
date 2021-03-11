@@ -1,4 +1,4 @@
-import {Component, useState} from "react";
+import React, {Component, useState} from "react";
 import "./Card.css";
 
 import {
@@ -17,7 +17,7 @@ import AdminLayout from "../../component/AdminLayout";
 import {
     changeAppalTypeAction,
     getAppealListAllAction, getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
-    getClientStatusListAction, getRegionsAction, getReklamaAction,
+    getClientStatusListAction, getOneAppeal, getOneAppealForEdit, getRegionsAction, getReklamaAction,
     getToplamListForSelectAction,
     saveAppealAction
 } from "../../redux/actions/AppActions";
@@ -52,11 +52,17 @@ class Card extends Component {
         dropdownOpen: true,
         curDropdownID: ''
     }
+    isOpen = (id) => {
+        return this.state.curDropdownID === id
+    }
+    dropdownToggle = (item) => {
+        this.setState({curDropdownID: item})
+    }
 
     render() {
         const {
             appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
-            reklamas, selectItems, showChangeModal, toplamList, loading
+            reklamas, selectItems, showChangeModal, toplamList, loading, currentItem
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
@@ -68,6 +74,18 @@ class Card extends Component {
                     showModal: !showModal
                 }
             })
+        }
+        const openEditModal = (item) => {
+            if (item.length > 0) {
+                dispatch(getOneAppealForEdit({id: item}))
+            } else {
+                dispatch({
+                    type: "updateState",
+                    payload: {
+                        showModal: false
+                    }
+                })
+            }
         }
 
         const setClientStatus = (e, v) => {
@@ -91,7 +109,6 @@ class Card extends Component {
         const allowDrop = (e) => {
             e.preventDefault();
         }
-
         const drag = (e) => {
             this.setState({object: e.target.id})
             this.setState({enumType: e.target.offsetParent.id})
@@ -119,12 +136,6 @@ class Card extends Component {
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
-        const isOpen = (id) => {
-            return curDropdownID === id
-        }
-        const dropdownToggle = (item) => {
-            this.setState({curDropdownID: item})
-        }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
@@ -149,7 +160,6 @@ class Card extends Component {
                                             <hr/>
                                             {section.appealDtos ? section.appealDtos.map(appeal =>
                                                 <div className={"element"} draggable={true}
-                                                    // onDrop={(e) => drop(e, item.id)}
                                                      onDragStart={drag}
                                                      id={appeal.id}>
                                                     <Row>
@@ -162,16 +172,22 @@ class Card extends Component {
                                                             <Dropdown
                                                                 className="d-inline"
                                                                 id={"show" + appeal.id} onMouseOver={() => {
-                                                                dropdownToggle('show' + appeal.id)
+                                                                this.dropdownToggle('show' + appeal.id)
                                                             }} onMouseLeave={() => {
-                                                                dropdownToggle('')
-                                                            }} isOpen={isOpen('show' + appeal.id)}>
+                                                                this.dropdownToggle('')
+                                                            }} isOpen={this.isOpen('show' + appeal.id)}
+                                                                toggle={() => {
+                                                                    this.dropdownToggle('show' + appeal.id)
+                                                                }}>
                                                                 <DropdownToggle className={"btn btn-light text-center"}
                                                                                 size={"sm"}>:</DropdownToggle>
                                                                 <DropdownMenu>
-                                                                    <DropdownItem>Talaba qo'shish</DropdownItem>
-                                                                    <DropdownItem>Tahrirlash</DropdownItem>
-                                                                    <DropdownItem>O'chirish</DropdownItem>
+                                                                    <DropdownItem onClick={() => openModal(item.id)}>Talaba
+                                                                        qo'shish</DropdownItem>
+                                                                    <DropdownItem
+                                                                        onClick={() => openEditModal(appeal.id)}>Tahrirlash</DropdownItem>
+                                                                    <DropdownItem
+                                                                        onClick={() => openModal(item.id)}>O'chirish</DropdownItem>
                                                                 </DropdownMenu>
                                                             </Dropdown>
                                                         </Col>
@@ -196,13 +212,13 @@ class Card extends Component {
                             <Row>
                                 <Col>
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.fullName : ""}
+                                        defaultValue={currentItem ? currentItem.fullName : ""}
                                         type={"text"}
                                         errorMessage={"Ismni yozish majburiy"}
                                         label={"FISH"} name={"fullName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                        defaultValue={currentItem ? currentItem.phoneNumber : ""}
                                         type={"text"}
                                         errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
                                         validate={{
@@ -215,6 +231,10 @@ class Card extends Component {
                                         placeholer={"99 1234567"} required/>
                                     Murojaat bo'limi
                                     <Select
+                                        defaultValue={currentItem && {
+                                            value: currentItem.clientStatusId,
+                                            label: (currentItem.statusName)
+                                        }}
                                         placeholder="Bo'limni tanlang..."
                                         name="groupId"
                                         isSearchable={true}
@@ -225,7 +245,7 @@ class Card extends Component {
                                     />
                                     Jinsi
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject ? currentObject.gender : ""}
+                                                  defaultValue={currentItem ? currentItem.gender : ""}
                                                   required
                                                   className={""}
                                                   errorMessage="Birini tanlang!">
@@ -242,11 +262,15 @@ class Card extends Component {
                                 <Col>
                                     <AvField
                                         type={"number"}
-                                        defaultValue={currentObject && currentObject.age}
+                                        defaultValue={currentItem && currentItem.age}
                                         label={"Yoshi"} name={"age"} className={"form-control"}
                                     />
                                     Hudud
                                     <Select
+                                        defaultValue={currentItem && {
+                                            value: currentItem.regionId,
+                                            label: (currentItem.regionName)
+                                        }}
                                         placeholder="Hududni tanlang..."
                                         name="regionId"
                                         isSearchable={true}
@@ -258,6 +282,10 @@ class Card extends Component {
                                     <br/>
                                     Reklama
                                     <Select
+                                        defaultValue={currentItem && {
+                                            value: currentItem.reklamaId,
+                                            label: (currentItem.reklamaName)
+                                        }}
                                         placeholder="Reklamani tanlang..."
                                         name="groupId"
                                         isSearchable={true}
@@ -267,14 +295,14 @@ class Card extends Component {
                                         classNamePrefix="select"
                                     />
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
+                                        value={currentItem ? currentItem.description : ""}
                                         label={"Izoh"} name={"description"} className={"form-control"}/>
                                 </Col>
                             </Row>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="secondary" onClick={openEditModal}>Bekor qilish</Button>
                             <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
@@ -288,6 +316,7 @@ class Card extends Component {
 
 export default connect(({
                             app: {
+                                currentItem,
                                 appealList, clientStatusList,
                                 toplamList,
                                 selectItems,
@@ -303,6 +332,7 @@ export default connect(({
                                 deleteModal
                             },
                         }) => ({
+        currentItem,
         appealList, clientStatusList,
         toplamList,
         selectItems,
