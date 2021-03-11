@@ -86,7 +86,6 @@ class Dashboard extends Component {
         } = this.props;
 
 
-
         const toggle = tab => {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
@@ -166,7 +165,6 @@ class Dashboard extends Component {
                                                 {dashboardStat[8].data}
                                             </h2>
                                             <h6>{dashboardStat[8].label}</h6>
-
                                         </hgroup>
                                     </div>
                                 </div>
@@ -373,7 +371,7 @@ class Dashboard extends Component {
                                                     {
                                                         this.state.weekDays.map((item2, i) =>
                                                             weeklySchedule ? weeklySchedule.map((item3, i) =>
-                                                                item3.weekdays ? item3.weekdays.map((item4,i) =>
+                                                                item3.weekdays ? item3.weekdays.map((item4, i) =>
                                                                     item4 === item2 ?
                                                                         item === item3.startTime ?
                                                                             <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
@@ -404,7 +402,7 @@ class Dashboard extends Component {
 
                                                                                 </div>
                                                                             </td>
-                                                                            :''
+                                                                            : ''
                                                                         : ''
                                                                 ) : ''
                                                             ) : ''
