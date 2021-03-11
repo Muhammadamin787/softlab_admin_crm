@@ -99,7 +99,7 @@ export const getReklamaForSelectApi = () => {
 }
 //START CLIENT STATUS
 export const getClientStatusListApi = () => {
-    return HttpClient.doGet(api.clientStatus + "/list")
+        return HttpClient.doGet(api.clientStatus + "/list")
 }
 export const saveClientStatusApi = (data) => {
     return HttpClient.doPost(api.clientStatus, data)
@@ -291,7 +291,7 @@ export const editStudentApi = (data) => {
 }
 export const getStudentsApi = (data) => {
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size + "&status=" + data.type : ""))
+        + "&size=" + data.size : ""))
 }
 export const getStudentByGroupApi = (data) => {
     return HttpClient.doGet(api.student + "/groupStudent/" + data)
@@ -310,12 +310,6 @@ export const getStudentPaymentApi = (data) => {
 }
 export const getStudentGroupsApi = (data) => {
     return HttpClient.doGet(api.studentPayment + "/studentGroup/" + data)
-}
-export const changeStatusApi = (data) => {
-    return HttpClient.doGet(api.student + "/changeStatus?studentId=" + data.studentId + "&status=" + data.status)
-}
-export const changeTeacherStatusApi = (data) => {
-    return HttpClient.doGet(api.teacher + "/changeStatus?teacherId=" + data.teacherId + "&status=" + data.status)
 }
 
 
@@ -363,7 +357,7 @@ export const editTeacherApi = (data) => {
 
 export const getTeachersApi = (data) => {
     return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size + "&status=" + data.type : ""))
+        + "&size=" + data.size : ""))
 }
 export const getTeachersForSelectApi = () => {
     return HttpClient.doGet(api.teacher + "/select")

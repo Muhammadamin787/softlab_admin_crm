@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.Toplam;
-import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +16,6 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     Page<Student> getDebtorStudents(Pageable pageable);
 
     List<Student> findAllByStudentGroup_Group_id(Integer studentGroup_group_id);
-
-    Page<Student> findAllByUser_status(UserStatusEnum user_status,Pageable pageable);
 
     boolean deleteByBalans(double balans);
 
