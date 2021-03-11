@@ -35,7 +35,7 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 class Teacher extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size,type: "DEFAULT"}))
+        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "DEFAULT"}))
 
     }
 
@@ -398,7 +398,9 @@ export default connect((
             attachmentId,
             teachers,
             readModal,
-            teacherDto
+            teacherDto,
+            archiveModal,
+            activeModal,
         },
     }) => ({
         page,
@@ -418,6 +420,9 @@ export default connect((
         attachmentId,
         readModal,
         teachers,
-        teacherDto
+        teacherDto,
+        archiveModal,
+        activeModal,
+
     })
 )(Teacher);

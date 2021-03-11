@@ -1853,6 +1853,16 @@ export const getDailySchedule = (payload) => (dispatch) => {
         data: payload
     })
 }
+export const getWeeklySchedule = () => (dispatch) => {
+    dispatch({
+        api: getWeeklyScheduleList,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_WEEKLY_SCHEDULE,
+            types.REQUEST_ERROR
+        ]
+    })
+}
 
 // END SCHEDULE
 // FINISH TEACHER SALARY
