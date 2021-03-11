@@ -1,7 +1,18 @@
-import {Component} from "react";
+import {Component, useState} from "react";
 import "./Card.css";
 
-import {Button, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Row} from "reactstrap";
+import {
+    Button,
+    Col,
+    Container, Dropdown, DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row
+} from "reactstrap";
 import AdminLayout from "../../component/AdminLayout";
 import {
     changeAppalTypeAction,
@@ -38,6 +49,8 @@ class Card extends Component {
         changeLocationType: "",
         currentPage: '',
         enumType: '',
+        dropdownOpen: true,
+        curDropdownID: ''
     }
 
     render() {
@@ -45,10 +58,9 @@ class Card extends Component {
             appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
             reklamas, selectItems, showChangeModal, toplamList, loading
         } = this.props
-        const {currentObject, reklamaId, regionId, statusTypeId, currentPage} = this.state
+        const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
         const openModal = (item) => {
-            console.log(item);
             this.setState({currentPage: item})
             dispatch({
                 type: "updateState",
@@ -73,7 +85,6 @@ class Card extends Component {
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             v.statusEnum = currentPage
-            console.log(v);
             dispatch(saveAppealAction(v));
         }
 
@@ -108,6 +119,13 @@ class Card extends Component {
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
+        const isOpen = (id) => {
+            return curDropdownID === id
+        }
+        const dropdownToggle = (item) => {
+            this.setState({curDropdownID: item})
+        }
+
         return (
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"container p-1"}>
@@ -136,6 +154,25 @@ class Card extends Component {
                                                      id={appeal.id}>
                                                     <Link
                                                         to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
+                                                    <Dropdown
+                                                        className="d-inline"
+                                                        id={"show" + appeal.id} onMouseOver={() => {
+                                                        dropdownToggle('show' + appeal.id)
+                                                    }} onMouseLeave={() => {
+                                                        dropdownToggle('')
+                                                    }} isOpen={isOpen('show' + appeal.id)}>
+                                                        <DropdownToggle caret></DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem header>Header</DropdownItem>
+                                                            <DropdownItem>Some Action</DropdownItem>
+                                                            <DropdownItem text>Dropdown Item Text</DropdownItem>
+                                                            <DropdownItem disabled>Action (disabled)</DropdownItem>
+                                                            <DropdownItem divider/>
+                                                            <DropdownItem>Foo Action</DropdownItem>
+                                                            <DropdownItem>Bar Action</DropdownItem>
+                                                            <DropdownItem>Quo Action</DropdownItem>
+                                                        </DropdownMenu>
+                                                    </Dropdown>
                                                 </div>
                                             ) : ''}
                                         </div>
