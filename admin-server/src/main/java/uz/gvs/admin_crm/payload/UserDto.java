@@ -20,16 +20,27 @@ import java.util.UUID;
 public class UserDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String fullName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int age;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Region region;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer regionId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String gender;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Attachment avatar;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String birthDate;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Role> roles;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Permission> permissions;
 
     public UserDto(String fullName, String phoneNumber, String description, int regionId, String gender, String birthDate) {

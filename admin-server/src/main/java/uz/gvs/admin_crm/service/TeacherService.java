@@ -78,7 +78,6 @@ public class TeacherService {
     }
 
     public ApiResponse getTeacherList(int page, int size) {
-        Sort sort;
         Page<Teacher> all = teacherRepository.findAll(PageRequest.of(page, size));
         return apiResponseService.getResponse(
                 new PageableDto(
