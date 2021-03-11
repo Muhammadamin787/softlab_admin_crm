@@ -152,27 +152,30 @@ class Card extends Component {
                                                     // onDrop={(e) => drop(e, item.id)}
                                                      onDragStart={drag}
                                                      id={appeal.id}>
-                                                    <Link
-                                                        to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
-                                                    <Dropdown
-                                                        className="d-inline"
-                                                        id={"show" + appeal.id} onMouseOver={() => {
-                                                        dropdownToggle('show' + appeal.id)
-                                                    }} onMouseLeave={() => {
-                                                        dropdownToggle('')
-                                                    }} isOpen={isOpen('show' + appeal.id)}>
-                                                        <DropdownToggle caret></DropdownToggle>
-                                                        <DropdownMenu>
-                                                            <DropdownItem header>Header</DropdownItem>
-                                                            <DropdownItem>Some Action</DropdownItem>
-                                                            <DropdownItem text>Dropdown Item Text</DropdownItem>
-                                                            <DropdownItem disabled>Action (disabled)</DropdownItem>
-                                                            <DropdownItem divider/>
-                                                            <DropdownItem>Foo Action</DropdownItem>
-                                                            <DropdownItem>Bar Action</DropdownItem>
-                                                            <DropdownItem>Quo Action</DropdownItem>
-                                                        </DropdownMenu>
-                                                    </Dropdown>
+                                                    <Row>
+                                                        <Col md={"10"}>
+                                                            <Link className="small"
+                                                                  to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> /
+                                                            <span className="small">{appeal.phoneNumber}</span>
+                                                        </Col>
+                                                        <Col md={"2"}>
+                                                            <Dropdown
+                                                                className="d-inline"
+                                                                id={"show" + appeal.id} onMouseOver={() => {
+                                                                dropdownToggle('show' + appeal.id)
+                                                            }} onMouseLeave={() => {
+                                                                dropdownToggle('')
+                                                            }} isOpen={isOpen('show' + appeal.id)}>
+                                                                <DropdownToggle className={"btn btn-light text-center"}
+                                                                                size={"sm"}>:</DropdownToggle>
+                                                                <DropdownMenu>
+                                                                    <DropdownItem>Talaba qo'shish</DropdownItem>
+                                                                    <DropdownItem>Tahrirlash</DropdownItem>
+                                                                    <DropdownItem>O'chirish</DropdownItem>
+                                                                </DropdownMenu>
+                                                            </Dropdown>
+                                                        </Col>
+                                                    </Row>
                                                 </div>
                                             ) : ''}
                                         </div>
