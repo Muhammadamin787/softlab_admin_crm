@@ -439,7 +439,6 @@ public class StudentService {
         }
     }
 
-
     public ApiResponse getDebtorStudents(int page, int size) {
         Page<Student> all = studentRepository.getDebtorStudents(PageRequest.of(page, size));
         return apiResponseService.getResponse(
@@ -515,7 +514,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getPayments(int page, int size, String type) {
         try {

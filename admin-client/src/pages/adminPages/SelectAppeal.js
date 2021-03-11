@@ -172,7 +172,7 @@ class SelectAppeal extends Component {
                             && currentItem.clientStatusConnect.client.fullName
                             }
                         </h3>
-                        <Link to={"/admin/appeals"}
+                        <Link to={"/admin/card"}
                               className={"text-decoration-none"}>
                         <span
                             className={""}>Murojaatlar

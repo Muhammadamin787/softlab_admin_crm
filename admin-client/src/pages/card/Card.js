@@ -1,7 +1,18 @@
-import {Component} from "react";
+import {Component, useState} from "react";
 import "./Card.css";
 
-import {Button, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Row} from "reactstrap";
+import {
+    Button,
+    Col,
+    Container, Dropdown, DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Row
+} from "reactstrap";
 import AdminLayout from "../../component/AdminLayout";
 import {
     changeAppalTypeAction,
@@ -14,7 +25,8 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import Select from "react-select";
-import {formatSelectList} from "../../utils/addFunctions";
+import {formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
+import LoaderMini from "../../component/LoaderMini";
 
 class Card extends Component {
     componentDidMount() {
@@ -37,22 +49,19 @@ class Card extends Component {
         changeLocationType: "",
         currentPage: '',
         enumType: '',
+        dropdownOpen: true,
+        curDropdownID: ''
     }
 
     render() {
         const {
             appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
-            reklamas, selectItems, showChangeModal, toplamList
+            reklamas, selectItems, showChangeModal, toplamList, loading
         } = this.props
-        const {currentObject, reklamaId, regionId, statusTypeId, currentPage} = this.state
+        const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
-        const openModal = (item, collection) => {
-            if (collection) {
-                this.setState({currentPage: item})
-            } else {
-                this.setState({currentPage: ""})
-                this.setState({currentObject: item})
-            }
+        const openModal = (item) => {
+            this.setState({currentPage: item})
             dispatch({
                 type: "updateState",
                 payload: {
@@ -76,7 +85,6 @@ class Card extends Component {
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             v.statusEnum = currentPage
-            v.enumType = currentPage
             dispatch(saveAppealAction(v));
         }
 
@@ -107,30 +115,33 @@ class Card extends Component {
             v.id = data
             v.clientStatusId = statusId
             v.statusEnum = enumStatus;
-            console.log(v);
             dispatch(changeAppalTypeAction(v))
+            this.setState({currentObject: '', object: '', changeLocationType: ''})
+        }
+
+        const isOpen = (id) => {
+            return curDropdownID === id
+        }
+        const dropdownToggle = (item) => {
+            this.setState({curDropdownID: item})
         }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
-                <div className={"container bg-white p-5"}>
-                    <h3>Murojaatlar</h3>
-                    <hr/>
-                    <Container className={"pt-5"}>
-                        <Row>
-                            {appealList ? appealList.map(item =>
+                <div className={"container p-1"}>
+                    <h2>Murojaatlar</h2>
+                    <Container className={"py-3 bg-white px-5"}>
+                        <Row id={""}>
+                            {appealList && !loading && appealList.length > 0 ? appealList.map(item =>
                                 <Col id={item.title}>
                                     <h4>
-                                        {item.title}
-                                        {item.id === "COLLECTION" ?
-                                            "" :
-                                            <Button color={"primary"} className={"ml-5"}
-                                                    onClick={() => openModal(item.id, true)}>Qo'shish</Button>
-                                        }
-
+                                        {item.title === "COLLECTION" ? "To'plamlar" : item.title === "WAITING" ? "Kutish" : "So'rovlar"}
                                     </h4>
+                                    <button className={"btn btn-default btn-sm rounded-circle border-secondary"}
+                                            onClick={() => openModal(item.title)}>+
+                                    </button>
                                     <hr/>
-                                    {item.sectionDtos ? item.sectionDtos.map(section =>
+                                    {item.sectionDtos && item.sectionDtos.length > 0 ? sortList(item.sectionDtos).map(section =>
                                         <div className={"section"} onDrop={(e) => drop(e, item.id)}
                                              onDragOver={allowDrop}
                                              draggable={false} id={section.id + item.title}>
@@ -138,10 +149,33 @@ class Card extends Component {
                                             <hr/>
                                             {section.appealDtos ? section.appealDtos.map(appeal =>
                                                 <div className={"element"} draggable={true}
-                                                     onDrop={false} onDragStart={drag}
+                                                    // onDrop={(e) => drop(e, item.id)}
+                                                     onDragStart={drag}
                                                      id={appeal.id}>
-                                                    <Link
-                                                        to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> / {appeal.phoneNumber}
+                                                    <Row>
+                                                        <Col md={"10"}>
+                                                            <Link className="small"
+                                                                  to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> /
+                                                            <span className="small">{appeal.phoneNumber}</span>
+                                                        </Col>
+                                                        <Col md={"2"}>
+                                                            <Dropdown
+                                                                className="d-inline"
+                                                                id={"show" + appeal.id} onMouseOver={() => {
+                                                                dropdownToggle('show' + appeal.id)
+                                                            }} onMouseLeave={() => {
+                                                                dropdownToggle('')
+                                                            }} isOpen={isOpen('show' + appeal.id)}>
+                                                                <DropdownToggle className={"btn btn-light text-center"}
+                                                                                size={"sm"}>:</DropdownToggle>
+                                                                <DropdownMenu>
+                                                                    <DropdownItem>Talaba qo'shish</DropdownItem>
+                                                                    <DropdownItem>Tahrirlash</DropdownItem>
+                                                                    <DropdownItem>O'chirish</DropdownItem>
+                                                                </DropdownMenu>
+                                                            </Dropdown>
+                                                        </Col>
+                                                    </Row>
                                                 </div>
                                             ) : ''}
                                         </div>
@@ -184,7 +218,7 @@ class Card extends Component {
                                         placeholder="Bo'limni tanlang..."
                                         name="groupId"
                                         isSearchable={true}
-                                        options={clientStatusList && clientStatusList.length > 0 && formatSelectList(clientStatusList)}
+                                        options={clientStatusList && clientStatusList.length > 0 && sortByEnumType(clientStatusList, currentPage)}
                                         onChange={setClientStatus}
                                         className="basic-multi-select"
                                         classNamePrefix="select"

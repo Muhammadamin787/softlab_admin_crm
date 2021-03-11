@@ -1519,7 +1519,7 @@ export const saveAppealAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        dispatch(getAppealListAllAction({page: 0, size: 20}))
+        dispatch(getAppealListAllAction())
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1550,8 +1550,6 @@ export const changeAppalTypeByToplamAction = (data) => (dispatch) => {
         if (res && res.payload && res.payload.message)
             toast.success(res.payload.message)
         dispatch(getOneToplamAction({id: data.toplamId}))
-
-
     })
 }
 export const getAppealListByEnumTypeAction = (data) => (dispatch) => {
