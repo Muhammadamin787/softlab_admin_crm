@@ -10,6 +10,7 @@ import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
@@ -129,9 +130,9 @@ public class StudentService {
         );
     }
 
-    public ApiResponse getStudents(int page, int size) {
+    public ApiResponse getStudents(int page, int size,String type) {
         try {
-            Page<Student> all = studentRepository.findAll(PageRequest.of(page, size));
+            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
@@ -596,6 +597,7 @@ public class StudentService {
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
+
     }
 
 
@@ -617,6 +619,22 @@ public class StudentService {
             return apiResponseService.notFoundResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
+        }
+    }
+    public ApiResponse ToArchiveStatus(UUID studentId, String status) {
+        try {
+            Optional<Student> studentOptional = studentRepository.findById(studentId);
+            if (studentOptional.isPresent()) {
+                Student student = studentOptional.get();
+                student.getUser().setEnabled(!student.getUser().isEnabled());
+                student.getUser().setStatus(UserStatusEnum.valueOf(status));
+                studentRepository.save(student);
+                return apiResponseService.updatedResponse();
+            } else {
+                return apiResponseService.existResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.errorResponse();
         }
     }
 }

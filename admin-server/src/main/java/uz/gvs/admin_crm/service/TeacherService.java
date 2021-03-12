@@ -13,6 +13,7 @@ import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.RoleRepository;
@@ -77,8 +78,9 @@ public class TeacherService {
         return apiResponseService.getResponse(resSelects);
     }
 
-    public ApiResponse getTeacherList(int page, int size) {
-        Page<Teacher> all = teacherRepository.findAll(PageRequest.of(page, size));
+    public ApiResponse getTeacherList(int page, int size,String type) {
+        Sort sort;
+        Page<Teacher> all = teacherRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
         return apiResponseService.getResponse(
                 new PageableDto(
                         all.getTotalPages(),
@@ -182,6 +184,23 @@ public class TeacherService {
             return apiResponseService.getResponse(resSelects);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public ApiResponse ToArchiveStatus(UUID teacherId, String status) {
+        try {
+            Optional<Teacher> teacherOptional = teacherRepository.findById(teacherId);
+            if (teacherOptional.isPresent()) {
+                Teacher teacher = teacherOptional.get();
+                teacher.getUser().setEnabled(!teacher.getUser().isEnabled());
+                teacher.getUser().setStatus(UserStatusEnum.valueOf(status));
+                teacherRepository.save(teacher);
+                return apiResponseService.updatedResponse();
+            } else {
+                return apiResponseService.existResponse();
+            }
+        } catch (Exception exception) {
+            return apiResponseService.errorResponse();
         }
     }
 }
