@@ -6,11 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
+import uz.gvs.admin_crm.entity.enums.ClientEnum;
 import uz.gvs.admin_crm.entity.enums.ClientStatusEnum;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,10 @@ public class AppealService {
     ToplamRepository toplamRepository;
     @Autowired
     ClientStatusConnectRepository clientStatusConnectRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    StudentService studentService;
 
     public ApiResponse saveAppeal(AppealDto appealDto) {
         try {
@@ -40,13 +46,17 @@ public class AppealService {
                 return apiResponseService.notFoundResponse();
             // clientni saqlash
             Client client = new Client();
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
             client.setFullName(appealDto.getFullName());
-            client.setPhoneNumber(appealDto.getPhoneNumber());
-            if (appealDto.getAge() != null)
-                client.setAge(appealDto.getAge());
+            if (appealDto.getPhoneNumber().length() == 9)
+                client.setPhoneNumber(appealDto.getPhoneNumber());
+            else
+                return apiResponseService.notEnoughErrorResponse();
             client.setGender(Gender.valueOf(appealDto.getGender()));
             client.setDescription(appealDto.getDescription());
-
+            if (!appealDto.getBirthDate().isEmpty()) {
+                client.setBirthDate(formatter1.parse(appealDto.getBirthDate()));
+            }
             if (appealDto.getRegionId() != null && appealDto.getRegionId() > 0) {
                 Region region = regionRepository.findById(appealDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region"));
                 client.setRegion(region);
@@ -82,6 +92,33 @@ public class AppealService {
             return apiResponseService.saveResponse();
         } catch (Exception e) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse editAppeal(UUID id, AppealDto appealDto) {
+        try {
+            Optional<Client> optionalClient = clientRepository.findById(id);
+            if (optionalClient.isPresent()) {
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+                Client client = optionalClient.get();
+                if (appealDto.getPhoneNumber().length() == 9)
+                    client.setPhoneNumber(appealDto.getPhoneNumber());
+                else
+                    return apiResponseService.notEnoughErrorResponse();
+                client.setFullName(appealDto.getFullName());
+                if (!appealDto.getBirthDate().isEmpty())
+                    client.setBirthDate(formatter1.parse(appealDto.getBirthDate()));
+                client.setDescription(appealDto.getDescription());
+                if (appealDto.getRegion() != null)
+                    client.setRegion(regionRepository.findById(appealDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")));
+                if (appealDto.getReklama() != null)
+                    client.setReklama(reklamaRepository.findById(appealDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get reklama")));
+                clientRepository.save(client);
+                return apiResponseService.saveResponse();
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 
@@ -124,6 +161,36 @@ public class AppealService {
             return apiResponseService.updatedResponse();
         } catch (Exception e) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse makeStudent(UUID id) {
+        try {
+            Optional<Client> byId = clientRepository.findById(id);
+            if (byId.isPresent()) {
+                Client client = byId.get();
+                String studentId = studentRepository.getStudentId(client.getPhoneNumber());
+                if (studentId != null) {
+                    return apiResponseService.existResponse();
+                } else {
+                    ApiResponse apiResponse = studentService.saveStudent(
+                            new StudentDto(
+                                    client.getFullName(),
+                                    client.getPhoneNumber(),
+                                    client.getDescription(),
+                                    client.getRegion() != null ? client.getRegion().getId() : null,
+                                    client.getGender().toString(),
+                                    client.getBirthDate() != null ? client.getBirthDate().toString() : null, 0.0));
+                    if (apiResponse.isSuccess()) {
+                        client.setClientEnum(ClientEnum.STUDENT);
+                        clientRepository.save(client);
+                        return apiResponseService.saveResponse();
+                    } else return apiResponse;
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 
@@ -243,16 +310,16 @@ public class AppealService {
                 String clientFullName = client[1].toString();
                 String clientPhone = client[2].toString();
                 String gender = client[3].toString();
-                Integer age = Integer.valueOf(client[4].toString());
+                String birthDate = client[4].toString();
                 String izoh = client[5].toString();
-                Integer regionId = Integer.valueOf(client[6].toString());
+                Integer regionId = Integer.parseInt(client[6].toString()) == 0 ? null : Integer.valueOf(client[6].toString());
                 String regionName = client[7].toString();
-                Integer reklamaId = Integer.valueOf(client[8].toString());
+                Integer reklamaId = Integer.parseInt(client[8].toString()) == 0 ? null : Integer.valueOf(client[8].toString());
                 String reklamaName = client[9].toString();
                 String statusName = client[10].toString();
                 Integer statusId = Integer.valueOf(client[11].toString());
                 String statusEnum = client[12].toString();
-                return apiResponseService.getResponse(new AppealDto(clientId, clientFullName, clientPhone, gender, izoh, regionId, reklamaId, age, statusEnum, statusId, statusName, reklamaName, regionName));
+                return apiResponseService.getResponse(new AppealDto(clientId, clientFullName, clientPhone, gender, izoh, regionId, reklamaId, birthDate, statusEnum, statusId, statusName, reklamaName, regionName));
             }
             return apiResponseService.notFoundResponse();
         } catch (Exception e) {
@@ -262,6 +329,9 @@ public class AppealService {
 
     public ApiResponse deleteAppeal(UUID id) {
         try {
+            clientAppealRepository.deleteAllByClient_id(id);
+            clientStatusConnectRepository.deleteByClient_id(id);
+            clientRepository.deleteById(id);
             return apiResponseService.deleteResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();

@@ -8,6 +8,7 @@ import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.Toplam;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface StudentRepository extends JpaRepository<Student, UUID> {
@@ -23,4 +24,6 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
             " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
     List<Object> searchStudent(String objName);
 
+    @Query(nativeQuery = true, value="select cast(u.id as varchar) from users u  where u.phone_number=:telefon_raqam")
+    String getStudentId(String telefon_raqam);
 }

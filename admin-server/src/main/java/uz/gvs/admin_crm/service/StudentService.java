@@ -131,7 +131,7 @@ public class StudentService {
 
     public ApiResponse getStudents(int page, int size) {
         try {
-            Page<Student> all = studentRepository.findAll(PageRequest.of(page, size));
+            Page<Student> all = studentRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),

@@ -86,7 +86,13 @@ const reducers = {
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
-        state.selectDebtors = payload.payload.object.object
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.selectDebtors = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
 
 
@@ -439,7 +445,7 @@ const reducers = {
     [types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
         state.showModal = true
-        console.log(payload.payload.object,243);
+        console.log(payload.payload.object, 243);
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {

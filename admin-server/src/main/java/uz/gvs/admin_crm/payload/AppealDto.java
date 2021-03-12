@@ -33,7 +33,7 @@ public class AppealDto {
     private String statusEnum;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer clientStatusId;
-
+    private String birthDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reklama reklama;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -46,7 +46,7 @@ public class AppealDto {
     private String regionName;
 
 
-    public AppealDto(UUID id, String fullName, String phoneNumber, String gender, String description, Integer regionId, Integer reklamaId, Integer age, String statusEnum, Integer clientStatusId, String statusName, String reklamaName, String regionName) {
+    public AppealDto(UUID id, String fullName, String phoneNumber, String gender, String description, Integer regionId, Integer reklamaId, String birthDate, String statusEnum, Integer clientStatusId, String statusName, String reklamaName, String regionName) {
         this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
@@ -54,7 +54,7 @@ public class AppealDto {
         this.description = description;
         this.regionId = regionId;
         this.reklamaId = reklamaId;
-        this.age = age;
+        this.birthDate = birthDate;
         this.statusEnum = statusEnum;
         this.clientStatusId = clientStatusId;
         this.statusName = statusName;

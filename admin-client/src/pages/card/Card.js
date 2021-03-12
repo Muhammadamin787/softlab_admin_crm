@@ -18,15 +18,16 @@ import {
     changeAppalTypeAction,
     getAppealListAllAction, getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
     getClientStatusListAction, getOneAppeal, getOneAppealForEdit, getRegionsAction, getReklamaAction,
-    getToplamListForSelectAction,
+    getToplamListForSelectAction, makeStudentByAppealAction,
     saveAppealAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import Select from "react-select";
-import {formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
+import {formatPhoneNumber, formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
 import LoaderMini from "../../component/LoaderMini";
+import moment from "moment";
 
 class Card extends Component {
     componentDidMount() {
@@ -50,7 +51,8 @@ class Card extends Component {
         currentPage: '',
         enumType: '',
         dropdownOpen: true,
-        curDropdownID: ''
+        curDropdownID: '',
+        editModal: false
     }
     isOpen = (id) => {
         return this.state.curDropdownID === id
@@ -61,23 +63,26 @@ class Card extends Component {
 
     render() {
         const {
+            history,
             appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
             reklamas, selectItems, showChangeModal, toplamList, loading, currentItem
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
         const openModal = (item) => {
-            this.setState({currentPage: item})
+            this.setState({currentPage: item, editModal: false})
             dispatch({
                 type: "updateState",
                 payload: {
+                    currentItem: '',
                     showModal: !showModal
                 }
             })
         }
-        const openEditModal = (item) => {
+        const openEditModal = (item, statusEnum) => {
             if (item.length > 0) {
                 dispatch(getOneAppealForEdit({id: item}))
+                this.setState({currentPage: statusEnum, editModal: true})
             } else {
                 dispatch({
                     type: "updateState",
@@ -102,8 +107,19 @@ class Card extends Component {
             v.regionId = regionId
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
+            if (this.state.editModal) {
+                v.id = currentItem && currentItem.id
+                if (!reklamaId)
+                    v.reklamaId = currentItem.reklamaId
+                if (!regionId)
+                    v.regionId = currentItem.regionId
+            }
+            v.birthDate = v.birthDate ? moment(v.birthDate).format('DD/MM/YYYY').toString() : ""
             v.statusEnum = currentPage
             dispatch(saveAppealAction(v));
+        }
+        const makeStudent = (id) => {
+            dispatch(makeStudentByAppealAction({id: id, history: history}));
         }
 
         const allowDrop = (e) => {
@@ -119,20 +135,37 @@ class Card extends Component {
             let data = ''
             let statusId = ''
             let enumStatus = e.target.offsetParent.id
-            if (e.target.classList.contains("section")) {
-                data = e.dataTransfer.getData("text");
-                e.target.appendChild(document.getElementById(data));
-                statusId = e.target.id.substring(0, e.target.id.indexOf(enumStatus));
+            if (e.target.classList.contains('section') || e.target.classList.contains('element')) {
+                if (e.target.classList.contains("section")) {
+                    data = e.dataTransfer.getData("text");
+                    e.target.appendChild(document.getElementById(data));
+                    statusId = e.target.id.substring(0, e.target.id.indexOf(enumStatus));
+                } else {
+                    console.log(e);
+                    console.log(this.state.object);
+                    e.target.parentElement.appendChild(document.getElementById(this.state.object));
+                    data = this.state.object;
+                    statusId = e.target.parentElement.id.substring(0, e.target.parentElement.id.indexOf(enumStatus))
+                }
+                let v = {}
+                v.id = data
+                v.clientStatusId = statusId
+                v.statusEnum = enumStatus;
+                dispatch(changeAppalTypeAction(v))
             } else {
-                e.target.parentElement.appendChild(document.getElementById(this.state.object));
-                data = this.state.object;
-                statusId = e.target.parentElement.id.substring(0, e.target.parentElement.id.indexOf(enumStatus))
+                dispatch({
+                    type: 'updateState',
+                    payload: {
+                        loading: true
+                    }
+                })
+                dispatch({
+                    type: 'updateState',
+                    payload: {
+                        loading: false
+                    }
+                })
             }
-            let v = {}
-            v.id = data
-            v.clientStatusId = statusId
-            v.statusEnum = enumStatus;
-            dispatch(changeAppalTypeAction(v))
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
@@ -166,7 +199,8 @@ class Card extends Component {
                                                         <Col md={"10"}>
                                                             <Link className="small"
                                                                   to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> /
-                                                            <span className="small">{appeal.phoneNumber}</span>
+                                                            <span
+                                                                className="small"> {formatPhoneNumber(appeal.phoneNumber)}</span>
                                                         </Col>
                                                         <Col md={"2"}>
                                                             <Dropdown
@@ -182,10 +216,11 @@ class Card extends Component {
                                                                 <DropdownToggle className={"btn btn-light text-center"}
                                                                                 size={"sm"}>:</DropdownToggle>
                                                                 <DropdownMenu>
-                                                                    <DropdownItem onClick={() => openModal(item.id)}>Talaba
+                                                                    <DropdownItem
+                                                                        onClick={() => makeStudent(appeal.id)}>Talaba
                                                                         qo'shish</DropdownItem>
                                                                     <DropdownItem
-                                                                        onClick={() => openEditModal(appeal.id)}>Tahrirlash</DropdownItem>
+                                                                        onClick={() => openEditModal(appeal.id, item.title)}>Tahrirlash</DropdownItem>
                                                                     <DropdownItem
                                                                         onClick={() => openModal(item.id)}>O'chirish</DropdownItem>
                                                                 </DropdownMenu>
@@ -230,19 +265,21 @@ class Card extends Component {
                                         label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"99 1234567"} required/>
                                     Murojaat bo'limi
-                                    <Select
-                                        defaultValue={currentItem && {
-                                            value: currentItem.clientStatusId,
-                                            label: (currentItem.statusName)
-                                        }}
-                                        placeholder="Bo'limni tanlang..."
-                                        name="groupId"
-                                        isSearchable={true}
-                                        options={clientStatusList && clientStatusList.length > 0 && sortByEnumType(clientStatusList, currentPage)}
-                                        onChange={setClientStatus}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                    />
+                                    {currentItem && currentItem.id ? '' :
+                                        <Select
+                                            defaultValue={currentItem && {
+                                                value: currentItem.clientStatusId,
+                                                label: (currentItem.statusName)
+                                            }}
+                                            placeholder="Bo'limni tanlang..."
+                                            name="groupId"
+                                            isSearchable={true}
+                                            options={clientStatusList && clientStatusList.length > 0 && sortByEnumType(clientStatusList, currentPage)}
+                                            onChange={setClientStatus}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        />
+                                    }
                                     Jinsi
                                     <AvRadioGroup name="gender"
                                                   defaultValue={currentItem ? currentItem.gender : ""}
@@ -261,13 +298,13 @@ class Card extends Component {
                                 </Col>
                                 <Col>
                                     <AvField
-                                        type={"number"}
-                                        defaultValue={currentItem && currentItem.age}
-                                        label={"Yoshi"} name={"age"} className={"form-control"}
-                                    />
+                                        type={"date"}
+                                        defaultValue={currentItem && currentItem.birthDate ? moment(currentItem.birthDate).format('YYYY-MM-DD')
+                                            : ""}
+                                        label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}/>
                                     Hudud
                                     <Select
-                                        defaultValue={currentItem && {
+                                        defaultValue={currentItem && currentItem.regionId && {
                                             value: currentItem.regionId,
                                             label: (currentItem.regionName)
                                         }}
@@ -282,7 +319,7 @@ class Card extends Component {
                                     <br/>
                                     Reklama
                                     <Select
-                                        defaultValue={currentItem && {
+                                        defaultValue={currentItem && currentItem.reklamaId && {
                                             value: currentItem.reklamaId,
                                             label: (currentItem.reklamaName)
                                         }}

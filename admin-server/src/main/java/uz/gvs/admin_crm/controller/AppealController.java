@@ -23,6 +23,18 @@ public class AppealController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
+    @PutMapping("/{id}")
+    public HttpEntity<?> editAppeal(@PathVariable UUID id, @RequestBody AppealDto appealDto) {
+        ApiResponse apiResponse = appealService.editAppeal(id, appealDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/makeStudent/{id}")
+    public HttpEntity<?> makeStudent(@PathVariable UUID id) {
+        ApiResponse apiResponse = appealService.makeStudent(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
+    }
+
     @PutMapping("/changeType/{id}")
     public HttpEntity<?> changeAppealStatus(@PathVariable UUID id, @RequestBody AppealDto appealDto) {
         ApiResponse apiResponse = appealService.changeStatus(id, appealDto);
@@ -47,21 +59,9 @@ public class AppealController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    @GetMapping
-    public HttpEntity<?> getAppealList(
-            @RequestParam(value = "enumType", defaultValue = "REQUEST") String enumType,
-            @RequestParam(value = "typeId", defaultValue = "0") int typeId,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size
-    ) {
-        ApiResponse apiResponse = appealService.getClientList(enumType, typeId, page, size);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
-
     @GetMapping("/all")
     public HttpEntity<?> getAppealListAll() {
         ApiResponse apiResponse = appealService.getAppealList();
-//        ApiResponse apiResponse = appealService.getAppealListAll(typeId, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 

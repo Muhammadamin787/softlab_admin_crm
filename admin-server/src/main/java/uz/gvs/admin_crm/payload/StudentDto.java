@@ -86,4 +86,14 @@ public class StudentDto {
         this.regionId = regionId;
         this.groupList = groupList;
     }
+
+    public StudentDto(String fullName, String phoneNumber, String description, Integer regionId, String gender, String birthDate, double balans) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
+        this.regionId = regionId;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.balans = balans;
+    }
 }

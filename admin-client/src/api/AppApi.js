@@ -278,10 +278,8 @@ export const getFileAppApi = (data) => {
 
 // START STUDENT API
 export const getDebtorsAPI = (data) => {
-    return HttpClient.doGet(api.debtors)
+    return HttpClient.doGet(api.debtors + "?page=" + data.page + "&size=" + data.size)
 }
-// e
-
 
 export const saveStudentApi = (data) => {
     return HttpClient.doPost(api.student, data)
@@ -381,6 +379,12 @@ export const editStudentStatusApi = (data) => {
 // START APPEAL API
 export const saveAppealApi = (data) => {
     return HttpClient.doPost(api.appeal, data)
+}
+export const makeStudentByAppealApi = (data) => {
+    return HttpClient.doGet(api.appeal + "/makeStudent/" + data.id, data)
+}
+export const editAppealApi = (data) => {
+    return HttpClient.doPut(api.appeal + "/" + data.id, data)
 }
 export const changeAppealEnumTypeApi = (data) => {
     if (data && data.id)

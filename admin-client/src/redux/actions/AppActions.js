@@ -141,7 +141,7 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi,
+    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -188,14 +188,15 @@ export const saveAttendanceAction = (data) => (dispatch) => {
     })
 }
 
-export const getDebtorsAction = () => (dispatch) => {
+export const getDebtorsAction = (data) => (dispatch) => {
     dispatch({
         api: getDebtorsAPI,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_DEBTORS_SUCCESS,
             types.REQUEST_ERROR
-        ]
+        ],
+        data
     })
 }
 
@@ -1511,7 +1512,7 @@ export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
 // START APPEAL ACTIONS
 export const saveAppealAction = (data) => (dispatch) => {
     dispatch({
-        api: saveAppealApi,
+        api: data.id ? editAppealApi : saveAppealApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_APPEAL_SUCCESS,
@@ -1520,6 +1521,25 @@ export const saveAppealAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         dispatch(getAppealListAllAction())
+    })
+}
+export const makeStudentByAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: makeStudentByAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res.statusCode === 201) {
+            toast.success("Talaba saqlandi!")
+            // data.history.push(config.BASE_URL + "/admin/student/" + res)
+        }
+        dispatch(getAppealListAllAction())
+    }).catch((e) => {
+        toast.error('Telefon raqam allaqachon mavjud!')
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
