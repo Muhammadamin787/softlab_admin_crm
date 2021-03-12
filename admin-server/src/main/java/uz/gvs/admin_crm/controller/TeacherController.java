@@ -43,7 +43,7 @@ public class TeacherController {
         ApiResponse apiResponse = teacherService.getTeacherList(page, size,status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-
+//
     //// Change Status
     @GetMapping("/changeStatus")
     public HttpEntity<?> ToArchiveStatus(@RequestParam(value = "teacherId") UUID teacherId,
