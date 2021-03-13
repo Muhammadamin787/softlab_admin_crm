@@ -18,6 +18,6 @@ public class Teacher extends AbsEntity {
     @ManyToOne
     private User user;
     private Double balance = 0.0;
-    private boolean isPercent;
+    private Boolean isPercent;
     private Double salary;
 }

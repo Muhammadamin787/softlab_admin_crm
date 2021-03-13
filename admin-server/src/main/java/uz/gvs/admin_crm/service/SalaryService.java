@@ -25,7 +25,7 @@ public class SalaryService {
                 if (teacherDto.getSalary() != null) {
                     Teacher teacher = optional.get();
                         teacher.setSalary(teacherDto.getSalary());
-                        teacher.setPercent(teacherDto.isPercent());
+                        teacher.setIsPercent(teacherDto.getIsPercent());
                         teacherRepository.save(teacher);
                         return apiResponseService.saveResponse();
                 }
