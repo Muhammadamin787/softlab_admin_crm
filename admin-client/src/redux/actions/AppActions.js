@@ -907,7 +907,7 @@ export const changeGroupStatusActions = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getGroupsAction({page: 0, size: 20, type: data.status}))
+        dispatch(getGroupsAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
