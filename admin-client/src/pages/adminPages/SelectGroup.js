@@ -225,6 +225,7 @@ class SelectGroup extends Component {
                 ) : ""
             )
             v.studentList = arr
+            v.date = moment(v.date).format('YYYY-MM-DD').toString()
             this.props.dispatch(saveAttendanceAction(v))
             showHideModal()
         }
@@ -400,13 +401,17 @@ class SelectGroup extends Component {
                                                 <div className={""}>
                                                     <Row>
                                                         <Col md={1}>
-                                                            <i onClick={minusM} className="fas fa-angle-left"/>
+                                                            <Button onClick={minusM} className={"btn btn-light"}>
+                                                                <i className="fas fa-angle-left"/>
+                                                            </Button>
                                                         </Col>
                                                         <Col md={3}>
                                                             {" " + year + " - yil, " + months[month] + " "}
                                                         </Col>
                                                         <Col md={1}>
-                                                            <i onClick={plusM} className="fa fa-angle-right"/>
+                                                            <Button onClick={plusM} className={"btn btn-light"}>
+                                                                <i className="fa fa-angle-right"/>
+                                                            </Button>
                                                         </Col>
                                                     </Row>
                                                 </div>
@@ -437,7 +442,7 @@ class SelectGroup extends Component {
                                                                                 <td className={"text-center py-auto"}>
                                                                                     {
                                                                                         attendanceList ? attendanceList.map(item3 =>
-                                                                                            (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                                            (year + "-" + ((month + 1) > 9 ? (month + 1) : "0" + (month + 1)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
                                                                                                 <FaRegCalendarCheck
                                                                                                     color={"#33cc33"}
                                                                                                     className={"my-2"}
@@ -547,7 +552,8 @@ class SelectGroup extends Component {
                                     <AvField type="date"
                                              defaultValue={currentObject && currentItem.finishDate ? moment(currentObject.finishDate).format('YYYY-MM-DD') : ""}
                                              label={"Kursning tugash sanasi"} name={"finishDate"}/>
-                                    <AvField type="checkbox" defaultValue={currentObject ? currentObject.active : false}
+                                    <AvField type="checkbox"
+                                             defaultValue={currentObject ? currentObject.active : false}
                                              label={"Active"} name={"active"}/>
                                 </div>
                             </ModalBody>
@@ -611,7 +617,8 @@ class SelectGroup extends Component {
                                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
                             <AvField type={"hidden"} name={"teacherId"}
                                      defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
-                            <AvField type={"hidden"} name={"groupId"} defaultValue={currentItem ? currentItem.id : ''}/>
+                            <AvField type={"hidden"} name={"groupId"}
+                                     defaultValue={currentItem ? currentItem.id : ''}/>
                             <Table>
                                 {students ? students.map((item, i) =>
                                     item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
@@ -638,37 +645,43 @@ class SelectGroup extends Component {
     }
 }
 
-SelectGroup.propTypes = {};
+SelectGroup
+    .propTypes = {};
 
-export default connect(({
-                            app: {
-                                selectItems,
-                                changeStatusModal,
-                                students,
-                                teachers,
-                                getItems,
-                                rooms,
-                                groups,
-                                currentItem,
-                                loading,
-                                showModal,
-                                deleteModal,
-                                parentItems,
-                                courseCategories,
-                                durationTypes,
-                                readModal,
-                                attendanceList,
-                            },
-                        }) => ({
-        selectItems,
-        changeStatusModal,
-        students,
-        teachers,
-        getItems,
-        rooms,
-        groups,
-        currentItem,
-        attendanceList,
-        loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
-    })
-)(SelectGroup);
+export default connect(
+    ({
+         app: {
+             selectItems,
+             changeStatusModal,
+             students,
+             teachers,
+             getItems,
+             rooms,
+             groups,
+             currentItem,
+             loading,
+             showModal,
+             deleteModal,
+             parentItems,
+             courseCategories,
+             durationTypes,
+             readModal,
+             attendanceList,
+         }
+         ,
+     }
+    ) =>
+        ({
+            selectItems,
+            changeStatusModal,
+            students,
+            teachers,
+            getItems,
+            rooms,
+            groups,
+            currentItem,
+            attendanceList,
+            loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
+        })
+)
+(SelectGroup);
