@@ -68,18 +68,8 @@ class AdminLayout extends Component {
                                     Murojaatlar
                                 </div>
                             </Link>
-                            <Link to="/admin/attandance" className={
-                                this.props.pathname === "/admin/attandance" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-dashboard"/>
-                                <div className="main-link">
-                                    Davomat
-                                </div>
-                            </Link>
-
                             <Link to="/admin/students" className={
-                                this.props.pathname === "/admin/students" ?
+                                this.props.pathname && this.props.pathname.startsWith("/admin/student") ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-customer"/>
@@ -97,7 +87,7 @@ class AdminLayout extends Component {
                                 </div>
                             </Link>
                             <Link to="/admin/groups" className={
-                                this.props.pathname === "/admin/groups" ?
+                                this.props.pathname && this.props.pathname.startsWith("/admin/group") ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-teacher"/>
@@ -106,7 +96,7 @@ class AdminLayout extends Component {
                                 </div>
                             </Link>
                             <Link to="/admin/teachers" className={
-                                this.props.pathname === "/admin/teachers" ?
+                                this.props.pathname && this.props.pathname.startsWith("/admin/teacher") ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-teacher"/>
