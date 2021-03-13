@@ -225,7 +225,6 @@ class SelectGroup extends Component {
                 ) : ""
             )
             v.studentList = arr
-            console.log(v);
             this.props.dispatch(saveAttendanceAction(v))
             showHideModal()
         }
@@ -434,11 +433,11 @@ class SelectGroup extends Component {
 
                                                                     {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
                                                                         currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                                            c_item === days[new Date(year, month + 1, item2).getDay()] ?
+                                                                            c_item === days[new Date(year, month, item2).getDay()] ?
                                                                                 <td className={"text-center py-auto"}>
                                                                                     {
                                                                                         attendanceList ? attendanceList.map(item3 =>
-                                                                                            (year + "-" + ((month + 1) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                                            (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
                                                                                                 <FaRegCalendarCheck
                                                                                                     color={"#33cc33"}
                                                                                                     className={"my-2"}
@@ -457,7 +456,7 @@ class SelectGroup extends Component {
                                                             {
                                                                 daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
                                                                     currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                                        c_item === days[new Date(year, month + 1, item).getDay()] ?
+                                                                        c_item === days[new Date(year, month, item).getDay()] ?
                                                                             <td className={"text-center"}>
                                                                                 <FaRegCalendarPlus
                                                                                     color={"#EE8033"}
