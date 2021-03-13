@@ -32,8 +32,6 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        // this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getDebtorsAction({page: 0, size: 20}))
         this.props.dispatch(getStudentsAction({page: 0, size: this.props.size, type: "DEFAULT"}))
     }
 
@@ -79,10 +77,11 @@ class Student extends Component {
         }
         const openFiltrDebtors = (item) => {
             this.setState({currentObject: item})
+            console.log(item, 1000);
             if (this.state.secondPage) {
                 dispatch(getDebtorsAction({page: 0, size: size}))
             } else {
-                dispatch(getStudentsAction({page: 0, size: size}))
+                dispatch(getStudentsAction({page: 0, size: size, type: activeTab}))
             }
             this.setState({secondPage: !this.state.secondPage})
         }
@@ -186,7 +185,7 @@ class Student extends Component {
                                         toggle('DEFAULT');
                                     }}
                                 >
-                                    Faol Talabalar
+                                    Faol talabalar
                                 </NavLink>
                             </NavItem>
                             <NavItem
@@ -196,7 +195,7 @@ class Student extends Component {
                                         toggle('ARCHIVE');
                                     }}
                                 >
-                                    Arxiv Talabalar
+                                    Arxiv talabalar
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -264,15 +263,6 @@ class Student extends Component {
                             <TabPane tabId="ARCHIVE">
                                 <div className={"w-100"}>
                                     <div className="w-75">
-                                        <div align={"right"} className={"mb-1"}>
-                                            <Button color={"btn btn-outline-info"} size={"sm"}
-                                                    className={"rounded"}
-                                                    onClick={openFiltrDebtors}>Qarzdorlar</Button>
-                                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
-                                                    className={"btn mx-2 border-none rounded"}
-                                                    onClick={downloadExcel}>
-                                                <span className={"icon icon-download"}></span></Button>
-                                        </div>
                                         <Table className={"table-style w-100"}>
                                             <thead className={""}>
                                             <tr className={""}>
