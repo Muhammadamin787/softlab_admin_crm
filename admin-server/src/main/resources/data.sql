@@ -13,4 +13,3 @@ insert into weekday("weekday_name") values
 ('FRIDAY'),
 ('SATURDAY'),
 ('SUNDAY');
-insert into client
