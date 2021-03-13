@@ -48,6 +48,7 @@ class Staff extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
+
                     showModal: !showModal
                 }
             })
