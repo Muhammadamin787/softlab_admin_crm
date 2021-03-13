@@ -8,10 +8,7 @@ import {
     ModalFooter,
     ModalHeader,
     Row,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem, Container, Table, Input, NavItem, NavLink, Nav, TabContent, TabPane
+    Table, Input, NavItem, NavLink, Nav, TabContent, TabPane
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
@@ -47,7 +44,6 @@ class SelectGroup extends Component {
             dispatch(getTeachersForSelectAction())
 
             dispatch(getAttendanceListAction(id))
-            dispatch(getStudentsByGroupAction(id))
 
             let year = new Date().getFullYear()
             let month = new Date().getMonth()
@@ -220,14 +216,16 @@ class SelectGroup extends Component {
         const saveAttendance = (e, v) => {
 
             let arr = []
-            students.map(item => {
-                arr.push({
-                    studentId: item.id,
-                    active: document.getElementById(item.id).checked
-                })
-            })
+            students.map(item =>
+                item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                    arr.push({
+                        studentId: item.id,
+                        active: document.getElementById(item.id).checked
+                    })
+                ) : ""
+            )
             v.studentList = arr
-
+            console.log(v);
             this.props.dispatch(saveAttendanceAction(v))
             showHideModal()
         }
@@ -246,7 +244,7 @@ class SelectGroup extends Component {
             if (item) {
                 this.setState({
                     openModal1: !openModal1,
-                    currentDay: year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item > 9 ? item : "0" + item)
+                    currentDay: year + "-" + ((month + 1) > 9 ? (month + 1) : "0" + (month + 1)) + "-" + (item > 9 ? item : "0" + item)
                 })
             } else {
                 this.setState({
@@ -333,18 +331,18 @@ class SelectGroup extends Component {
                                             <div className={"student-list border-top py-3 px-1"}>
                                                 {students && students.length > 0 && students.map((student, i) =>
                                                         <div key={i} className={"row"}>
-                                                            {student.studentGroup ?
+                                                            {student.studentGroupDto ?
                                                                 <div className="col-6">
                                                     <span
-                                                        className={"px-1 " + (student.studentGroup.studentGroupStatus === "TRANSFER" ?
+                                                        className={"px-1 " + (student.studentGroupDto.studentGroupStatus === "TRANSFER" ?
                                                             "bg-light text-secondary" :
-                                                            student.studentGroup.studentGroupStatus === "ACTIVE" ?
+                                                            student.studentGroupDto.studentGroupStatus === "ACTIVE" ?
                                                                 "text-success" :
-                                                                student.studentGroup.studentGroupStatus === "ARCHIVE" ?
+                                                                student.studentGroupDto.studentGroupStatus === "ARCHIVE" ?
                                                                     "text-light bg-secondary" :
-                                                                    student.studentGroup.studentGroupStatus === "FROZEN" ?
+                                                                    student.studentGroupDto.studentGroupStatus === "FROZEN" ?
                                                                         "bg-info text-white" :
-                                                                        student.studentGroup.studentGroupStatus === "TEST_LESSON" ?
+                                                                        student.studentGroupDto.studentGroupStatus === "TEST_LESSON" ?
                                                                             "bg-warning text-dark" :
                                                                             "")}>
                                                 {student.fullName}
@@ -376,7 +374,8 @@ class SelectGroup extends Component {
                             {currentItem !== "" ?
                                 <div className={"mt-5"}>
                                     <Nav tabs>
-                                        <NavItem className={activeTab === '1' ? "tab-item-style-active1" : "tab-item-style-default1"}>
+                                        <NavItem
+                                            className={activeTab === '1' ? "tab-item-style-active1" : "tab-item-style-default1"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('1');
@@ -385,7 +384,8 @@ class SelectGroup extends Component {
                                                 Davomat &#128467;
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem className={activeTab === '2' ? "tab-item-style-active1" : "tab-item-style-default1"}>
+                                        <NavItem
+                                            className={activeTab === '2' ? "tab-item-style-active1" : "tab-item-style-default1"}>
                                             <NavLink
                                                 onClick={() => {
                                                     toggle('2');
@@ -397,7 +397,7 @@ class SelectGroup extends Component {
                                     </Nav>
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
-                                            <div style={tableStyle} className={"p-4"} >
+                                            <div style={tableStyle} className={"p-4"}>
                                                 <div className={""}>
                                                     <Row>
                                                         <Col md={1}>
@@ -414,8 +414,7 @@ class SelectGroup extends Component {
                                                 <div style={gg}>
                                                     <Table>
                                                         <tr>
-                                                            <td className={"py-2"}>#</td>
-                                                            <td className={"py-2"}>Student</td>
+                                                            <td className={"py-2"}>Talaba</td>
                                                             {
                                                                 daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
                                                                     currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
@@ -429,36 +428,36 @@ class SelectGroup extends Component {
                                                             }
                                                         </tr>
                                                         {students ? students.map((item, i) =>
-                                                            <tr key={i}>
-                                                                <td className={"attandance-block_td py-auto"}>{i + 1}</td>
-                                                                <td className={"attandance-block_td py-auto"}>{item.fullName}</td>
+                                                            item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                                                                <tr key={i}>
+                                                                    <td className={"attandance-block_td py-auto"}>{item.fullName}</td>
 
-                                                                {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
-                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                                        c_item === days[new Date(year, month, item2).getDay()] ?
-                                                                            <td className={"text-center py-auto"}>
-                                                                                {
-                                                                                    attendanceList ? attendanceList.map(item3 =>
-                                                                                        (year + "-" + ((month) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
-                                                                                            <FaRegCalendarCheck
-                                                                                                color={"#33cc33"}
-                                                                                                className={"my-2"}
-                                                                                            /> : ''
-                                                                                    ) : ''
-                                                                                }
-                                                                            </td>
-                                                                            : ''
-                                                                    ) : ''
-                                                                ) : ''}
-                                                            </tr>
+                                                                    {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
+                                                                        currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                            c_item === days[new Date(year, month + 1, item2).getDay()] ?
+                                                                                <td className={"text-center py-auto"}>
+                                                                                    {
+                                                                                        attendanceList ? attendanceList.map(item3 =>
+                                                                                            (year + "-" + ((month + 1) > 9 ? (month) : "0" + (month)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
+                                                                                                <FaRegCalendarCheck
+                                                                                                    color={"#33cc33"}
+                                                                                                    className={"my-2"}
+                                                                                                /> : ''
+                                                                                        ) : ''
+                                                                                    }
+                                                                                </td>
+                                                                                : ''
+                                                                        ) : ''
+                                                                    ) : ''}
+                                                                </tr>
+                                                            ) : ""
                                                         ) : ''}
                                                         <tr>
-                                                            <td></td>
                                                             <td></td>
                                                             {
                                                                 daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
                                                                     currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
-                                                                        c_item === days[new Date(year, month, item).getDay()] ?
+                                                                        c_item === days[new Date(year, month + 1, item).getDay()] ?
                                                                             <td className={"text-center"}>
                                                                                 <FaRegCalendarPlus
                                                                                     color={"#EE8033"}
@@ -616,13 +615,14 @@ class SelectGroup extends Component {
                             <AvField type={"hidden"} name={"groupId"} defaultValue={currentItem ? currentItem.id : ''}/>
                             <Table>
                                 {students ? students.map((item, i) =>
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.fullName}</td>
-                                        <td>
-                                            <Input type={"checkbox"} id={item.id}/>
-                                        </td>
-                                    </tr>
+                                    item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                                        <tr key={i}>
+                                            <td>{item.fullName}</td>
+                                            <td>
+                                                <Input type={"checkbox"} id={item.id}/>
+                                            </td>
+                                        </tr>
+                                    ) : ""
                                 ) : ''}
                             </Table>
 

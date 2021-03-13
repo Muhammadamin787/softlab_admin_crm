@@ -52,7 +52,7 @@ public class StudentDto {
     private StudentGroupDto studentGroupDto;
 
 
-    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber,String parentPhone, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, List<StudentGroupDto> studentGroupDtos) {
+    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String parentPhone, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, List<StudentGroupDto> studentGroupDtos) {
         this.id = id;
         this.userId = userId;
         this.fullName = fullName;
@@ -66,6 +66,22 @@ public class StudentDto {
         this.roles = roles;
         this.balans = balans;
         this.studentGroupDto = studentGroupDto;
+    }
+
+    public StudentDto(UUID id, UUID userId, String fullName, String phoneNumber, String parentPhone, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles, double balans, Set<StudentGroup> groupList) {
+        this.id = id;
+        this.userId = userId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.parentPhone = parentPhone;
+        this.description = description;
+        this.region = region;
+        this.regionId = regionId;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.roles = roles;
+        this.balans = balans;
+        this.groupList = groupList;
     }
 
     public StudentDto(UUID id, String fullName, String phoneNumber, StudentGroupDto studentGroupDto) {

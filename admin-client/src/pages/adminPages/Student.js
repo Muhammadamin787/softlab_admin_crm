@@ -55,7 +55,7 @@ class Student extends Component {
     }
 
     render() {
-        const {currentObject,activeTab} = this.state;
+        const {currentObject, activeTab} = this.state;
         const {
             page,
             size,
@@ -189,7 +189,8 @@ class Student extends Component {
                                     Faol Talabalar
                                 </NavLink>
                             </NavItem>
-                            <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            <NavItem
+                                className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                                 <NavLink
                                     onClick={() => {
                                         toggle('ARCHIVE');
@@ -225,7 +226,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{i + 1}</td>
+                                                        <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
@@ -233,13 +234,12 @@ class Student extends Component {
                                                             {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                                         </td>
                                                         <td>
-                                                            <Button className={"table-info"}
+                                                            <Button className={"table-icon"}
                                                                     onClick={() => openToArchive(item)}>
                                                                 <GlobusIcon/>
                                                             </Button>
-                                                        </td>
-                                                        <td>
-                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -286,7 +286,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{i + 1}</td>
+                                                        <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
@@ -298,9 +298,8 @@ class Student extends Component {
                                                                     onClick={() => openToActive(item)}>
                                                                 <GlobusIcon/>
                                                             </Button>
-                                                        </td>
-                                                        <td>
-                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -371,7 +370,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -383,7 +382,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu Talabani Active ro'yxatga Qo'shmoqchimisiz 🤨❓
+                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 🤨❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>

@@ -2,9 +2,7 @@ import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
 
 import {
-
     getExcelInfoApi,
-
     getClientList,
     editClientApi,
     saveClientApi,
@@ -1299,11 +1297,11 @@ export const toChangeStatusAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 toArchiveModal: false,
-                toActiveModal:false
+                toActiveModal: false
             }
         })
         toast.success(res.payload.message)
-        dispatch(getStudentsAction({page: 0, size: 20, type: data.status}))
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1322,7 +1320,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 archiveModal: false,
-                activeModal:false
+                activeModal: false
             }
         })
         toast.success(res.payload.message)

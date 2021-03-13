@@ -45,7 +45,6 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
-        this.props.dispatch(getCashbackListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
     }
 

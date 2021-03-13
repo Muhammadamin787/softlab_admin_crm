@@ -184,7 +184,7 @@ public class StudentService {
                 student.getUser().getBirthDate() != null ? student.getUser().getBirthDate().toString() : "",
                 student.getUser().getRoles(),
                 student.getBalans(),
-                studentGroupDtos
+                student.getStudentGroup()
         );
     }
 

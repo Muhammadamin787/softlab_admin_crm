@@ -236,13 +236,15 @@ class Card extends Component {
                                                      id={appeal.id}>
                                                     <Row>
                                                         <Col md={"10"}>
-                                                            <Link className="small"
+                                                            <Link className="small" draggable="false"
                                                                   to={"/admin/appeal/" + (appeal.id)}>{appeal.fullName} </Link> /
                                                             <span
+                                                                draggable="false"
                                                                 className="small"> {formatPhoneNumber(appeal.phoneNumber)}</span>
                                                         </Col>
                                                         <Col md={"2"}>
                                                             <Dropdown
+                                                                draggable="false"
                                                                 className="d-inline"
                                                                 id={"show" + appeal.id} onMouseOver={() => {
                                                                 this.dropdownToggle('show' + appeal.id)
