@@ -43,7 +43,7 @@ public class UserDto {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Permission> permissions;
 
-    public UserDto(String fullName, String phoneNumber, String description, int regionId, String gender, String birthDate) {
+    public UserDto(String fullName, String phoneNumber, String description, Integer regionId, String gender, String birthDate) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.description = description;

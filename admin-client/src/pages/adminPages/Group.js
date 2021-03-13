@@ -169,7 +169,6 @@ class Group extends Component {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-
                         <TabPane tabId="1">
                             <Table className={"table-style"}>
                                 <thead className={""}>

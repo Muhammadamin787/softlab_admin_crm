@@ -16,6 +16,8 @@ import {Funnel} from 'funnel-react';
 import MultiLine from "../../component/dashboard/MultiLine";
 import Donut from "../../component/dashboard/Donut";
 import ApexChart from "../../component/dashboard/ApexChart";
+import BarColumn from "../../component/dashboard/BarColumn";
+import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
 class Dashboard extends Component {
 
@@ -126,95 +128,101 @@ class Dashboard extends Component {
                     <div className={"flex-column container"}>
                         {dashboardStat && dashboardStat.length > 7 ?
                             <div className={"row dashboard-style"}>
-                                <div className="col-md-3 col-analytics-dashboard">
-                                    <div className="card">
-                                        <hgroup>
-                                            <h2 className="text-warning">
-                                                {dashboardStat[5].data}
-                                            </h2>
-                                            <h6>{dashboardStat[5].label}</h6>
+                                <div className={"col-md-12 row"}>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[5].data}
+                                                </h2>
+                                                <h6>{dashboardStat[5].label}</h6>
 
-                                        </hgroup>
+                                            </hgroup>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-md-3 col-analytics-dashboard">
-                                    <div className="card">
-                                        <hgroup>
-                                            <h2 className="text-warning">
-                                                {dashboardStat[6].data}
-                                            </h2>
-                                            <h6>{dashboardStat[6].label}</h6>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[6].data}
+                                                </h2>
+                                                <h6>{dashboardStat[6].label}</h6>
 
-                                        </hgroup>
-                                    </div>
-                                </div>
-                                <div className="col-md-3 col-analytics-dashboard">
-                                    <div className="card">
-                                        <hgroup>
-                                            <h2 className="text-warning">
-                                                {dashboardStat[7].data}
-                                            </h2>
-                                            <h6>{dashboardStat[7].label}</h6>
-                                        </hgroup>
-                                    </div>
-                                </div>
-                                <div className="col-md-3 col-analytics-dashboard">
-                                    <div className="card">
-                                        <hgroup>
-                                            <h2 className="text-warning">
-                                                {dashboardStat[8].data}
-                                            </h2>
-                                            <h6>{dashboardStat[8].label}</h6>
-                                        </hgroup>
-                                    </div>
-                                </div>
-                                <div className={"col-md-6 bg-white p-3"}>
-                                    <h5>Sotuv voronkasi</h5>
-                                    <Funnel
-                                        labelKey='label'
-                                        height={250}
-                                        colors={{
-                                            graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
-                                            percent: 'red',
-                                            label: 'secondary',
-                                            value: 'orange'
-                                        }}
-                                        valueKey='quantity'
-                                        displayPercent={true}
-                                        data={[{
-                                            "label": dashboardStat[0].label,
-                                            "quantity": dashboardStat[0].data
-                                        }, {
-                                            "label": dashboardStat[1].label,
-                                            "quantity": dashboardStat[1].data
-                                        }, {
-                                            "label": dashboardStat[2].label,
-                                            "quantity": dashboardStat[2].data
-                                        }, {
-                                            "label": dashboardStat[3].label,
-                                            "quantity": dashboardStat[3].data
-                                        }, {
-                                            "label": dashboardStat[4].label,
-                                            "quantity": dashboardStat[4].data
-                                        },
-                                        ]}/>
-                                </div>
-                                <div className="col-md-12 my-2">
-                                    <h4>O'quvchilar statistikasi</h4>
-                                    <div className="row">
-                                        {/*<div className="col-md-7 bg-white border-right">*/}
-                                        {/*    <ApexChart/>*/}
-                                        {/*</div>*/}
-                                        <div className="col-md-7 bg-white border-right">
-                                            <MultiLine/>
+                                            </hgroup>
                                         </div>
-                                        <div className="col-md-5 bg-white">
-                                            <Donut
-                                                title={"Yosh bo'yicha"}
-                                                labels={sortAges ? sortAges.labels : []}
-                                                series={sortAges ? sortAges.series : []}
-                                            />
+                                    </div>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[7].data}
+                                                </h2>
+                                                <h6>{dashboardStat[7].label}</h6>
+                                            </hgroup>
                                         </div>
+                                    </div>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[8].data}
+                                                </h2>
+                                                <h6>{dashboardStat[8].label}</h6>
+                                            </hgroup>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"col-md-12 my-3 row"}>
+                                    <div className={"col-md-5 bg-white p-3 shadow-sm"}>
+                                        <h5>Mijozlar manbalari</h5>
+                                        <ReklamaChart/>
+                                    </div>
+                                    <div className={"ml-auto col-md-6 bg-white p-3 shadow-sm"}>
+                                        <h5>Sotuv voronkasi</h5>
+                                        <Funnel
+                                            labelKey='label'
+                                            height={250}
+                                            colors={{
+                                                graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
+                                                percent: 'red',
+                                                label: 'secondary',
+                                                value: 'orange'
+                                            }}
+                                            valueKey='quantity'
+                                            displayPercent={true}
+                                            data={[{
+                                                "label": dashboardStat[0].label,
+                                                "quantity": dashboardStat[0].data
+                                            }, {
+                                                "label": dashboardStat[1].label,
+                                                "quantity": dashboardStat[1].data
+                                            }, {
+                                                "label": dashboardStat[2].label,
+                                                "quantity": dashboardStat[2].data
+                                            }, {
+                                                "label": dashboardStat[3].label,
+                                                "quantity": dashboardStat[3].data
+                                            }, {
+                                                "label": dashboardStat[4].label,
+                                                "quantity": dashboardStat[4].data
+                                            },
+                                            ]}/>
+                                    </div>
+                                </div>
+                                <div className="col-md-12 my-2 row">
+                                    <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">
+                                        <h5>Talabalar statistikasi</h5>
+                                        <BarColumn/>
+                                    </div>
+                                    {/*<div className="col-md-7 bg-white border-right">*/}
+                                    {/*    <MultiLine/>*/}
+                                    {/*</div>*/}
+                                    <div className="ml-auto col-md-5 bg-white py-3 shadow-sm">
+                                        <h5>Yosh taqsimoti</h5>
+                                        <Donut
+                                            labels={sortAges ? sortAges.labels : []}
+                                            series={sortAges ? sortAges.series : []}
+                                        />
                                     </div>
                                 </div>
                             </div>

@@ -15,5 +15,5 @@ public class AttendanceDto {
     private UUID teacherId;
     private Integer groupId;
     private List<StudentAttendDto> studentList;
-    private Date date;
+    private String date;
 }

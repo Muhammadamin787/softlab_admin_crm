@@ -5,13 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Toplam;
-import uz.gvs.admin_crm.entity.Weekday;
+import uz.gvs.admin_crm.entity.*;
+import uz.gvs.admin_crm.entity.enums.ClientEnum;
+import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
-import uz.gvs.admin_crm.payload.ApiResponse;
-import uz.gvs.admin_crm.payload.ClientDto;
-import uz.gvs.admin_crm.payload.PageableDto;
-import uz.gvs.admin_crm.payload.ToplamDto;
+import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
 
 import java.util.*;
@@ -29,6 +27,16 @@ public class ToplamService {
     TeacherRepository teacherRepository;
     @Autowired
     WeekdayRepository weekdayRepository;
+    @Autowired
+    GroupService groupService;
+    @Autowired
+    ClientStatusConnectRepository clientStatusConnectRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    ClientRepository clientRepository;
+    @Autowired
+    UserService userService;
 
     public ApiResponse saveToplam(ToplamDto toplamDto) {
         try {
@@ -139,6 +147,62 @@ public class ToplamService {
                 toplam.isActive(),
                 toplam.getCourse().getName()
         );
+    }
+
+    public ApiResponse makeGroupByToplam(Integer id, GroupDto groupDto) {
+        try {
+            Optional<Toplam> byId = toplamRepository.findById(id);
+            if (byId.isPresent()) {
+                Toplam toplam = byId.get();
+                Group group = groupService.makeGroup(groupDto);
+                if (group != null) {
+                    List<ClientStatusConnect> toplamStudents = clientStatusConnectRepository.findAllByStatusIdAndToplam(toplam.getId().toString(), true);
+                    for (ClientStatusConnect toplamStudent : toplamStudents) {
+                        if (!toplamStudent.getClient().getClientEnum().equals(ClientEnum.STUDENT)) {
+                            Client client = toplamStudent.getClient();
+                            String studentId = studentRepository.getStudentId(client.getPhoneNumber());
+                            if (studentId != null) {
+                                return apiResponseService.existResponse();
+                            } else {
+                                Student student = new Student();
+                                StudentDto studentDto = new StudentDto(
+                                        client.getFullName(),
+                                        client.getPhoneNumber(),
+                                        client.getDescription(),
+                                        client.getRegion() != null ? client.getRegion().getId() : null,
+                                        client.getGender().toString(),
+                                        client.getBirthDate() != null ? client.getBirthDate().toString() : null, 0.0);
+
+                                User user = userService.makeUser(new UserDto(
+                                        studentDto.getFullName(),
+                                        studentDto.getPhoneNumber(),
+                                        studentDto.getDescription(),
+                                        studentDto.getRegionId(),
+                                        studentDto.getGender(),
+                                        studentDto.getBirthDate()), RoleName.STUDENT);
+                                if (user == null)
+                                    return apiResponseService.tryErrorResponse();
+                                student.setUser(user);
+                                student.setParentPhone(studentDto.getParentPhone());
+                                Student save = studentRepository.save(student);
+
+                                client.setClientEnum(ClientEnum.STUDENT);
+                                clientRepository.save(client);
+                                clientStatusConnectRepository.deleteByClient_id(client.getId());
+
+                                groupService.addStudentForGroup(new AddGroupDto(save.getId(), group.getId()));
+                            }
+                        }
+                    }
+                    return apiResponseService.saveResponse();
+                } else {
+                    return apiResponseService.errorResponse();
+                }
+            }
+            return apiResponseService.notFoundResponse();
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
+        }
     }
 
     public ApiResponse getToplamListForSelect() {

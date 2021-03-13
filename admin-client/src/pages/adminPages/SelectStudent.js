@@ -45,7 +45,6 @@ class SelectStudent extends Component {
         this.props.dispatch(getRegionsAction())
         this.props.dispatch(getGroupsForSelectAction())
         this.props.dispatch(getPayTypeListAction())
-        this.props.dispatch(getCashbackListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
     }
 
@@ -310,6 +309,7 @@ class SelectStudent extends Component {
                                                 </div>
                                                 <div className={"col-md-5"}>
                                                     <h4>Guruhlar</h4>
+
                                                     <div className={" ml-2 bg-white student-group-block"}>
                                                         {currentItem && currentItem.id && currentItem.groupList ? currentItem.groupList.map((item, i) =>
                                                                 <Row key={i} className={"p-2"}>

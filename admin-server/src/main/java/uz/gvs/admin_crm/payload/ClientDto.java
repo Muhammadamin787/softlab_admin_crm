@@ -9,6 +9,7 @@ import uz.gvs.admin_crm.entity.enums.Gender;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class ClientDto {
     private String phoneNumber;
     private String description;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private int age;
+    private String birthDate;
     private Integer regionId;
     private Region region;
     private String gender;
@@ -42,12 +43,12 @@ public class ClientDto {
         this.time = time;
     }
 
-    public ClientDto(UUID id, String fullName, String phoneNumber, String description, int age, Integer regionId, Region region, String gender) {
+    public ClientDto(UUID id, String fullName, String phoneNumber, String description, String birthDate, Integer regionId, Region region, String gender) {
         this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.description = description;
-        this.age = age;
+        this.birthDate = birthDate;
         this.regionId = regionId;
         this.region = region;
         this.gender = gender;
@@ -58,12 +59,12 @@ public class ClientDto {
         this.clientAppealList = clientAppealList;
     }
 
-    public ClientDto(UUID id, String fullName, String phoneNumber, String description, int age, Integer regionId, String gender) {
+    public ClientDto(UUID id, String fullName, String phoneNumber, String description, String birthDate, Integer regionId, String gender) {
         this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.description = description;
-        this.age = age;
+        this.birthDate = birthDate;
         this.regionId = regionId;
         this.gender = gender;
     }

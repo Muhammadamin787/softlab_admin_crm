@@ -66,6 +66,7 @@ const initState = {
     sortAges: [],
     selectExcel: [],
     byCource: [],
+    sortReklama: [],
     employee: []
 };
 
@@ -87,7 +88,13 @@ const reducers = {
     },
 
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
-        state.selectDebtors = payload.payload.object.object
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.selectDebtors = payload.payload.object.object
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
 
 
@@ -437,6 +444,11 @@ const reducers = {
     [types.REQUEST_GET_APPEAL_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
+    [types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+        state.showModal = true
+        console.log(payload.payload.object, 243);
+    },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
             state.appealList = payload.payload.object
@@ -494,6 +506,7 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
+        console.log(payload)
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
@@ -563,6 +576,18 @@ const reducers = {
                         data: activeCount
                     }
                 ]
+            }
+            if (payload.payload.object.ageSortList && payload.payload.object.reklamaSortList.length > 0) {
+                let series = [];
+                let labels = [];
+                let agesList = payload.payload.object.reklamaSortList;
+                for (let i = 0; i < agesList.length; i++) {
+                    series.push(agesList[i].data);
+                    labels.push(agesList[i].label);
+                }
+                state.sortReklama = []
+                state.sortReklama.labels = labels;
+                state.sortReklama.series = series;
             }
             if (payload.payload.object.ageSortList && payload.payload.object.ageSortList.length > 0) {
                 let series = [];

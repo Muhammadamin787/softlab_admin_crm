@@ -2,9 +2,7 @@ import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
 
 import {
-
     getExcelInfoApi,
-
     getClientList,
     editClientApi,
     saveClientApi,
@@ -141,6 +139,8 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
+    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
+    changeTeacherStatusApi, changeStatusApi,
     getByCourseApi, getEmployeeListApi, editEmployeeApi, saveEmployeeApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
@@ -188,14 +188,15 @@ export const saveAttendanceAction = (data) => (dispatch) => {
     })
 }
 
-export const getDebtorsAction = () => (dispatch) => {
+export const getDebtorsAction = (data) => (dispatch) => {
     dispatch({
         api: getDebtorsAPI,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_DEBTORS_SUCCESS,
             types.REQUEST_ERROR
-        ]
+        ],
+        data
     })
 }
 
@@ -1283,7 +1284,52 @@ export const studentAddGroupAction = (data) => (dispatch) => {
         })
     })
 }
-
+export const toChangeStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeStatusApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                toArchiveModal: false,
+                toActiveModal: false
+            }
+        })
+        toast.success(res.payload.message)
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
+export const toChangeTeacherStatusAction = (data) => (dispatch) => {
+    dispatch({
+        api: changeTeacherStatusApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                archiveModal: false,
+                activeModal: false
+            }
+        })
+        toast.success(res.payload.message)
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status}))
+    }).catch((err) => {
+        toast.error("Xatolik!")
+    })
+}
 
 // FINISH STUDENT ACTION
 // START TEACHER ACTION
@@ -1511,7 +1557,7 @@ export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
 // START APPEAL ACTIONS
 export const saveAppealAction = (data) => (dispatch) => {
     dispatch({
-        api: saveAppealApi,
+        api: data.id ? editAppealApi : saveAppealApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_APPEAL_SUCCESS,
@@ -1520,6 +1566,25 @@ export const saveAppealAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         dispatch(getAppealListAllAction())
+    })
+}
+export const makeStudentByAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: makeStudentByAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res.statusCode === 201) {
+            toast.success("Talaba saqlandi!")
+            // data.history.push(config.BASE_URL + "/admin/student/" + res)
+        }
+        dispatch(getAppealListAllAction())
+    }).catch((e) => {
+        toast.error('Telefon raqam allaqachon mavjud!')
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1580,6 +1645,17 @@ export const getOneAppeal = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getOneAppealForEdit = (data) => (dispatch) => {
+    dispatch({
+        api: getOneAppealForEditApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data

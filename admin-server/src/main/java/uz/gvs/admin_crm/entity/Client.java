@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import uz.gvs.admin_crm.entity.enums.ClientEnum;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.template.AbsEntity;
 import uz.gvs.admin_crm.entity.template.AbsNameEntity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,8 +22,7 @@ import javax.persistence.*;
 public class Client extends AbsEntity {
     private String fullName;
     private String phoneNumber;
-
-    private int age;
+    private Date birthDate;
     @ManyToOne
     private Region region;
     @ManyToOne
@@ -30,6 +31,8 @@ public class Client extends AbsEntity {
     private Gender gender;
     @Column(columnDefinition = "text")
     private String description;
+    @Enumerated(EnumType.STRING)
+    private ClientEnum clientEnum = ClientEnum.DEFAULT;
 
     public Client(String fullName, String phoneNumber) {
         this.fullName = fullName;

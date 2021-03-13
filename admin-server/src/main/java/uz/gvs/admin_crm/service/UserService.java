@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.UserDto;
 import uz.gvs.admin_crm.repository.AttachmentRepository;
 import uz.gvs.admin_crm.repository.RegionRepository;
@@ -38,12 +39,13 @@ public class UserService {
                 return null;
             }
             User user = new User();
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
             user.setFullName(userDto.getFullName());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setDescription(userDto.getDescription());
             user.setRegion(userDto.getRegionId() != null ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
             user.setGender(Gender.valueOf(userDto.getGender()));
+            user.setStatus(roleName.equals(RoleName.STUDENT) ? UserStatusEnum.DEFAULT : UserStatusEnum.ACTIVE);
             user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
             user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
             return userRepository.save(user);
