@@ -109,9 +109,9 @@ public class AppealService {
                 if (!appealDto.getBirthDate().isEmpty())
                     client.setBirthDate(formatter1.parse(appealDto.getBirthDate()));
                 client.setDescription(appealDto.getDescription());
-                if (appealDto.getRegion() != null)
+                if (appealDto.getRegionId() != null)
                     client.setRegion(regionRepository.findById(appealDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")));
-                if (appealDto.getReklama() != null)
+                if (appealDto.getReklamaId() != null)
                     client.setReklama(reklamaRepository.findById(appealDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get reklama")));
                 clientRepository.save(client);
                 return apiResponseService.saveResponse();
