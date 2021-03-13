@@ -38,7 +38,7 @@ public class TeacherController {
     @GetMapping
     public HttpEntity<?> getTeacherList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                        @RequestParam(value = "status", defaultValue = "DEFAULT") String status,
+                                        @RequestParam(value = "status", defaultValue = "ACTIVE") String status,
                                         @CurrentUser User user) {
         ApiResponse apiResponse = teacherService.getTeacherList(page, size,status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);

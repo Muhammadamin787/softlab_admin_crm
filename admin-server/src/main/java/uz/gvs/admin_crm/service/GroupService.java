@@ -3,11 +3,13 @@ package uz.gvs.admin_crm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
@@ -184,10 +186,9 @@ public class GroupService {
 
     }
 
-    public ApiResponse getGroupList(int page, int size) {
+    public ApiResponse getGroupList(int page, int size, String type) {
         try {
-            Page<Group> all = null;
-            all = groupRepository.findAll(PageRequest.of(page, size));
+            Page<Group> all = groupRepository.findAllByGroupStatus(GroupStatus.valueOf(type), PageRequest.of(page, size));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
@@ -326,4 +327,18 @@ public class GroupService {
             return apiResponseService.tryErrorResponse();
         }
     }
+
+    public ApiResponse changeStatus(Integer groupId, String status) {
+        Optional<Group> groupOptional = groupRepository.findById(groupId);
+        if (groupOptional.isPresent()) {
+            Group group = groupOptional.get();
+            group.setActive(!group.isActive());
+            group.setGroupStatus(GroupStatus.valueOf(status));
+            groupRepository.save(group);
+            return apiResponseService.updatedResponse();
+        } else {
+            return apiResponseService.notFoundResponse();
+        }
+    }
+
 }
