@@ -505,6 +505,7 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
+        console.log(payload)
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0

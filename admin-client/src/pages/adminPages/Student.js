@@ -1,15 +1,27 @@
 import React, {Component} from 'react';
-import {ModalHeader, Modal, Button, ModalBody, Table, ModalFooter} from "reactstrap";
+import {
+    ModalHeader,
+    Modal,
+    Button,
+    ModalBody,
+    Table,
+    ModalFooter,
+    Nav,
+    NavItem,
+    NavLink,
+    TabContent,
+    TabPane
+} from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteStudentAction, downloadFileAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction,
-    saveStudentAction,
+    saveStudentAction, toChangeStatusAction,
     uploadFileAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
-import {DeleteIcon} from "../../component/Icons";
+import {DeleteIcon, GlobusIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
 import Pagination from "react-js-pagination";
@@ -20,7 +32,9 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
+        // this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
+        this.props.dispatch(getDebtorsAction({page: 0, size: 20}))
+        this.props.dispatch(getStudentsAction({page: 0, size: this.props.size, type: "DEFAULT"}))
     }
 
     state = {
@@ -28,6 +42,8 @@ class Student extends Component {
         currentObject: "",
         secondPage: true,
         specs: '',
+        type: '',
+        activeTab: "DEFAULT",
     }
 
     handlePageChange(pageNumber) {
@@ -39,7 +55,7 @@ class Student extends Component {
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject,activeTab} = this.state;
         const {
             page,
             size,
@@ -48,7 +64,9 @@ class Student extends Component {
             dispatch,
             showModal,
             deleteModal,
-            regions, selectDebtors
+            regions, selectDebtors,
+            toArchiveModal,
+            toActiveModal,
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -119,6 +137,39 @@ class Student extends Component {
             dispatch(downloadStudentFileAction(v))
         }
 
+        ////////////////////
+        const a = (tab) => {
+            this.setState({activeTab: tab})
+        }
+        const toggle = (tab) => {
+            this.setState({activeTab: tab})
+            this.setState({type: tab})
+            dispatch(getStudentsAction({page: 0, size: this.props.size, type: tab}))
+        }
+        const openToArchive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    toArchiveModal: !toArchiveModal
+                }
+            })
+        }
+        const openToActive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    toActiveModal: !toActiveModal
+                }
+            })
+        }
+        const ItemChangeStatus = (item) => {
+            dispatch(toChangeStatusAction({
+                studentId: item.id,
+                status: activeTab === "DEFAULT" ? "ARCHIVE" : "DEFAULT"
+            }))
+        }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 {this.state.secondPage ?
@@ -127,57 +178,151 @@ class Student extends Component {
                         <div align={"right"}><Button color={"success"} onClick={openModal}
                                                      className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
                         </div>
-                        <div className="w-75">
-                            <div align={"right"} className={"mb-1"}>
-                                <Button color={"btn btn-outline-info"} size={"sm"}
-                                        className={"rounded"}
-                                        onClick={openFiltrDebtors}>Qarzdorlar</Button>
-                                <Button color={"btn btn-outline-info rounded"} size={"sm"}
-                                        className={"btn mx-2 border-none rounded"}
-                                        onClick={downloadExcel}>
-                                    <span className={"icon icon-download"}></span></Button>
-                            </div>
-                            <Table className={"table-style w-100"}>
-                                <thead className={""}>
-                                <tr className={""}>
-                                    <th>No</th>
-                                    <th>Ism</th>
-                                    <th>Telefon</th>
-                                    <th colSpan="2">Amal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    students ? students.map((item, i) =>
-                                        <tr key={i} className={"table-tr"}>
-                                            <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
-                                            <td><Link className={"text-dark"}
-                                                      to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
-                                            </td>
-                                            <td>
-                                                {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
-                                            </td>
-                                            <td>
-                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ) : ''
-                                }
-                                </tbody>
-                            </Table>
-                            <div align={"center"}>
-                                <Pagination
-                                    activePage={page + 1}
-                                    itemsCountPerPage={size}
-                                    totalItemsCount={totalElements}
-                                    pageRangeDisplayed={5}
-                                    onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                                    linkClass="page-link"
-                                />
-                            </div>
-                        </div>
+                        <Nav tabs>
+                            <NavItem
+                                className={activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                <NavLink
+                                    onClick={() => {
+                                        toggle('DEFAULT');
+                                    }}
+                                >
+                                    Faol Talabalar
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                <NavLink
+                                    onClick={() => {
+                                        toggle('ARCHIVE');
+                                    }}
+                                >
+                                    Arxiv Talabalar
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <TabContent activeTab={activeTab}>
+                            <TabPane tabId="DEFAULT">
+                                <div className={"w-100"}>
+                                    <div className="w-75">
+                                        <div align={"right"} className={"mb-1"}>
+                                            <Button color={"btn btn-outline-info"} size={"sm"}
+                                                    className={"rounded"}
+                                                    onClick={openFiltrDebtors}>Qarzdorlar</Button>
+                                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
+                                                    className={"btn mx-2 border-none rounded"}
+                                                    onClick={downloadExcel}>
+                                                <span className={"icon icon-download"}></span></Button>
+                                        </div>
+                                        <Table className={"table-style w-100"}>
+                                            <thead className={""}>
+                                            <tr className={""}>
+                                                <th>No</th>
+                                                <th>Ism</th>
+                                                <th>Telefon</th>
+                                                <th colSpan="2">Amal</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                students ? students.map((item, i) =>
+                                                    <tr key={i} className={"table-tr"}>
+                                                        <td>{i + 1}</td>
+                                                        <td><Link className={"text-dark"}
+                                                                  to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
+                                                        </td>
+                                                        <td>
+                                                            {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
+                                                        </td>
+                                                        <td>
+                                                            <Button className={"table-info"}
+                                                                    onClick={() => openToArchive(item)}>
+                                                                <GlobusIcon/>
+                                                            </Button>
+                                                        </td>
+                                                        <td>
+                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                                <DeleteIcon/>
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ) : ''
+                                            }
+                                            </tbody>
+                                        </Table>
+                                        <div align={"center"}>
+                                            <Pagination
+                                                activePage={page + 1}
+                                                itemsCountPerPage={size}
+                                                totalItemsCount={totalElements}
+                                                pageRangeDisplayed={5}
+                                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                                linkClass="page-link"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabPane>
+                            <TabPane tabId="ARCHIVE">
+                                <div className={"w-100"}>
+                                    <div className="w-75">
+                                        <div align={"right"} className={"mb-1"}>
+                                            <Button color={"btn btn-outline-info"} size={"sm"}
+                                                    className={"rounded"}
+                                                    onClick={openFiltrDebtors}>Qarzdorlar</Button>
+                                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
+                                                    className={"btn mx-2 border-none rounded"}
+                                                    onClick={downloadExcel}>
+                                                <span className={"icon icon-download"}></span></Button>
+                                        </div>
+                                        <Table className={"table-style w-100"}>
+                                            <thead className={""}>
+                                            <tr className={""}>
+                                                <th>No</th>
+                                                <th>Ism</th>
+                                                <th>Telefon</th>
+                                                <th colSpan="2">Amal</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                students ? students.map((item, i) =>
+                                                    <tr key={i} className={"table-tr"}>
+                                                        <td>{i + 1}</td>
+                                                        <td><Link className={"text-dark"}
+                                                                  to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
+                                                        </td>
+                                                        <td>
+                                                            {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
+                                                        </td>
+                                                        <td>
+                                                            <Button className={"table-info"}
+                                                                    onClick={() => openToActive(item)}>
+                                                                <GlobusIcon/>
+                                                            </Button>
+                                                        </td>
+                                                        <td>
+                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                                <DeleteIcon/>
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ) : ''
+                                            }
+                                            </tbody>
+                                        </Table>
+                                        <div align={"center"}>
+                                            <Pagination
+                                                activePage={page + 1}
+                                                itemsCountPerPage={size}
+                                                totalItemsCount={totalElements}
+                                                pageRangeDisplayed={5}
+                                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                                                linkClass="page-link"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabPane>
+                        </TabContent>
                     </div>
                     :
                     <div className={"flex-column container"}>
@@ -220,6 +365,32 @@ class Student extends Component {
                     </div>
 
                 }
+
+
+                <Modal isOpen={toArchiveModal} toggle={() => openToArchive("")} className={""}>
+                    <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={toActiveModal} toggle={() => openToActive("")} className={""}>
+                    <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Bu Talabani Active ro'yxatga Qo'shmoqchimisiz 🤨❓
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -330,6 +501,8 @@ export default connect((
             teachers,
             readModal,
             teacherDto,
+            toArchiveModal,
+            toActiveModal,
         }
         ,
     }
@@ -352,7 +525,9 @@ export default connect((
             attachmentId,
             readModal,
             teachers,
-            teacherDto
+            teacherDto,
+            toArchiveModal,
+            toActiveModal,
         }
     )
 )(Student);
