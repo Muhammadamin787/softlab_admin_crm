@@ -46,7 +46,11 @@ class Student extends Component {
 
     handlePageChange(pageNumber) {
         if (this.state.secondPage) {
-            this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+            this.props.dispatch(getStudentsAction({
+                page: (pageNumber - 1),
+                size: this.props.size,
+                type: this.state.activeTab
+            }))
         } else {
             this.props.dispatch(getDebtorsAction(({page: (pageNumber - 1), size: this.props.size})))
         }
@@ -77,7 +81,6 @@ class Student extends Component {
         }
         const openFiltrDebtors = (item) => {
             this.setState({currentObject: item})
-            console.log(item, 1000);
             if (this.state.secondPage) {
                 dispatch(getDebtorsAction({page: 0, size: size}))
             } else {
