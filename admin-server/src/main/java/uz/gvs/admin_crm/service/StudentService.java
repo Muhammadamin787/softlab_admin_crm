@@ -132,7 +132,7 @@ public class StudentService {
 
     public ApiResponse getStudents(int page, int size,String type) {
         try {
-            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
+            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
@@ -184,7 +184,7 @@ public class StudentService {
                 student.getUser().getBirthDate() != null ? student.getUser().getBirthDate().toString() : "",
                 student.getUser().getRoles(),
                 student.getBalans(),
-                studentGroupDtos
+                student.getStudentGroup()
         );
     }
 
@@ -597,7 +597,6 @@ public class StudentService {
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
-
     }
 
 

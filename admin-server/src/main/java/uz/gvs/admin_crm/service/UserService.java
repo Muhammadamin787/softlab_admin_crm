@@ -39,7 +39,7 @@ public class UserService {
                 return null;
             }
             User user = new User();
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
             user.setFullName(userDto.getFullName());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setDescription(userDto.getDescription());

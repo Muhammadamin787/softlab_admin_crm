@@ -14,6 +14,7 @@ import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.repository.ClientRepository;
 import uz.gvs.admin_crm.repository.RegionRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -56,10 +57,11 @@ public class ClientService {
             if (clientRepository.existsByFullNameEqualsIgnoreCaseAndIdNot(clientDto.getFullName(), id)) {
                 return apiResponseService.existResponse();
             }
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
             Client client = optionalClient.get();
             client.setFullName(clientDto.getFullName());
             client.setPhoneNumber(clientDto.getPhoneNumber());
-            client.setAge(clientDto.getAge());
+            client.setBirthDate(formatter1.parse(clientDto.getBirthDate()));
             client.setDescription(clientDto.getDescription());
             client.setRegion(regionRepository.findById(clientDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get Region")));
             client.setGender(Gender.valueOf(clientDto.getGender()));
@@ -89,7 +91,7 @@ public class ClientService {
                 client.getFullName(),
                 client.getPhoneNumber(),
                 client.getDescription(),
-                client.getAge(),
+                client.getBirthDate().toString(),
                 client.getRegion() != null ? client.getRegion().getId() : null,
                 client.getRegion(),
                 client.getGender().toString()

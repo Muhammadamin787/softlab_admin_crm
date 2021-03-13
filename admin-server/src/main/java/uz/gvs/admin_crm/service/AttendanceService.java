@@ -118,8 +118,9 @@ public class AttendanceService {
                             }
                         }
                     }
+                    return apiResponseService.saveResponse();
                 }
-                return apiResponseService.saveResponse();
+                return apiResponseService.errorResponse();
             } else {
                 return apiResponseService.notFoundResponse();
             }

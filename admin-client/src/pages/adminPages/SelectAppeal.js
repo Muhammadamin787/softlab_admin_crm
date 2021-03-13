@@ -24,10 +24,6 @@ class SelectAppeal extends Component {
             id = this.props.match.params.id;
             dispatch(getOneAppeal({id: id}))
         }
-        dispatch(getClientStatusListAction({type: "REQUEST"}))
-        dispatch(getRegionsAction())
-        dispatch(getReklamaAction())
-        dispatch(getAppealListByEnumTypeAction({enumType: "REQUEST", page: 0, size: 20}))
         dispatch({
             type: "updateState",
             payload: {
@@ -206,8 +202,15 @@ class SelectAppeal extends Component {
                                                     <small className={"text-secondary"}>Murojaat vaqti: </small>
                                                     {currentItem.clientStatusConnect
                                                     && currentItem.clientStatusConnect.client
-                                                    && currentItem.clientStatusConnect.client.reklama
                                                     && moment(currentItem.clientStatusConnect.client.createdAt).format("DD/MM/yyyy, HH:mm")
+                                                    }</h6>
+                                            </hgroup>
+                                            <hgroup>
+                                                <h6>
+                                                    <small className={"text-secondary"}>Jinsi: </small>
+                                                    {currentItem.clientStatusConnect
+                                                    && currentItem.clientStatusConnect.client
+                                                    && currentItem.clientStatusConnect.client.gender === "MALE" ? "Erkak" : "Ayol"
                                                     }</h6>
                                             </hgroup>
                                             <hgroup>
@@ -228,14 +231,7 @@ class SelectAppeal extends Component {
                                                     && currentItem.clientStatusConnect.client.reklama.name
                                                     }</h6>
                                             </hgroup>
-                                            <hgroup>
-                                                <h6>
-                                                    <small className={"text-secondary"}>Jinsi: </small>
-                                                    {currentItem.clientStatusConnect
-                                                    && currentItem.clientStatusConnect.client
-                                                    && currentItem.clientStatusConnect.client.gender === "MALE" ? "Erkak" : "Ayol"
-                                                    }</h6>
-                                            </hgroup>
+
 
                                             <hgroup>
                                                 <h6>
@@ -245,14 +241,6 @@ class SelectAppeal extends Component {
                                                     && currentItem.clientStatusConnect.client.description
                                                     }</h6>
                                             </hgroup>
-                                        </div>
-                                        <div className="col-4">
-                                            <Button className="table-icon" onClick={() => openModal(currentItem)}>
-                                                <EditIcon/>
-                                            </Button>
-                                            <Button className="table-icon" onClick={() => openDeleteModal(currentItem)}>
-                                                <DeleteIcon/>
-                                            </Button>
                                         </div>
                                     </div>
                                 </div>
