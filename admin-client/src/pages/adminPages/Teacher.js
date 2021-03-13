@@ -114,7 +114,7 @@ class Teacher extends Component {
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY hh:mm:ss').toString(),
             }
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
