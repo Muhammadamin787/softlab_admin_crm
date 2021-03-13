@@ -66,7 +66,8 @@ const initState = {
     sortAges: [],
     selectExcel: [],
     byCource: [],
-    sortReklama: []
+    sortReklama: [],
+    employee: []
 };
 
 const reducers = {

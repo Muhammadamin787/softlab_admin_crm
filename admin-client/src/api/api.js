@@ -24,5 +24,6 @@ export const api = {
     salary: '/salary',
     attendance : "/attendance",
     dashboard: "/dashboard",
-    searchStudent: '/student/search'
+    searchStudent: '/student/search',
+    employee: '/employee'
 };
