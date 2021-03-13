@@ -106,7 +106,7 @@ public class TeacherService {
                         teacher.getUser().getRoles()
                 ),
                 teacher.getBalance(),
-                teacher.isPercent(),
+                teacher.getIsPercent(),
                 teacher.getSalary()
 
         );
