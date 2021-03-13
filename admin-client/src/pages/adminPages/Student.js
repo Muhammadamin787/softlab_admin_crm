@@ -48,7 +48,7 @@ class Student extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
     render() {
@@ -217,7 +217,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{i + 1}</td>
+                                                        <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
@@ -278,7 +278,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{i + 1}</td>
+                                                        <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>

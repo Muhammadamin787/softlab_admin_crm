@@ -16,7 +16,7 @@ import moment from "moment";
 class TeacherFinance extends Component {
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getFinanceTeacherAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getFinanceTeacherAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
     componentDidMount(pageNumber) {
@@ -127,7 +127,7 @@ class TeacherFinance extends Component {
                                         <tbody>
                                         {teacherPaymentFinance ? teacherPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link
                                                         to={"/admin/teacher/" + (item && item.teacherId ? item.teacherId : '')}>
@@ -170,7 +170,7 @@ class TeacherFinance extends Component {
                                         <tbody>
                                         {teacherPaymentFinance ? teacherPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link to={"/admin/teacher/" + (item && item.attendance && item.attendance.teacher
                                                         ? item.attendance.teacher.id : '')}>

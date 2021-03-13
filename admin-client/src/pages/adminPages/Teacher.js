@@ -50,7 +50,7 @@ class Teacher extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getTeachersAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getTeachersAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
     render() {
@@ -212,7 +212,7 @@ class Teacher extends Component {
                                         <tbody>
                                         {teachers ? teachers.map((item, i) =>
                                             <tr key={i} className={"table-tr"}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
                                                         {item.userDto && item.userDto.fullName}
@@ -268,7 +268,7 @@ class Teacher extends Component {
                                         <tbody>
                                         {teachers ? teachers.map((item, i) =>
                                             <tr key={i} className={"table-tr"}>
-                                                <td>{i + 1}</td>
+                                                <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
                                                         {item.userDto && item.userDto.fullName}
