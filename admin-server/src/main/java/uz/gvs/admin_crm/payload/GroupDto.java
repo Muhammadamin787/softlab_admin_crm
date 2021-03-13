@@ -34,6 +34,18 @@ public class GroupDto {
     private Room room;
     private GroupStatus groupStatus;
 
+    public GroupDto(String name,  UUID teacherId, String startTime, String finishTime, Integer courseId, Integer roomId, String startDate, String finishDate, Set<String> weekdays) {
+        this.name = name;
+        this.teacherId = teacherId;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.courseId = courseId;
+        this.roomId = roomId;
+        this.startDate = startDate;
+        this.finishDate = finishDate;
+        this.weekdays = weekdays;
+    }
+
     public GroupDto(Integer id, String name, String description, boolean active, String startTime, String finishTime, String startDate, String finishDate, Set<String> weekdays, Teacher teacher, Course course, Room room, GroupStatus groupStatus) {
         this.id = id;
         this.name = name;

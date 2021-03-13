@@ -32,8 +32,9 @@ public class DashboardService {
                 dashboardDtos.add(new DashboardDto("To'plam", setCount));
                 Integer groupCount = Integer.valueOf(client[3].toString());
                 dashboardDtos.add(new DashboardDto("Guruhda", groupCount));
-                Integer payCount = Integer.valueOf(client[4].toString());
-                dashboardDtos.add(new DashboardDto("To'langan", payCount));
+//                Integer payCount = Integer.valueOf(client[4].toString());
+                Object[] object2 = clientRepository.getTolovCountForFunnel();
+                dashboardDtos.add(new DashboardDto("To'langan", object2.length));
                 // dashboard card
                 Integer activeLid = Integer.valueOf(client[5].toString());
                 dashboardDtos.add(new DashboardDto("Faol lidlar", activeLid));
@@ -68,6 +69,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getStudentStatByAge() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -86,6 +88,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getStudentStatByGender() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -100,6 +103,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getReklamaSortByClient() {
         try {
             List<Object> objects = clientRepository.getReklamaSortByClient();

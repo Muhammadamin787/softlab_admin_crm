@@ -5,6 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.GroupDto;
 import uz.gvs.admin_crm.payload.ToplamDto;
 import uz.gvs.admin_crm.service.ToplamService;
 import uz.gvs.admin_crm.utils.AppConstants;
@@ -24,6 +25,12 @@ public class ToplamController {
     @PutMapping("/{id}")
     public HttpEntity<?> editToplam(@PathVariable int id, @RequestBody ToplamDto toplamDto) {
         ApiResponse apiResponse = toplamService.editToplam(id, toplamDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
+    }
+
+    @PutMapping("/makeGroup/{id}")
+    public HttpEntity<?> makeGroupByToplam(@PathVariable Integer id, @RequestBody GroupDto groupDto) {
+        ApiResponse apiResponse = toplamService.makeGroupByToplam(id, groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 

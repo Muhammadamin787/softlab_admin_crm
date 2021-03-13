@@ -90,26 +90,30 @@ public class ExcelService {
 
         // Creating data rows for each customer
         for (int i = 0; i < students.size(); i++) {
-            String[] s = students.get(i).getUser().getBirthDate().toString().split(" ");
-            String[] split = s[0].split("-");
-            int i1 = Integer.parseInt(split[0]);
-            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date(System.currentTimeMillis());
-            String[] s1 = formatter.format(date).split(" ");
-            String[] split2 = s1[0].split("-");
-            int i2 = Integer.parseInt(split2[0]);
-            int age = i2-i1;
+            int age = 0;
+            int studentStartDate = 0;
+            if (students.get(i).getUser().getBirthDate() != null) {
+                String[] s = students.get(i).getUser().getBirthDate().toString().split(" ");
+                String[] split = s[0].split("-");
+                int i1 = Integer.parseInt(split[0]);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date(System.currentTimeMillis());
+                String[] s1 = formatter.format(date).split(" ");
+                String[] split2 = s1[0].split("-");
+                int i2 = Integer.parseInt(split2[0]);
+                age = i2 - i1;
 
-            String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
-            String[] a=s2[0].split("-");
-            int studentStartDate=Integer.parseInt(a[0]);
+                String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
+                String[] a = s2[0].split("-");
+                studentStartDate = Integer.parseInt(a[0]);
+            }
 
-            String getGropuName = "" ;
+            String getGropuName = "";
             Set<StudentGroup> studentGroup = students.get(i).getStudentGroup();
-            for (StudentGroup studentGroup1: studentGroup) {
+            for (StudentGroup studentGroup1 : studentGroup) {
                 if (studentGroup.size() > 1) {
                     getGropuName += studentGroup1.getGroup().getName() + ", ";
-                }else {
+                } else {
                     getGropuName += studentGroup1.getGroup().getName();
                 }
             }
@@ -119,7 +123,8 @@ public class ExcelService {
             dataRow.createCell(1).setCellValue(age);
             dataRow.createCell(2).setCellValue(students.get(i).getUser().getPhoneNumber());
             dataRow.createCell(3).setCellValue(getGropuName);
-            dataRow.createCell(4).setCellValue(students.get(i).getUser().getRegion().getId() != 0 ?
+            dataRow.createCell(4).setCellValue(students.get(i).getUser().getRegion() != null &&
+                    students.get(i).getUser().getRegion().getId() != 0 ?
                     students.get(i).getUser().getRegion().getName() : null);
             dataRow.createCell(5).setCellValue(students.get(i).getBalans());
             dataRow.createCell(6).setCellValue(studentStartDate);
@@ -187,14 +192,13 @@ public class ExcelService {
         cell.setCellValue("Oylik");
         cell.setCellStyle(headerCellStyle);
 
-        cell=row.createCell(5);
+        cell = row.createCell(5);
         cell.setCellValue("Jisni");
         cell.setCellStyle(headerCellStyle);
 
-        cell=row.createCell(6);
+        cell = row.createCell(6);
         cell.setCellValue("Tug`ilgan vaqti");
         cell.setCellStyle(headerCellStyle);
-
 
 
         // Creating data rows for each customer
@@ -202,12 +206,12 @@ public class ExcelService {
             String[] s = teachers.get(i).getUser().getBirthDate().toString().split(" ");
             String[] split = s[0].split("-");
             int i1 = Integer.parseInt(split[0]);
-            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date(System.currentTimeMillis());
             String[] s1 = formatter.format(date).split(" ");
             String[] split2 = s1[0].split("-");
             int i2 = Integer.parseInt(split2[0]);
-            int age = i2-i1;
+            int age = i2 - i1;
 
             Row dataRow = sheet.createRow(i + 1);
             dataRow.createCell(0).setCellValue(teachers.get(i).getUser().getFullName());
@@ -219,12 +223,6 @@ public class ExcelService {
             dataRow.createCell(5).setCellValue(teachers.get(i).getUser().getGender().toString());
             dataRow.createCell(6).setCellValue(s[0]);
         }
-
-
-
-
-
-
 
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

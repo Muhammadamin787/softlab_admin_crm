@@ -99,7 +99,7 @@ export const getReklamaForSelectApi = () => {
 }
 //START CLIENT STATUS
 export const getClientStatusListApi = () => {
-        return HttpClient.doGet(api.clientStatus + "/list")
+    return HttpClient.doGet(api.clientStatus + "/list")
 }
 export const saveClientStatusApi = (data) => {
     return HttpClient.doPost(api.clientStatus, data)
@@ -278,10 +278,8 @@ export const getFileAppApi = (data) => {
 
 // START STUDENT API
 export const getDebtorsAPI = (data) => {
-    return HttpClient.doGet(api.debtors)
+    return HttpClient.doGet(api.debtors + "?page=" + data.page + "&size=" + data.size)
 }
-// e
-
 
 export const saveStudentApi = (data) => {
     return HttpClient.doPost(api.student, data)
@@ -387,6 +385,12 @@ export const editStudentStatusApi = (data) => {
 export const saveAppealApi = (data) => {
     return HttpClient.doPost(api.appeal, data)
 }
+export const makeStudentByAppealApi = (data) => {
+    return HttpClient.doGet(api.appeal + "/makeStudent/" + data.id, data)
+}
+export const editAppealApi = (data) => {
+    return HttpClient.doPut(api.appeal + "/" + data.id, data)
+}
 export const changeAppealEnumTypeApi = (data) => {
     if (data && data.id)
         return HttpClient.doPut(api.appeal + "/changeType/" + data.id, data)
@@ -399,6 +403,9 @@ export const getAppealListAllApi = (data) => {
 }
 export const getOneAppealApi = (data) => {
     return HttpClient.doGet(api.appeal + "/" + data.id)
+}
+export const getOneAppealForEditApi = (data) => {
+    return HttpClient.doGet(api.appeal + "/edit/" + data.id)
 }
 export const getAppealListByStatusTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&typeId=" + data.typeId + "&page=" + data.page + "&size=" + data.size)

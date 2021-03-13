@@ -25,16 +25,13 @@ import {DeleteIcon, GlobusIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import moment from 'moment';
 import Pagination from "react-js-pagination";
-
-import {formatPhoneNumber} from "../../utils/addFunctions";
 import {Link} from "react-router-dom";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 
 
 class Student extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-        // this.props.dispatch(getStudentsAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getDebtorsAction({page: 0, size: 20}))
         this.props.dispatch(getStudentsAction({page: 0, size: this.props.size, type: "DEFAULT"}))
     }
 
@@ -48,11 +45,19 @@ class Student extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getStudentsAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
+        if (this.state.secondPage) {
+            this.props.dispatch(getStudentsAction({
+                page: (pageNumber - 1),
+                size: this.props.size,
+                type: this.state.activeTab
+            }))
+        } else {
+            this.props.dispatch(getDebtorsAction(({page: (pageNumber - 1), size: this.props.size})))
+        }
     }
 
     render() {
-        const {currentObject,activeTab} = this.state;
+        const {currentObject, activeTab} = this.state;
         const {
             page,
             size,
@@ -76,6 +81,11 @@ class Student extends Component {
         }
         const openFiltrDebtors = (item) => {
             this.setState({currentObject: item})
+            if (this.state.secondPage) {
+                dispatch(getDebtorsAction({page: 0, size: size}))
+            } else {
+                dispatch(getStudentsAction({page: 0, size: size, type: activeTab}))
+            }
             this.setState({secondPage: !this.state.secondPage})
         }
         const openStudentInfo = (item) => {
@@ -118,7 +128,7 @@ class Student extends Component {
                 avatarId: v.attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
             }
             dispatch(saveStudentAction(studentDto))
         }
@@ -178,16 +188,17 @@ class Student extends Component {
                                         toggle('DEFAULT');
                                     }}
                                 >
-                                    Faol Talabalar
+                                    Faol talabalar
                                 </NavLink>
                             </NavItem>
-                            <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            <NavItem
+                                className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                                 <NavLink
                                     onClick={() => {
                                         toggle('ARCHIVE');
                                     }}
                                 >
-                                    Arxiv Talabalar
+                                    Arxiv talabalar
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -217,7 +228,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
+                                                        <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
@@ -225,13 +236,12 @@ class Student extends Component {
                                                             {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                                         </td>
                                                         <td>
-                                                            <Button className={"table-info"}
+                                                            <Button className={"table-icon"}
                                                                     onClick={() => openToArchive(item)}>
                                                                 <GlobusIcon/>
                                                             </Button>
-                                                        </td>
-                                                        <td>
-                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -256,15 +266,6 @@ class Student extends Component {
                             <TabPane tabId="ARCHIVE">
                                 <div className={"w-100"}>
                                     <div className="w-75">
-                                        <div align={"right"} className={"mb-1"}>
-                                            <Button color={"btn btn-outline-info"} size={"sm"}
-                                                    className={"rounded"}
-                                                    onClick={openFiltrDebtors}>Qarzdorlar</Button>
-                                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
-                                                    className={"btn mx-2 border-none rounded"}
-                                                    onClick={downloadExcel}>
-                                                <span className={"icon icon-download"}></span></Button>
-                                        </div>
                                         <Table className={"table-style w-100"}>
                                             <thead className={""}>
                                             <tr className={""}>
@@ -278,7 +279,7 @@ class Student extends Component {
                                             {
                                                 students ? students.map((item, i) =>
                                                     <tr key={i} className={"table-tr"}>
-                                                        <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
+                                                        <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
@@ -290,9 +291,8 @@ class Student extends Component {
                                                                     onClick={() => openToActive(item)}>
                                                                 <GlobusIcon/>
                                                             </Button>
-                                                        </td>
-                                                        <td>
-                                                            <Button className="table-icon" onClick={() => openDeleteModal(item)}>
+                                                            <Button className="table-icon"
+                                                                    onClick={() => openDeleteModal(item)}>
                                                                 <DeleteIcon/>
                                                             </Button>
                                                         </td>
@@ -315,112 +315,6 @@ class Student extends Component {
                                 </div>
                             </TabPane>
                         </TabContent>
-
-                        <Modal isOpen={toArchiveModal} toggle={() => openToArchive("")} className={""}>
-                            <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
-                                         charCode="X">O'chirish</ModalHeader>
-                            <ModalBody>
-                                Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
-                                <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
-                            </ModalFooter>
-                        </Modal>
-
-                        <Modal isOpen={toActiveModal} toggle={() => openToActive("")} className={""}>
-                            <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
-                                         charCode="X">O'chirish</ModalHeader>
-                            <ModalBody>
-                                Bu Talabani Active ro'yxatga Qo'shmoqchimisiz 🤨❓
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
-                                <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
-                            </ModalFooter>
-                        </Modal>
-
-
-                        <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                            <AvForm className={""} onValidSubmit={saveItem}>
-                                <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                    {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
-                                </ModalHeader>
-                                <ModalBody>
-                                    <div className={"w-100 modal-form"}>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.fullName : ""}
-                                            type={"text"}
-                                            label={"FISH"} name={"fullName"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                required: {value: true},
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
-                                            placeholer={"991234567"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.parentPhone : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Ota-onasining telefon raqami"} name={"parentPhone"}
-                                            className={"form-control"}
-                                            placeholer={"991234567"}/>
-                                        <AvField
-                                            type={"date"}
-                                            defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
-                                                : ""}
-                                            label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                            required/>
-                                        <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                                 name="regionId"
-                                                 defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                            <option key={0} value={"0"}>Ota hududni tanlang</option>
-                                            {regions ? regions.map((item, i) =>
-                                                <option key={i} value={item.id}>{item.name}</option>
-                                            ) : ""}
-                                        </AvField>
-                                        <AvRadioGroup name="gender"
-                                                      defaultValue={currentObject ? currentObject.gender : ""}
-                                                      label="Jins" required
-                                                      errorMessage="Birini tanlang!">
-                                            <AvRadio label="Erkak" value="MALE"/>
-                                            <AvRadio label="Ayol" value="FEMALE"/>
-                                        </AvRadioGroup>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.description : ""}
-                                            type={"textarea"}
-                                            label={"Izoh"} name={"description"} className={"form-control"}/>
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                                    <Button color="primary">Saqlash</Button>
-                                </ModalFooter>
-                            </AvForm>
-                        </Modal>
-                        <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
-                            <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
-                                         charCode="X">O'chirish</ModalHeader>
-                            <ModalBody>
-                                Rostdan ham ushbu elementni o'chirishni istaysizmi?
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
-                                <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
-                            </ModalFooter>
-                        </Modal>
                     </div>
                     :
                     <div className={"flex-column container"}>
@@ -440,8 +334,9 @@ class Student extends Component {
                             <tbody>
                             {selectDebtors ? selectDebtors.map((item, i) =>
                                 <tr key={i} className={"table-tr"}>
-                                    <td>{i + 1}</td>
-                                    <td>{item.fullName}</td>
+                                    <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
+                                    <td><Link className={"text-dark"}
+                                              to={"/admin/student/" + (item.id)}>{item.fullName}</Link></td>
                                     <td>{item.phoneNumber}</td>
                                     <td>{item.parentPhone}</td>
                                     <td>{item.region ? item.region.name : ''}</td>
@@ -459,171 +354,115 @@ class Student extends Component {
                             linkClass="page-link"
                         />
 
-                        <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                            <AvForm className={""} onValidSubmit={saveItem}>
-                                <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                    {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
-                                </ModalHeader>
-                                <ModalBody>
-                                    <div className={"w-100 modal-form"}>changeTeacherStatusApi
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.fullName : ""}
-                                            type={"text"}
-                                            label={"FISH"} name={"fullName"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                required: {value: true},
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
-                                            placeholer={"991234567"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.parentPhone : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                required: {value: true},
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
-                                            className={"form-control"}
-                                            placeholer={"991234567"} required/>
-                                        <AvField
-                                            type={"date"}
-                                            defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
-                                                : ""}
-                                            label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                            required/>
-                                        <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                                 name="regionId"
-                                                 defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                            <option key={0} value={"0"}>Ota hududni tanlang</option>
-                                            {regions ? regions.map((item, i) =>
-                                                <option key={i} value={item.id}>{item.name}</option>
-                                            ) : ""}
-                                        </AvField>
-                                        <AvRadioGroup name="gender"
-                                                      defaultValue={currentObject ? currentObject.gender : ""}
-                                                      label="Jins" required
-                                                      errorMessage="Birini tanlang!">
-                                            <AvRadio label="Erkak" value="MALE"/>
-                                            <AvRadio label="Ayol" value="FEMALE"/>
-                                        </AvRadioGroup>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.description : ""}
-                                            type={"textarea"}
-                                            label={"Izoh"} name={"description"} className={"form-control"}/>
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                                    <Button color="primary">Saqlash</Button>
-                                </ModalFooter>
-                            </AvForm>
-                        </Modal>
-                        <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
-                            <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
-                                         charCode="X">O'chirish</ModalHeader>
-                            <ModalBody>
-                                Rostdan ham ushbu elementni o'chirishni istaysizmi?
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
-                                <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
-                            </ModalFooter>
-                        </Modal>
-
-                        <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                            <AvForm className={""} onValidSubmit={saveItem}>
-                                <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                                    {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
-                                </ModalHeader>
-                                <ModalBody>
-                                    <div className={"w-100 modal-form"}>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.fullName : ""}
-                                            type={"text"}
-                                            label={"FISH"} name={"fullName"} className={"form-control"}
-                                            placeholer={"nomi"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                required: {value: true},
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Telefon Raqam"} name={"phoneNumber"} className={"form-control"}
-                                            placeholer={"991234567"} required/>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.parentPhone : ""}
-                                            type={"number"}
-                                            errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
-                                            validate={{
-                                                required: {value: true},
-                                                pattern: {value: "^[0-9]+$"},
-                                                minLength: {value: 9},
-                                                maxLength: {value: 9}
-                                            }}
-                                            label={"Ota-onasining telefon Raqami"} name={"parentPhone"}
-                                            className={"form-control"}
-                                            placeholer={"991234567"} required/>
-                                        <AvField
-                                            type={"date"}
-                                            defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
-                                                : ""}
-                                            label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                            required/>
-                                        <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                                 name="regionId"
-                                                 defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                            <option key={0} value={"0"}>Ota hududni tanlang</option>
-                                            {regions ? regions.map((item, i) =>
-                                                <option key={i} value={item.id}>{item.name}</option>
-                                            ) : ""}
-                                        </AvField>
-                                        <AvRadioGroup name="gender"
-                                                      defaultValue={currentObject ? currentObject.gender : ""}
-                                                      label="Jins" required
-                                                      errorMessage="Birini tanlang!">
-                                            <AvRadio label="Erkak" value="MALE"/>
-                                            <AvRadio label="Ayol" value="FEMALE"/>
-                                        </AvRadioGroup>
-                                        <AvField
-                                            defaultValue={currentObject ? currentObject.description : ""}
-                                            type={"textarea"}
-                                            label={"Izoh"} name={"description"} className={"form-control"}/>
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                                    <Button color="primary">Saqlash</Button>
-                                </ModalFooter>
-                            </AvForm>
-                        </Modal>
-                        <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
-                            <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
-                                         charCode="X">O'chirish</ModalHeader>
-                            <ModalBody>
-                                Rostdan ham ushbu elementni o'chirishni istaysizmi?
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
-                                <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
-                            </ModalFooter>
-                        </Modal>
                     </div>
+
                 }
+
+
+                <Modal isOpen={toArchiveModal} toggle={() => openToArchive("")} className={""}>
+                    <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨❓
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={toActiveModal} toggle={() => openToActive("")} className={""}>
+                    <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 🤨❓
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => ItemChangeStatus(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
+                    <AvForm className={""} onValidSubmit={saveItem}>
+                        <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
+                            {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
+                        </ModalHeader>
+                        <ModalBody>
+                            <div className={"w-100 modal-form"}>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.fullName : ""}
+                                    type={"text"}
+                                    label={"FISH"} name={"fullName"} className={"form-control"}
+                                    placeholer={"nomi"} required/>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                    type={"text"}
+                                    errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
+                                    validate={{
+                                        required: {value: true},
+                                        pattern: {value: "^[0-9]+$"},
+                                        minLength: {value: 9},
+                                        maxLength: {value: 9}
+                                    }}
+                                    label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                    placeholer={"991234567"} required/>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.parentPhone : ""}
+                                    type={"text"}
+                                    errorMessage="telefon raqam uzunligi 9 ta bo'lishi shart"
+                                    validate={{
+                                        pattern: {value: "^[0-9]+$"},
+                                        minLength: {value: 9},
+                                        maxLength: {value: 9}
+                                    }}
+                                    label={"Ota-onasining telefon raqami"} name={"parentPhone"}
+                                    className={"form-control"}
+                                    placeholer={"991234567"}/>
+                                <AvField
+                                    type={"date"}
+                                    defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                        : ""}
+                                    label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
+                                    required/>
+                                <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                         name="regionId"
+                                         defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
+                                    <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                    {regions ? regions.map((item, i) =>
+                                        <option key={i} value={item.id}>{item.name}</option>
+                                    ) : ""}
+                                </AvField>
+                                <AvRadioGroup name="gender"
+                                              defaultValue={currentObject ? currentObject.gender : ""}
+                                              label="Jins" required
+                                              errorMessage="Birini tanlang!">
+                                    <AvRadio label="Erkak" value="MALE"/>
+                                    <AvRadio label="Ayol" value="FEMALE"/>
+                                </AvRadioGroup>
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.description : ""}
+                                    type={"textarea"}
+                                    label={"Izoh"} name={"description"} className={"form-control"}/>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="primary">Saqlash</Button>
+                        </ModalFooter>
+                    </AvForm>
+                </Modal>
+                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                 charCode="X">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
             </AdminLayout>
         );
     }

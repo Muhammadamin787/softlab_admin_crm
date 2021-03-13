@@ -2,9 +2,7 @@ import * as types from "../actionTypes/AppActionTypes";
 import * as app from "../../api/AppApi";
 
 import {
-
     getExcelInfoApi,
-
     getClientList,
     editClientApi,
     saveClientApi,
@@ -141,7 +139,8 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, changeTeacherStatusApi, changeStatusApi,
+    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
+    changeTeacherStatusApi, changeStatusApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -188,14 +187,15 @@ export const saveAttendanceAction = (data) => (dispatch) => {
     })
 }
 
-export const getDebtorsAction = () => (dispatch) => {
+export const getDebtorsAction = (data) => (dispatch) => {
     dispatch({
         api: getDebtorsAPI,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_DEBTORS_SUCCESS,
             types.REQUEST_ERROR
-        ]
+        ],
+        data
     })
 }
 
@@ -1297,11 +1297,11 @@ export const toChangeStatusAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 toArchiveModal: false,
-                toActiveModal:false
+                toActiveModal: false
             }
         })
         toast.success(res.payload.message)
-        dispatch(getStudentsAction({page: 0, size: 20, type: data.status}))
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1320,7 +1320,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             type: "updateState",
             payload: {
                 archiveModal: false,
-                activeModal:false
+                activeModal: false
             }
         })
         toast.success(res.payload.message)
@@ -1556,7 +1556,7 @@ export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
 // START APPEAL ACTIONS
 export const saveAppealAction = (data) => (dispatch) => {
     dispatch({
-        api: saveAppealApi,
+        api: data.id ? editAppealApi : saveAppealApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_SAVE_APPEAL_SUCCESS,
@@ -1565,6 +1565,25 @@ export const saveAppealAction = (data) => (dispatch) => {
         data
     }).then((res) => {
         dispatch(getAppealListAllAction())
+    })
+}
+export const makeStudentByAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: makeStudentByAppealApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_SAVE_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then((res) => {
+        if (res.statusCode === 201) {
+            toast.success("Talaba saqlandi!")
+            // data.history.push(config.BASE_URL + "/admin/student/" + res)
+        }
+        dispatch(getAppealListAllAction())
+    }).catch((e) => {
+        toast.error('Telefon raqam allaqachon mavjud!')
     })
 }
 export const changeAppalTypeAction = (data) => (dispatch) => {
@@ -1625,6 +1644,17 @@ export const getOneAppeal = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_APPEAL_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getOneAppealForEdit = (data) => (dispatch) => {
+    dispatch({
+        api: getOneAppealForEditApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data
