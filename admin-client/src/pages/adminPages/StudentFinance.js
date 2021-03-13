@@ -16,7 +16,6 @@ import moment from "moment";
 class StudentFinance extends Component {
 
     handlePageChange(pageNumber) {
-        console.clear()
         this.props.dispatch(getFinanceAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 

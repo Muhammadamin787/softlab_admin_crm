@@ -43,8 +43,6 @@ class SelectStudent extends Component {
             this.props.dispatch(getStudentAction({id: id}))
         }
         this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getGroupsForSelectAction())
-        this.props.dispatch(getPayTypeListAction())
         this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
     }
 
@@ -97,6 +95,8 @@ class SelectStudent extends Component {
         }
         const openPaymentModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: !showPaymentModal})
+            dispatch(getGroupsForSelectAction())
+            dispatch(getPayTypeListAction())
             dispatch({
                 type: "updateState",
                 payload: {
@@ -173,6 +173,9 @@ class SelectStudent extends Component {
         //StudentPayment Edit Start
         const editItem = (e, v) => {
             if (currentObject && currentObject.id) {
+                dispatch(getPayTypeListAction())
+                dispatch(getGroupsForSelectAction())
+
                 if (this.props.match && this.props.match.params && this.props.match.params.id) {
                     v.id = currentObject.id
                     v.groupId = addGroup;
@@ -200,6 +203,8 @@ class SelectStudent extends Component {
             if (activeTab !== tab)
                 this.setState({activeTab: tab})
             if (tab === "2") {
+                dispatch(getPayTypeListAction())
+                dispatch(getGroupsForSelectAction())
                 if (this.props.match && this.props.match.params && this.props.match.params.id) {
                     dispatch(getStudentPaymentAction(this.props.match.params.id))
                 }
@@ -522,13 +527,12 @@ class SelectStudent extends Component {
 
                                     Tolov Turi
                                     <AvRadioGroup name="payTypeId"
-                                                  defaultValue={currentObject && currentObject.payType ? currentObject.payType.name : ""}
+                                                  defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                   label="" required className="pay-form-style d-block"
                                                   errorMessage="Birini tanlang!">
 
                                         {payTypes ? payTypes.map((item, i) =>
-                                            <AvRadio key={i} className="d-block" label={item.name} value={item.id}
-                                                     checked={currentObject && currentObject.payType && currentObject.payType.id === item.id}/>
+                                            <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
                                         ) : ""}
                                     </AvRadioGroup>
                                     {console.log(currentObject)}
