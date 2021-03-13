@@ -37,7 +37,7 @@ class Teacher extends Component {
         this.props.dispatch(getRegionsAction())
 
         this.props.dispatch(getDebtorsAction({page: 0, size: 20}))
-        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "DEFAULT"}))
+        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
     }
 
     state = {
@@ -46,7 +46,7 @@ class Teacher extends Component {
         secondPage: true,
         specs: '',
         type: '',
-        activeTab: "DEFAULT",
+        activeTab: "ACTIVE",
     }
 
     handlePageChange(pageNumber) {
@@ -114,7 +114,7 @@ class Teacher extends Component {
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY hh:mm:ss').toString(),
             }
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
@@ -155,7 +155,7 @@ class Teacher extends Component {
         const ItemChangeStatus = (item) => {
             dispatch(toChangeTeacherStatusAction({
                 teacherId: item.id,
-                status: activeTab === "DEFAULT" ? "ARCHIVE" : "DEFAULT"
+                status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
             }))
         }
         return (
@@ -169,10 +169,10 @@ class Teacher extends Component {
                     </div>
                     <Nav tabs>
                         <NavItem
-                            className={activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
-                                    toggle('DEFAULT');
+                                    toggle('ACTIVE');
                                 }}
                             >
                                 Faol O'qituvchilar
@@ -190,7 +190,7 @@ class Teacher extends Component {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="DEFAULT">
+                        <TabPane tabId="ACTIVE">
                             <div className={"w-100"}>
                                 <div className="w-75">
                                     <div align={"right"} className="mb-1">
