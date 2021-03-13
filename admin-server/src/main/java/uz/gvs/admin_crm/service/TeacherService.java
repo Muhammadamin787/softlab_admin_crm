@@ -41,7 +41,7 @@ public class TeacherService {
 
     public ApiResponse saveTeacher(TeacherDto teacherDto) {
         try {
-            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 1))
+            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 0))
                 return apiResponseService.notEnoughErrorResponse();
             if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
                 User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
