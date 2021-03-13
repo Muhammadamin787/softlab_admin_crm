@@ -18,4 +18,6 @@ public interface ClientStatusConnectRepository extends JpaRepository<ClientStatu
 
     void deleteByClient_id(UUID client_id);
 
+    List<ClientStatusConnect> findAllByStatusIdAndToplam(String statusId, boolean toplam);
+
 }

@@ -65,7 +65,8 @@ const initState = {
     multiLineStat: [],
     sortAges: [],
     selectExcel: [],
-    byCource: []
+    byCource: [],
+    sortReklama: []
 };
 
 const reducers = {
@@ -573,6 +574,18 @@ const reducers = {
                         data: activeCount
                     }
                 ]
+            }
+            if (payload.payload.object.ageSortList && payload.payload.object.reklamaSortList.length > 0) {
+                let series = [];
+                let labels = [];
+                let agesList = payload.payload.object.reklamaSortList;
+                for (let i = 0; i < agesList.length; i++) {
+                    series.push(agesList[i].data);
+                    labels.push(agesList[i].label);
+                }
+                state.sortReklama = []
+                state.sortReklama.labels = labels;
+                state.sortReklama.series = series;
             }
             if (payload.payload.object.ageSortList && payload.payload.object.ageSortList.length > 0) {
                 let series = [];

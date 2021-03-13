@@ -68,6 +68,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getStudentStatByAge() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -86,6 +87,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getStudentStatByGender() {
         try {
             List<DashboardDto> dashboardDtos = new ArrayList<>();
@@ -100,6 +102,7 @@ public class DashboardService {
             return new ArrayList<>();
         }
     }
+
     public List<DashboardDto> getReklamaSortByClient() {
         try {
             List<Object> objects = clientRepository.getReklamaSortByClient();

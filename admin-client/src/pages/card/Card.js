@@ -52,10 +52,17 @@ class Card extends Component {
         enumType: '',
         dropdownOpen: true,
         curDropdownID: '',
+        toplamDropdown: '',
         editModal: false
     }
     isOpen = (id) => {
         return this.state.curDropdownID === id
+    }
+    isGroupModal = (id) => {
+        return this.state.toplamDropdown === id
+    }
+    toplamDropdownToggle = (item) => {
+        this.setState({toplamDropdown: item})
     }
     dropdownToggle = (item) => {
         this.setState({curDropdownID: item})
@@ -119,6 +126,12 @@ class Card extends Component {
             dispatch(saveAppealAction(v));
         }
         const makeStudent = (id) => {
+            dispatch(makeStudentByAppealAction({id: id, history: history}));
+        }
+        const makeGroupModal = (id) => {
+
+        }
+        const makeGroup = (id) => {
             dispatch(makeStudentByAppealAction({id: id, history: history}));
         }
 
@@ -189,7 +202,33 @@ class Card extends Component {
                                         <div className={"section"} onDrop={(e) => drop(e, item.id)}
                                              onDragOver={allowDrop}
                                              draggable={false} id={section.id + item.title}>
-                                            <h6>{section.name}</h6>
+                                            <Row>
+                                                <Col md={item.title === "COLLECTION" ? "10" : "12"}>
+                                                    <small>{section.name}</small>
+                                                </Col>
+                                                {item.title === "COLLECTION" ?
+                                                    <Col md={"2"}>
+                                                        <Dropdown
+                                                            className="d-inline"
+                                                            id={"show" + section.id + item.title} onMouseOver={() => {
+                                                            this.dropdownToggle("show" + section.id + item.title)
+                                                        }} onMouseLeave={() => {
+                                                            this.dropdownToggle('')
+                                                        }} isOpen={this.isOpen("show" + section.id + item.title)}
+                                                            toggle={() => {
+                                                                this.dropdownToggle("show" + section.id + item.title)
+                                                            }}>
+                                                            <DropdownToggle className={"btn btn-light text-center"}
+                                                                            size={"sm"}>:</DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem
+                                                                    onClick={() => makeGroupModal(section.id)}>Guruh
+                                                                    tayyorlash</DropdownItem>
+                                                            </DropdownMenu>
+                                                        </Dropdown>
+                                                    </Col>
+                                                    : ""}
+                                            </Row>
                                             <hr/>
                                             {section.appealDtos ? section.appealDtos.map(appeal =>
                                                 <div className={"element"} draggable={true}

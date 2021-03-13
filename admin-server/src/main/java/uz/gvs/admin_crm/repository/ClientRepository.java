@@ -125,4 +125,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Query(nativeQuery = true, value = "select r.name, sum(case when r.id=(select cl.reklama_id from client cl where cl.reklama_id=r.id limit 1) then (select count(*)  from client cl where cl.reklama_id=r.id) else 0 end) as soni from reklama r  group by r.name")
     List<Object> getReklamaSortByClient();
 
+
+
 }
