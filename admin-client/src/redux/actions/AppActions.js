@@ -141,7 +141,7 @@ import {
     getDashboardStudentStatApi,
     getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
     changeTeacherStatusApi, changeStatusApi,
-    getByCourseApi, getEmployeeListApi, editEmployeeApi, saveEmployeeApi,
+    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
