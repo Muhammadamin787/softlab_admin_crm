@@ -432,7 +432,7 @@ class SelectGroup extends Component {
                                                             }
                                                         </tr>
                                                         {students ? students.map((item, i) =>
-                                                            item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                                                            item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
                                                                 <tr key={i}>
                                                                     <td className={"attandance-block_td py-auto"}>{item.fullName}</td>
 
