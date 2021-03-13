@@ -141,7 +141,7 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi,
+    getByCourseApi, getEmployeeListApi, editEmployeeApi, saveEmployeeApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1845,3 +1845,56 @@ export const getGroupsByCourseAction = (data) => (dispatch) => {
 }
 
 // FINISH DASHBOARD
+
+// START EMPLOYEE
+export const getEmployeeListAction = () => (dispatch) => {
+    dispatch({
+        api: getEmployeeListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+
+export const saveEmployeeAction = (data) => (dispatch) => {
+    dispatch({
+        api: (data.id ? editEmployeeApi : saveEmployeeApi),
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+        dispatch(getEmployeeListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+export const deleteEmployeeAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteEmployeeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                employee: null
+            }
+        })
+        toast.success("Malumot ochirildi")
+        dispatch(getEmployeeListAction())
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+};
+// FINISH EMPLOYEE

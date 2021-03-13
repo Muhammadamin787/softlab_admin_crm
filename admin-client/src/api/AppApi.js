@@ -477,3 +477,21 @@ export const searchStudentApi = (data) => {
     return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name : ""))
 }
 // FINISH SEARCH STUDENT
+
+// START EMPLOYEE
+export const saveEmployeeApi = (data) => {
+    return HttpClient.doPost(api.employee, data)
+}
+export const editEmployeeApi = (data) => {
+    return HttpClient.doPut(api.employee + "/" + data.id, data)
+}
+export const getEmployeeApi = () => {
+    return HttpClient.doGet(api.employee + "/")
+}
+export const getEmployeeListApi = (data) => {
+    return HttpClient.doGet(api.employee + "/" + data.id + "?page=" + data.page + "&size=" + data.size)
+}
+export const deleteEmployeeApi = (data) => {
+    return HttpClient.doDelete(api.employee + "/" + data)
+}
+// FINSIH EMPLOYEE

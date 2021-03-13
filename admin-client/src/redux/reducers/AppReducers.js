@@ -65,7 +65,8 @@ const initState = {
     multiLineStat: [],
     sortAges: [],
     selectExcel: [],
-    byCource: []
+    byCource: [],
+    employee: []
 };
 
 const reducers = {

@@ -59,6 +59,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/student/:id" component={SelectStudent}/>
                 {/*<PrivateRoute exact path="/admin/courseCategory/:id" component={CourseCategory}/>*/}
                 <PrivateRoute exact path="/admin/teachers" component={AddTeacher}/>
+                <PrivateRoute exact path="/admin/teachers" component={AddTeacher}/>
                 <PrivateRoute exact path="/admin/teacher/:id" component={SelectTeacher}/>
                 {/*<PrivateRoute exact path="/admin/reklama" component={Reklama}/>*/}
                 <PrivateRoute exact path="/admin/room" component={Room}/>
