@@ -10,6 +10,8 @@ import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.GroupService;
 import uz.gvs.admin_crm.utils.AppConstants;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("api/group")
 public class GroupController {
@@ -34,15 +36,18 @@ public class GroupController {
 
     @GetMapping
     public HttpEntity<?> getGroupList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        ApiResponse apiResponse = groupService.getGroupList(page, size);
+                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+                                      @RequestParam(value = "status", defaultValue = "ACTIVE") String status) {
+        ApiResponse apiResponse = groupService.getGroupList(page, size,status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @GetMapping("/schedule/{week}")
     public HttpEntity<?> getGroups(@PathVariable String week) {
         ApiResponse apiResponse = groupService.getGroupsByWeekDayForSchedule(week);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @GetMapping("/schedule")
     public HttpEntity<?> getAllGroups() {
         ApiResponse apiResponse = groupService.getAllGroups();
@@ -54,6 +59,7 @@ public class GroupController {
         ApiResponse apiResponse = groupService.getGroupsForSelect();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @GetMapping("/search")
     public HttpEntity<?> searchGroup(@RequestParam(value = "name") String name) {
         ApiResponse apiResponse = groupService.searchGroup(name);
@@ -77,6 +83,7 @@ public class GroupController {
         ApiResponse apiResponse = groupService.changeToArchiveStatus(groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @PatchMapping("/changeToActiveStatus")
     public HttpEntity<?> changeToActiveStatus(@RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = groupService.changeToActiveStatus(groupDto);
@@ -93,5 +100,15 @@ public class GroupController {
             return ResponseEntity.status(409).body(apiResponseService.tryErrorResponse());
         }
     }
+
+    // Change Status
+
+    @GetMapping("/changeStatus")
+    public HttpEntity<?> changeStatus(@RequestParam(value = "groupId") Integer groupId,
+                                      @RequestParam(value = "status") String status) {
+        ApiResponse apiResponse = groupService.changeStatus(groupId, status);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
 
 }
