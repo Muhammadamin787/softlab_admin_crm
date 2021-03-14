@@ -41,9 +41,9 @@ class SelectStudent extends Component {
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getStudentAction({id: id}))
+            this.props.dispatch(getRegionsAction())
+            this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
         }
-        this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getStudentGroupAction(this.props.match.params.id))
     }
 
     state = {
@@ -95,7 +95,6 @@ class SelectStudent extends Component {
         }
         const openPaymentModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: !showPaymentModal})
-            dispatch(getGroupsForSelectAction())
             dispatch(getPayTypeListAction())
             dispatch({
                 type: "updateState",
@@ -105,6 +104,7 @@ class SelectStudent extends Component {
             })
         }
         const openAddGroupModal = (item) => {
+            this.props.dispatch(getGroupsForSelectAction())
             this.setState({currentObject: item})
             dispatch({
                 type: "updateState",
@@ -511,6 +511,7 @@ class SelectStudent extends Component {
                                     placeholer={"nomi"} required/>
 
                                 <>
+                                    {console.log(selectGroups)}
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
                                             value: currentObject.group.id,

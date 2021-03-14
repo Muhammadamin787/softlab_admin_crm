@@ -168,7 +168,7 @@ public class GroupService {
     public ApiResponse getGroupsForSelect() {
         try {
 
-            List<Group> all = groupRepository.findAll();
+            List<Group> all = groupRepository.findAllByGroupStatus(GroupStatus.ACTIVE);
             List<ResSelect> resSelects = new ArrayList<>();
             for (Group group : all) {
                 ResSelect resSelect = new ResSelect();
@@ -187,7 +187,7 @@ public class GroupService {
     public ApiResponse getGroupList(int page, int size) {
         try {
             Page<Group> all = null;
-            all = groupRepository.findAll(PageRequest.of(page, size));
+            all = groupRepository.findAllByGroupStatus(GroupStatus.ACTIVE, PageRequest.of(page, size));
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
