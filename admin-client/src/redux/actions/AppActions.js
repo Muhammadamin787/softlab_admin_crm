@@ -1302,7 +1302,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1370,7 +1370,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
