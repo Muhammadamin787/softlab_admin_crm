@@ -17,8 +17,10 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 //            "limit :size offset (:size*:page)")
 //    List<Payment> getByDate(Date date1, Date date2, int page, int size);
 
-    @Query(nativeQuery = true, value = "select * from payment pt where pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  >= :date1) and pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  < :date2)")
-    Page<Payment> getByDate(Date date1, Date date2, Pageable pageable);
+    @Query(nativeQuery = true, value = "select * from payment pt where pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  >= :date1) and pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  < :date2) order by pt.created_at desc limit :size offset (:size * :page)")
+    List<Payment> getByDate(Date date1, Date date2, int page, int size);
+    @Query(nativeQuery = true, value = "select count(*) from payment pt where pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  >= :date1) and pt.attendance_id = ANY(select att.id from attendance att where att.attend_date  < :date2)")
+    Integer getByDateCount(Date date1, Date date2);
     @Query(nativeQuery = true, value = "select cast(p.id as varchar) from payment p where attendance_id=:attendanceId")
     String getPaymentIdForDelete(UUID attendanceId);
 }
