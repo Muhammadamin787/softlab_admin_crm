@@ -34,14 +34,8 @@ import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
 import {
-    BgIcon,
-    BrandIcon,
-    CloseIcon,
-    DashboardIcon,
     DeleteIcon,
-    EditIcon, GlobusIcon, MessageIcon,
-    ShowIcon, UserIcon,
-    WarehouseIcon
+    GlobusIcon,
 } from "../../component/Icons";
 import moment from "moment";
 import Pagination from "react-js-pagination";

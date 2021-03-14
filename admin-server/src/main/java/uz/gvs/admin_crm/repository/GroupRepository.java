@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.Room;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
@@ -19,6 +20,8 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     boolean existsByTeacher_Id(UUID teacher_id);
 
     List<Group> findAllByTeacher_id(UUID teacher_id);
+    List<Group> findAllByGroupStatus(GroupStatus groupStatus);
+    Page<Group> findAllByGroupStatus(GroupStatus groupStatus, Pageable pageable);
 
     boolean existsByNameEqualsIgnoreCaseAndCourseId(String name, Integer id);
 
@@ -33,7 +36,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(nativeQuery = true, value = "select * from groups gr where gr.active = true and gr.group_status = 'ACTIVE'")
     List<Group> findAllGroups1();
 
-
     @Query(nativeQuery = true, value = "select * from groups gr where gr.course_id = (select id from course cr where cr.id=:courseId)")
     List<Group> findGroupByCource(Integer courseId);
 
@@ -47,7 +49,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(nativeQuery = true, value = "select gr.id, gr.name from groups gr" +
             " where LOWER(gr.name) like LOWER(concat('%', :objName, '%')) limit 10")
     List<Object> searchGroup(String objName);
-
-    Page<Group> findAllByGroupStatus(GroupStatus status, Pageable pageable);
 }
 //
