@@ -477,7 +477,6 @@ public class StudentService {
             switch (type) {
                 case "all":
                     List<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, page, size);
-
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     Long.valueOf(studentPaymentRepository.getStudentPaymentByDateCount(firstDate, secondDate)),
@@ -488,7 +487,6 @@ public class StudentService {
                     );
                 case "byCashbacks":
                     List<StudentPayment> byCashback = studentPaymentRepository.getByDateAndCashback(firstDate, secondDate, page, size);
-
                     return apiResponseService.getResponse(
                             new PageableDto(
                                     Long.valueOf(studentPaymentRepository.getByDateAndCashbackCount(firstDate, secondDate)),

@@ -24,11 +24,10 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
     @Query(nativeQuery = true, value = "select count(*) from student_payment sp where sp.cashback_id is not null")
     Integer getStudentPaymentByCashbackCount();
 
-
-    @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2 order by sp.created_at desc limit :size offset (:size * :page)")
+    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= :date1 and sp.pay_date < :date2 order by sp.created_at desc limit :size offset (:size * :page)")
     List<StudentPayment> getByDate(Date date1, Date date2, int size, int page);
 
-    @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2 and cashback_id is not null order by sp.created_at desc limit :size offset (:size * :page)")
+    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= :date1 and sp.pay_date < :date2 and sp.cashback_id is not null order by sp.created_at desc limit :size offset (:size * :page)")
     List<StudentPayment> getByDateAndCashback(Date date1, Date date2, int size, int page);
 
     @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 and cashback_id is not null")
