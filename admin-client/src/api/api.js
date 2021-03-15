@@ -25,5 +25,6 @@ export const api = {
     attendance : "/attendance",
     dashboard: "/dashboard",
     searchStudent: '/student/search',
-    employee: '/employee'
+    employee: '/employee',
+    accountant:'/excel/download/accountant'
 };

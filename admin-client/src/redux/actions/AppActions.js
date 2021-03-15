@@ -3,6 +3,7 @@ import * as app from "../../api/AppApi";
 
 import {
     getExcelInfoApi,
+
     getClientList,
     editClientApi,
     saveClientApi,
@@ -147,6 +148,18 @@ import {toast} from "react-toastify";
 import {config} from "../../utils/config";
 
 
+export const getExcelListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getExcelListApp,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_INFO_IN_EXCEL,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
+
 export const getAttendanceListAction = (payload) => (dispatch) => {
     dispatch({
         api: getAttendanceListAppApi,
@@ -158,6 +171,7 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
         data: payload
     })
 }
+
 export const getStudentsByGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentByGroupApi,
@@ -211,6 +225,14 @@ export const downloadTeacherFileAction = () => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/teacher")
     link.setAttribute("download", "teacher.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+
+export const downloadAccountantFileAction = (v) => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/accountant?startDate="+v.startDate.toString() +"&finishDate="+v.finishDate.toString())
+    link.setAttribute("download","accountant.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -904,7 +926,7 @@ export const changeGroupStatusActions = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getGroupsAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
+        dispatch(getGroupsAction({page: 0, size: 20, type: data.status === "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1364,7 +1386,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
+        dispatch(getTeachersAction({page: 0, size: 20}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1400,6 +1422,8 @@ export const deleteTeacherAction = (data) => (dispatch) => {
         })
     })
 }
+
+
 // START STUDENT PAYMENT ACTIONS
 export const getStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
@@ -1423,6 +1447,7 @@ export const getStudentGroupAction = (data) => (dispatch) => {
         data: data
     })
 }
+
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
@@ -1472,6 +1497,7 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
         })
     })
 }
+
 export const getStudentPaymentListByDateAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentPaymentListByDateApi,
@@ -1483,6 +1509,7 @@ export const getStudentPaymentListByDateAction = (data) => (dispatch) => {
         data
     })
 }
+
 export const getFinanceAction = (data) => (dispatch) => {
     dispatch({
         api: getFinanceStudentApi,
@@ -1516,6 +1543,8 @@ export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
         data
     })
 }
+
+
 // FINISH STUDENT PAYMENT ACTIONS
 
 // START APPEAL ACTIONS
@@ -1779,6 +1808,7 @@ export const editTeacherSalaryListAction = (payload) => (dispatch) => {
         toast.error("Xato")
     })
 }
+
 export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
     dispatch({
         api: deleteTeacherSalaryApi,
@@ -1835,6 +1865,7 @@ export const getDailySchedule = (payload) => (dispatch) => {
         data: payload
     })
 }
+
 export const getWeeklySchedule = () => (dispatch) => {
     dispatch({
         api: getWeeklyScheduleList,
@@ -1890,16 +1921,6 @@ export const getEmployeeListAction = () => (dispatch) => {
         api: getEmployeeListApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEES_SUCCESS,
-            types.REQUEST_ERROR,
-        ]
-    })
-}
-export const getEmployeeAction = () => (dispatch) => {
-    dispatch({
-        api: getEmployeeApi,
-        types: [
-            types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR,
         ]
@@ -1911,24 +1932,24 @@ export const saveEmployeeAction = (data) => (dispatch) => {
         api: (data.id ? editEmployeeApi : saveEmployeeApi),
         types: [
             types.REQUEST_START,
-            types.REQUEST_SAVE_EMPLOYEE_SUCCESS,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR
         ],
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        this.props.dispatch(getEmployeeListAction({page: 0, size: this.props.size}))
-        dispatch(getEmployeeAction({id: data.id}))
+        dispatch(getEmployeeListAction())
     }).catch((err) => {
         toast.error("Xatolik")
     })
 }
+
 export const deleteEmployeeAction = (data) => (dispatch) => {
     dispatch({
         api: deleteEmployeeApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_SAVE_EMPLOYEE_SUCCESS,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR
         ],
         data: data
