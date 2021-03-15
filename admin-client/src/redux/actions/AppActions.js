@@ -3,6 +3,7 @@ import * as app from "../../api/AppApi";
 
 import {
     getExcelInfoApi,
+
     getClientList,
     editClientApi,
     saveClientApi,
@@ -141,11 +142,23 @@ import {
     getDashboardStudentStatApi,
     getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
     changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi
+    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi, getExcelListApp
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
 
+
+export const getExcelListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getExcelListApp,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_INFO_IN_EXCEL,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
 
 export const getAttendanceListAction = (payload) => (dispatch) => {
     dispatch({
@@ -158,6 +171,7 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
         data: payload
     })
 }
+
 export const getStudentsByGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentByGroupApi,
@@ -211,6 +225,14 @@ export const downloadTeacherFileAction = () => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/teacher")
     link.setAttribute("download", "teacher.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+
+export const downloadAccountantFileAction = (v) => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/accountant?startDate="+v.startDate.toString() +"&finishDate="+v.finishDate.toString())
+    link.setAttribute("download","accountant.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -907,7 +929,7 @@ export const changeGroupStatusActions = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getGroupsAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
+        dispatch(getGroupsAction({page: 0, size: 20, type: data.status === "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1302,7 +1324,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
