@@ -169,7 +169,7 @@ export const deleteRegionApi = (data) => {
 // START GROUP API
 export const getGroupsApi = (data) => {
     return HttpClient.doGet(api.group + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size : ""))
+        + "&size=" + data.size + "&status=" + data.type : ""))
 }
 export const getGroupsForSelectApi = () => {
     return HttpClient.doGet(api.group + "/select")
@@ -186,11 +186,8 @@ export const saveGroupApi = (data) => {
 export const changeStudentGroupStatusApi = (data) => {
     return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
-export const changeGroupToArchiveStatusApi = (data) => {
-    return HttpClient.doPatch(api.group + "/changeToArchiveStatus", data)
-}
-export const changeGroupToActiveStatusApi = (data) => {
-    return HttpClient.doPatch(api.group + "/changeToActiveStatus", data)
+export const changeGroupAPi = (data) => {
+    return HttpClient.doGet(api.group + "/changeStatus?groupId=" + data.groupId + "&status=" + data.status)
 }
 export const editGroupApi = (data) => {
     if (data && data.id)

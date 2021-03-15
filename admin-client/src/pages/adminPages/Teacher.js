@@ -114,7 +114,7 @@ class Teacher extends Component {
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('DD-MM-YYYY hh:mm:ss').toString(),
+                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
             }
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
@@ -158,6 +158,7 @@ class Teacher extends Component {
                 status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
             }))
         }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
