@@ -283,8 +283,6 @@ public class StudentService {
         }
     }
 
-
-    //
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
@@ -320,7 +318,6 @@ public class StudentService {
                 payment.getAmount()
         );
     }
-
 
     public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
         try {
@@ -469,7 +466,6 @@ public class StudentService {
         return null;
     }
 
-    //
     public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
             Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
@@ -556,9 +552,9 @@ public class StudentService {
         }
     }
 
-    public ApiResponse searchStudent(String name) {
+    public ApiResponse searchStudent(String name, Integer groupId) {
         try {
-            List<Object> objects = studentRepository.searchStudent(name);
+            List<Object> objects = studentRepository.searchStudent(name, groupId);
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] student = (Object[]) obj;
@@ -572,7 +568,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse addIndividualPrice(UUID id, ResSelect resSelect) {
         try {
@@ -594,7 +589,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse deleteIndividualPrice(UUID studentId, Integer groupId) {
         try {
@@ -631,6 +625,24 @@ public class StudentService {
             }
         } catch (Exception exception) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse searchAllStudent(String name) {
+        try {
+            List<Object> objects = studentRepository.searchAllStudent(name);
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] student = (Object[]) obj;
+                UUID id = UUID.fromString(student[0].toString());
+                String name1 = student[1].toString();
+                String phoneNumber = student[2].toString();
+                ResSelect resSelectDto = new ResSelect(id, name1, phoneNumber);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 }

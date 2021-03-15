@@ -122,8 +122,12 @@ class Toplam extends Component {
                                 <td><input type="checkbox" checked={item.active}/></td>
                                 <td>
                                     <Button color={"white"} onClick={() => openDeleteModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
+                                    <Button color={"white"} onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>
+
                                 </td>
                             </tr>
                         )}
