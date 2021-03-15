@@ -23,10 +23,14 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     boolean deleteByBalans(double balans);
 
-    @Query(nativeQuery = true, value = "select st.id, ur.full_name from student st inner join users ur on st.user_id = ur.id" +
-            " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
-    List<Object> searchStudent(String objName);
+    @Query(nativeQuery = true, value = "select st.id, ur.full_name from student st inner join users ur on st.user_id = ur.id inner join student_student_group ssg on st.id = ssg.student_id\n" +
+            "where :groupId<>any(select sg.group_id from student_group sg where ssg.student_group_id=sg.id) and  LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%')  limit 10")
+    List<Object> searchStudent(String objName, Integer groupId);
 
     @Query(nativeQuery = true, value="select cast(u.id as varchar) from users u  where u.phone_number=:telefon_raqam")
     String getStudentId(String telefon_raqam);
+
+    @Query(nativeQuery = true, value = "select st.id, ur.full_name ur.phone_number from student st inner join users ur on st.user_id = ur.id" +
+            " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
+    List<Object> searchAllStudent(String objName);
 }
