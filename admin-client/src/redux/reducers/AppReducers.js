@@ -86,7 +86,6 @@ const reducers = {
     [types.REQUEST_GET_INFO_IN_EXCEL](state, payload) {
         state.selectExcel = payload.payload.object.object
     },
-
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.selectDebtors = payload.payload.object.object

@@ -10,6 +10,11 @@ import {api} from './api'
 //     link.click();
 // }
 
+export const getExcelListApp = (data) => {
+    return HttpClient.doGet(api.accountant + (data && data.startDate && data.finishDate != null ? "?startDate=" + data.startDate
+        + "&finishDate=" + data.finishDate : ""))
+}
+
 export const getAttendanceListAppApi = (data) => {
     return HttpClient.doGet(api.attendance + "/" + data)
 }
