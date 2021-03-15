@@ -69,7 +69,7 @@ public class StudentService {
     public ApiResponse editStudent(UUID id, StudentDto studentDto) {
         try {
             Optional<Student> byId = studentRepository.findById(id);
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
             if (byId.isPresent()) {
                 Student student = byId.get();
                 User user = student.getUser();

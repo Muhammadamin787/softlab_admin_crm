@@ -141,7 +141,7 @@ import {
     getDashboardStudentStatApi,
     getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
     changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi
+    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi, getEmployeeApi
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -423,6 +423,7 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         toast.error("Xatolik")
     })
 };
+
 // PayType End
 // START CLIENT STATUS
 export const getClientStatusListAction = (data) => (dispatch) => {
@@ -753,7 +754,6 @@ export const getGroupsAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const getGroupsForSelectAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupsForSelectApi,
@@ -845,7 +845,6 @@ export const saveGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeStudentGroupStatusAction = (data) => (dispatch) => {
     dispatch({
         api: changeStudentGroupStatusApi,
@@ -874,7 +873,6 @@ export const changeStudentGroupStatusAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const searchGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getRegionSearchApi,
@@ -888,7 +886,6 @@ export const searchGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeGroupStatusActions = (data) => (dispatch) => {
     dispatch({
         api: changeGroupAPi,
@@ -961,8 +958,6 @@ export const saveTestCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
-
 //  Profession
 export const getProfessionAction = () => (dispatch) => {
     dispatch({
@@ -1078,7 +1073,6 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 // START TRIAL CONTACT TYPE
 export const getTrialContactTypesAction = () => (dispatch) => {
     dispatch({
@@ -1406,8 +1400,6 @@ export const deleteTeacherAction = (data) => (dispatch) => {
         })
     })
 }
-
-
 // START STUDENT PAYMENT ACTIONS
 export const getStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
@@ -1431,7 +1423,6 @@ export const getStudentGroupAction = (data) => (dispatch) => {
         data: data
     })
 }
-
 export const saveStudentPaymentAction = (data) => (dispatch) => {
     dispatch({
         api: (data.id ? editStudentPaymentApi : saveStudentPaymentApi),
@@ -1481,7 +1472,6 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
         })
     })
 }
-
 export const getStudentPaymentListByDateAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentPaymentListByDateApi,
@@ -1493,7 +1483,6 @@ export const getStudentPaymentListByDateAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const getFinanceAction = (data) => (dispatch) => {
     dispatch({
         api: getFinanceStudentApi,
@@ -1527,8 +1516,6 @@ export const getTeacherPaymentListByDateAction = (data) => (dispatch) => {
         data
     })
 }
-
-
 // FINISH STUDENT PAYMENT ACTIONS
 
 // START APPEAL ACTIONS
@@ -1792,7 +1779,6 @@ export const editTeacherSalaryListAction = (payload) => (dispatch) => {
         toast.error("Xato")
     })
 }
-
 export const deleteTeacherSalaryAction = (payload) => (dispatch) => {
     dispatch({
         api: deleteTeacherSalaryApi,
@@ -1849,7 +1835,6 @@ export const getDailySchedule = (payload) => (dispatch) => {
         data: payload
     })
 }
-
 export const getWeeklySchedule = () => (dispatch) => {
     dispatch({
         api: getWeeklyScheduleList,
@@ -1905,6 +1890,16 @@ export const getEmployeeListAction = () => (dispatch) => {
         api: getEmployeeListApi,
         types: [
             types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEES_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+export const getEmployeeAction = () => (dispatch) => {
+    dispatch({
+        api: getEmployeeApi,
+        types: [
+            types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR,
         ]
@@ -1916,24 +1911,24 @@ export const saveEmployeeAction = (data) => (dispatch) => {
         api: (data.id ? editEmployeeApi : saveEmployeeApi),
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_SAVE_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR
         ],
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getEmployeeListAction())
+        this.props.dispatch(getEmployeeListAction({page: 0, size: this.props.size}))
+        dispatch(getEmployeeAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik")
     })
 }
-
 export const deleteEmployeeAction = (data) => (dispatch) => {
     dispatch({
         api: deleteEmployeeApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_SAVE_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR
         ],
         data: data
