@@ -140,9 +140,19 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
-    changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi, getEmployeeApi
+    getByCourseApi,
+    getOneAppealForEditApi,
+    editAppealApi,
+    makeStudentByAppealApi,
+    changeTeacherStatusApi,
+    changeStatusApi,
+    getEmployeeListApi,
+    editEmployeeApi,
+    saveEmployeeApi,
+    deleteEmployeeApi,
+    changeGroupAPi,
+    getEmployeeApi,
+    getExcelListApp
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1210,7 +1220,7 @@ export const saveStudentAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getStudentAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -1386,7 +1396,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1919,6 +1929,16 @@ export const getGroupsByCourseAction = (data) => (dispatch) => {
 export const getEmployeeListAction = () => (dispatch) => {
     dispatch({
         api: getEmployeeListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+export const getEmployeeAction = () => (dispatch) => {
+    dispatch({
+        api: getEmployeeApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,

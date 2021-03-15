@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
-    deleteEmployeeAction,
-    getEmployeeAction, saveEmployeeAction
+    deleteEmployeeAction, getEmployeeAction, saveEmployeeAction
 
 
 } from "../../redux/actions/AppActions";
@@ -11,7 +10,7 @@ import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-valida
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
-import {formatParentPhone, formatPhoneNumber} from "../../utils/addFunctions";
+import {formatPhoneNumber} from "../../utils/addFunctions";
 import {AiOutlineUsergroupAdd} from "react-icons/all";
 
 class SelectStaff extends Component {
