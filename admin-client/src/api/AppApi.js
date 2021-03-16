@@ -10,6 +10,11 @@ import {api} from './api'
 //     link.click();
 // }
 
+export const getExcelListApp = (data) => {
+    return HttpClient.doGet(api.accountant + (data && data.startDate && data.finishDate != null ? "?startDate=" + data.startDate
+        + "&finishDate=" + data.finishDate : ""))
+}
+
 export const getAttendanceListAppApi = (data) => {
     return HttpClient.doGet(api.attendance + "/" + data)
 }
@@ -169,7 +174,7 @@ export const deleteRegionApi = (data) => {
 // START GROUP API
 export const getGroupsApi = (data) => {
     return HttpClient.doGet(api.group + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size : ""))
+        + "&size=" + data.size + "&status=" + data.type : ""))
 }
 export const getGroupsForSelectApi = () => {
     return HttpClient.doGet(api.group + "/select")
@@ -186,11 +191,8 @@ export const saveGroupApi = (data) => {
 export const changeStudentGroupStatusApi = (data) => {
     return HttpClient.doPatch(api.student + "/changeGroupStatus", data)
 }
-export const changeGroupToArchiveStatusApi = (data) => {
-    return HttpClient.doPatch(api.group + "/changeToArchiveStatus", data)
-}
-export const changeGroupToActiveStatusApi = (data) => {
-    return HttpClient.doPatch(api.group + "/changeToActiveStatus", data)
+export const changeGroupAPi = (data) => {
+    return HttpClient.doGet(api.group + "/changeStatus?groupId=" + data.groupId + "&status=" + data.status)
 }
 export const editGroupApi = (data) => {
     if (data && data.id)
@@ -504,12 +506,15 @@ export const saveEmployeeApi = (data) => {
 export const editEmployeeApi = (data) => {
     return HttpClient.doPut(api.employee + "/" + data.id, data)
 }
-export const getEmployeeApi = () => {
-    return HttpClient.doGet(api.employee + "/")
+export const getEmployeeApi = (data) => {
+    return HttpClient.doGet(api.employee + "/" + data.id)
 }
+
 export const getEmployeeListApi = (data) => {
-    return HttpClient.doGet(api.employee + "/" + data.id + "?page=" + data.page + "&size=" + data.size)
+    return HttpClient.doGet(api.employee + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
 }
+
 export const deleteEmployeeApi = (data) => {
     return HttpClient.doDelete(api.employee + "/" + data)
 }

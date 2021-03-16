@@ -17,6 +17,7 @@ import uz.gvs.admin_crm.repository.TeacherSalaryRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -109,9 +110,9 @@ public class TeacherSalaryService {
 
                         double newAmount = teacherSalaryDto.getAmount();
 
-                        if (optionalTeacher.isPresent()){
-                            if (newAmount != oldAmount){
-                                teacher.setBalance((teacher.getBalance()+(oldAmount-newAmount)));
+                        if (optionalTeacher.isPresent()) {
+                            if (newAmount != oldAmount) {
+                                teacher.setBalance((teacher.getBalance() + (oldAmount - newAmount)));
                             }
                         }
                         teacherRepository.save(teacher);
@@ -123,7 +124,7 @@ public class TeacherSalaryService {
                 return apiResponseService.notEnoughErrorResponse();
             }
             return apiResponseService.notFoundResponse();
-        }catch (Exception e){
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }
@@ -160,6 +161,7 @@ public class TeacherSalaryService {
                 payment.getAmountTeacher()
         );
     }
+
     public ApiResponse getFinance(int page, int size, String type) {
         try {
             switch (type) {
@@ -186,7 +188,7 @@ public class TeacherSalaryService {
                             )
                     );
                 default:
-                    return  apiResponseService.errorResponse();
+                    return apiResponseService.errorResponse();
             }
         } catch (Exception exception) {
             return apiResponseService.existResponse();
@@ -198,26 +200,24 @@ public class TeacherSalaryService {
             java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
             Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
-                case "minusSalary" :
-                    Page<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "minusSalary":
+                    List<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate, secondDate, page, size);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    all.getTotalPages(),
-                                    all.getTotalElements(),
-                                    all.getNumber(),
-                                    all.getSize(),
-                                    all.get().map(this::makeSalaryList).collect(Collectors.toList())
+                                    Long.valueOf(teacherSalaryRepository.getByDateCount(firstDate, secondDate)),
+                                    page,
+                                    size,
+                                    all.stream().map(this::makeSalaryList).collect(Collectors.toList())
                             )
                     );
-                case "plusSalary" :
-                    Page<Payment> getPrice = paymentRepository.getByDate(firstDate,secondDate,PageRequest.of(page, size));
+                case "plusSalary":
+                    List<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, page, size);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    getPrice.getTotalPages(),
-                                    getPrice.getTotalElements(),
-                                    getPrice.getNumber(),
-                                    getPrice.getSize(),
-                                    getPrice.get().map(this::getAllPrices).collect(Collectors.toList())
+                                    Long.valueOf(paymentRepository.getByDateCount(firstDate, secondDate)),
+                                    page,
+                                    size,
+                                    getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())
                             )
                     );
                 default:
@@ -236,7 +236,7 @@ public class TeacherSalaryService {
                 teacherSalaryRepository.deleteById(teacherSalary.getId());
                 Optional<Teacher> byId = teacherRepository.findById(teacherSalary.getTeacher().getId());
                 Teacher teacher = byId.get();
-                teacher.setBalance(teacher.getBalance()+teacherSalary.getAmount());
+                teacher.setBalance(teacher.getBalance() + teacherSalary.getAmount());
                 teacherRepository.save(teacher);
                 return apiResponseService.deleteResponse();
             }

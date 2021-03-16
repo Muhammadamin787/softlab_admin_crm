@@ -15,23 +15,22 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
-    changeGroupStatusAction, changeGroupStatusToActiveAction, changeGroupStatusToArchiveAction,
+    changeGroupStatusAction, changeGroupStatusActions,
+    changeGroupStatusToActiveAction,
+    changeGroupStatusToArchiveAction, changeGroupStautsActions,
     deleteGroupAction,
     deleteRegionAction, getCoursesAction, getGroupsAction,
     getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getTeachersForSelectAction, saveGroupAction,
+    getGroupsByStatusAction,
+    getTeachersAction,
+    toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
 import AdminLayout from "../../component/AdminLayout";
 import {
-    BgIcon,
-    BrandIcon,
-    CloseIcon,
-    DashboardIcon,
     DeleteIcon,
-    EditIcon, GlobusIcon, MessageIcon,
-    ShowIcon, UserIcon,
-    WarehouseIcon
+    GlobusIcon,
 } from "../../component/Icons";
 import moment from "moment";
 import Pagination from "react-js-pagination";
@@ -40,7 +39,7 @@ import {Link} from "react-router-dom";
 class Group extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getGroupsAction({page: 0, size: this.props.size}))
+        this.props.dispatch(getGroupsAction({page: 0, size: this.props.size, type: "ACTIVE"}))
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getCoursesAction())
         this.props.dispatch(getTeachersForSelectAction())
@@ -53,11 +52,12 @@ class Group extends Component {
         selectParentRegion: "",
         showOptionDiv: false,
         parentRegionDisable: false,
-        activeTab: "1"
+        type: '',
+        activeTab: "ACTIVE",
     }
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getGroupsAction({page: (pageNumber - 1), size: this.props.size}))
+        this.props.dispatch(getGroupsAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
     render() {
@@ -69,13 +69,14 @@ class Group extends Component {
             dispatch,
             showModal,
             deleteModal,
-            changeToArchiveModal,
-            changeToActiveModal,
             groups,
             teachers,
             getItems,
+            archiveGroupModal,
+            activeGroupModal,
             rooms,
         } = this.props;
+
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -84,16 +85,6 @@ class Group extends Component {
                     showModal: !showModal
                 }
             })
-        }
-
-        const toggle = tab => {
-            if (activeTab !== tab)
-                this.setState({activeTab: tab})
-            if (tab === "2") {
-                if (this.props.match && this.props.match.params && this.props.match.params.id) {
-                    dispatch(getStudentPaymentAction(this.props.match.params.id))
-                }
-            }
         }
 
         const openDeleteModal = (item) => {
@@ -105,40 +96,52 @@ class Group extends Component {
                 }
             })
         }
-        const openChangeToArchive = (item) => {
-            this.setState({currentObject: item})
-            dispatch({
-                type: "updateState",
-                payload: {
-                    changeToArchiveModal: !changeToArchiveModal
-                }
-            })
-        }
-        const openChangeToActive = (item) => {
-            this.setState({currentObject: item})
-            dispatch({
-                type: "updateState",
-                payload: {
-                    changeToActiveModal: !changeToActiveModal
-                }
-            })
-        }
 
         const deleteItem = (item) => {
             dispatch(deleteGroupAction({...item}))
         }
-        const changeItemToArchive = (item) => {
-            dispatch(changeGroupStatusToArchiveAction({...item}))
-        }
-        const changeItemToActive = (item) => {
-            dispatch(changeGroupStatusToActiveAction({...item}))
-        }
 
         const saveItem = (e, v) => {
-            console.log(v)
+
             v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
             v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
+        }
+
+        ///////////////////////////////////////// Change status
+
+        const a = (tab) => {
+            this.setState({activeTab: tab})
+        }
+        const toggle = (tab) => {
+            this.setState({activeTab: tab})
+            this.setState({type: tab})
+            dispatch(getGroupsAction({page: 0, size: this.props.size, type: tab}))
+        }
+
+        const openToArchive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    archiveGroupModal: !archiveGroupModal
+                }
+            })
+        }
+        const openToActive = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    activeGroupModal: !activeGroupModal
+                }
+            })
+        }
+        const changeStatus = (item) => {
+            dispatch(changeGroupStatusActions({
+                groupId: item.id,
+                status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
+            }))
         }
 
         return (
@@ -151,19 +154,19 @@ class Group extends Component {
                         </Button>
                     </div>
                     <Nav tabs>
-                        <NavItem className={activeTab === '1' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
-                                    toggle('1');
+                                    toggle('ACTIVE');
                                 }}
                             >
                                 Faol Guruhlar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === '2' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
-                                    toggle('2');
+                                    toggle('ARCHIVE');
                                 }}
                             >
                                 Arxiv Guruhlar
@@ -171,7 +174,7 @@ class Group extends Component {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="1">
+                        <TabPane tabId="ACTIVE">
                             <Table className={"table-style"}>
                                 <thead className={""}>
                                 <tr className={""}>
@@ -206,7 +209,7 @@ class Group extends Component {
                                             }</td>
                                             <td>
                                                 <Button className={"table-info"}
-                                                        onClick={() => openChangeToArchive(item)}>
+                                                        onClick={() => openToArchive(item)}>
                                                     <GlobusIcon/>
                                                 </Button>
                                             </td>
@@ -230,7 +233,7 @@ class Group extends Component {
                                 linkClass="page-link"
                             />
                         </TabPane>
-                        <TabPane tabId="2">
+                        <TabPane tabId="ARCHIVE">
                             <Table className={"table-style"}>
                                 <thead className={""}>
                                 <tr className={""}>
@@ -266,7 +269,7 @@ class Group extends Component {
                                             }</td>
                                             <td>
                                                 <Button className={"table-info"}
-                                                        onClick={() => openChangeToActive(item)}>
+                                                        onClick={() => openToActive(item)}>
                                                     <GlobusIcon/>
                                                 </Button>
                                             </td>
@@ -290,6 +293,29 @@ class Group extends Component {
                         </TabPane>
                     </TabContent>
 
+                    <Modal isOpen={archiveGroupModal} toggle={() => openToArchive("")} className={""}>
+                        <ModalHeader isOpen={archiveGroupModal} toggle={() => openToArchive("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => changeStatus(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
+
+                    <Modal isOpen={activeGroupModal} toggle={() => openToActive("")} className={""}>
+                        <ModalHeader isOpen={activeGroupModal} toggle={() => openToActive("")}
+                                     charCode="X">O'chirish</ModalHeader>
+                        <ModalBody>
+                            Bu Talabani Active ro'yxatga Qo'shmoqchimisiz 🤨❓
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
+                            <Button color="light" onClick={() => changeStatus(currentObject)}>Ha</Button>
+                        </ModalFooter>
+                    </Modal>
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -377,29 +403,6 @@ class Group extends Component {
                         </ModalFooter>
                     </Modal>
 
-                    <Modal isOpen={changeToArchiveModal} toggle={() => openChangeToArchive("")} className={""}>
-                        <ModalHeader isOpen={changeToArchiveModal} toggle={() => openChangeToArchive("")}
-                                     charCode="X">O'chirish</ModalHeader>
-                        <ModalBody>
-                            Bu Guruhni Arxiv Guruhlarga Qo'shmoqchimisiz
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={() => changeToArchiveModal("")}>Yo'q</Button>
-                            <Button color="light" onClick={() => changeItemToArchive(currentObject)}>Ha</Button>
-                        </ModalFooter>
-                    </Modal>
-
-                    <Modal isOpen={changeToActiveModal} toggle={() => openChangeToActive("")} className={""}>
-                        <ModalHeader isOpen={changeToActiveModal} toggle={() => openChangeToActive("")}
-                                     charCode="X">O'chirish</ModalHeader>
-                        <ModalBody>
-                            Bu Guruhni Faol Guruhlarga Qo'shmoqchimsiz
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={() => changeToActiveModal("")}>Yo'q</Button>
-                            <Button color="light" onClick={() => changeItemToActive(currentObject)}>Ha</Button>
-                        </ModalFooter>
-                    </Modal>
 
                 </div>
             </AdminLayout>
@@ -423,8 +426,8 @@ export default connect(({
                                 showModal,
                                 deleteModal,
                                 selectItems,
-                                changeToArchiveModal,
-                                changeToActiveModal,
+                                archiveGroupModal,
+                                activeGroupModal,
                             },
                         }) => ({
         page,
@@ -432,8 +435,8 @@ export default connect(({
         totalElements,
         getItems, teachers,
         groups, rooms,
-        loading, regions, showModal, deleteModal, selectItems, changeToArchiveModal,
-        changeToActiveModal
+        loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
+    activeGroupModal,
     })
 )(Group);
 //

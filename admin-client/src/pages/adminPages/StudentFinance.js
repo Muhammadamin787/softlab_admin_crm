@@ -1,7 +1,20 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
-import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
+    Button,
+    Col,
+    Modal,
+    ModalBody,
+    ModalFooter, ModalHeader,
+    Nav,
+    NavItem,
+    NavLink,
+    TabContent,
+    Table,
+    TabPane
+} from "reactstrap";
+import {
+    downloadAccountantFileAction,
     getFinanceAction,
     getStudentPaymentListByDateAction,
 
@@ -44,7 +57,7 @@ class StudentFinance extends Component {
 
         const {currentObject, activeTab} = this.state;
         const {
-            dispatch, page, size, totalElements, studentPaymentFinance
+            dispatch,showModal, page, size,totalElements, studentPaymentFinance
         } = this.props;
 
 
@@ -72,11 +85,31 @@ class StudentFinance extends Component {
             }))
         }
 
+        const openAccountantModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    showModal: !showModal
+                }
+            })
+        }
+
+        const saveItem = (e, v) => {
+            dispatch(downloadAccountantFileAction({
+                startDate: v.startDate,
+                finishDate: v.finishDate,
+            }))
+        }
+
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
                     <h3>Moliya</h3>
                     <h5 className="mb-3" onClick={showHide}>Filtr</h5>
+                    <br/>
+                    <Button onClick={openAccountantModal} color={"danger"}>Accountant</Button>
                     <div id="filtrMenu">
                         <div className="row mb-4">
                             <Col>
@@ -256,6 +289,25 @@ class StudentFinance extends Component {
                             </div>
                         </TabPane>
                     </TabContent>
+
+                    <Modal id={"allModalStyle"} isOpen={showModal} toggle={openAccountantModal} className={""}>
+                        <AvForm className={""} onValidSubmit={saveItem}>
+                            <ModalHeader toggle={openAccountantModal} charCode={"X"}>
+                                {"Qo'shish"}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={"w-100 modal-form"}>
+                                    <AvField type={"date"} label={"Malumotlar olishni boshlash sanasi"}
+                                             name={"startDate"}/>
+                                    <AvField type={"date"} label={"Malumotlar olishni tugatish sanasi"}
+                                             name={"finishDate"}/>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button>Malumotlarni Yuklash</Button>
+                            </ModalFooter>
+                        </AvForm>
+                    </Modal>
                 </div>
             </AdminLayout>
         );
@@ -266,6 +318,7 @@ StudentFinance.propTypes = {};
 
 export default connect(({
                             app: {
+                                showModal,
                                 studentPayments,
                                 page,
                                 size,
@@ -276,6 +329,6 @@ export default connect(({
 
                             },
                         }) => ({
-        studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks, studentPaymentFinance
+        showModal,studentPayments, page, size, totalElements, teacherSalaryAppApi, studentPaymentCashbaks, studentPaymentFinance
     })
 )(StudentFinance);

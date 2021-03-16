@@ -439,6 +439,7 @@ class Student extends Component {
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     required/>
+                                {console.log(currentObject)}
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>

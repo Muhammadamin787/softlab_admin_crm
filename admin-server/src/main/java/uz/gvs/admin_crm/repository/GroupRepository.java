@@ -1,10 +1,16 @@
 package uz.gvs.admin_crm.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.gvs.admin_crm.entity.Course;
 import uz.gvs.admin_crm.entity.Group;
 import uz.gvs.admin_crm.entity.Room;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
+import uz.gvs.admin_crm.entity.Student;
+import uz.gvs.admin_crm.entity.enums.GroupStatus;
+import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 
 import java.util.List;
@@ -14,6 +20,8 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     boolean existsByTeacher_Id(UUID teacher_id);
 
     List<Group> findAllByTeacher_id(UUID teacher_id);
+    List<Group> findAllByGroupStatus(GroupStatus groupStatus);
+    Page<Group> findAllByGroupStatus(GroupStatus groupStatus, Pageable pageable);
 
     boolean existsByNameEqualsIgnoreCaseAndCourseId(String name, Integer id);
 
