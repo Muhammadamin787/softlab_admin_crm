@@ -293,6 +293,13 @@ export const getStudentsApi = (data) => {
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size + "&status=" + data.type : ""))
 }
+
+//  Written By Muhammadamin
+export const getStudentsBySearchApi = (data) => {
+    console.log(data.name);
+    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name : ""))
+}
+// ---
 export const getStudentByGroupApi = (data) => {
     return HttpClient.doGet(api.student + "/groupStudent/" + data)
 }
@@ -362,7 +369,7 @@ export const editTeacherApi = (data) => {
 
 export const getTeachersApi = (data) => {
     return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size+ "&status=" + data.type : ""))
+        + "&size=" + data.size + "&status=" + data.type : ""))
 }
 export const getTeachersForSelectApi = () => {
     return HttpClient.doGet(api.teacher + "/select")
@@ -512,3 +519,13 @@ export const deleteEmployeeApi = (data) => {
     return HttpClient.doDelete(api.employee + "/" + data)
 }
 // FINSIH EMPLOYEE
+
+// Written by Muhammadamin
+export const getStudentOnSearchApi = (data) => {
+    return HttpClient.doGet(api.student + (data && data.name != null ? "/search?name=" + data.name : ""))
+}
+export const saveStudentToGroupApi = (data) => {
+    console.log(data);
+    return HttpClient.doPost(api.group + "/addStudent", data)
+}
+

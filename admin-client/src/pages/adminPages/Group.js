@@ -19,15 +19,10 @@ import {
     changeGroupStatusToActiveAction,
     changeGroupStatusToArchiveAction, changeGroupStautsActions,
     deleteGroupAction,
-    deleteRegionAction,
-    getCoursesAction,
-    getGroupsAction,
+    deleteRegionAction, getCoursesAction, getGroupsAction,
+    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getTeachersForSelectAction, saveGroupAction,
     getGroupsByStatusAction,
-    getRoomListAction,
-    getStudentPaymentAction,
     getTeachersAction,
-    getTeachersForSelectAction,
-    saveGroupAction,
     toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -55,6 +50,7 @@ class Group extends Component {
         currentObject: "",
         selectRegion: [],
         selectParentRegion: "",
+        showOptionDiv: false,
         parentRegionDisable: false,
         type: '',
         activeTab: "ACTIVE",
@@ -147,6 +143,7 @@ class Group extends Component {
                 status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
             }))
         }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
