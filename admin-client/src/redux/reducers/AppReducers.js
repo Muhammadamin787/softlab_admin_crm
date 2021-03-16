@@ -67,7 +67,7 @@ const initState = {
     selectExcel: [],
     byCource: [],
     sortReklama: [],
-    employee: []
+    employees: []
 };
 
 const reducers = {
@@ -275,16 +275,6 @@ const reducers = {
         );
     },
 
-    // Test Cateogry
-
-    [types.REQUEST_SAVE_TEST_CATEGORY_SUCCESS](state, payload) {
-        state.showModal = false
-    },
-    [types.REQUEST_GET_TEST_CATEGORY_SUCCESS](state, payload) {
-        state.testCategory = payload.payload.object.object.sort((a, b) =>
-            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-        );
-    },
 
     // Course
 
@@ -326,7 +316,6 @@ const reducers = {
         }
     },
 
-
     // Trail Contact Type
     [types.REQUEST_SAVE_TRIAL_CONTACT_TYPE_SUCCESS](state, payload) {
         state.showModal = false
@@ -336,7 +325,6 @@ const reducers = {
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
-
     //// Teacher
 
     [types.REQUEST_SAVE_TEACHER_SUCCESS](state, payload) {
@@ -398,7 +386,6 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-
     [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.studentPayments = payload.payload.object.object.sort((a, b) =>
@@ -607,5 +594,27 @@ const reducers = {
             ...payload,
         };
     },
+
+
+    //start employe
+
+    [types.REQUEST_SAVE_EMPLOYEE_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_EMPLOYEES_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.employees = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+    [types.REQUEST_GET_EMPLOYEE_SUCCESS](state, payload) {
+        state.currentItem = payload.payload.object
+    },
+
 };
 export default createReducer(initState, reducers);

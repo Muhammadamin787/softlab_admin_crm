@@ -140,9 +140,19 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
-    changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi, getExcelListApp
+    getByCourseApi,
+    getOneAppealForEditApi,
+    editAppealApi,
+    makeStudentByAppealApi,
+    changeTeacherStatusApi,
+    changeStatusApi,
+    getEmployeeListApi,
+    editEmployeeApi,
+    saveEmployeeApi,
+    deleteEmployeeApi,
+    changeGroupAPi,
+    getEmployeeApi,
+    getExcelListApp
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -445,6 +455,7 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         toast.error("Xatolik")
     })
 };
+
 // PayType End
 // START CLIENT STATUS
 export const getClientStatusListAction = (data) => (dispatch) => {
@@ -775,7 +786,6 @@ export const getGroupsAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const getGroupsForSelectAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupsForSelectApi,
@@ -867,7 +877,6 @@ export const saveGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeStudentGroupStatusAction = (data) => (dispatch) => {
     dispatch({
         api: changeStudentGroupStatusApi,
@@ -896,7 +905,6 @@ export const changeStudentGroupStatusAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const searchGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getRegionSearchApi,
@@ -910,7 +918,6 @@ export const searchGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeGroupStatusActions = (data) => (dispatch) => {
     dispatch({
         api: changeGroupAPi,
@@ -983,8 +990,6 @@ export const saveTestCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
-
 //  Profession
 export const getProfessionAction = () => (dispatch) => {
     dispatch({
@@ -1100,7 +1105,6 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 // START TRIAL CONTACT TYPE
 export const getTrialContactTypesAction = () => (dispatch) => {
     dispatch({
@@ -1216,7 +1220,7 @@ export const saveStudentAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getStudentAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -1324,7 +1328,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1392,7 +1396,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1925,6 +1929,16 @@ export const getGroupsByCourseAction = (data) => (dispatch) => {
 export const getEmployeeListAction = () => (dispatch) => {
     dispatch({
         api: getEmployeeListApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
+export const getEmployeeAction = () => (dispatch) => {
+    dispatch({
+        api: getEmployeeApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,
