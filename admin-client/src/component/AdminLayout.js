@@ -196,11 +196,11 @@ class AdminLayout extends Component {
                                 </Link>
                             </Link>
                             <Link to="/admin/staff" className={
-                                this.props.pathname === "/admin/staff" ?
+                                this.props.pathname === "/admin/staffs" ?
                                     "active-link" : "default-link"
                             }>
                                 <span className="icon icon-teacher"/>
-                                <Link to="/admin/staff"
+                                <Link to="/admin/staffs"
                                       className="main-link">
                                     Xodimlar
                                 </Link>

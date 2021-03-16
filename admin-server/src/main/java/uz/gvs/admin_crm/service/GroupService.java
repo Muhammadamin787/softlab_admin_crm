@@ -235,33 +235,6 @@ public class GroupService {
         }
     }
 
-    public ApiResponse changeToArchiveStatus(GroupDto groupDto) {
-        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
-        if (groupOptional.isPresent()) {
-            Group group = groupOptional.get();
-            group.setActive(!group.isActive());
-            group.setGroupStatus(GroupStatus.ARCHIVE);
-            groupRepository.save(group);
-            return apiResponseService.updatedResponse();
-        } else {
-            return apiResponseService.notFoundResponse();
-        }
-    }
-
-    public ApiResponse changeToActiveStatus(GroupDto groupDto) {
-        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
-        if (groupOptional.isPresent()) {
-            Group group = groupOptional.get();
-            group.setActive(!group.isActive());
-            group.setGroupStatus(GroupStatus.ACTIVE);
-            groupRepository.save(group);
-            return apiResponseService.updatedResponse();
-        } else {
-            return apiResponseService.notFoundResponse();
-        }
-    }
-
-
     public ApiResponse getGroups(String weekName) {
         try {
             WeekdayName weekdayName = WeekdayName.valueOf(weekName);
@@ -280,7 +253,6 @@ public class GroupService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getGroupsByWeekDayForSchedule(String weekday) {
         try {

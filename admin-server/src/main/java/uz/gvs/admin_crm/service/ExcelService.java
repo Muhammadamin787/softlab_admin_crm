@@ -3,238 +3,87 @@ package uz.gvs.admin_crm.service;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.StudentGroup;
 import uz.gvs.admin_crm.entity.Teacher;
+import uz.gvs.admin_crm.payload.excelDtos.PaymentDtos;
+import uz.gvs.admin_crm.payload.excelDtos.PaymentExcelDtos;
+import uz.gvs.admin_crm.repository.StudentPaymentRepository;
+import uz.gvs.admin_crm.repository.StudentRepository;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ExcelService {
-
-    public byte[] contactListToExcelStudentFile(List<Student> students) {
-
-        Workbook workbook = new XSSFWorkbook();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String format = simpleDateFormat.format(new Date());
-
-        XSSFSheet sheet = (XSSFSheet) workbook.createSheet(String.valueOf(format));
-
-        Row row = sheet.createRow(0);
-
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());
-        headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerCellStyle.setBorderBottom(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderLeft(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderRight(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderTop(BorderStyle.MEDIUM);
-
-        // Creating header
-
-        sheet.setColumnWidth(0, 4000);
-        sheet.setColumnWidth(1, 4000);
-        sheet.setColumnWidth(2, 4000);
-        sheet.setColumnWidth(3, 4000);
-        sheet.setColumnWidth(4, 4000);
-        sheet.setColumnWidth(5, 4000);
-        sheet.setColumnWidth(6, 4000);
-        sheet.setColumnWidth(7, 8000);
+    @Autowired
+    ApiResponseService apiResponseService;
+    @Autowired
+    MakeExcelService makeExcelService;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    StudentPaymentRepository studentPaymentRepository;
 
 
-        Cell cell = row.createCell(0);
-        cell.setCellValue("To`liq ismi");
-        cell.setCellStyle(headerCellStyle);
+    public HttpEntity<?> downloadStudentPaymentExcel(String startDate, String finishDate) {
+        List<Object> objects = studentPaymentRepository.getStudentPaymentForExcel(startDate, finishDate);
+        List<PaymentExcelDtos> paymentExcelDtos = new ArrayList<>();
 
-        cell = row.createCell(1);
-        cell.setCellValue("Yoshi:");
-        cell.setCellStyle(headerCellStyle);
+        SimpleDateFormat formatForDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatForTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<PaymentDtos> paymentDtos = new ArrayList<>();
+        for (Object obj : objects) {
+            Object[] client = (Object[]) obj;
+            String studentName = client[0].toString();
+            Double tolov = Double.valueOf(client[1].toString());
+            Double keshbek = Double.valueOf(client[2].toString());
+            Double all = Double.valueOf(client[3].toString());
+            String payDate = client[4].toString();
+            String date = client[5].toString();
+            String payTypeName = client[6].toString();
+            String group = client[7].toString();
 
-        cell = row.createCell(2);
-        cell.setCellValue("Telefon raqami");
-        cell.setCellStyle(headerCellStyle);
+            PaymentDtos paymentDto = new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group);
+            if (paymentExcelDtos.size() > 0) {
+                for (PaymentExcelDtos paymentExcelDto : paymentExcelDtos) {
+                    if (paymentExcelDto.getDate().equals(date)) {
+                        paymentDtos = new ArrayList<>();
+                        List<PaymentDtos> paymentDtos1 = paymentExcelDto.getPaymentDtos();
 
-        cell = row.createCell(3);
-        cell.setCellValue("Gruxi");
-        cell.setCellStyle(headerCellStyle);
+                        paymentDtos.add(paymentDto);
+                        paymentDtos.addAll(paymentDtos1);
 
-        cell = row.createCell(4);
-        cell.setCellValue("Manzil");
-        cell.setCellStyle(headerCellStyle);
+                        paymentExcelDto.setPaymentDtos(paymentDtos);
+                    } else {
+                        paymentExcelDtos.add(
+                                new PaymentExcelDtos(date,
+                                        Collections.singletonList(
+                                                new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
 
-        cell = row.createCell(5);
-        cell.setCellValue("Balas");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(6);
-        cell.setCellValue("Qachon kelgani");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(7);
-        cell.setCellValue("Ota-onasi telefon raqami");
-        cell.setCellStyle(headerCellStyle);
-
-        // Creating data rows for each customer
-        for (int i = 0; i < students.size(); i++) {
-            int age = 0;
-            int studentStartDate = 0;
-            if (students.get(i).getUser().getBirthDate() != null) {
-                String[] s = students.get(i).getUser().getBirthDate().toString().split(" ");
-                String[] split = s[0].split("-");
-                int i1 = Integer.parseInt(split[0]);
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = new Date(System.currentTimeMillis());
-                String[] s1 = formatter.format(date).split(" ");
-                String[] split2 = s1[0].split("-");
-                int i2 = Integer.parseInt(split2[0]);
-                age = i2 - i1;
-
-                String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
-                String[] a = s2[0].split("-");
-                studentStartDate = Integer.parseInt(a[0]);
-            }
-
-            String getGropuName = "";
-            Set<StudentGroup> studentGroup = students.get(i).getStudentGroup();
-            for (StudentGroup studentGroup1 : studentGroup) {
-                if (studentGroup.size() > 1) {
-                    getGropuName += studentGroup1.getGroup().getName() + ", ";
-                } else {
-                    getGropuName += studentGroup1.getGroup().getName();
+                        break;
+                    }
                 }
+            } else {
+                paymentExcelDtos.add(
+                        new PaymentExcelDtos(date,
+                                Collections.singletonList(
+                                        new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
+
             }
-
-            Row dataRow = sheet.createRow(i + 1);
-            dataRow.createCell(0).setCellValue(students.get(i).getUser().getFullName());
-            dataRow.createCell(1).setCellValue(age);
-            dataRow.createCell(2).setCellValue(students.get(i).getUser().getPhoneNumber());
-            dataRow.createCell(3).setCellValue(getGropuName);
-            dataRow.createCell(4).setCellValue(students.get(i).getUser().getRegion() != null &&
-                    students.get(i).getUser().getRegion().getId() != 0 ?
-                    students.get(i).getUser().getRegion().getName() : null);
-            dataRow.createCell(5).setCellValue(students.get(i).getBalans());
-            dataRow.createCell(6).setCellValue(studentStartDate);
-            dataRow.createCell(7).setCellValue(students.get(i).getParentPhone());
         }
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            workbook.write(outputStream);
-            outputStream.close();
-        } catch (Exception a) {
-            a.printStackTrace();
-        }
-        return outputStream.toByteArray();
-
+        byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=accountant.xlsx")
+                .body(file);
     }
-
-    public byte[] contactListToExcelTeacherFile(List<Teacher> teachers) throws ParseException {
-
-        Workbook workbook = new XSSFWorkbook();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String format = simpleDateFormat.format(new Date());
-
-        XSSFSheet sheet = (XSSFSheet) workbook.createSheet(String.valueOf(format));
-
-        Row row = sheet.createRow(0);
-
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());
-        headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerCellStyle.setBorderBottom(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderLeft(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderRight(BorderStyle.MEDIUM);
-        headerCellStyle.setBorderTop(BorderStyle.MEDIUM);
-
-        // Creating header
-
-        sheet.setColumnWidth(0, 4000);
-        sheet.setColumnWidth(1, 4000);
-        sheet.setColumnWidth(2, 4000);
-        sheet.setColumnWidth(3, 4000);
-        sheet.setColumnWidth(4, 4000);
-        sheet.setColumnWidth(5, 4000);
-        sheet.setColumnWidth(6, 4000);
-        sheet.setColumnWidth(7, 8000);
-
-
-        Cell cell = row.createCell(0);
-        cell.setCellValue("To`liq ismi");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(1);
-        cell.setCellValue("Yoshi:");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(2);
-        cell.setCellValue("Telefon raqami");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(3);
-        cell.setCellValue("Manzil");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(4);
-        cell.setCellValue("Oylik");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(5);
-        cell.setCellValue("Jisni");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(6);
-        cell.setCellValue("Tug`ilgan vaqti");
-        cell.setCellStyle(headerCellStyle);
-
-
-        // Creating data rows for each customer
-        for (int i = 0; i < teachers.size(); i++) {
-            String[] s = teachers.get(i).getUser().getBirthDate().toString().split(" ");
-            String[] split = s[0].split("-");
-            int i1 = Integer.parseInt(split[0]);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date(System.currentTimeMillis());
-            String[] s1 = formatter.format(date).split(" ");
-            String[] split2 = s1[0].split("-");
-            int i2 = Integer.parseInt(split2[0]);
-            int age = i2 - i1;
-
-            Row dataRow = sheet.createRow(i + 1);
-            dataRow.createCell(0).setCellValue(teachers.get(i).getUser().getFullName());
-            dataRow.createCell(1).setCellValue(age);
-            dataRow.createCell(2).setCellValue(teachers.get(i).getUser().getPhoneNumber());
-            dataRow.createCell(3).setCellValue(teachers.get(i).getUser().getRegion().getId() != 0 ?
-                    teachers.get(i).getUser().getRegion().getName() : null);
-            dataRow.createCell(4).setCellValue(teachers.get(i).getSalary() != null ? teachers.get(i).getSalary() : 0);
-            dataRow.createCell(5).setCellValue(teachers.get(i).getUser().getGender().toString());
-            dataRow.createCell(6).setCellValue(s[0]);
-        }
-
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            workbook.write(outputStream);
-            outputStream.close();
-        } catch (Exception a) {
-            a.printStackTrace();
-        }
-        return outputStream.toByteArray();
-
-    }
-
-
 }

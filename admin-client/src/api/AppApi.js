@@ -10,6 +10,11 @@ import {api} from './api'
 //     link.click();
 // }
 
+export const getExcelListApp = (data) => {
+    return HttpClient.doGet(api.accountant + (data && data.startDate && data.finishDate != null ? "?startDate=" + data.startDate
+        + "&finishDate=" + data.finishDate : ""))
+}
+
 export const getAttendanceListAppApi = (data) => {
     return HttpClient.doGet(api.attendance + "/" + data)
 }
@@ -494,12 +499,15 @@ export const saveEmployeeApi = (data) => {
 export const editEmployeeApi = (data) => {
     return HttpClient.doPut(api.employee + "/" + data.id, data)
 }
-export const getEmployeeApi = () => {
-    return HttpClient.doGet(api.employee + "/")
+export const getEmployeeApi = (data) => {
+    return HttpClient.doGet(api.employee + "/" + data.id)
 }
+
 export const getEmployeeListApi = (data) => {
-    return HttpClient.doGet(api.employee + "/" + data.id + "?page=" + data.page + "&size=" + data.size)
+    return HttpClient.doGet(api.employee + (data && data.page != null && data.size ? "?page=" + data.page
+        + "&size=" + data.size : ""))
 }
+
 export const deleteEmployeeApi = (data) => {
     return HttpClient.doDelete(api.employee + "/" + data)
 }
