@@ -55,6 +55,7 @@ const initState = {
     attendanceList: [],
     teacherSalaryList: [],
     studentPaymentFinance: [],
+    addStudentInGroupModal: false,
     teacherPaymentFinance: [],
     rooms: [],
     dailySchedule: [],
@@ -67,7 +68,9 @@ const initState = {
     selectExcel: [],
     byCource: [],
     sortReklama: [],
-    employees: []
+    employees: [],
+    // Written by Muhammadamin
+    studentsOption: [],
 };
 
 const reducers = {
@@ -86,6 +89,7 @@ const reducers = {
     [types.REQUEST_GET_INFO_IN_EXCEL](state, payload) {
         state.selectExcel = payload.payload.object.object
     },
+
     [types.REQUEST_GET_DEBTORS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.selectDebtors = payload.payload.object.object
@@ -362,6 +366,26 @@ const reducers = {
     [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
+    [types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS](state, payload) {
+        state.students = [];
+        console.log(payload.payload.object);
+        if (payload && payload.payload && payload.payload.object) {
+            let data = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            data.map(item => {
+                let obj = {
+                    id: 0,
+                    fullName: '',
+                    phoneNumber: ''
+                };
+                obj.id = item.uuid;
+                obj.fullName = item.name;
+                obj.phoneNumber = item.phoneNumber ? item.phoneNumber : "notFound";
+                state.students.push(obj)
+            })
+        }
+    },
     [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.students = payload.payload.object.object.sort((a, b) =>
@@ -534,9 +558,18 @@ const reducers = {
     [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
         state.dashboardStat = payload.payload.object
     },
+    // Written By Muhammadamin
     [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
         state.byCource = payload.payload.object
     },
+    [types.REQUEST_GET_GROUPS_SEARCH_SUCCESS](state, payload) {
+        state.studentsOption = []
+        payload.payload.object.map((item, i) => {
+            state.studentsOption.push({name: i, label: item.name, id: item.uuid});
+        })
+    },
+    // ---
+
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
         if (payload.payload && payload.payload.object) {
             if (payload.payload.object.countSortList && payload.payload.object.countSortList.length > 0) {

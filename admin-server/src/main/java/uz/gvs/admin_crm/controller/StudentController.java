@@ -1,5 +1,8 @@
 package uz.gvs.admin_crm.controller;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 
+@Data
 @RestController
 @RequestMapping("/api/student")
 public class  StudentController {

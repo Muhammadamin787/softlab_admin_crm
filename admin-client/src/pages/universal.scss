@@ -416,3 +416,32 @@
     box-sizing: border-box;
   }
 }
+
+// Written By Muhammadamin
+
+// Option Box Styles
+
+.optionBox {
+  background-color: #fff;
+  margin-top: 2px;
+  box-shadow: 0 4px 8px 0 #333;
+  border-radius: 4px;
+  position: absolute;
+  max-height: 300px;
+  width: 460px;
+  overflow: auto;
+}
+.optionItem {
+  color: #333;
+  padding: 6px 5px;
+}
+
+.optionItem:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: #b3ecff;
+}
+
+.selectedOptions {
+  background-color: red;
+}
