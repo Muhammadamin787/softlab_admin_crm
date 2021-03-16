@@ -18,7 +18,7 @@ import {
     changeGroupStatusAction, changeGroupStatusToActiveAction, changeGroupStatusToArchiveAction,
     deleteGroupAction,
     deleteRegionAction, getCoursesAction, getGroupsAction,
-    getRoomListAction, getStudentPaymentAction, getTeachersForSelectAction, saveGroupAction,
+    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getTeachersForSelectAction, saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -51,6 +51,7 @@ class Group extends Component {
         currentObject: "",
         selectRegion: [],
         selectParentRegion: "",
+        showOptionDiv: false,
         parentRegionDisable: false,
         activeTab: "1"
     }
@@ -139,6 +140,7 @@ class Group extends Component {
             v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
         }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -422,7 +424,7 @@ export default connect(({
                                 deleteModal,
                                 selectItems,
                                 changeToArchiveModal,
-                                changeToActiveModal
+                                changeToActiveModal,
                             },
                         }) => ({
         page,

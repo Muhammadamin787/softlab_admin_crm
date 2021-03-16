@@ -139,9 +139,18 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
-    changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi,
+    getByCourseApi,
+    getOneAppealForEditApi,
+    editAppealApi,
+    makeStudentByAppealApi,
+    changeTeacherStatusApi,
+    changeStatusApi,
+    getEmployeeListApi,
+    editEmployeeApi,
+    saveEmployeeApi,
+    deleteEmployeeApi,
+    getStudentOnSearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -779,7 +788,6 @@ export const getGroupStudentsAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupStudentsApi,
         types: [
-
             types.REQUEST_START,
             types.REQUEST_GET_GROUP_STUDENTS_SUCCESS,
             types.REQUEST_ERROR,
@@ -1195,6 +1203,20 @@ export const getStudentsAction = (data) => (dispatch) => {
         data
     })
 }
+
+//  Written By Muhammadamin
+export const getStudentsBySearchAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentsBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// ---
 export const getStudentAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentApi,
@@ -1974,3 +1996,35 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
     })
 };
 // FINISH EMPLOYEE
+
+
+// Written By Muhammadamin
+export const getStudentOnSearchAction = (payload) => (dispatch) => {
+    dispatch({
+        api: getStudentOnSearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_SEARCH_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: payload
+    })
+}
+
+export const saveStudentToGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveStudentToGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+
