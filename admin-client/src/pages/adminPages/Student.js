@@ -139,8 +139,8 @@ class Student extends Component {
         const downloadExcel = (e, v) => {
             dispatch(downloadStudentFileAction(v))
         }
-
         //
+
         const a = (tab) => {
             this.setState({activeTab: tab})
         }
