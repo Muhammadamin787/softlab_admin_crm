@@ -140,7 +140,7 @@ class Student extends Component {
             dispatch(downloadStudentFileAction(v))
         }
 
-        ////////////////////
+        //
         const a = (tab) => {
             this.setState({activeTab: tab})
         }
