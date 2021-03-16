@@ -23,7 +23,7 @@ public class ToplamController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> editToplam(@PathVariable int id, @RequestBody ToplamDto toplamDto) {
+    public HttpEntity<?> editToplam(@PathVariable Integer id, @RequestBody ToplamDto toplamDto) {
         ApiResponse apiResponse = toplamService.editToplam(id, toplamDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
@@ -55,7 +55,7 @@ public class ToplamController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteToplam(int id) {
+    public HttpEntity<?> deleteToplam(@PathVariable Integer id) {
         ApiResponse apiResponse = toplamService.deleteToplam(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 204 : 409).body(apiResponse);
     }

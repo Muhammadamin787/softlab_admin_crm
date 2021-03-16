@@ -414,7 +414,7 @@ export const saveToplamApi = (data) => {
     return HttpClient.doPost(api.toplam, data)
 }
 export const editToplamApi = (data) => {
-    return HttpClient.doGet(api.toplam + "/" + data.id, data)
+    return HttpClient.doPut(api.toplam + "/" + data.id, data)
 }
 export const getToplamListApi = (data) => {
     return HttpClient.doGet(api.toplam + "?page=" + data.page + "&size=" + data.size)
