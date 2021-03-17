@@ -46,7 +46,6 @@ public class PayTypeService {
     public ApiResponse getPayTypeList() {
         try {
             List<PayType> allPayTypes = payTypeRepository.findAll();
-            if (allPayTypes.isEmpty()) return apiResponseService.notFoundResponse();
             return apiResponseService.getResponse(allPayTypes);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();

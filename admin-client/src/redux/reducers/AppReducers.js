@@ -25,6 +25,7 @@ const initState = {
     date1: '',
     date2: '',
     type: '',
+    groupId: '',
     totalElements: 0,
     totalPages: 0,
     parentItems: [],
@@ -514,16 +515,17 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
-        console.log(payload)
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-            let ketmon = []
+            let arr = []
             for (let i = 0; i < state.studentGroups.length; i++) {
-                ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
+                arr.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
             }
-            state.selectGroups = ketmon
+            state.selectGroups = arr
+            console.log("????????????????????")
+            console.log(state.selectGroups)
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {

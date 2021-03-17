@@ -302,26 +302,8 @@ class SelectGroup extends Component {
                 this.setState({selectedStudent: ''})
         }
         const handleInputChange = (e) => {
-            // let array = [];
-            // let arr = {
-            //     name: 0,
-            //     label: ''
-            // }
-            // this.setState({optionsOfStudent: array});
             if (e.length > 0) {
-                dispatch(getStudentOnSearchAction({name: e}))
-                // studentsOption.map((item, i) => {
-                //     arr.name = i;
-                //     arr.label = item.name;
-                //     array.push(arr);
-                //     this.state.optionsOfStudent.map(el => {
-                //         if (el.name !== i) {
-                //             this.setState({optionsOfStudent: array});
-                //         }
-                //     })
-                //     console.log("==========");
-                //     console.log(this.state.optionsOfStudent);
-                // });
+                dispatch(getStudentOnSearchAction({name: e, id: currentItem.id}))
             } else {
                 dispatch({
                     type: 'updateState',
