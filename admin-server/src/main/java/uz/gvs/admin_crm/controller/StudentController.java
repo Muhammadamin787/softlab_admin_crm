@@ -81,7 +81,7 @@ public class  StudentController {
         ApiResponse apiResponse = studentService.getDebtorStudents(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
-//2
+
     @GetMapping("/search")
     public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name, @RequestParam(value = "groupId") Integer groupId){
         ApiResponse apiResponse = studentService.searchStudent(name, groupId);
