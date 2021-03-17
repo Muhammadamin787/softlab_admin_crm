@@ -1743,7 +1743,7 @@ export const deleteToplamAction = (data) => (dispatch) => {
         dispatch({
             type: "updateState",
             payload: {
-                showDeleteModal: false
+                deleteModal: false
             }
         })
         dispatch(getToplamListAction({page: 0, size: 20}));

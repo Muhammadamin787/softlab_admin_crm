@@ -417,7 +417,7 @@ class SelectStudent extends Component {
                                         />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
-                                                      defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
+                                            defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                       label="" required className="pay-form-style d-block"
                                                       errorMessage="Birini tanlang!">
 

@@ -53,7 +53,6 @@ class Cashback extends Component {
             if (currentObject && currentObject.id) {
                 v.id = currentObject.id
             }
-            console.log(v);
             dispatch(saveCashbackAction(v))
         }
 
