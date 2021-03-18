@@ -294,12 +294,6 @@ export const getStudentsApi = (data) => {
         + "&size=" + data.size + "&status=" + data.type : ""))
 }
 
-//  Written By Muhammadamin
-export const getStudentsBySearchApi = (data) => {
-    console.log(data.name);
-    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name : ""))
-}
-// ---
 export const getStudentByGroupApi = (data) => {
     return HttpClient.doGet(api.student + "/groupStudent/" + data)
 }
@@ -522,10 +516,14 @@ export const deleteEmployeeApi = (data) => {
 
 // Written by Muhammadamin
 export const getStudentOnSearchApi = (data) => {
-    return HttpClient.doGet(api.student + (data && data.name != null ? "/search?name=" + data.name : ""))
+    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name + "&groupId=" + data.id : ""))
 }
 export const saveStudentToGroupApi = (data) => {
     console.log(data);
     return HttpClient.doPost(api.group + "/addStudent", data)
 }
 
+export const getStudentsBySearchApi = (data) => {
+    return HttpClient.doGet(api.student + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
+}
+// ---
