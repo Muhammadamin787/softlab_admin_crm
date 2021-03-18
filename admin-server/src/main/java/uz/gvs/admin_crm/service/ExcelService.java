@@ -1,25 +1,16 @@
 package uz.gvs.admin_crm.service;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Student;
-import uz.gvs.admin_crm.entity.StudentGroup;
-import uz.gvs.admin_crm.entity.Teacher;
 import uz.gvs.admin_crm.payload.excelDtos.PaymentDtos;
 import uz.gvs.admin_crm.payload.excelDtos.PaymentExcelDtos;
 import uz.gvs.admin_crm.repository.StudentPaymentRepository;
 import uz.gvs.admin_crm.repository.StudentRepository;
 
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -38,8 +29,7 @@ public class ExcelService {
         List<Object> objects = studentPaymentRepository.getStudentPaymentForExcel(startDate, finishDate);
         List<PaymentExcelDtos> paymentExcelDtos = new ArrayList<>();
 
-        SimpleDateFormat formatForDate = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatForTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         List<PaymentDtos> paymentDtos = new ArrayList<>();
         for (Object obj : objects) {
             Object[] client = (Object[]) obj;
@@ -52,32 +42,33 @@ public class ExcelService {
             String payTypeName = client[6].toString();
             String group = client[7].toString();
 
+
             PaymentDtos paymentDto = new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group);
             if (paymentExcelDtos.size() > 0) {
-                for (PaymentExcelDtos paymentExcelDto : paymentExcelDtos) {
-                    if (paymentExcelDto.getDate().equals(date)) {
+                boolean isHave = false;
+                for (PaymentExcelDtos paymentExcelDtos1 : paymentExcelDtos) {
+                    String[] s = paymentExcelDtos1.getDate().split(" ");
+                    if (Objects.equals(s[0], date)) {
                         paymentDtos = new ArrayList<>();
-                        List<PaymentDtos> paymentDtos1 = paymentExcelDto.getPaymentDtos();
-
+                        List<PaymentDtos> paymentDtos1 = paymentExcelDtos1.getPaymentDtos();
                         paymentDtos.add(paymentDto);
                         paymentDtos.addAll(paymentDtos1);
-
-                        paymentExcelDto.setPaymentDtos(paymentDtos);
-                    } else {
-                        paymentExcelDtos.add(
-                                new PaymentExcelDtos(date,
-                                        Collections.singletonList(
-                                                new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
-
+                        paymentExcelDtos1.setPaymentDtos(paymentDtos);
+                        isHave = true;
                         break;
                     }
+
+                }
+                if (!isHave) {
+                    paymentExcelDtos.add(new PaymentExcelDtos(
+                            date, Collections.singletonList(new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
+
                 }
             } else {
                 paymentExcelDtos.add(
                         new PaymentExcelDtos(date,
                                 Collections.singletonList(
                                         new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
-
             }
         }
         byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
