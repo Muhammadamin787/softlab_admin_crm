@@ -71,7 +71,7 @@ public class ExcelService {
                                         new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
             }
         }
-        byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
+            byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=accountant.xlsx")
