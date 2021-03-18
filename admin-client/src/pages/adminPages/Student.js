@@ -173,6 +173,7 @@ class Student extends Component {
                 status: activeTab === "DEFAULT" ? "ARCHIVE" : "DEFAULT"
             }))
         }
+
         //  Written By Muhammadamin
         const searchStudent = (e, v) => {
             let value = document.getElementById("searchStudent").value;
@@ -181,6 +182,7 @@ class Student extends Component {
             }
             dispatch(getStudentsBySearchAction({name: value}));
         }
+        // ---
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 {this.state.secondPage ?

@@ -443,6 +443,7 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
+        dispatch(getPayTypeListAction())
         dispatch({
             type: "updateState",
             payload: {
@@ -450,7 +451,6 @@ export const deletePayTypeAction = (data) => (dispatch) => {
             }
         })
         toast.success("Malumot ochirildi")
-        dispatch(getPayTypeListAction())
     }).catch((err) => {
         toast.error("Xatolik")
     })
