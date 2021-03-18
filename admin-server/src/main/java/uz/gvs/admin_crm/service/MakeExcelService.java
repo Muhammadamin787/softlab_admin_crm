@@ -249,6 +249,7 @@ public class MakeExcelService {
 
         Cell cell = null;
         Map<String, Double> allAmount = new HashMap<>();
+
         NumberFormat nf = NumberFormat.getInstance(new Locale("sk", "SK"));
         nf.setMinimumFractionDigits(2);
 
@@ -355,8 +356,8 @@ public class MakeExcelService {
         }
         XSSFSheet sheet = (XSSFSheet) workbook.createSheet("Umumiy");
 
-        sheet.setColumnWidth(0,4000);
-        sheet.setColumnWidth(1,6000);
+        sheet.setColumnWidth(0, 4000);
+        sheet.setColumnWidth(1, 6000);
 
 
         CellStyle sellStyle1 = workbook.createCellStyle();
@@ -382,25 +383,20 @@ public class MakeExcelService {
         double allSum = 0.0;
         for (String string : strings) {
             newRow1 = sheet.createRow(i);
-
             cell1 = newRow1.createCell(0);
             cell1.setCellValue(string);
-
             cell1 = newRow1.createCell(1);
             cell1.setCellValue(nf.format(allAmount.get(string)));
             allSum += allAmount.get(string);
             i++;
         }
         newRow1 = sheet.createRow(i);
-
         cell1 = newRow1.createCell(0);
         cell1.setCellValue("Jami:");
         cell1.setCellStyle(sellStyle1);
-
         cell1 = newRow1.createCell(1);
         cell1.setCellValue(nf.format(allSum));
         cell1.setCellStyle(sellStyle1);
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             workbook.write(outputStream);
