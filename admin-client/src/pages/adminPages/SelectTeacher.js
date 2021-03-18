@@ -614,7 +614,6 @@ class SelectTeacher extends Component {
                                         type={"number"} name={"salary"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                 </Col>
-                                {console.log(currentObject)}
                                 <Col md={5} className={"pl-0"}>
                                     <AvField type="select" name="percent">
                                         {currentObject.salary === null ?

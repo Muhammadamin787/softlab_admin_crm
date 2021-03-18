@@ -67,11 +67,10 @@ public class ToplamService {
             Optional<Toplam> byId = toplamRepository.findById(id);
             if (!byId.isPresent())
                 return apiResponseService.notFoundResponse();
-
             Toplam toplam = byId.get();
             toplam.setActive(toplamDto.isActive());
             toplam.setName(toplamDto.getName());
-            toplam.setName(toplamDto.getTime());
+            toplam.setTime(toplamDto.getTime());
             toplam.setTeacher(teacherRepository.findById(toplamDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get teacher")));
             toplam.setCourse(courseRepository.findById(toplamDto.getCourseId()).orElseThrow(() -> new ResourceNotFoundException("get course")));
             Set<Weekday> weekdayNameSet = new HashSet<>();

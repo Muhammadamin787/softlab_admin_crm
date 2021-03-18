@@ -3,7 +3,6 @@ import * as app from "../../api/AppApi";
 
 import {
     getExcelInfoApi,
-
     getClientList,
     editClientApi,
     saveClientApi,
@@ -140,9 +139,21 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
-    changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi, getExcelListApp
+    getByCourseApi,
+    getOneAppealForEditApi,
+    editAppealApi,
+    makeStudentByAppealApi,
+    changeTeacherStatusApi,
+    changeStatusApi,
+    getEmployeeListApi,
+    editEmployeeApi,
+    saveEmployeeApi,
+    deleteEmployeeApi,
+    changeGroupAPi,
+    getEmployeeApi,
+    getExcelListApp,
+    getStudentOnSearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -171,7 +182,6 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
         data: payload
     })
 }
-
 export const getStudentsByGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentByGroupApi,
@@ -775,7 +785,6 @@ export const getGroupsAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const getGroupsForSelectAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupsForSelectApi,
@@ -867,7 +876,6 @@ export const saveGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeStudentGroupStatusAction = (data) => (dispatch) => {
     dispatch({
         api: changeStudentGroupStatusApi,
@@ -896,7 +904,6 @@ export const changeStudentGroupStatusAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const searchGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getRegionSearchApi,
@@ -910,7 +917,6 @@ export const searchGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeGroupStatusActions = (data) => (dispatch) => {
     dispatch({
         api: changeGroupAPi,
@@ -983,8 +989,6 @@ export const saveTestCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
-
 //  Profession
 export const getProfessionAction = () => (dispatch) => {
     dispatch({
@@ -1100,7 +1104,6 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 // START TRIAL CONTACT TYPE
 export const getTrialContactTypesAction = () => (dispatch) => {
     dispatch({
@@ -1194,6 +1197,20 @@ export const getStudentsAction = (data) => (dispatch) => {
         data
     })
 }
+
+//  Written By Muhammadamin
+export const getStudentsBySearchAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentsBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// ---
 export const getStudentAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentApi,
@@ -1216,7 +1233,7 @@ export const saveStudentAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getStudentAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -1324,7 +1341,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1392,7 +1409,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1726,7 +1743,7 @@ export const deleteToplamAction = (data) => (dispatch) => {
         dispatch({
             type: "updateState",
             payload: {
-                showDeleteModal: false
+                deleteModal: false
             }
         })
         dispatch(getToplamListAction({page: 0, size: 20}));
@@ -1932,6 +1949,16 @@ export const getEmployeeListAction = () => (dispatch) => {
         ]
     })
 }
+export const getEmployeeAction = () => (dispatch) => {
+    dispatch({
+        api: getEmployeeApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_ERROR,
+        ]
+    })
+}
 
 export const saveEmployeeAction = (data) => (dispatch) => {
     dispatch({
@@ -1973,3 +2000,35 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
     })
 };
 // FINISH EMPLOYEE
+
+
+// Written By Muhammadamin
+export const getStudentOnSearchAction = (payload) => (dispatch) => {
+    dispatch({
+        api: getStudentOnSearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_SEARCH_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: payload
+    })
+}
+
+export const saveStudentToGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveStudentToGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+

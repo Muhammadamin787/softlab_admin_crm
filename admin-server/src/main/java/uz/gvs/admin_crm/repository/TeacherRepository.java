@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
-    @Query(nativeQuery = true, value = "select tr.id, ur.full_name from teacher tr inner join users ur on tr.user_id = ur.id" +
+    @Query(nativeQuery = true, value = "select cast(tr.id as varchar ), ur.full_name from teacher tr inner join users ur on tr.user_id = ur.id" +
             " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
     List<Object> searchTeacher(String objName);
     Page<Teacher> findAllByUser_status(UserStatusEnum user_status, Pageable pageable);

@@ -1,5 +1,8 @@
 package uz.gvs.admin_crm.controller;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +81,6 @@ public class StudentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    //2
     @GetMapping("/search")
     public HttpEntity<?> searchStudent(@RequestParam(value = "name") String name, @RequestParam(value = "groupId") Integer groupId) {
         ApiResponse apiResponse = studentService.searchStudent(name, groupId);

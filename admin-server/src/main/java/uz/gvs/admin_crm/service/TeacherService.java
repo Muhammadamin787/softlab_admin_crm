@@ -41,14 +41,17 @@ public class TeacherService {
 
     public ApiResponse saveTeacher(TeacherDto teacherDto) {
         try {
-            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 1))
+            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 0))
                 return apiResponseService.notEnoughErrorResponse();
             if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
                 User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
-                Teacher teacher = new Teacher();
-                teacher.setUser(user);
-                teacherRepository.save(teacher);
-                return apiResponseService.saveResponse();
+                if (user != null) {
+                    Teacher teacher = new Teacher();
+                    teacher.setUser(user);
+                    teacherRepository.save(teacher);
+                    return apiResponseService.saveResponse();
+                }
+                return apiResponseService.existResponse();
             }
             return apiResponseService.existResponse();
         } catch (Exception exception) {

@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import {
+    deleteEmployeeAction, getEmployeeAction, saveEmployeeAction
 
-    getEmployeeListAction,
-    deleteEmployeeAction,
-    saveEmployeeAction,
-    getRegionsAction, getGroupsAction
+
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon, EditIcon, GlobusIcon} from "../../component/Icons";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
-import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
-import Pagination from "react-js-pagination";
+import {AiOutlineUsergroupAdd} from "react-icons/all";
 
-class Staff extends Component {
+class SelectStaff extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getEmployeeListAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getRegionsAction())
+        let id = 0
+        if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            id = this.props.match.params.id;
+            this.props.dispatch(getEmployeeAction({id: id}))
+        }
     }
 
     state = {
@@ -29,17 +29,9 @@ class Staff extends Component {
         currentObject: ''
     }
 
-    handlePageChange(pageNumber) {
-        this.props.dispatch(getEmployeeListAction({page: (pageNumber - 1), size: this.props.size}))
-    }
-
     render() {
         const {currentObject} = this.state;
-        const {
-            dispatch, showModal, deleteModal, employees, regions, page,
-            size,
-            totalElements,
-        } = this.props;
+        const {dispatch, showModal, deleteModal,regions,currentItem} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -56,70 +48,85 @@ class Staff extends Component {
             dispatch(deleteEmployeeAction(currentObject))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
+
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
             }
-            let employeeDto
-            employeeDto = {
+            let employeeDto;
+            employeeDto = {userDto: ""}
+            employeeDto.userDto = {
+                id: v.id,
                 fullName: v.fullName,
                 gender: v.gender,
                 phoneNumber: v.phoneNumber,
-                parentPhone: v.parentPhone,
-                avatarId: v.attachmentId,
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
-                roleName: v.roleName
             }
+            employeeDto.roleName = v.roleName;
+            employeeDto.id = currentObject.id
             dispatch(saveEmployeeAction(employeeDto))
         }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Xodimlar</h1>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
-                        <Table className={"table-style"}>
-                            <thead>
-                            <tr className={"text-center"}>
-                                <th>№</th>
-                                <th>ISMI</th>
-                                <th>TELEFON</th>
-                                <th>KASBI</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                employees && employees.length > 0 ? employees.map((item, i) =>
-                                <tr key={i} className={"table-tr"}>
-                                    <td>{i + 1}</td>
-                                    <td><Link className={"text-dark"}
-                                              to={"/admin/staff/" + (item.id)}>{item.fullName}</Link>
-                                    </td>
-                                    <td>
-                                        {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
-                                    </td>
-                                    <td>{currentObject.roleName}</td>
-                                </tr>
-                            ) : ''}
-                            </tbody>
-                        </Table>
-                        <div align={"center"}>
-                            <Pagination
-                                activePage={page + 1}
-                                itemsCountPerPage={size}
-                                totalItemsCount={totalElements}
-                                pageRangeDisplayed={5}
-                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                                linkClass="page-link"
-                            />
+                    <div
+                        className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-staff-style"}>
+                        <div className="row">
+                            <div className="col-8">
+                                <hgroup>
+                                    <small className={"text-secondary"}>FISH: </small>
+                                    <p className={"d-inline"}> {currentItem.fullName}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Telefon
+                                        raqam: </small>
+                                    <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Tug'ilgan
+                                        sana: </small>
+                                    <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Manzil: </small>
+                                    <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Jinsi: </small>
+                                    <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Tavsif: </small>
+                                    <p className={"d-inline"}> {currentItem.description}</p>
+                                </hgroup>
+                                <div className="button-block">
+                                    {/*<Button className="table-icon px-2"*/}
+                                    {/*        onClick={() => openAddGroupModal(currentItem)}>*/}
+                                    {/*    <AiOutlineUsergroupAdd*/}
+                                    {/*        color={"#EE8033"}*/}
+                                    {/*    />*/}
+                                    {/*</Button>*/}
+                                    {/*<Button className="table-icon px-2"*/}
+                                    {/*        onClick={() => openPaymentModal(currentItem)}>*/}
+                                    {/*    <span className="icon icon-wallet bg-success "/>*/}
+                                    {/*</Button>*/}
+                                </div>
+                            </div>
+                            <div className="col-4 button-block">
+                                <Button className="table-icon"
+                                        onClick={() => openModal(currentItem)}>
+                                    <EditIcon className="button-icon"/>
+                                </Button>
+                                <Button className="table-icon"
+                                        onClick={() => openDeleteModal(currentItem)}>
+                                    <DeleteIcon className="button-icon"/>
+                                </Button>
+                            </div>
                         </div>
-
+                    </div>
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -128,24 +135,24 @@ class Staff extends Component {
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.fullName : ""}
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
                                         type={"text"}
                                         label={"FISH"} name={"fullName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
+                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
-                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
+                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
                                         <option key={0} value={"0"}>Ota hududni tanlang</option>
                                         {regions ? regions.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -155,12 +162,12 @@ class Staff extends Component {
                                                   defaultValue={currentObject ? currentObject.roleName : ""}
                                                   label="Kasbi" required
                                                   errorMessage="Birini tanlang!">
-                                        <AvRadio label="Adminstrator" value="RECEPTION"/>
-                                        <AvRadio label="Hisobchi" value="FINANCIER"/>
-                                        <AvRadio label="Admin" value="ADMIN"/>
+                                        <AvRadio label="Adminstrator" value="Adminstrator"/>
+                                        <AvRadio label="Hisobchi" value="Hisobchi"/>
+                                        <AvRadio label="Admin" value="Admin"/>
                                     </AvRadioGroup>
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject ? currentObject.gender : ""}
+                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
                                                   label="Jins" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Erkak" value="MALE"/>
@@ -196,10 +203,10 @@ class Staff extends Component {
     }
 }
 
-Staff.propTypes = {}
+SelectStaff.propTypes = {}
 export default connect(({
-                            app: {loading, employees, showModal, deleteModal, regions},
+                            app: {loading, employees, showModal, deleteModal,regions},
                         }) => ({
-        loading, employees, showModal, deleteModal, regions
+        loading, employees, showModal, deleteModal,regions
     })
-)(Staff);
+)(SelectStaff);

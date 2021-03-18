@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction,
+    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction, getGroupsAction,
     getGroupsForSelectAction,
     getPayTypeListAction,
     getRegionsAction,
@@ -103,6 +103,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openAddGroupModal = (item) => {
             this.props.dispatch(getGroupsForSelectAction())
             this.setState({currentObject: item})
@@ -113,6 +114,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -122,6 +124,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openStudentPayDelModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -131,6 +134,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const deleteItem = (item) => {
             dispatch(deleteStudentAction({...item, history: history}))
         }
@@ -416,20 +420,19 @@ class SelectStudent extends Component {
                                         />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
-                                            // defaultValue={currentObject ? currentObject.gender : ""}
+                                            defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                       label="" required className="pay-form-style d-block"
                                                       errorMessage="Birini tanlang!">
+
                                             {payTypes ? payTypes.map((item, i) =>
                                                 <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
                                             ) : ""}
                                         </AvRadioGroup>
                                         <AvField
-                                            // defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"} id={"price"}
+                                            defaultValue={currentObject ? currentObject.sum : ""}
+                                            type={"number"}
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
-
-
                                         <AvField
                                             type={"datetime-local"}
                                             defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
@@ -515,7 +518,7 @@ class SelectStudent extends Component {
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
                                             value: currentObject.group.id,
-                                            label: (currentObject.group.name)
+                                            label: (currentObject.group.name + " ["+ currentObject.group.course.name +"]")
                                         }}
                                         placeholder="Guruhni tanlang..."
                                         name="groupId"
@@ -536,7 +539,6 @@ class SelectStudent extends Component {
                                             <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
                                         ) : ""}
                                     </AvRadioGroup>
-                                    {console.log(currentObject)}
                                     <AvField
                                         defaultValue={currentObject ? currentObject.sum : ""}
                                         type={"number"}
