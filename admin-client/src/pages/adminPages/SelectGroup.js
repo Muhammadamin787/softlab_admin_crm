@@ -49,6 +49,7 @@ class SelectGroup extends Component {
             let year = new Date().getFullYear()
             let month = new Date().getMonth()
             let date = new Date().getDate()
+            let dateMobile = new Date().getDate()
 
             let arr = []
             for (let i = 1; i <= new Date(this.state.year, this.state.month + 1, 0).getDate(); i++) {
@@ -215,21 +216,44 @@ class SelectGroup extends Component {
                 dispatch(saveGroupAction(v))
             }
         }
-        const saveAttendance = (e, v) => {
+        const checkAttendence = (bool, id) => {
+            let activeBtn = document.getElementById("active" + id);
+            let notActiveBtn = document.getElementById("notActive" + id);
+            if (bool) {
+                activeBtn.classList.remove("not-active-btn-style");
+                activeBtn.classList.add("active-btn-style");
+                notActiveBtn.classList.remove("active-btn-style");
+                notActiveBtn.classList.add("not-active-btn-style");
+            } else {
+                notActiveBtn.classList.remove("not-active-btn-style");
+                notActiveBtn.classList.add("active-danger-btn-style");
+                activeBtn.classList.remove("active-btn-style");
+                activeBtn.classList.add("not-active-btn-style");
+            }
 
+            document.getElementById("mobile" + id).checked = bool;
+        }
+        const saveAttendance = (e, v, bool) => {
             let arr = []
             students.map(item =>
                 item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
                     arr.push({
                         studentId: item.id,
-                        active: document.getElementById(item.id).checked
+                        active: bool ? document.getElementById("mobile" + item.id).checked : document.getElementById(item.id).checked
                     })
                 ) : ""
             )
             v.studentList = arr
             v.date = moment(v.date).format('YYYY-MM-DD').toString()
+            console.log(v)
+
             this.props.dispatch(saveAttendanceAction(v))
-            showHideModal()
+            if (!bool) {
+                showHideModal()
+            }
+        }
+        const saveAttendanceMobile = (e, v) => {
+            saveAttendance(e, v, true)
         }
         const gg = {
             overflowX: "scroll",
@@ -548,45 +572,67 @@ class SelectGroup extends Component {
                                             </div>
 
                                             <div style={tableStyle} id={"tableStyleInSelectGroup_mobile"}
-                                                 className={"p-4"}>
+                                                 className={"p-3"}>
                                                 <div className={"allMonthAttandence"}>
                                                     <div
-                                                        className={"my-2"}>{new Date().getDate() + " " + months[month]}</div>
-                                                    {
-                                                        students && students.length > 0 && students.map((student, i) =>
-                                                            <>
-                                                                <div className={"row px-2"}>
-                                                                    <div
-                                                                        className={"py-2 w-100"}>{student.fullName}</div>
-                                                                    <br/>
-                                                                    <div className={"row w-100"}>
-
-                                                                        <AvForm className={"border w-100"} onValidSubmit={saveAttendance}>
-                                                                            <AvField type={"hidden"} name={"date"}
-                                                                                     defaultValue={currentDay ? currentDay : ''}
-                                                                                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
-                                                                            <AvField type={"hidden"} name={"teacherId"}
-                                                                                     defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
-                                                                            <AvField type={"hidden"} name={"groupId"}
-                                                                                     defaultValue={currentItem ? currentItem.id : ''}/>
-                                                                            <div className={"border row"}>
-                                                                                <div className={"col-6"}>
-                                                                                    <button
-                                                                                        className={"btn w-100 btn-danger"} type={"submit"}>Kelmadi
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div className={"col-6"}>
-                                                                                    <button
-                                                                                        className={"btn w-100 btn-success"} type={"submit"}>Keldi
-                                                                                    </button>
+                                                        className={"mt-2 mb-4"}>{new Date().getDate() + " " + months[month]}</div>
+                                                    <AvForm className={"w-100"}
+                                                            onValidSubmit={saveAttendanceMobile}>
+                                                        {
+                                                            students && students.length > 0 && students.map((student, i) =>
+                                                                <>
+                                                                    {
+                                                                        student.studentGroupDto && student.studentGroupDto.studentGroupStatus === "ACTIVE" ?
+                                                                            <div className={"px-2"}>
+                                                                                <div
+                                                                                    className={"w-100"}>{student.fullName}</div>
+                                                                                <div className={"w-100"}>
+                                                                                    <AvField type={"hidden"}
+                                                                                             name={"dateMobile"}
+                                                                                             defaultValue={currentDay ? currentDay : ''}
+                                                                                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                                                                                    <AvField type={"hidden"}
+                                                                                             name={"teacherId"}
+                                                                                             defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
+                                                                                    <AvField type={"hidden"}
+                                                                                             name={"groupId"}
+                                                                                             defaultValue={currentItem ? currentItem.id : ''}/>
+                                                                                    <div className={"row w-100 "}>
+                                                                                        <div className={"col-6"}>
+                                                                                            <button
+                                                                                                className={"btn w-100 btn-outline-danger outline-none"}
+                                                                                                type={"button"}
+                                                                                                id={"notActive" + student.id}
+                                                                                                onClick={() => checkAttendence(false, student.id)}>Kelmadi
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div className={"col-6"}>
+                                                                                            <button
+                                                                                                className={"btn w-100 btn-outline-success"}
+                                                                                                type={"button"}
+                                                                                                id={"active" + student.id}
+                                                                                                onClick={() => checkAttendence(true, student.id)}>Keldi
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <hr className={"d-block"}/>
+                                                                                    <div className={"text-center"}>
+                                                                                        <Input type={"checkbox"} hidden
+                                                                                               id={"mobile" + student.id}/>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </AvForm>
-                                                                    </div>
-                                                                </div>
-                                                            </>
-                                                        )
-                                                    }
+                                                                            : ''
+                                                                    }
+                                                                </>
+                                                            )
+                                                        }
+                                                        <div className={"pl-2 mt-1 btn-submit text-center"}>
+                                                            <button className={"btn btn-outline-primary w-100"}
+                                                                    type={"submit"}>Saqlash
+                                                            </button>
+                                                        </div>
+                                                    </AvForm>
                                                     <div className={"row mt-3"}>
                                                         <div className={"col-2"}></div>
                                                         <div className={"col-2"}>

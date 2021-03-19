@@ -84,9 +84,39 @@ body {
 #tableStyleInSelectGroup_mobile {
   display: none;
 }
+
+.allMonthAttandence .btn-outline-danger:focus,
+.allMonthAttandence .btn-outline-success:focus{
+  outline: none !important;
+  box-shadow: none !important;
+}
+.active-danger-btn-style {
+  background-color: #E33545;
+  color: #fff;
+}
+.active-btn-style {
+  background-color: #28A745;
+  color: #fff;
+}
+.not-active-btn-style {
+  border-color: #aaa;
+  background-color: #fff;
+  color: #aaa;
+}
+
+.not-active-btn-style:hover {
+  color: #fff;
+}
+.btn-submit {
+  width: 91%;
+}
+
 @media only screen and (max-width: 767px) {
   #tableStyleInSelectGroup {
     display: none;
+  }
+  #allModalStyle {
+    display: none !important;
   }
   #tableStyleInSelectGroup_mobile {
     display: block;
