@@ -98,13 +98,11 @@ class Staff extends Component {
                                 employees && employees.length > 0 ? employees.map((item, i) =>
                                 <tr key={i} className={"table-tr"}>
                                     <td>{i + 1}</td>
-                                    <td><Link className={"text-dark"}
-                                              to={"/admin/staff/" + (item.id)}>{item.fullName}</Link>
-                                    </td>
+                                    <td>item.fullName</td>
                                     <td>
                                         {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                     </td>
-                                    <td>{currentObject.roleName}</td>
+                                    <td>{item.roleName}</td>
                                 </tr>
                             ) : ''}
                             </tbody>
