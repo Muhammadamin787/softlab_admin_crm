@@ -31,7 +31,7 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
 import {AiOutlinePlusCircle, FaRegCalendarCheck, FaRegCalendarPlus} from "react-icons/all";
 
-class SelectGroup extends Component {
+class SelectGroupOld extends Component {
     componentDidMount() {
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
@@ -467,8 +467,8 @@ class SelectGroup extends Component {
                                     </Nav>
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
-                                            <div style={tableStyle} id={"tableStyleInSelectGroup"} className={"p-4"}>
-                                                <div>
+                                            <div style={tableStyle} className={"p-4"}>
+                                                <div className={""}>
                                                     <Row>
                                                         <Col md={1}>
                                                             <Button onClick={minusM} className={"btn btn-light"}>
@@ -544,66 +544,6 @@ class SelectGroup extends Component {
                                                             }
                                                         </tr>
                                                     </Table>
-                                                </div>
-                                            </div>
-
-                                            <div style={tableStyle} id={"tableStyleInSelectGroup_mobile"}
-                                                 className={"p-4"}>
-                                                <div className={"allMonthAttandence"}>
-                                                    <div
-                                                        className={"my-2"}>{new Date().getDate() + " " + months[month]}</div>
-                                                    {
-                                                        students && students.length > 0 && students.map((student, i) =>
-                                                            <>
-                                                                <div className={"row px-2"}>
-                                                                    <div
-                                                                        className={"py-2 w-100"}>{student.fullName}</div>
-                                                                    <br/>
-                                                                    <div className={"row w-100"}>
-
-                                                                        <AvForm className={"border w-100"} onValidSubmit={saveAttendance}>
-                                                                            <AvField type={"hidden"} name={"date"}
-                                                                                     defaultValue={currentDay ? currentDay : ''}
-                                                                                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
-                                                                            <AvField type={"hidden"} name={"teacherId"}
-                                                                                     defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
-                                                                            <AvField type={"hidden"} name={"groupId"}
-                                                                                     defaultValue={currentItem ? currentItem.id : ''}/>
-                                                                            <div className={"border row"}>
-                                                                                <div className={"col-6"}>
-                                                                                    <button
-                                                                                        className={"btn w-100 btn-danger"} type={"submit"}>Kelmadi
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div className={"col-6"}>
-                                                                                    <button
-                                                                                        className={"btn w-100 btn-success"} type={"submit"}>Keldi
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </AvForm>
-                                                                    </div>
-                                                                </div>
-                                                            </>
-                                                        )
-                                                    }
-                                                    <div className={"row mt-3"}>
-                                                        <div className={"col-2"}></div>
-                                                        <div className={"col-2"}>
-                                                            <Button onClick={minusM} className={"btn btn-light"}>
-                                                                <i className="fas fa-angle-left"/>
-                                                            </Button>
-                                                        </div>
-                                                        <div className={"col-4 pt-2"}>
-                                                            {" " + year + " - yil, " + months[month] + " "}
-                                                        </div>
-                                                        <div className={"col-2"}>
-                                                            <Button onClick={plusM} className={"btn btn-light"}>
-                                                                <i className="fa fa-angle-right"/>
-                                                            </Button>
-                                                        </div>
-                                                        <div className={"col-2"}></div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </TabPane>
@@ -799,8 +739,7 @@ class SelectGroup extends Component {
     }
 }
 
-SelectGroup
-    .propTypes = {};
+SelectGroupOld.propTypes = {};
 
 export default connect(
     ({
@@ -842,4 +781,4 @@ export default connect(
             loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
         })
 )
-(SelectGroup);
+(SelectGroupOld);

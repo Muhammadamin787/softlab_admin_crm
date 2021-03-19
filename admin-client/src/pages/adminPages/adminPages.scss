@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
 body {
@@ -8,7 +7,7 @@ body {
 /*START DASHBOARD*/
 
 .schedule-block {
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04);
 
   &__title {
     padding: 1.5rem 1rem;
@@ -43,6 +42,7 @@ body {
   border-bottom: 2px solid #007BFF !important;
   cursor: pointer;
 }
+
 .tab-item-style-active1 {
   background-color: white;
   cursor: pointer;
@@ -56,7 +56,8 @@ body {
   margin-left: 1rem;
   cursor: pointer;
 }
-.hide{
+
+.hide {
   display: none;
 }
 
@@ -74,7 +75,22 @@ body {
 
 .inside-td-block {
   padding: 2rem !important;
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04);
   color: #000;
   border-radius: 5px;
 }
+
+//  Written By Muhammadmin this is a for responsibility of the group page!
+#tableStyleInSelectGroup_mobile {
+  display: none;
+}
+@media only screen and (max-width: 767px) {
+  #tableStyleInSelectGroup {
+    display: none;
+  }
+  #tableStyleInSelectGroup_mobile {
+    display: block;
+  }
+}
+
+//  ---
