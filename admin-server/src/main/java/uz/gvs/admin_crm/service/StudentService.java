@@ -55,8 +55,6 @@ public class StudentService {
                     studentDto.getRegionId(),
                     studentDto.getGender(),
                     studentDto.getBirthDate()), RoleName.STUDENT);
-            if (user == null)
-                return apiResponseService.tryErrorResponse();
             student.setUser(user);
             student.setParentPhone(studentDto.getParentPhone());
             studentRepository.save(student);

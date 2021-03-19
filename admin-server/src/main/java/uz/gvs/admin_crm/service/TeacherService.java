@@ -82,17 +82,22 @@ public class TeacherService {
     }
 
     public ApiResponse getTeacherList(int page, int size,String type) {
-        Sort sort;
-        Page<Teacher> all = teacherRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
-        return apiResponseService.getResponse(
-                new PageableDto(
-                        all.getTotalPages(),
-                        all.getTotalElements(),
-                        all.getNumber(),
-                        all.getSize(),
-                        all.get().map(this::makeTeacherDto).collect(Collectors.toList())
-                )
-        );
+        try{
+            Sort sort;
+            Page<Teacher> all = teacherRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
+            return apiResponseService.getResponse(
+                    new PageableDto(
+                            all.getTotalPages(),
+                            all.getTotalElements(),
+                            all.getNumber(),
+                            all.getSize(),
+                            all.get().map(this::makeTeacherDto).collect(Collectors.toList())
+                    )
+            );
+        }catch (Exception e){
+            return apiResponseService.tryErrorResponse();
+        }
+
     }
 
     public TeacherDto makeTeacherDto(Teacher teacher) {

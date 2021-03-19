@@ -24,8 +24,8 @@ public class SalaryService {
             if (optional.isPresent()) {
                 if (teacherDto.getSalary() != null) {
                     Teacher teacher = optional.get();
+                        teacher.setIsPercent(teacherDto.getPercent());
                         teacher.setSalary(teacherDto.getSalary());
-                        teacher.setIsPercent(teacherDto.isPercent());
                         teacherRepository.save(teacher);
                         return apiResponseService.saveResponse();
                 }
