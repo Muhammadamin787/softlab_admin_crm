@@ -15,20 +15,8 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
-    changeGroupStatusAction, changeGroupStatusActions,
-    changeGroupStatusToActiveAction,
-    changeGroupStatusToArchiveAction, changeGroupStautsActions,
-    deleteGroupAction,
-    deleteRegionAction,
-    getCoursesAction,
-    getGroupsAction,
-    getGroupsByStatusAction,
-    getRoomListAction,
-    getStudentPaymentAction,
-    getTeachersAction,
-    getTeachersForSelectAction,
-    saveGroupAction,
-    toChangeTeacherStatusAction,
+    changeGroupStatusActions, deleteGroupAction, getCoursesAction, getGroupsAction,
+    getRoomListAction, getTeachersForSelectAction, saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -55,6 +43,7 @@ class Group extends Component {
         currentObject: "",
         selectRegion: [],
         selectParentRegion: "",
+        showOptionDiv: false,
         parentRegionDisable: false,
         type: '',
         activeTab: "ACTIVE",
@@ -147,8 +136,9 @@ class Group extends Component {
                 status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
             }))
         }
+
         return (
-            <AdminLayout className="" pathname={this.props.location.pathname}>
+            <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Guruhlar</h1>
                     <div align={"right"}>
@@ -157,7 +147,8 @@ class Group extends Component {
                         </Button>
                     </div>
                     <Nav tabs>
-                        <NavItem className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ACTIVE');
@@ -166,7 +157,8 @@ class Group extends Component {
                                 Faol Guruhlar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ARCHIVE');
@@ -439,7 +431,7 @@ export default connect(({
         getItems, teachers,
         groups, rooms,
         loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
-    activeGroupModal,
+        activeGroupModal,
     })
 )(Group);
 //

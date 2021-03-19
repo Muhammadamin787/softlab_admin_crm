@@ -67,7 +67,7 @@ class Client extends Component {
         }
 
         return (
-            <AdminLayout className="" pathname={this.props.location.pathName}>
+            <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Client</h1>
                     <div>

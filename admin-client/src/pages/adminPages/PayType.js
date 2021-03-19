@@ -106,7 +106,7 @@ class PayType extends Component {
                         </AvForm>
                     </Modal>
 
-                    <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <Modal isOpen={this.state.showDeleteModal} toggle={() => openDeleteModal("")} className={""}>
                         <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>

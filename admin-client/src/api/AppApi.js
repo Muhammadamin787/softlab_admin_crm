@@ -293,6 +293,7 @@ export const getStudentsApi = (data) => {
     return HttpClient.doGet(api.student + (data && data.page != null && data.size ? "?page=" + data.page
         + "&size=" + data.size + "&status=" + data.type : ""))
 }
+
 export const getStudentByGroupApi = (data) => {
     return HttpClient.doGet(api.student + "/groupStudent/" + data)
 }
@@ -362,7 +363,7 @@ export const editTeacherApi = (data) => {
 
 export const getTeachersApi = (data) => {
     return HttpClient.doGet(api.teacher + (data && data.page != null && data.size ? "?page=" + data.page
-        + "&size=" + data.size+ "&status=" + data.type : ""))
+        + "&size=" + data.size + "&status=" + data.type : ""))
 }
 export const getTeachersForSelectApi = () => {
     return HttpClient.doGet(api.teacher + "/select")
@@ -419,7 +420,7 @@ export const saveToplamApi = (data) => {
     return HttpClient.doPost(api.toplam, data)
 }
 export const editToplamApi = (data) => {
-    return HttpClient.doGet(api.toplam + "/" + data.id, data)
+    return HttpClient.doPut(api.toplam + "/" + data.id, data)
 }
 export const getToplamListApi = (data) => {
     return HttpClient.doGet(api.toplam + "?page=" + data.page + "&size=" + data.size)
@@ -512,3 +513,17 @@ export const deleteEmployeeApi = (data) => {
     return HttpClient.doDelete(api.employee + "/" + data)
 }
 // FINSIH EMPLOYEE
+
+// Written by Muhammadamin
+export const getStudentOnSearchApi = (data) => {
+    return HttpClient.doGet(api.searchStudent + (data && data.name != null ? "?name=" + data.name + "&groupId=" + data.id : ""))
+}
+export const saveStudentToGroupApi = (data) => {
+    console.log(data);
+    return HttpClient.doPost(api.group + "/addStudent", data)
+}
+
+export const getStudentsBySearchApi = (data) => {
+    return HttpClient.doGet(api.student + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
+}
+// ---

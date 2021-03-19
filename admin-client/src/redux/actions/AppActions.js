@@ -3,7 +3,6 @@ import * as app from "../../api/AppApi";
 
 import {
     getExcelInfoApi,
-
     getClientList,
     editClientApi,
     saveClientApi,
@@ -152,7 +151,9 @@ import {
     deleteEmployeeApi,
     changeGroupAPi,
     getEmployeeApi,
-    getExcelListApp
+    getExcelListApp,
+    getStudentOnSearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -181,7 +182,6 @@ export const getAttendanceListAction = (payload) => (dispatch) => {
         data: payload
     })
 }
-
 export const getStudentsByGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentByGroupApi,
@@ -443,6 +443,7 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
+        dispatch(getPayTypeListAction())
         dispatch({
             type: "updateState",
             payload: {
@@ -450,12 +451,10 @@ export const deletePayTypeAction = (data) => (dispatch) => {
             }
         })
         toast.success("Malumot ochirildi")
-        dispatch(getPayTypeListAction())
     }).catch((err) => {
         toast.error("Xatolik")
     })
 };
-
 // PayType End
 // START CLIENT STATUS
 export const getClientStatusListAction = (data) => (dispatch) => {
@@ -1198,6 +1197,20 @@ export const getStudentsAction = (data) => (dispatch) => {
         data
     })
 }
+
+//  Written By Muhammadamin
+export const getStudentsBySearchAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentsBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// ---
 export const getStudentAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentApi,
@@ -1730,7 +1743,7 @@ export const deleteToplamAction = (data) => (dispatch) => {
         dispatch({
             type: "updateState",
             payload: {
-                showDeleteModal: false
+                deleteModal: false
             }
         })
         dispatch(getToplamListAction({page: 0, size: 20}));
@@ -1987,3 +2000,35 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
     })
 };
 // FINISH EMPLOYEE
+
+
+// Written By Muhammadamin
+export const getStudentOnSearchAction = (payload) => (dispatch) => {
+    dispatch({
+        api: getStudentOnSearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_SEARCH_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: payload
+    })
+}
+
+export const saveStudentToGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveStudentToGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data
+    }).then((res) => {
+        toast.success(res.payload.message)
+    }).catch((err) => {
+        toast.error("Xatolik")
+    })
+}
+
+

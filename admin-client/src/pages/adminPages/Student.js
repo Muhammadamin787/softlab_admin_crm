@@ -15,7 +15,7 @@ import {
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteStudentAction, downloadFileAction, downloadStudentFileAction, getDebtorsAction,
-    getRegionsAction, getStudentsAction,
+    getRegionsAction, getStudentsAction, getStudentsBySearchAction,
     saveStudentAction, toChangeStatusAction,
     uploadFileAction
 } from "../../redux/actions/AppActions";
@@ -27,6 +27,7 @@ import moment from 'moment';
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
+import Select from "react-select";
 
 
 class Student extends Component {
@@ -138,8 +139,8 @@ class Student extends Component {
         const downloadExcel = (e, v) => {
             dispatch(downloadStudentFileAction(v))
         }
+        //
 
-        ////////////////////
         const a = (tab) => {
             this.setState({activeTab: tab})
         }
@@ -172,6 +173,16 @@ class Student extends Component {
                 status: activeTab === "DEFAULT" ? "ARCHIVE" : "DEFAULT"
             }))
         }
+
+        //  Written By Muhammadamin
+        const searchStudent = (e, v) => {
+            let value = document.getElementById("searchStudent").value;
+            if (value.length === 0) {
+                this.props.dispatch(getStudentsAction({page: 0, size: this.props.size, type: "DEFAULT"}))
+            }
+            dispatch(getStudentsBySearchAction({name: value}));
+        }
+        // ---
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 {this.state.secondPage ?
@@ -200,6 +211,11 @@ class Student extends Component {
                                 >
                                     Arxiv talabalar
                                 </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <input type={"search"} name={"studentSearch"} id={"searchStudent"}
+                                       className={"form-control"}
+                                       onChange={searchStudent}/>
                             </NavItem>
                         </Nav>
                         <TabContent activeTab={activeTab}>

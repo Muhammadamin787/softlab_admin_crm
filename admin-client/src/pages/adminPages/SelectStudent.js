@@ -18,12 +18,8 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction, getGroupsAction,
-    getGroupsForSelectAction,
-    getPayTypeListAction,
-    getRegionsAction,
-    getStudentAction, getStudentGroupAction, getStudentPaymentAction,
-    saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
+    deleteStudentAction, deleteStudentPaymentAction, getGroupsForSelectAction, getPayTypeListAction, getRegionsAction,
+    getStudentAction, getStudentGroupAction, getStudentPaymentAction, saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -95,6 +91,7 @@ class SelectStudent extends Component {
         }
         const openPaymentModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: !showPaymentModal})
+            dispatch(getStudentGroupAction(this.props.match.params.id));
             dispatch(getPayTypeListAction())
             dispatch({
                 type: "updateState",
@@ -420,7 +417,7 @@ class SelectStudent extends Component {
                                         />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
-                                                      defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
+                                            defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                       label="" required className="pay-form-style d-block"
                                                       errorMessage="Birini tanlang!">
 
@@ -512,9 +509,7 @@ class SelectStudent extends Component {
                                     type={"text"}
                                     label={"FISH"} name={"fullName"} className={"form-control"}
                                     placeholer={"nomi"} required/>
-
                                 <>
-                                    {console.log(selectGroups)}
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
                                             value: currentObject.group.id,

@@ -75,7 +75,7 @@ public class AttendanceService {
                                         paymentRepository.save(new Payment(
                                                 attendance1,
                                                 group.getCourse().getPrice(),
-                                                (teacher.getIsPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                                (teacher.getIsPercent() != null ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
                                         ));
                                     }
                                 }
@@ -100,7 +100,7 @@ public class AttendanceService {
                                     paymentRepository.save(new Payment(
                                             savedAttendance,
                                             group.getCourse().getPrice(),
-                                            (teacher.getIsPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                            (teacher.getIsPercent() != null ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
                                     ));
                                     get_student.setBalans(get_student.getBalans() - group.getCourse().getPrice());
                                     if (teacher.getIsPercent()) {
