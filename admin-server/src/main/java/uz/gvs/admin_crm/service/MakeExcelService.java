@@ -162,7 +162,7 @@ public class MakeExcelService {
 
         // Creating header
 
-        sheet.setColumnWidth(0, 4000);
+        sheet.setColumnWidth(0, 6000);
         sheet.setColumnWidth(1, 4000);
         sheet.setColumnWidth(2, 4000);
         sheet.setColumnWidth(3, 4000);

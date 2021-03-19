@@ -308,7 +308,7 @@ class Teacher extends Component {
                         <ModalHeader isOpen={archiveModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                            Bu O`qituvchini Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
