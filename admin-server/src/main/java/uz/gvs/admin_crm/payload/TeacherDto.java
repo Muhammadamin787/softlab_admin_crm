@@ -13,7 +13,7 @@ public class TeacherDto {
     private UUID id;
     private UserDto userDto;
     private Double balance;
-    private Boolean isPercent;
+    private Boolean percent;
     private Double salary;
 
 
