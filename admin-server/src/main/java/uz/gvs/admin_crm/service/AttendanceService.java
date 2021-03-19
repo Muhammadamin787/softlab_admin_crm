@@ -32,7 +32,7 @@ public class AttendanceService {
     public ApiResponse saveAttendance(AttendanceDto attendanceDto) {
         try {
             // userni teacher yoki superadmin admin roliga tekshirish
-            Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
+                Optional<Teacher> optionalTeacher = teacherRepository.findById(attendanceDto.getTeacherId());
             Optional<Group> optionalGroup = groupRepository.findById(attendanceDto.getGroupId());
             if (optionalGroup.isPresent() && optionalTeacher.isPresent()
                     && attendanceDto.getStudentList() != null
@@ -75,7 +75,7 @@ public class AttendanceService {
                                         paymentRepository.save(new Payment(
                                                 attendance1,
                                                 group.getCourse().getPrice(),
-                                                (teacher.getIsPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                                (teacher.getIsPercent() != null ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
                                         ));
                                     }
                                 }
@@ -100,7 +100,7 @@ public class AttendanceService {
                                     paymentRepository.save(new Payment(
                                             savedAttendance,
                                             group.getCourse().getPrice(),
-                                            (teacher.getIsPercent() ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
+                                            (teacher.getIsPercent() != null ? (group.getCourse().getPrice() / 100 * teacher.getSalary()) : teacher.getSalary())
                                     ));
                                     get_student.setBalans(get_student.getBalans() - group.getCourse().getPrice());
                                     if (teacher.getIsPercent()) {
