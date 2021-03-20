@@ -2025,6 +2025,12 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                addStudentInGroupModal: false
+            }
+        })
         toast.success(res.payload.message)
     }).catch((err) => {
         toast.error("Xatolik")
