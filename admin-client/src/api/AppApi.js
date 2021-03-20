@@ -93,7 +93,6 @@ export const editReklamaApi = (data) => {
     return HttpClient.doPut(api.reklama + "/" + data.id, data)
 }
 export const deleteReklamaApi = (data) => {
-    console.log(data)
     return HttpClient.doDelete(api.reklama + "/" + data.id)
 }
 export const getReklamaApi = () => {

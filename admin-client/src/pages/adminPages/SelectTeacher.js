@@ -612,7 +612,7 @@ class SelectTeacher extends Component {
                                     <AvField
                                         defaultValue={currentObject ? currentObject.salary : ""}
                                         type={"number"} name={"salary"} className={"form-control"}
-                                        placeholder={"nomi"} required/>
+                                        placeholder={"miqdor"} required/>
                                 </Col>
                                 <Col md={5} className={"pl-0"}>
                                     <AvField type="select" name="percent">
