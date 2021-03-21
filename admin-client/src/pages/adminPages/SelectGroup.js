@@ -569,7 +569,10 @@ class SelectGroup extends Component {
                                     <AvField className={'form-control'} label={'Kurs:'} type="select"
                                              name="courseId"
                                              defaultValue={currentObject &&
-                                             currentObject.course && currentObject.course.id ? currentObject.course.id : "0"}>
+                                             currentObject.course && currentObject.course.courseCategory &&
+                                             currentObject.course.courseCategory &&
+                                             currentObject.course.courseCategory.id ?
+                                                 currentObject.course.courseCategory.id : "0"}>
                                         <option key={0} value={"0"}>Kursni tanlang</option>
                                         {getItems ? getItems.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -578,7 +581,8 @@ class SelectGroup extends Component {
                                     <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
                                              name="teacherId"
                                              defaultValue={currentObject
-                                             && currentObject.teacher && currentObject.teacher.id ? currentObject.teacher.id : "0"}>
+                                             && currentObject.teacher && currentObject.teacher.user &&
+                                             currentObject.teacher.user.fullName ? currentObject.teacher.user.fullName : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
                                             <option key={i} value={item.uuid}>{item.name}</option>
