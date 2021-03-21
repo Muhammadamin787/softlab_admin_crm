@@ -150,7 +150,7 @@ class SelectTeacher extends Component {
                     phoneNumber: v.phoneNumber,
                     regionId: v.regionId,
                     description: v.description,
-                    birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                    birthDate: moment(v.birthDate).format('YYYY-MM-DD hh:mm:ss').toString(),
                 }
                 teacherDto.id = currentObject.id
                 dispatch(saveTeacherAction(teacherDto))
@@ -160,7 +160,7 @@ class SelectTeacher extends Component {
         const saveSalary = (e, v) => {
             if (currentObject) {
                 v.teacherId = currentObject.id;
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
                 dispatch(giveSalaryAction(v));
             }
         }
@@ -205,8 +205,8 @@ class SelectTeacher extends Component {
             v.teacherId = currentItem.id
             if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
             }
+                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }

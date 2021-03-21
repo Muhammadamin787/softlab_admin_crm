@@ -488,8 +488,11 @@ export const saveClientStatusAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
-    }).then(() => {
+    }).then((res) => {
+        toast.success(res.payload.message)
         dispatch(getClientStatusListAction({type: "all"}));
+    }).catch((err) => {
+        toast.error("Xatolik")
     })
 }
 export const deleteClientStatusAction = (data) => (dispatch) => {
@@ -1484,6 +1487,7 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
+
     }).catch((err) => {
         toast.error("Xatolik!")
     })

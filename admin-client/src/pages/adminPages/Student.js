@@ -379,7 +379,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨❓
+                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨 ❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -391,7 +391,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 🤨❓
+                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 😊 ❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
