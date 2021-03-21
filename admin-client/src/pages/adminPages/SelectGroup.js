@@ -14,12 +14,22 @@ import AsyncSelect from "react-select";
 import {AvForm, AvField, AvGroup, AvInput, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
     changeStudentGroupStatusAction,
-    deleteCourseAction, deleteGroupAction, getAttendanceListAction,
+    deleteCourseAction,
+    deleteGroupAction,
+    getAttendanceListAction,
     getCoursesAction,
-    getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
-    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getStudentsByGroupAction,
-    getTeachersForSelectAction, saveAttendanceAction,
-    saveGroupAction, saveStudentToGroupAction,
+    getGroupAction,
+    getGroupsForSelectAction,
+    getGroupStudentsAction,
+    getRoomListAction,
+    getStudentOnSearchAction,
+    getStudentPaymentAction,
+    getStudentsByGroupAction,
+    getStudentsBySearchAction,
+    getTeachersForSelectAction,
+    saveAttendanceAction,
+    saveGroupAction,
+    saveStudentToGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -318,13 +328,14 @@ class SelectGroup extends Component {
         }
 
         const addStudentSaveItem = (e, v) => {
-            console.log(this.state.selectedStudent);
             let obj = {
                 name: this.state.selectedStudent.name,
                 studentId: this.state.selectedStudent.id,
                 groupId: currentItem.id
             }
             this.props.dispatch(saveStudentToGroupAction(obj));
+            console.log(currentGroup)
+            // this.props.dispatch(getStudentsByGroupAction())
         }
 
         return (
@@ -415,7 +426,8 @@ class SelectGroup extends Component {
                                                                         student.studentGroupDto.studentGroupStatus === "TEST_LESSON" ?
                                                                             "bg-warning text-dark" :
                                                                             "")}>
-                                                {student.fullName}
+                                                {<Link className={"text-dark"}
+                                                       to={"/admin/student/" + (student.id)}>{student.fullName}</Link>}
                                                 </span>
                                                                 </div>
                                                                 : ""}
@@ -718,11 +730,11 @@ class SelectGroup extends Component {
                        className={""}>
                     <AvForm onValidSubmit={addStudentSaveItem}>
                         <ModalHeader>
-                            <p>Salom</p>
+                            <p>Guruhga o'quvchi qo'shish : </p>
                         </ModalHeader>
                         <ModalBody className={"ml-1"}>
                             <AsyncSelect
-                                placeholder={"Mahsulot turini tanlang"}
+                                placeholder={"Qidirish..."}
                                 onChange={selectStudentOption}
                                 isSearchable={true}
                                 onInputChange={handleInputChange}
