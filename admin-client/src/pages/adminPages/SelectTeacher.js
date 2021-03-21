@@ -160,7 +160,7 @@ class SelectTeacher extends Component {
         const saveSalary = (e, v) => {
             if (currentObject) {
                 v.teacherId = currentObject.id;
-                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm').toString()
+                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
                 dispatch(giveSalaryAction(v));
             }
         }
