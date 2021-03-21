@@ -1484,6 +1484,7 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
+
     }).catch((err) => {
         toast.error("Xatolik!")
     })
