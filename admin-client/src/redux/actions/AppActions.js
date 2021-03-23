@@ -1487,7 +1487,6 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
-
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1509,10 +1508,10 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.history) {
-            data.history.go(-1)
-        }
-        dispatch(getStudentPaymentAction())
+        // if (data && data.history) {
+        //     data.history.go(-1)
+        // }
+        dispatch(getStudentPaymentAction(data.student.id))
 
     }).catch((err) => {
         toast.error("Xatolik")
