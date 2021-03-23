@@ -47,6 +47,13 @@ public class EmployeeDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String roleName;
 
+    public EmployeeDto(UUID id, String fullName, String phoneNumber, String roleName) {
+        this.id = id;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.roleName = roleName;
+    }
+
     public EmployeeDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, String roleName) {
         this.id = id;
         this.userId = userId;

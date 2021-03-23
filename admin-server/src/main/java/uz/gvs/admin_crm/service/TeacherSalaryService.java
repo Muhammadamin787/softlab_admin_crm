@@ -58,7 +58,7 @@ public class TeacherSalaryService {
             teacherSalary.setTeacher(teacherRepository.findById(teacherSalaryDto.getTeacherId()).orElseThrow(() -> new ResourceNotFoundException("get Teacher")));
             teacherSalary.setPayType(payTypeRepository.findById(teacherSalaryDto.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("get PayType")));
             teacherSalary.setAmount(teacherSalaryDto.getAmount());
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
             teacherSalary.setAmountDate(teacherSalaryDto.getAmountDate() != null ? formatter1.parse(teacherSalaryDto.getAmountDate()) : null);
             teacherSalary.setDescription(teacherSalaryDto.getDescription());
             return teacherSalaryRepository.save(teacherSalary);
@@ -96,7 +96,7 @@ public class TeacherSalaryService {
         try {
             Optional<TeacherSalary> optional = teacherSalaryRepository.findById(id);
             if (optional.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 if (teacherSalaryDto.getTeacherId() != null && teacherSalaryDto.getPayTypeId() != null && teacherSalaryDto.getAmountDate() != null) {
                     TeacherSalary teacherSalary = optional.get();
                     if (teacherSalaryDto.getTeacherId().equals(teacherSalary.getTeacher().getId())) {
@@ -197,8 +197,8 @@ public class TeacherSalaryService {
 
     public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
-            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
+            java.util.Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
             switch (type) {
                 case "minusSalary":
                     List<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate, secondDate, page, size);

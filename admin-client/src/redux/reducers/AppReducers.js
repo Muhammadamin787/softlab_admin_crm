@@ -647,6 +647,7 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+
     [types.REQUEST_GET_EMPLOYEE_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
