@@ -43,13 +43,16 @@ public class MakeExcelService {
         headerCellStyle.setBorderLeft(BorderStyle.MEDIUM);
         headerCellStyle.setBorderRight(BorderStyle.MEDIUM);
         headerCellStyle.setBorderTop(BorderStyle.MEDIUM);
+        headerCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+
 
         // Creating header
 
-        sheet.setColumnWidth(0, 4000);
+        sheet.setColumnWidth(0, 6000);
         sheet.setColumnWidth(1, 4000);
         sheet.setColumnWidth(2, 4000);
-        sheet.setColumnWidth(3, 4000);
+        sheet.setColumnWidth(3, 8000);
         sheet.setColumnWidth(4, 4000);
         sheet.setColumnWidth(5, 4000);
         sheet.setColumnWidth(6, 4000);
@@ -67,6 +70,7 @@ public class MakeExcelService {
         cell = row.createCell(2);
         cell.setCellValue("Telefon raqami");
         cell.setCellStyle(headerCellStyle);
+
 
         cell = row.createCell(3);
         cell.setCellValue("Gruxi");
