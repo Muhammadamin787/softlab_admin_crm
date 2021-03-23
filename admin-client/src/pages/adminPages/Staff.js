@@ -100,6 +100,7 @@ class Staff extends Component {
                         </tr>
                         </thead>
                         <tbody>
+                        {console.log(employees)}
                         {
                             employees && employees.length > 0 ? employees.map((item, i) =>
                                 <tr key={i} className={"table-tr"}>
