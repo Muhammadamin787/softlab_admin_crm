@@ -292,7 +292,7 @@ class Group extends Component {
                         <ModalHeader isOpen={archiveGroupModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu guruhni arxiv ro'yxatga qo'shmoqchimisiz 😕 ❓
+                            Bu Guruhni arxiv ro'yxatga qo'shmoqchimisiz 😕 ❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -304,13 +304,14 @@ class Group extends Component {
                         <ModalHeader isOpen={activeGroupModal} toggle={() => openToActive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu guruhni active ro'yxatga qo'shmoqchimisiz 😊 ❓
+                            Bu Guruhni active ro'yxatga qo'shmoqchimisiz 😊 ❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
                             <Button color="light" onClick={() => changeStatus(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
+
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>

@@ -441,11 +441,10 @@ class Student extends Component {
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     required/>
-                                {console.log(currentObject)}
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                    <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                    <option key={0} value={"0"}>Yashash joyini tanlang</option>
                                     {regions ? regions.map((item, i) =>
                                         <option key={i} value={item.id}>{item.name}</option>
                                     ) : ""}

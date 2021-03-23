@@ -194,7 +194,7 @@ const reducers = {
         let groupsForSelect = payload.payload.object
         let ketmon = []
         for (let i = 0; i < groupsForSelect.length; i++) {
-            ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
+            ketmon.push({value: groupsForSelect[i].uuid, label: groupsForSelect[i].name})
         }
         state.getItems = ketmon
     },
@@ -298,6 +298,7 @@ const reducers = {
 
     },
     [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
+        console.log(payload)
         if (payload && payload.payload && payload.payload.object) {
             state.currentItem = payload.payload.object
         }
