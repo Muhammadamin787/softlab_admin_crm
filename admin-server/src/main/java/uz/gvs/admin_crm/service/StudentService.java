@@ -67,7 +67,7 @@ public class StudentService {
     public ApiResponse editStudent(UUID id, StudentDto studentDto) {
         try {
             Optional<Student> byId = studentRepository.findById(id);
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             if (byId.isPresent()) {
                 Student student = byId.get();
                 User user = student.getUser();
@@ -209,7 +209,7 @@ public class StudentService {
         try {
             Optional<Student> byId = studentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -242,7 +242,7 @@ public class StudentService {
         try {
             Optional<StudentPayment> byId = studentPaymentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 StudentPayment studentPayment = byId.get();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -466,8 +466,8 @@ public class StudentService {
 
     public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
-            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
+            Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
             switch (type) {
                 case "all":
                     List<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, page, size);

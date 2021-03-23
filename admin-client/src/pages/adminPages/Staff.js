@@ -36,7 +36,12 @@ class Staff extends Component {
     render() {
         const {currentObject} = this.state;
         const {
-            dispatch, showModal, deleteModal, employees, regions, page,
+            dispatch,
+            showModal,
+            deleteModal,
+            employees,
+            regions,
+            page,
             size,
             totalElements,
         } = this.props;
@@ -69,7 +74,7 @@ class Staff extends Component {
                 avatarId: v.attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
                 roleName: v.roleName
             }
             dispatch(saveEmployeeAction(employeeDto))
@@ -83,40 +88,42 @@ class Staff extends Component {
                         <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
+
                     </div>
-                        <Table className={"table-style"}>
-                            <thead>
-                            <tr className={"text-center"}>
-                                <th>№</th>
-                                <th>ISMI</th>
-                                <th>TELEFON</th>
-                                <th>KASBI</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                employees && employees.length > 0 ? employees.map((item, i) =>
+                    <Table className={"table-style"}>
+                        <thead>
+                        <tr className={"text-center"}>
+                            <th>№</th>
+                            <th>ISMI</th>
+                            <th className={"mb-0"}>TELEFON</th>
+                            <th>KASBI</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {console.log(employees)}
+                        {
+                            employees && employees.length > 0 ? employees.map((item, i) =>
                                 <tr key={i} className={"table-tr"}>
                                     <td>{i + 1}</td>
-                                    <td>item.fullName</td>
+                                    <td>{item.fullName}</td>
                                     <td>
                                         {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                     </td>
                                     <td>{item.roleName}</td>
                                 </tr>
                             ) : ''}
-                            </tbody>
-                        </Table>
-                        <div align={"center"}>
-                            <Pagination
-                                activePage={page + 1}
-                                itemsCountPerPage={size}
-                                totalItemsCount={totalElements}
-                                pageRangeDisplayed={5}
-                                onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                                linkClass="page-link"
-                            />
-                        </div>
+                        </tbody>
+                    </Table>
+
+                    <Pagination
+                        activePage={page + 1}
+                        itemsCountPerPage={size}
+                        totalItemsCount={totalElements}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
+                        linkClass="page-link"
+                    />
+
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -196,8 +203,23 @@ class Staff extends Component {
 
 Staff.propTypes = {}
 export default connect(({
-                            app: {loading, employees, showModal, deleteModal, regions},
+                            app: {loading,
+                                employees,
+                                showModal,
+                                deleteModal,
+                                regions,
+                                page,
+                                size,
+                                totalElements,}
                         }) => ({
-        loading, employees, showModal, deleteModal, regions
+        loading,
+    employees,
+    showModal,
+    deleteModal,
+    regions,
+    page,
+    size,
+    totalElements,
+
     })
 )(Staff);

@@ -129,7 +129,7 @@ class Student extends Component {
                 avatarId: v.attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
             }
             dispatch(saveStudentAction(studentDto))
         }
@@ -437,7 +437,7 @@ class Student extends Component {
                                     placeholer={"991234567"}/>
                                 <AvField
                                     type={"date"}
-                                    defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                    defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     required/>
