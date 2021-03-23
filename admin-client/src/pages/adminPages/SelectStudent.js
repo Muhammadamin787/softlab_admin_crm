@@ -510,7 +510,7 @@ class SelectStudent extends Component {
                                     disabled={showPaymentEditModal}
                                     type={"text"}
                                     label={"FISH"} name={"fullName"} className={"form-control"}
-                                    placeholer={"nomi"} required/>
+                                    placeholer={"nomi"} disabled/>
                                 <>
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {

@@ -488,8 +488,11 @@ export const saveClientStatusAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
-    }).then(() => {
+    }).then((res) => {
+        toast.success(res.payload.message)
         dispatch(getClientStatusListAction({type: "all"}));
+    }).catch((err) => {
+        toast.error("Xatolik")
     })
 }
 export const deleteClientStatusAction = (data) => (dispatch) => {
@@ -1506,10 +1509,10 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.history) {
-            data.history.go(-1)
-        }
-        dispatch(getStudentPaymentAction())
+        // if (data && data.history) {
+        //     data.history.go(-1)
+        // }
+        dispatch(getStudentPaymentAction(data.student.id))
 
     }).catch((err) => {
         toast.error("Xatolik")
@@ -2037,6 +2040,12 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                addStudentInGroupModal: false
+            }
+        })
         toast.success(res.payload.message)
     }).catch((err) => {
         toast.error("Xatolik")

@@ -206,8 +206,8 @@ class SelectTeacher extends Component {
             v.teacherId = currentItem.id
             if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
-                v.amountDate = moment(v.amountDate).format('DD-MM-YYYY hh:mm:ss').toString()
             }
+                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }

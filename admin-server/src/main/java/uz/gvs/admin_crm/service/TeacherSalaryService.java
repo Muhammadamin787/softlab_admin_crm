@@ -197,8 +197,8 @@ public class TeacherSalaryService {
 
     public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            java.util.Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
-            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
+            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
                 case "minusSalary":
                     List<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate, secondDate, page, size);
