@@ -443,7 +443,6 @@ class SelectTeacher extends Component {
                                     defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
                                     label={"To'langan vaqti"} name={"amountDate"}
                                     required/>
-                                {console.log(currentObject)}
                                 <ModalFooter>
                                     <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
                                     <Button color={"primary"} type={"submit"}>Saqlash</Button>
