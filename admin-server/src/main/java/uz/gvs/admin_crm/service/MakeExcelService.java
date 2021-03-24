@@ -1,6 +1,7 @@
 package uz.gvs.admin_crm.service;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpEntity;
@@ -251,6 +252,26 @@ public class MakeExcelService {
         sellStyle.setBorderRight(BorderStyle.MEDIUM);
         sellStyle.setBorderTop(BorderStyle.MEDIUM);
 
+        CellStyle sellStyle2 = workbook.createCellStyle();
+        sellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        sellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        sellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        sellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        sellStyle.setBorderRight(BorderStyle.MEDIUM);
+        sellStyle.setBorderTop(BorderStyle.MEDIUM);
+        sellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+        CellStyle sellStyle3 = workbook.createCellStyle();
+        sellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        sellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        sellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        sellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        sellStyle.setBorderRight(BorderStyle.MEDIUM);
+        sellStyle.setBorderTop(BorderStyle.MEDIUM);
+        sellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+
+
         Cell cell = null;
         Map<String, Double> allAmount = new HashMap<>();
 
@@ -269,8 +290,8 @@ public class MakeExcelService {
                 sheet.setColumnWidth(3, 4500);
                 sheet.setColumnWidth(4, 3000);
                 sheet.setColumnWidth(5, 3500);
-                sheet.setColumnWidth(6, 4950);
-                sheet.setColumnWidth(7, 2650);
+                sheet.setColumnWidth(6, 5100);
+                sheet.setColumnWidth(7, 3000);
 
                 cell = row.createCell(0);
                 cell.setCellValue("№");
@@ -329,11 +350,11 @@ public class MakeExcelService {
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(1);
-            cell1.setCellValue(paymentExcelDto.getPaymentDtos().size());
+            cell1.setCellValue("O`quvchi: "+paymentExcelDto.getPaymentDtos().size());
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(2);
-            cell1.setCellValue(paymentExcelDto.getPaymentDtos().size());
+            cell1.setCellValue("Guruh: "+paymentExcelDto.getPaymentDtos().size());
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(3);

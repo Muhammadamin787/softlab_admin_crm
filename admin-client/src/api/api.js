@@ -27,4 +27,5 @@ export const api = {
     searchStudent: '/student/search',
     employee: '/employee',
     accountant:'/excel/download/accountant'
+
 };

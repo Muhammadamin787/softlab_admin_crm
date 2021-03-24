@@ -67,7 +67,6 @@ class Reklama extends Component {
             }
         }
         const deleteNumber = (item) => {
-            console.log(item);
             dispatch(deleteReklamaAction(item))
         }
         return (
