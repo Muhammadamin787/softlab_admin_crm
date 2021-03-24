@@ -525,12 +525,13 @@ const reducers = {
                 arr.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
             }
             state.selectGroups = arr
-            console.log("????????????????????")
-            console.log(state.selectGroups)
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            // state.teacherSalaryList = payload.payload.object.object.sort((a, b) =>
+            //     a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            // );
             state.teacherSalaryList = payload.payload.object.object
             state.page = payload.payload.object.number
             state.size = payload.payload.object.size
@@ -638,8 +639,8 @@ const reducers = {
         state.showModal = false
     },
     [types.REQUEST_GET_EMPLOYEES_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.employees = payload.payload.object.object.sort((a, b) =>
+        if (payload && payload.payload && payload.payload.object) {
+            state.employees = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
             state.page = payload.payload.object.number
@@ -648,6 +649,7 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+
     [types.REQUEST_GET_EMPLOYEE_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },

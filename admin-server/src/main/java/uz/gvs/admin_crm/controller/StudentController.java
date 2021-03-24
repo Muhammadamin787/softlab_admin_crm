@@ -35,7 +35,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> editProfession(@PathVariable UUID id, @RequestBody StudentDto studentDto, @CurrentUser User user) {
+    public HttpEntity<?> editStudent(@PathVariable UUID id, @RequestBody StudentDto studentDto, @CurrentUser User user) {
         ApiResponse apiResponse = studentService.editStudent(id, studentDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
@@ -112,4 +112,6 @@ public class StudentController {
         ApiResponse apiResponse = studentService.ToArchiveStatus(studentId, status);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+
 }

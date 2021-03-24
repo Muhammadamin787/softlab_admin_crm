@@ -15,9 +15,7 @@ import uz.gvs.admin_crm.repository.RegionRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +59,7 @@ public class EmployeeService {
     public ApiResponse editEmployee(UUID id, EmployeeDto employeeDto) {
         try {
             Optional<Employee> byId = employeeRepository.findById(id);
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             if (byId.isPresent()) {
                 Employee employee = byId.get();
                 User user = employee.getUser();
@@ -87,15 +85,18 @@ public class EmployeeService {
 
     public ApiResponse getEmployeeList(int page, int size) {
         try {
-            Page<Employee> all = employeeRepository.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
-            return apiResponseService.getResponse(
-                    new PageableDto(
-                            all.getTotalPages(),
-                            all.getTotalElements(),
-                            all.getNumber(),
-                            all.getSize(),
-                            all.get().map(this::makeEmployeeDto).collect(Collectors.toList())
-                    ));
+            List<Object> objects = employeeRepository.getAllEmployees(size, page);
+            List<EmployeeDto> employeeDtos = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] employee = (Object[]) obj;
+                UUID id = UUID.fromString(employee[0].toString());
+                String fullName = employee[1].toString();
+                String phoneNumber = employee[2].toString();
+                String roleName = employee[3].toString();
+                EmployeeDto employeeDto = new EmployeeDto(id,fullName, phoneNumber, roleName);
+                employeeDtos.add(employeeDto);
+            }
+            return apiResponseService.getResponse(employeeDtos);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

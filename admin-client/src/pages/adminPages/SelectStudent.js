@@ -162,11 +162,11 @@ class SelectStudent extends Component {
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
-                    v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('DD-MM-YYYY hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
-                    v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
                     dispatch(saveStudentAction(v))
                 }
             }
@@ -181,8 +181,10 @@ class SelectStudent extends Component {
                     v.id = currentObject.id
                     v.groupId = addGroup;
                     v.studentId = this.props.match.params.id;
-                    v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('DD-MM-YYYY hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
+                    dispatch(getStudentPaymentAction(this.props.match.params.id))
+
                 }
             }
         }
@@ -432,7 +434,7 @@ class SelectStudent extends Component {
                                             placeholer={""} required/>
                                         <AvField
                                             type={"datetime-local"}
-                                            defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
+                                            defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
                                             required/>
@@ -461,7 +463,7 @@ class SelectStudent extends Component {
                                             placeholer={"nomi"}/>
                                         <AvField
                                             type={"date"}
-                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                             required/>
@@ -508,7 +510,7 @@ class SelectStudent extends Component {
                                     disabled={showPaymentEditModal}
                                     type={"text"}
                                     label={"FISH"} name={"fullName"} className={"form-control"}
-                                    placeholer={"nomi"} required/>
+                                    placeholer={"nomi"} disabled/>
                                 <>
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
@@ -541,7 +543,7 @@ class SelectStudent extends Component {
                                         placeholer={""} required/>
                                     <AvField
                                         type={"datetime-local"}
-                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.payDate).format('YYYY-MM-DD hh:mm:ss')
+                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.payDate).format('DD-MM-YYYY hh:mm:ss')
                                             : ""}
                                         label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
                                         required/>

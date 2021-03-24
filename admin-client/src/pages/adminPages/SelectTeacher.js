@@ -150,7 +150,8 @@ class SelectTeacher extends Component {
                     phoneNumber: v.phoneNumber,
                     regionId: v.regionId,
                     description: v.description,
-                    birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                    // birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
+                    birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
                 }
                 teacherDto.id = currentObject.id
                 dispatch(saveTeacherAction(teacherDto))
@@ -160,7 +161,7 @@ class SelectTeacher extends Component {
         const saveSalary = (e, v) => {
             if (currentObject) {
                 v.teacherId = currentObject.id;
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                v.amountDate = moment(v.amountDate).format('DD-MM-YYYY hh:mm:ss').toString()
                 dispatch(giveSalaryAction(v));
             }
         }
@@ -205,8 +206,8 @@ class SelectTeacher extends Component {
             v.teacherId = currentItem.id
             if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
-                v.amountDate = moment(v.amountDate).format('YYYY/MM/DD hh:mm:ss').toString()
             }
+                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }
@@ -276,7 +277,7 @@ class SelectTeacher extends Component {
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tug'ilgan
                                                                     sana: </small>
-                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-YYYY")}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Manzil: </small>
@@ -440,7 +441,7 @@ class SelectTeacher extends Component {
                                 {/*<AvField name={"payDate"} type={"date"}/>*/}
                                 <AvField
                                     type={"datetime-local"}
-                                    defaultValue={currentObject ? moment(currentObject.amountDate).format('YYYY-MM-DD') : ""}
+                                    defaultValue={currentObject ? moment(currentObject.amountDate).format('DD-MM-YYYY') : ""}
                                     label={"To'langan vaqti"} name={"amountDate"}
                                     required/>
                                 {console.log(currentObject)}
@@ -512,7 +513,7 @@ class SelectTeacher extends Component {
                                 <AvField
                                     type={"date"}
 
-                                    defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
+                                    defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     required/>
@@ -584,7 +585,7 @@ class SelectTeacher extends Component {
                                 </AvRadioGroup>
                                 <AvField
                                     type={"datetime-local"}
-                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('YYYY-MM-DD')
+                                    defaultValue={currentObject && currentObject.amountDate ? moment(currentObject.amountDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Pul yechilgan sana"} name={"amountDate"} className={"form-control"}
                                     required/>
@@ -612,7 +613,7 @@ class SelectTeacher extends Component {
                                     <AvField
                                         defaultValue={currentObject ? currentObject.salary : ""}
                                         type={"number"} name={"salary"} className={"form-control"}
-                                        placeholder={"miqdor"} required/>
+                                        placeholder={"nomi"} required/>
                                 </Col>
                                 <Col md={5} className={"pl-0"}>
                                     <AvField type="select" name="percent">
