@@ -41,7 +41,6 @@ class Room extends Component {
             this.setState({currentObject: item.id, showDeleteModal: !this.state.showDeleteModal})
         }
         const deleteItem = () => {
-            console.log(currentObject)
             dispatch(deleteRoomAction(currentObject))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }

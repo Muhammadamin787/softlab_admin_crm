@@ -39,7 +39,7 @@ public class UserService {
                 return null;
             }
             User user = new User();
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             user.setFullName(userDto.getFullName());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setDescription(userDto.getDescription());
@@ -62,7 +62,7 @@ public class UserService {
 
     public User editUser(UserDto userDto, User user,RoleName roleName) {
         try {
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             user.setFullName(userDto.getFullName());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setDescription(userDto.getDescription());

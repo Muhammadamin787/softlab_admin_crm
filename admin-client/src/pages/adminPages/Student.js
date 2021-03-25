@@ -129,7 +129,7 @@ class Student extends Component {
                 avatarId: v.attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
             }
             dispatch(saveStudentAction(studentDto))
         }
@@ -379,7 +379,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toArchiveModal} toggle={() => openToArchive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨❓
+                        Bu talabani arxiv ro'yxatga qo'shmoqchimisiz 🤨 ❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -391,7 +391,7 @@ class Student extends Component {
                     <ModalHeader isOpen={toActiveModal} toggle={() => openToActive("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
-                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 🤨❓
+                        Bu talabani faol ro'yxatga qo'shmoqchimisiz 😊 ❓
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
@@ -437,15 +437,14 @@ class Student extends Component {
                                     placeholer={"991234567"}/>
                                 <AvField
                                     type={"date"}
-                                    defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                    defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     required/>
-                                {console.log(currentObject)}
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                    <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                    <option key={0} value={"0"}>Yashash joyini tanlang</option>
                                     {regions ? regions.map((item, i) =>
                                         <option key={i} value={item.id}>{item.name}</option>
                                     ) : ""}
