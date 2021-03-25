@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {
-    deleteEmployeeAction, getEmployeeAction, saveEmployeeAction
+    deleteEmployeeAction,
+    getEmployeeAction,
+    getRegionsAction,
+    saveEmployeeAction,
 
 
 } from "../../redux/actions/AppActions";
@@ -12,6 +15,7 @@ import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import {AiOutlineUsergroupAdd} from "react-icons/all";
+import {Link} from "react-router-dom";
 
 class SelectStaff extends Component {
 
@@ -20,6 +24,7 @@ class SelectStaff extends Component {
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getEmployeeAction({id: id}))
+            this.props.dispatch(getRegionsAction())
         }
     }
 
@@ -31,7 +36,7 @@ class SelectStaff extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal,regions,currentItem} = this.props;
+        const {dispatch, showModal, deleteModal,history,regions,currentItem} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -42,40 +47,39 @@ class SelectStaff extends Component {
             })
         }
         const openDeleteModal = (item) => {
-            this.setState({currentObject: item.id, showDeleteModal: !this.state.showDeleteModal})
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
         }
-        const deleteItem = () => {
-            dispatch(deleteEmployeeAction(currentObject))
-            this.setState({showDeleteModal: !this.state.showDeleteModal})
+        const deleteItem = (item) => {
+            dispatch(deleteEmployeeAction({...item, history: history}))
         }
 
         const saveItem = (e, v) => {
-            if (currentObject) {
-                v.id = currentObject.id
-            }
-            let employeeDto;
-            employeeDto = {userDto: ""}
-            employeeDto.userDto = {
-                id: v.id,
-                fullName: v.fullName,
-                gender: v.gender,
-                phoneNumber: v.phoneNumber,
-                regionId: v.regionId,
-                description: v.description,
-                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
-            }
-            employeeDto.roleName = v.roleName;
-            employeeDto.id = currentObject.id
-            dispatch(saveEmployeeAction(employeeDto))
+            console.log(currentObject)
+            v.id = currentObject.id
+            v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
+            dispatch(saveEmployeeAction(v))
         }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
+                    <hgroup className={"course-select-header ml-2"}>
+                        <h3>{currentItem && currentItem.fullName} </h3>
+                        <Link to={"/admin/staffs"} className={"text-decoration-none"}><span
+                            className={""}> Xodimlar</span></Link>
+                    </hgroup>
+
                     <div
                         className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-staff-style"}>
                         <div className="row">
                             <div className="col-8">
+                                {console.log(currentItem)}
                                 <hgroup>
                                     <small className={"text-secondary"}>FISH: </small>
                                     <p className={"d-inline"}> {currentItem.fullName}</p>
@@ -95,6 +99,11 @@ class SelectStaff extends Component {
                                     <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
                                 </hgroup>
                                 <hgroup>
+                                    <small className={"text-secondary"}>Kasbi: </small>
+                                    {console.log(currentItem)}
+                                    <p className={"d-inline"}>{currentItem && currentItem.roleName ? currentItem.roleName[0].roleName: ''}</p>
+                                </hgroup>
+                                <hgroup>
                                     <small className={"text-secondary"}>Jinsi: </small>
                                     <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
                                 </hgroup>
@@ -102,18 +111,6 @@ class SelectStaff extends Component {
                                     <small className={"text-secondary"}>Tavsif: </small>
                                     <p className={"d-inline"}> {currentItem.description}</p>
                                 </hgroup>
-                                <div className="button-block">
-                                    {/*<Button className="table-icon px-2"*/}
-                                    {/*        onClick={() => openAddGroupModal(currentItem)}>*/}
-                                    {/*    <AiOutlineUsergroupAdd*/}
-                                    {/*        color={"#EE8033"}*/}
-                                    {/*    />*/}
-                                    {/*</Button>*/}
-                                    {/*<Button className="table-icon px-2"*/}
-                                    {/*        onClick={() => openPaymentModal(currentItem)}>*/}
-                                    {/*    <span className="icon icon-wallet bg-success "/>*/}
-                                    {/*</Button>*/}
-                                </div>
                             </div>
                             <div className="col-4 button-block">
                                 <Button className="table-icon"
@@ -127,6 +124,7 @@ class SelectStaff extends Component {
                             </div>
                         </div>
                     </div>
+
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -135,24 +133,24 @@ class SelectStaff extends Component {
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        defaultValue={currentObject ? currentObject.fullName : ""}
                                         type={"text"}
                                         label={"FISH"} name={"fullName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
-                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
                                         <option key={0} value={"0"}>Ota hududni tanlang</option>
                                         {regions ? regions.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -162,12 +160,12 @@ class SelectStaff extends Component {
                                                   defaultValue={currentObject ? currentObject.roleName : ""}
                                                   label="Kasbi" required
                                                   errorMessage="Birini tanlang!">
-                                        <AvRadio label="Adminstrator" value="Adminstrator"/>
-                                        <AvRadio label="Hisobchi" value="Hisobchi"/>
-                                        <AvRadio label="Admin" value="Admin"/>
+                                        <AvRadio label="Adminstrator" value="RECEPTION"/>
+                                        <AvRadio label="Hisobchi" value="FINANCIER"/>
+                                        <AvRadio label="Admin" value="ADMIN"/>
                                     </AvRadioGroup>
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  defaultValue={currentObject ? currentObject.gender : ""}
                                                   label="Jins" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Erkak" value="MALE"/>
@@ -205,8 +203,8 @@ class SelectStaff extends Component {
 
 SelectStaff.propTypes = {}
 export default connect(({
-                            app: {loading, employees, showModal, deleteModal,regions},
+                            app: {loading, history,employees,currentItem, showModal, deleteModal,regions},
                         }) => ({
-        loading, employees, showModal, deleteModal,regions
+        loading, employees, showModal,history,currentItem, deleteModal,regions
     })
 )(SelectStaff);
