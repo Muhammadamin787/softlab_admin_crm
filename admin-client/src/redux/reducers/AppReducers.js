@@ -651,6 +651,7 @@ const reducers = {
     },
 
     [types.REQUEST_GET_EMPLOYEE_SUCCESS](state, payload) {
+        console.log(payload)
         state.currentItem = payload.payload.object
     },
 

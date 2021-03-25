@@ -560,7 +560,6 @@ class SelectStudent extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
                 <Modal isOpen={showAddGroupModal} toggle={openAddGroupModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveAddGroup}>
                         <ModalHeader isOpen={showAddGroupModal} toggle={openAddGroupModal} charCode="X">
