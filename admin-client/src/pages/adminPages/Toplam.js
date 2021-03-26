@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 import {
-    deleteReklamaAction, getAppealListByEnumTypeAction, getCourseListForSelectAction, getCoursesAction,
-    getReklamaAction, getTeachersForSelectAction,
+    deleteReklamaAction,
+    deleteToplamAction,
+    getAppealListByEnumTypeAction,
+    getCourseListForSelectAction,
+    getCoursesAction,
+    getReklamaAction,
+    getTeachersForSelectAction,
     getToplamListAction,
-    saveReklamaAction, saveToplamAction
+    saveReklamaAction,
+    saveToplamAction
 } from "../../redux/actions/AppActions";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {connect} from "react-redux";
@@ -69,13 +75,18 @@ class Toplam extends Component {
             })
         }
         const saveToplam = (e, v) => {
+            if (currentObject) {
+                v.id = currentObject.id
+            }
             v.teacherId = this.state.teacherId
             v.courseId = this.state.courseId
-            console.log(v);
             if (v.courseId && v.teacherId)
                 dispatch(saveToplamAction(v))
+            console.log(v);
         }
-        const deleteNumber = (item) => {
+        const deleteNumber = () => {
+            dispatch(deleteToplamAction(currentObject))
+            this.setState({deleteModal: !this.state.deleteModal})
         }
         const setToplamCourse = (e, v) => {
             this.setState({courseId: e.value})
@@ -121,9 +132,13 @@ class Toplam extends Component {
                                 </td>
                                 <td><input type="checkbox" checked={item.active}/></td>
                                 <td>
+                                    <Button color={"white"} onClick={() => openModal(item)}>
+                                        <EditIcon/>
+                                    </Button>
                                     <Button color={"white"} onClick={() => openDeleteModal(item)}>
                                         <DeleteIcon/>
                                     </Button>
+
                                 </td>
                             </tr>
                         )}
@@ -148,6 +163,10 @@ class Toplam extends Component {
                                              label={"Nomi"} name={"name"} className={"form-control"}
                                              placeholder={"nomi"} required/>
                                     <Select
+                                        defaultValue={currentObject && currentObject.courseId ? {
+                                            value: currentObject.courseId,
+                                            label: (currentObject.courseName)
+                                        }: ""}
                                         placeholder="Kursni tanlang..."
                                         name="courseId"
                                         isSearchable={true}
@@ -165,7 +184,10 @@ class Toplam extends Component {
                                         <AvCheckbox label="Shan" value="SATURDAY"/>
                                         <AvCheckbox label="Yak" value="SUNDAY"/>
                                     </AvCheckboxGroup>
-                                    <Select
+                                    <Select defaultValue={currentObject && currentObject.teacherId ? {
+                                        value: currentObject.teacherId,
+                                        label: (currentObject.teacherName)
+                                    }: ""}
                                         placeholder="O'qituvchini tanlang..."
                                         name="teacherId"
                                         isSearchable={true}
@@ -175,7 +197,7 @@ class Toplam extends Component {
                                         classNamePrefix="select"
                                     />
                                     <AvField type="time"
-                                             defaultValue={currentObject ? currentObject.startTime : false}
+                                             defaultValue={currentObject ? currentObject.time : false}
                                              label={"Boshlanish vaqti"} name={"time"}/>
                                     <AvField defaultValue={currentObject ? currentObject.active : false}
                                              label={"Active"} type="checkbox" name={"active"}/>

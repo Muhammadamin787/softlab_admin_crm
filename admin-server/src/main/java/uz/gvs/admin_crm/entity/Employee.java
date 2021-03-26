@@ -21,4 +21,5 @@ import javax.persistence.*;
 public class Employee extends AbsEntity {
     @ManyToOne
     private User user;
+
 }

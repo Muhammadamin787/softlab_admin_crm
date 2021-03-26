@@ -139,13 +139,37 @@ import {
     getAppealListAllApi,
     getWeeklyScheduleList,
     getDashboardStudentStatApi,
-    getByCourseApi, getOneAppealForEditApi, editAppealApi, makeStudentByAppealApi,
-    changeTeacherStatusApi, changeStatusApi,
-    getEmployeeListApi, editEmployeeApi, saveEmployeeApi, deleteEmployeeApi, changeGroupAPi
+    getByCourseApi,
+    getOneAppealForEditApi,
+    editAppealApi,
+    makeStudentByAppealApi,
+    changeTeacherStatusApi,
+    changeStatusApi,
+    getEmployeeListApi,
+    editEmployeeApi,
+    saveEmployeeApi,
+    deleteEmployeeApi,
+    changeGroupAPi,
+    getEmployeeApi,
+    getExcelListApp,
+    getStudentOnSearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
 
+
+export const getExcelListAction = (data) => (dispatch) => {
+    dispatch({
+        api: getExcelListApp,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_INFO_IN_EXCEL,
+            types.REQUEST_ERROR
+        ],
+        data
+    })
+}
 
 export const getAttendanceListAction = (payload) => (dispatch) => {
     dispatch({
@@ -211,6 +235,14 @@ export const downloadTeacherFileAction = () => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/teacher")
     link.setAttribute("download", "teacher.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+
+export const downloadAccountantFileAction = (v) => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/accountant?startDate=" + v.startDate.toString() + "&finishDate=" + v.finishDate.toString())
+    link.setAttribute("download", "accountant.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -411,6 +443,7 @@ export const deletePayTypeAction = (data) => (dispatch) => {
         ],
         data: data
     }).then((res) => {
+        dispatch(getPayTypeListAction())
         dispatch({
             type: "updateState",
             payload: {
@@ -418,7 +451,6 @@ export const deletePayTypeAction = (data) => (dispatch) => {
             }
         })
         toast.success("Malumot ochirildi")
-        dispatch(getPayTypeListAction())
     }).catch((err) => {
         toast.error("Xatolik")
     })
@@ -456,8 +488,11 @@ export const saveClientStatusAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
-    }).then(() => {
+    }).then((res) => {
+        toast.success(res.payload.message)
         dispatch(getClientStatusListAction({type: "all"}));
+    }).catch((err) => {
+        toast.error("Xatolik")
     })
 }
 export const deleteClientStatusAction = (data) => (dispatch) => {
@@ -753,7 +788,6 @@ export const getGroupsAction = (data) => (dispatch) => {
         data
     })
 }
-
 export const getGroupsForSelectAction = (data) => (dispatch) => {
     dispatch({
         api: getGroupsForSelectApi,
@@ -845,7 +879,6 @@ export const saveGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeStudentGroupStatusAction = (data) => (dispatch) => {
     dispatch({
         api: changeStudentGroupStatusApi,
@@ -874,7 +907,6 @@ export const changeStudentGroupStatusAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const searchGroupAction = (data) => (dispatch) => {
     dispatch({
         api: getRegionSearchApi,
@@ -888,7 +920,6 @@ export const searchGroupAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 export const changeGroupStatusActions = (data) => (dispatch) => {
     dispatch({
         api: changeGroupAPi,
@@ -907,7 +938,7 @@ export const changeGroupStatusActions = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getGroupsAction({page: 0, size: 20, type: data.status=== "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
+        dispatch(getGroupsAction({page: 0, size: 20, type: data.status === "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -961,8 +992,6 @@ export const saveTestCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
-
 //  Profession
 export const getProfessionAction = () => (dispatch) => {
     dispatch({
@@ -1078,7 +1107,6 @@ export const saveCourseCategoryAction = (data) => (dispatch) => {
         toast.error("Xatolik!")
     })
 }
-
 // START TRIAL CONTACT TYPE
 export const getTrialContactTypesAction = () => (dispatch) => {
     dispatch({
@@ -1172,6 +1200,20 @@ export const getStudentsAction = (data) => (dispatch) => {
         data
     })
 }
+
+//  Written By Muhammadamin
+export const getStudentsBySearchAction = (data) => (dispatch) => {
+    dispatch({
+        api: getStudentsBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+// ---
 export const getStudentAction = (data) => (dispatch) => {
     dispatch({
         api: getStudentApi,
@@ -1194,7 +1236,7 @@ export const saveStudentAction = (data) => (dispatch) => {
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getStudentAction({id: data.id}))
     }).catch((err) => {
         toast.error("Xatolik!")
@@ -1220,7 +1262,7 @@ export const deleteStudentAction = (data) => (dispatch) => {
         if (data && data.history) {
             data.history.go(-1)
         }
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getRegionsAction())
 
     }).catch((err) => {
@@ -1302,7 +1344,7 @@ export const toChangeTeacherStatusAction = (data) => (dispatch) => {
             }
         })
         toast.success(res.payload.message)
-        dispatch(getTeachersAction({page: 0, size: 20, type: data.status=== "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status === "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1370,7 +1412,7 @@ export const saveTeacherAction = (data) => (dispatch) => {
             dispatch(getRegionsAction())
             dispatch(getPayTypeListAction())
         }
-        dispatch(getTeachersAction({page: 0, size: 20}))
+        dispatch(getTeachersAction({page: 0, size: 20, type: data.status === "ACTIVE" ? "ARCHIVE" : "ACTIVE"}))
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1445,6 +1487,7 @@ export const saveStudentPaymentAction = (data) => (dispatch) => {
         toast.success(res.payload.message)
         dispatch(getStudentGroupAction(data.studentId))
         dispatch(getStudentAction({id: data.studentId}))
+        dispatch(getStudentPaymentAction())
     }).catch((err) => {
         toast.error("Xatolik!")
     })
@@ -1466,10 +1509,10 @@ export const deleteStudentPaymentAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.history) {
-            data.history.go(-1)
-        }
-        dispatch(getStudentPaymentAction())
+        // if (data && data.history) {
+        //     data.history.go(-1)
+        // }
+        dispatch(getStudentPaymentAction(data.student.id))
 
     }).catch((err) => {
         toast.error("Xatolik")
@@ -1704,7 +1747,7 @@ export const deleteToplamAction = (data) => (dispatch) => {
         dispatch({
             type: "updateState",
             payload: {
-                showDeleteModal: false
+                deleteModal: false
             }
         })
         dispatch(getToplamListAction({page: 0, size: 20}));
@@ -1900,14 +1943,26 @@ export const getGroupsByCourseAction = (data) => (dispatch) => {
 // FINISH DASHBOARD
 
 // START EMPLOYEE
-export const getEmployeeListAction = () => (dispatch) => {
+export const getEmployeeListAction = (data) => (dispatch) => {
     dispatch({
         api: getEmployeeListApi,
         types: [
             types.REQUEST_START,
+            types.REQUEST_GET_EMPLOYEES_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+export const getEmployeeAction = (data) => (dispatch) => {
+    dispatch({
+        api: getEmployeeApi,
+        types: [
+            types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR,
-        ]
+        ],
+        data: data
     })
 }
 
@@ -1916,13 +1971,23 @@ export const saveEmployeeAction = (data) => (dispatch) => {
         api: (data.id ? editEmployeeApi : saveEmployeeApi),
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            "",
             types.REQUEST_ERROR
         ],
         data: data
     }).then((res) => {
         toast.success(res.payload.message)
-        dispatch(getEmployeeListAction())
+        dispatch({
+            type: "updateState",
+            payload: {
+                showModal: false
+            }
+        })
+        if (data && data.id) {
+            dispatch(getEmployeeAction({id: data.id}))
+        } else {
+            dispatch(getEmployeeListAction())
+        }
     }).catch((err) => {
         toast.error("Xatolik")
     })
@@ -1933,7 +1998,56 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
         api: deleteEmployeeApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then((res) => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
+        toast.success("Ma'lumot o'chirildi!")
+        if (data && data.history) {
+            data.history.go(-1)
+        }
+        dispatch(getEmployeeListAction())
+        dispatch(getRegionsAction())
+
+    }).catch((err) => {
+        toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
+    })
+}
+// FINISH EMPLOYEE
+
+
+// Written By Muhammadamin
+export const getStudentOnSearchAction = (payload) => (dispatch) => {
+    dispatch({
+        api: getStudentOnSearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_GROUPS_SEARCH_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: payload
+    })
+}
+
+export const saveStudentToGroupAction = (data) => (dispatch) => {
+    dispatch({
+        api: saveStudentToGroupApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
             types.REQUEST_ERROR
         ],
         data: data
@@ -1941,13 +2055,13 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
         dispatch({
             type: "updateState",
             payload: {
-                employee: null
+                addStudentInGroupModal: false
             }
         })
-        toast.success("Malumot ochirildi")
-        dispatch(getEmployeeListAction())
+        toast.success(res.payload.message)
     }).catch((err) => {
         toast.error("Xatolik")
     })
-};
-// FINISH EMPLOYEE
+}
+
+

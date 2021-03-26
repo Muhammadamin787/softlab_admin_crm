@@ -2,23 +2,29 @@ import React, {Component} from 'react';
 import {
     Button,
     Col,
-    CustomInput,
     Modal,
     ModalBody,
     ModalFooter,
     ModalHeader,
     Row,
-    Table, Input, NavItem, NavLink, Nav, TabContent, TabPane
+    Table,
+    Input,
+    NavItem,
+    NavLink,
+    Nav,
+    TabContent,
+    TabPane
 } from "reactstrap";
-import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
+import AsyncSelect from "react-select";
+import {AvForm, AvField, AvGroup, AvInput, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
     changeStudentGroupStatusAction,
     deleteCourseAction, deleteGroupAction, getAttendanceListAction,
     getCoursesAction,
     getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
-    getRoomListAction, getStudentPaymentAction, getStudentsByGroupAction,
+    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getStudentsByGroupAction,
     getTeachersForSelectAction, saveAttendanceAction,
-    saveGroupAction,
+    saveGroupAction, saveStudentToGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -28,7 +34,7 @@ import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import Select from "react-select";
-import {FaRegCalendarCheck, FaRegCalendarPlus} from "react-icons/all";
+import {AiOutlinePlusCircle, FaRegCalendarCheck, FaRegCalendarPlus} from "react-icons/all";
 
 class SelectGroup extends Component {
     componentDidMount() {
@@ -42,14 +48,11 @@ class SelectGroup extends Component {
             dispatch(getCoursesAction())
             dispatch(getGroupsForSelectAction())
             dispatch(getTeachersForSelectAction())
-
             dispatch(getAttendanceListAction(id))
 
             let year = new Date().getFullYear()
             let month = new Date().getMonth()
             let date = new Date().getDate()
-
-
             let arr = []
             for (let i = 1; i <= new Date(this.state.year, this.state.month + 1, 0).getDate(); i++) {
                 arr.push(i)
@@ -67,30 +70,27 @@ class SelectGroup extends Component {
         showModal: false,
         currentObject: "",
         dropdownOpen: false,
-        setDropdownOpen: false,
         activeTab: "1",
         groupInput: false,
         newGroup: [],
         days: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan'],
         months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktyabr", "Noyabr", "Dekabr"],
-
         year: '',
-        //Bitta kam sanaladi
         month: '',
-        day: '',
-
+        selectedOption: [],
+        selectedStudent: [],
+        optionsOfStudent: [],
         daysOfMonth: [],
-
-        groupSelect: [],
-        currentGroup: "",
         openModal1: false,
-        currentDay: ''
+        showOptionDiv: false,
+        currentDay: '',
+        allAttendance: [],
+        oneAttendDate: ''
     }
 
     render() {
         const {
-            days, months, year, month, daysOfMonth, activeTab, day, dayName, groupSelect,
-            currentGroup, openModal1, currentDay, currentObject, dropdownOpen, setDropdownOpen
+            days, months, year, month, daysOfMonth, activeTab, openModal1, currentDay, currentObject, dropdownOpen
         } = this.state
         const {
             selectItems,
@@ -100,11 +100,13 @@ class SelectGroup extends Component {
             dispatch,
             showModal,
             deleteModal,
+            addStudentInGroupModal,
             currentItem,
             teachers,
             getItems,
             rooms,
-            attendanceList,
+            studentsOption,
+            attendanceList
         } = this.props;
 
         const plusM = () => {
@@ -114,16 +116,12 @@ class SelectGroup extends Component {
             } else {
                 this.setState({month: month + 1})
             }
-
             let arr = []
             for (let i = 1; i <= new Date(year, month, 0).getDate(); i++) {
                 arr.push(i)
             }
             this.setState({daysOfMonth: arr})
-
-
         }
-
         const minusM = () => {
             if (month === 0) {
                 this.setState({month: 11})
@@ -137,7 +135,6 @@ class SelectGroup extends Component {
             }
             this.setState({daysOfMonth: arr})
         }
-
         const openModal = (item) => {
             if (item && item.id) {
                 this.setState({currentObject: item})
@@ -166,9 +163,6 @@ class SelectGroup extends Component {
                     changeStatusModal: !changeStatusModal
                 }
             })
-        }
-        const showDropdown = (item) => {
-            this.setState({dropdownOpen: !dropdownOpen})
         }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
@@ -212,24 +206,68 @@ class SelectGroup extends Component {
                 dispatch(saveGroupAction(v))
             }
         }
-
-        const saveAttendance = (e, v) => {
-
+        const checkAttendence = (bool, id) => {
+            let activeBtn = document.getElementById("active" + id);
+            let notActiveBtn = document.getElementById("notActive" + id);
+            if (bool) {
+                activeBtn.classList.remove("not-active-btn-style");
+                activeBtn.classList.add("active-btn-style");
+                notActiveBtn.classList.remove("active-btn-style");
+                notActiveBtn.classList.add("not-active-btn-style");
+            } else {
+                notActiveBtn.classList.remove("not-active-btn-style");
+                notActiveBtn.classList.add("active-danger-btn-style");
+                activeBtn.classList.remove("active-btn-style");
+                activeBtn.classList.add("not-active-btn-style");
+            }
+            let array = this.state.allAttendance;
+            if (array.length > 0) {
+                for (let i = 0; i < array.length; i++) {
+                    if (array[i].studentId === id) {
+                        array[i].attended = bool;
+                        break;
+                    }
+                }
+            } else {
+                array[0].attended = false;
+                array[0].studentId = id;
+                array[0].student = id;
+                for (let i = 0; i < array.length; i++) {
+                    if (array[i].studentId === id) {
+                        array[i].attended = bool;
+                        break;
+                    }
+                }
+            }
+            this.setState({allAttendence: array})
+        }
+        const saveAttendance = (e, v, fromMobile) => {
             let arr = []
-            students.map(item =>
-                item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+            if (fromMobile) {
+                this.state.allAttendance.map(item => {
                     arr.push({
-                        studentId: item.id,
-                        active: document.getElementById(item.id).checked
+                        studentId: item.studentId,
+                        active: item.attended
                     })
-                ) : ""
-            )
+                })
+            } else {
+                students.map(item =>
+                    item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                        arr.push({
+                            studentId: item.id,
+                            active: document.getElementById(item.id).checked
+                        })
+                    ) : ""
+                )
+            }
             v.studentList = arr
             v.date = moment(v.date).format('YYYY-MM-DD').toString()
-            this.props.dispatch(saveAttendanceAction(v))
             showHideModal()
+            this.props.dispatch(saveAttendanceAction(v))
         }
-
+        const saveAttendanceMobile = (e, v) => {
+            saveAttendance(e, v, true)
+        }
         const gg = {
             overflowX: "scroll",
             overflowY: "auto",
@@ -239,8 +277,38 @@ class SelectGroup extends Component {
         const tableStyle = {
             backgroundColor: "white"
         }
-
-        const showHideModal = (item) => {
+        const showHideModal = (year, month, item) => {
+            let oneDate = moment(new Date(year, month, item)).format("DD-MM-yyyy");
+            let attends = [];
+            let hasThisDate = true;
+            let array = []
+            attendanceList.map(e => {
+                if (e.student.studentGroup && e.student.studentGroup[0].studentGroupStatus === 'ACTIVE') {
+                    let date = moment(e.attendDate).format('DD-MM-yyyy');
+                    if (oneDate === date) {
+                        hasThisDate = false;
+                        attends.push({
+                            attended: e.attandanceEnum === 'YES',
+                            student: e.student.user.fullName,
+                            studentId: e.student.id
+                        })
+                    }
+                }
+            })
+            if (hasThisDate) {
+                students && students.map(student => {
+                        if (student.studentGroupDto && student.studentGroupDto.studentGroupStatus === 'ACTIVE') {
+                            array.push({
+                                attended: '',
+                                student: student.fullName,
+                                studentId: student.id
+                            })
+                        }
+                    }
+                )
+                attends = array;
+            }
+            this.setState({allAttendance: attends});
             if (item) {
                 this.setState({
                     openModal1: !openModal1,
@@ -262,6 +330,66 @@ class SelectGroup extends Component {
                 }
             }
         }
+        const openAddStudentModal = (item) => {
+            if (item && item.id) {
+                this.setState({currentObject: item})
+                dispatch({
+                    type: "updateState",
+                    payload: {
+                        addStudentInGroupModal: !addStudentInGroupModal
+                    }
+                })
+            } else {
+                if (addStudentInGroupModal) {
+                    dispatch({
+                        type: "updateState",
+                        payload: {
+                            addStudentInGroupModal: !addStudentInGroupModal
+                        }
+                    })
+                }
+            }
+        }
+        const openAddStudentInGroupModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    addStudentInGroupModal: !addStudentInGroupModal
+                }
+            })
+            dispatch(getStudentOnSearchAction({name: ""}))
+        }
+        const selectStudentOption = (e) => {
+            if (e)
+                this.setState({selectedStudent: {name: e.label, id: e.id}})
+            else
+                this.setState({selectedStudent: ''})
+        }
+        const handleInputChange = (e) => {
+            if (e.length > 0) {
+                dispatch(getStudentOnSearchAction({name: e, id: currentItem.id}))
+            } else {
+                dispatch({
+                    type: 'updateState',
+                    payload: {
+                        studentsOption: []
+                    }
+                })
+            }
+        }
+        const selectedOptions = (e) => {
+            console.log("selected options")
+        }
+        const addStudentSaveItem = (e, v) => {
+            let obj = {
+                name: this.state.selectedStudent.name,
+                studentId: this.state.selectedStudent.id,
+                groupId: currentItem.id
+            }
+            this.props.dispatch(saveStudentToGroupAction(obj));
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -315,6 +443,11 @@ class SelectGroup extends Component {
                                                         <small className={"text-secondary"}>Tavsif: </small>
                                                         <h6>{currentItem.description}</h6>
                                                     </hgroup>
+                                                    <div>
+                                                        <Button onClick={() => openAddStudentInGroupModal()}>
+                                                            <AiOutlinePlusCircle/>
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <Button className="table-icon"
@@ -345,7 +478,8 @@ class SelectGroup extends Component {
                                                                         student.studentGroupDto.studentGroupStatus === "TEST_LESSON" ?
                                                                             "bg-warning text-dark" :
                                                                             "")}>
-                                                {student.fullName}
+                                                {<Link className={"text-dark"}
+                                                       to={"/admin/student/" + (student.id)}>{student.fullName}</Link>}
                                                 </span>
                                                                 </div>
                                                                 : ""}
@@ -373,7 +507,7 @@ class SelectGroup extends Component {
                         <Col md={8}>
                             {currentItem !== "" ?
                                 <div className={"mt-5"}>
-                                    <Nav tabs>
+                                    <Nav tabs className={"selectGroupNav"}>
                                         <NavItem
                                             className={activeTab === '1' ? "tab-item-style-active1" : "tab-item-style-default1"}>
                                             <NavLink
@@ -397,23 +531,27 @@ class SelectGroup extends Component {
                                     </Nav>
                                     <TabContent activeTab={activeTab}>
                                         <TabPane tabId="1">
-                                            <div style={tableStyle} className={"p-4"}>
-                                                <div className={""}>
-                                                    <Row>
-                                                        <Col md={1}>
-                                                            <Button onClick={minusM} className={"btn btn-light"}>
-                                                                <i className="fas fa-angle-left"/>
-                                                            </Button>
-                                                        </Col>
-                                                        <Col md={3}>
-                                                            {" " + year + " - yil, " + months[month] + " "}
-                                                        </Col>
-                                                        <Col md={1}>
-                                                            <Button onClick={plusM} className={"btn btn-light"}>
-                                                                <i className="fa fa-angle-right"/>
-                                                            </Button>
-                                                        </Col>
-                                                    </Row>
+                                            <div style={tableStyle} id={"tableStyleInSelectGroup"} className={"p-4"}>
+                                                <div className={"dateOfTable"}>
+                                                    <div className={"dataOfMobile"}>
+                                                        <div className={"row"}>
+                                                            <div className={"col-auto"}>
+                                                                <Button onClick={minusM}
+                                                                        className={"border btn btn-light"}>
+                                                                    <i className="fas fa-angle-left"/>
+                                                                </Button>
+                                                            </div>
+                                                            <div className={"col-auto pt-2"}>
+                                                                {" " + year + " - yil, " + months[month] + " "}
+                                                            </div>
+                                                            <div className={"col-auto"}>
+                                                                <Button onClick={plusM}
+                                                                        className={"border btn btn-light"}>
+                                                                    <i className="fas fa-angle-right"/>
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div style={gg}>
                                                     <Table>
@@ -465,7 +603,7 @@ class SelectGroup extends Component {
                                                                             <td className={"text-center"}>
                                                                                 <FaRegCalendarPlus
                                                                                     color={"#EE8033"}
-                                                                                    onClick={() => showHideModal(item)}
+                                                                                    onClick={() => showHideModal(year, month, item)}
                                                                                 />
                                                                             </td>
                                                                             : ''
@@ -477,6 +615,14 @@ class SelectGroup extends Component {
                                                 </div>
                                             </div>
                                         </TabPane>
+                                        <TabPane tabId="2">
+                                            <div style={tableStyle} className={"p-4"}>
+                                                <br/>
+                                                Hozircha chegirmalar y'oq
+                                                <br/>
+                                                <br/>
+                                            </div>
+                                        </TabPane>
                                     </TabContent>
                                 </div>
                                 :
@@ -485,7 +631,8 @@ class SelectGroup extends Component {
                         </Col>
                     </Row>
                 </div>
-                <Modal id={"allModalStyle"} isOpen={showModal} toggle={() => openModal("")} className={""}>
+                <Modal id={"allModalStyle"} isOpen={showModal}
+                       toggle={() => openModal("")} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                             {currentObject ? "Kursni tahrirlash" : "Yangi kurs qo'shish"}
@@ -493,25 +640,36 @@ class SelectGroup extends Component {
                         <ModalBody>
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
-                                    <AvField defaultValue={currentObject ? currentObject.name : ""} type={"text"}
-                                             label={"Nomi"} name={"name"} className={"form-control"}
-                                             placeholer={"nomi"} required/>
-                                    <AvField className={'form-control'} label={'Kurs:'} type="select"
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.name : ""}
+                                        type={"text"}
+                                        label={"Nomi"} name={"name"}
+                                        className={"form-control"}
+                                        placeholer={"nomi"} required/>
+                                    <AvField className={'form-control'} label={'Kurs:'}
+                                             type="select"
                                              name="courseId"
                                              defaultValue={currentObject &&
-                                             currentObject.course && currentObject.course.id ? currentObject.course.id : "0"}>
+                                             currentObject.course && currentObject.course.courseCategory &&
+                                             currentObject.course.courseCategory &&
+                                             currentObject.course.courseCategory.id ?
+                                                 currentObject.course.courseCategory.id : "0"}>
                                         <option key={0} value={"0"}>Kursni tanlang</option>
                                         {getItems ? getItems.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
+                                            <option key={i}
+                                                    value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
-                                    <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
+                                    <AvField className={'form-control'}
+                                             label={"O'qituvchi:"} type="select"
                                              name="teacherId"
                                              defaultValue={currentObject
-                                             && currentObject.teacher && currentObject.teacher.id ? currentObject.teacher.id : "0"}>
+                                             && currentObject.teacher && currentObject.teacher.user &&
+                                             currentObject.teacher.user.fullName ? currentObject.teacher.user.fullName : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
-                                            <option key={i} value={item.uuid}>{item.name}</option>
+                                            <option key={i}
+                                                    value={item.uuid}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
 
@@ -526,32 +684,38 @@ class SelectGroup extends Component {
                                         <AvCheckbox label="Yak" value="SUNDAY"/>
                                     </AvCheckboxGroup>
 
-                                    <AvField className={'form-control'} label={"Xona:"} type="select"
+                                    <AvField className={'form-control'} label={"Xona:"}
+                                             type="select"
                                              name="roomId"
                                              defaultValue={currentObject && currentObject.room ? currentObject.room.id : "0"}>
                                         <option key={0} value={"0"}> tanlang</option>
                                         {rooms && rooms.length > 0 ? rooms.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
+                                            <option key={i}
+                                                    value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
                                     <Row>
                                         <Col md={6}>
                                             <AvField type="time"
                                                      defaultValue={currentObject ? currentObject.startTime : false}
-                                                     label={"Boshlanish vaqti"} name={"startTime"}/>
+                                                     label={"Boshlanish vaqti"}
+                                                     name={"startTime"}/>
                                         </Col>
                                         <Col md={6}>
                                             <AvField type="time"
                                                      defaultValue={currentObject ? currentObject.finishTime : false}
-                                                     label={"Tugash vaqti"} name={"finishTime"}/>
+                                                     label={"Tugash vaqti"}
+                                                     name={"finishTime"}/>
                                         </Col>
                                     </Row>
                                     <AvField type="date"
                                              defaultValue={currentObject && currentObject.startDate ? moment(currentObject.startDate).format('YYYY-MM-DD') : ""}
-                                             label={"Kursning boshlanish sanasi"} name={"startDate"}/>
+                                             label={"Kursning boshlanish sanasi"}
+                                             name={"startDate"}/>
                                     <AvField type="date"
                                              defaultValue={currentObject && currentItem.finishDate ? moment(currentObject.finishDate).format('YYYY-MM-DD') : ""}
-                                             label={"Kursning tugash sanasi"} name={"finishDate"}/>
+                                             label={"Kursning tugash sanasi"}
+                                             name={"finishDate"}/>
                                     <AvField type="checkbox"
                                              defaultValue={currentObject ? currentObject.active : false}
                                              label={"Active"} name={"active"}/>
@@ -559,32 +723,40 @@ class SelectGroup extends Component {
                             </ModalBody>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="secondary" onClick={openModal}>Bekor
+                                qilish</Button>
                             <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                       className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>
                     <ModalBody>
                         Rostdan ham ushbu elementni o'chirishni istaysizmi?
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
-                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                        <Button color="secondary"
+                                onClick={() => openDeleteModal("")}>Yo'q</Button>
+                        <Button color="light"
+                                onClick={() => deleteItem(currentObject)}>Ha</Button>
                     </ModalFooter>
                 </Modal>
-                <Modal isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")} className={""}>
+                <Modal isOpen={changeStatusModal}
+                       toggle={() => changeStatusOpenModal("")} className={""}>
                     <AvForm onValidSubmit={changeStudentStatus}>
-                        <ModalHeader isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")}
+                        <ModalHeader isOpen={changeStatusModal}
+                                     toggle={() => changeStatusOpenModal("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            <AvField className={'form-control'} onChange={openGroupSelects} label={"Status:"}
+                            <AvField className={'form-control'}
+                                     onChange={openGroupSelects} label={"Status:"}
                                      type="select"
                                      name="situation" required>
                                 <option value={"0"}>Statusni tanglang</option>
-                                <option value={"TRANSFER"}>Boshqa guruhga ko'chirish</option>
+                                <option value={"TRANSFER"}>Boshqa guruhga ko'chirish
+                                </option>
                                 <option value={"ACTIVE"}>Faollashtirish</option>
                                 <option value={"FROZEN"}>Muzlatish</option>
                                 <option value={"ARCHIVE"}>Arxivlash</option>
@@ -602,18 +774,20 @@ class SelectGroup extends Component {
                                 : ""}
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="secondary" onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
+                            <Button color="secondary"
+                                    onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
                             <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
                 <Modal isOpen={openModal1}>
-                    <ModalHeader>Kunlik davomat</ModalHeader>
+                    {/*<Modal isOpen={true}>*/}
+                    <ModalHeader>Kunlik davomat jhgf</ModalHeader>
+
                     <ModalBody>
-                        <AvForm onValidSubmit={saveAttendance}>
-                            {/*<AvField type={"date"} name={"date"}/>*/}
-                            <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''}
+                        <AvForm className={"modalDesktop"} onValidSubmit={saveAttendance}>
+                            <AvField type={"hidden"} name={"date"}
+                                     defaultValue={currentDay ? currentDay : ''}
                                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
                             <AvField type={"hidden"} name={"teacherId"}
                                      defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
@@ -621,7 +795,7 @@ class SelectGroup extends Component {
                                      defaultValue={currentItem ? currentItem.id : ''}/>
                             <Table>
                                 {students ? students.map((item, i) =>
-                                    item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                                    item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
                                         <tr key={i}>
                                             <td>{item.fullName}</td>
                                             <td>
@@ -633,12 +807,85 @@ class SelectGroup extends Component {
                             </Table>
 
                             <ModalFooter>
-                                <Button outline onClick={showHideModal}>Bekor qilish</Button>
-                                <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
+                                <Button outline onClick={showHideModal}>Bekor
+                                    qilish</Button>
+                                <Button outline color={"primary"}
+                                        type={"submit"}>Saqlash</Button>
+                            </ModalFooter>
+                        </AvForm>
+
+                        <AvForm className={"modalMobile h-100"} onValidSubmit={saveAttendanceMobile}>
+                            <AvField type={"hidden"} name={"date"}
+                                     defaultValue={currentDay ? currentDay : ''}
+                                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                            <AvField type={"hidden"} name={"teacherId"}
+                                     defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
+                            <AvField type={"hidden"} name={"groupId"}
+                                     defaultValue={currentItem ? currentItem.id : ''}/>
+                            <div className={"px-3"}>
+                                {
+                                    this.state.allAttendance && this.state.allAttendance.map(item => (
+                                        <div key={item.studentId} className={"mt-2 mb-3"}>
+                                            <div className={"my-1"}>{item.student}</div>
+                                            <div className={"row"}>
+                                                <div className={"col-6"}>
+                                                    <button
+                                                        className={item.attended === '' ? "btn w-100 btn-outline-danger" : item.attended ? "btn w-100 btn-outline-danger not-active-btn-style" : "btn w-100 btn-outline-danger active-danger-btn-style"}
+                                                        type={"button"}
+                                                        id={"notActive" + item.studentId}
+                                                        onClick={() => checkAttendence(false, item.studentId)}>Kelmadi
+                                                    </button>
+                                                </div>
+                                                <div className={"col-6"}>
+                                                    <button
+                                                        className={item.attended === '' ? "btn w-100 btn-outline-success" : item.attended ? "btn w-100 btn-outline-success active-btn-style" : "btn w-100 btn-outline-success not-active-btn-style"}
+                                                        type={"button"}
+                                                        id={"active" + item.studentId}
+                                                        onClick={() => checkAttendence(true, item.studentId)}>Keldi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>))
+
+                                }
+                            </div>
+                            <ModalFooter>
+                                <Button outline onClick={showHideModal}>Bekor
+                                    qilish</Button>
+                                <Button outline color={"primary"}
+                                        type={"submit"}>Saqlash</Button>
                             </ModalFooter>
                         </AvForm>
                     </ModalBody>
 
+                </Modal>
+
+                <Modal isOpen={addStudentInGroupModal} method={"post"}
+                       toggle={() => openAddStudentModal("")}
+                       className={""}>
+                    <AvForm onValidSubmit={addStudentSaveItem}>
+                        <ModalHeader>
+                            <p>Guruhga o'quvchi qo'shish : </p>
+                        </ModalHeader>
+                        <ModalBody className={"ml-1"}>
+                            <AsyncSelect
+                                placeholder={"Qidirish..."}
+                                onChange={selectStudentOption}
+                                isSearchable={true}
+                                onInputChange={handleInputChange}
+                                loadOptions={selectedOptions}
+                                isClearable={true}
+                                options={studentsOption}
+                                classNamePrefix={"select"}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color={"success"} type={"submit"}>Qo'shish</Button>
+                            <Button color="secondary"
+                                    onClick={openAddStudentInGroupModal}>Bekor
+                                qilish</Button>
+                        </ModalFooter>
+                    </AvForm>
                 </Modal>
             </AdminLayout>
         );
@@ -659,6 +906,8 @@ export default connect(
              rooms,
              groups,
              currentItem,
+             addStudentInGroupModal,
+             studentsOption,
              loading,
              showModal,
              deleteModal,
@@ -681,6 +930,8 @@ export default connect(
             groups,
             currentItem,
             attendanceList,
+            addStudentInGroupModal,
+            studentsOption,
             loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
         })
 )

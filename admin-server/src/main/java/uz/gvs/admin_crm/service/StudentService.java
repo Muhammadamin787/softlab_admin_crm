@@ -55,8 +55,6 @@ public class StudentService {
                     studentDto.getRegionId(),
                     studentDto.getGender(),
                     studentDto.getBirthDate()), RoleName.STUDENT);
-            if (user == null)
-                return apiResponseService.tryErrorResponse();
             student.setUser(user);
             student.setParentPhone(studentDto.getParentPhone());
             studentRepository.save(student);
@@ -69,7 +67,7 @@ public class StudentService {
     public ApiResponse editStudent(UUID id, StudentDto studentDto) {
         try {
             Optional<Student> byId = studentRepository.findById(id);
-            SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             if (byId.isPresent()) {
                 Student student = byId.get();
                 User user = student.getUser();
@@ -211,7 +209,7 @@ public class StudentService {
         try {
             Optional<Student> byId = studentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 StudentPayment studentPayment = new StudentPayment();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -244,7 +242,7 @@ public class StudentService {
         try {
             Optional<StudentPayment> byId = studentPaymentRepository.findById(id);
             if (byId.isPresent()) {
-                SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 StudentPayment studentPayment = byId.get();
                 studentPayment.setStudent(studentPaymentDto.getStudentId() != null ? studentRepository.findById(studentPaymentDto.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("get StudentId")) : null);
                 studentPayment.setGroup(studentPaymentDto.getGroupId() != null ? groupRepository.findById(studentPaymentDto.getGroupId()).orElseThrow(() -> new ResourceNotFoundException("get Group")) : null);
@@ -283,8 +281,6 @@ public class StudentService {
         }
     }
 
-
-    //
     public StudentPaymentDto makeStudentPaymentDto(StudentPayment studentPayment) {
         return new StudentPaymentDto(
                 studentPayment.getId(),
@@ -320,7 +316,6 @@ public class StudentService {
                 payment.getAmount()
         );
     }
-
 
     public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
         try {
@@ -469,11 +464,10 @@ public class StudentService {
         return null;
     }
 
-    //
     public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
-            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
+            Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
+            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
             switch (type) {
                 case "all":
                     List<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, page, size);
@@ -556,9 +550,9 @@ public class StudentService {
         }
     }
 
-    public ApiResponse searchStudent(String name) {
+    public ApiResponse searchStudent(String name, Integer groupId) {
         try {
-            List<Object> objects = studentRepository.searchStudent(name);
+            List<Object> objects = studentRepository.searchStudent(name, groupId);
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] student = (Object[]) obj;
@@ -572,7 +566,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse addIndividualPrice(UUID id, ResSelect resSelect) {
         try {
@@ -594,7 +587,6 @@ public class StudentService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse deleteIndividualPrice(UUID studentId, Integer groupId) {
         try {
@@ -631,6 +623,24 @@ public class StudentService {
             }
         } catch (Exception exception) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse searchAllStudent(String name) {
+        try {
+            List<Object> objects = studentRepository.searchAllStudent(name);
+            List<ResSelect> resSelects = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] student = (Object[]) obj;
+                UUID id = UUID.fromString(student[0].toString());
+                String name1 = student[1].toString();
+                String phoneNumber = student[2].toString();
+                ResSelect resSelectDto = new ResSelect(id, name1, phoneNumber);
+                resSelects.add(resSelectDto);
+            }
+            return apiResponseService.getResponse(resSelects);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 }

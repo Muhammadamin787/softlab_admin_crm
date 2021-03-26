@@ -36,6 +36,7 @@ import SelectToplam from "../pages/adminPages/SelectToplam";
 import Finance from "../pages/adminPages/TeacherFinance";
 import StudentFinance from "../pages/adminPages/StudentFinance";
 import Attandance from "../pages/adminPages/Attandance";
+import SelectStaff from "../pages/adminPages/SelectStaff";
 
 
 const App = () => {
@@ -66,7 +67,8 @@ const App = () => {
                 <PrivateRoute exact path="/admin/payType" component={PayType}/>
                 <PrivateRoute exact path="/admin/general" component={GeneralSetting}/>
                 <PrivateRoute exact path="/admin/clients" component={Client}/>
-                <PrivateRoute exact path="/admin/staff" component={Staff}/>
+                <PrivateRoute exact path="/admin/staffs" component={Staff}/>
+                <PrivateRoute exact path="/admin/staff/:id" component={SelectStaff}/>
                 <PrivateRoute exact path="/admin/reklama" component={Reklama}/>
                 <PrivateRoute exact path="/admin/appeals" component={Appeal}/>
                 <PrivateRoute exact path="/admin/clientStatus" component={ClientStatus}/>/>

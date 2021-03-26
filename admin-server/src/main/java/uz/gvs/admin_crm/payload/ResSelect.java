@@ -13,6 +13,13 @@ public class ResSelect {
     private String name;
     private Double individualPrice;
     private Boolean isPercent;
+    private String phoneNumber;
+
+    public ResSelect(UUID uuid, String name, String phoneNumber) {
+        this.uuid = uuid;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 
     public ResSelect(UUID uuid, Integer id, Double individualPrice, boolean isPercent) {
         this.uuid = uuid;

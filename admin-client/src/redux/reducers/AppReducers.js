@@ -25,6 +25,7 @@ const initState = {
     date1: '',
     date2: '',
     type: '',
+    groupId: '',
     totalElements: 0,
     totalPages: 0,
     parentItems: [],
@@ -55,6 +56,7 @@ const initState = {
     attendanceList: [],
     teacherSalaryList: [],
     studentPaymentFinance: [],
+    addStudentInGroupModal: false,
     teacherPaymentFinance: [],
     rooms: [],
     dailySchedule: [],
@@ -67,7 +69,9 @@ const initState = {
     selectExcel: [],
     byCource: [],
     sortReklama: [],
-    employee: []
+    employees: [],
+    // Written by Muhammadamin
+    studentsOption: [],
 };
 
 const reducers = {
@@ -190,7 +194,7 @@ const reducers = {
         let groupsForSelect = payload.payload.object
         let ketmon = []
         for (let i = 0; i < groupsForSelect.length; i++) {
-            ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
+            ketmon.push({value: groupsForSelect[i].uuid, label: groupsForSelect[i].name})
         }
         state.getItems = ketmon
     },
@@ -276,16 +280,6 @@ const reducers = {
         );
     },
 
-    // Test Cateogry
-
-    [types.REQUEST_SAVE_TEST_CATEGORY_SUCCESS](state, payload) {
-        state.showModal = false
-    },
-    [types.REQUEST_GET_TEST_CATEGORY_SUCCESS](state, payload) {
-        state.testCategory = payload.payload.object.object.sort((a, b) =>
-            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-        );
-    },
 
     // Course
 
@@ -304,6 +298,7 @@ const reducers = {
 
     },
     [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
+        console.log(payload)
         if (payload && payload.payload && payload.payload.object) {
             state.currentItem = payload.payload.object
         }
@@ -327,7 +322,6 @@ const reducers = {
         }
     },
 
-
     // Trail Contact Type
     [types.REQUEST_SAVE_TRIAL_CONTACT_TYPE_SUCCESS](state, payload) {
         state.showModal = false
@@ -337,7 +331,6 @@ const reducers = {
             a.id > b.id ? 1 : b.id > a.id ? -1 : 0
         );
     },
-
     //// Teacher
 
     [types.REQUEST_SAVE_TEACHER_SUCCESS](state, payload) {
@@ -375,6 +368,26 @@ const reducers = {
     [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
+    [types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS](state, payload) {
+        state.students = [];
+        console.log(payload.payload.object);
+        if (payload && payload.payload && payload.payload.object) {
+            let data = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            data.map(item => {
+                let obj = {
+                    id: 0,
+                    fullName: '',
+                    phoneNumber: ''
+                };
+                obj.id = item.uuid;
+                obj.fullName = item.name;
+                obj.phoneNumber = item.phoneNumber ? item.phoneNumber : "notFound";
+                state.students.push(obj)
+            })
+        }
+    },
     [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.students = payload.payload.object.object.sort((a, b) =>
@@ -399,7 +412,6 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
-
     [types.REQUEST_SAVE_STUDENT_PAYMENT_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
             state.studentPayments = payload.payload.object.object.sort((a, b) =>
@@ -504,20 +516,22 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_STUDENT_GROUPS_SUCCESS](state, payload) {
-        console.log(payload)
         if (payload && payload.payload && payload.payload.object && payload.payload.object) {
             state.studentGroups = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-            let ketmon = []
+            let arr = []
             for (let i = 0; i < state.studentGroups.length; i++) {
-                ketmon.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
+                arr.push({value: state.studentGroups[i].id, label: state.studentGroups[i].name})
             }
-            state.selectGroups = ketmon
+            state.selectGroups = arr
         }
     },
     [types.REQUEST_GET_LIST_SALARY_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            // state.teacherSalaryList = payload.payload.object.object.sort((a, b) =>
+            //     a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            // );
             state.teacherSalaryList = payload.payload.object.object
             state.page = payload.payload.object.number
             state.size = payload.payload.object.size
@@ -548,9 +562,18 @@ const reducers = {
     [types.REQUEST_DASHBOARD_STAT_SUCCESS](state, payload) {
         state.dashboardStat = payload.payload.object
     },
+    // Written By Muhammadamin
     [types.REQUEST_GET_GROUPS_BY_COURSE_SUCCESS](state, payload) {
         state.byCource = payload.payload.object
     },
+    [types.REQUEST_GET_GROUPS_SEARCH_SUCCESS](state, payload) {
+        state.studentsOption = []
+        payload.payload.object.map((item, i) => {
+            state.studentsOption.push({name: i, label: item.name, id: item.uuid});
+        })
+    },
+    // ---
+
     [types.REQUEST_DASHBOARD_STUDENT_STAT_SUCCESS](state, payload) {
         if (payload.payload && payload.payload.object) {
             if (payload.payload.object.countSortList && payload.payload.object.countSortList.length > 0) {
@@ -608,5 +631,29 @@ const reducers = {
             ...payload,
         };
     },
+
+
+    //start employe
+
+    [types.REQUEST_SAVE_EMPLOYEE_SUCCESS](state, payload) {
+        state.showModal = false
+    },
+    [types.REQUEST_GET_EMPLOYEES_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object) {
+            state.employees = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
+
+    [types.REQUEST_GET_EMPLOYEE_SUCCESS](state, payload) {
+        console.log(payload)
+        state.currentItem = payload.payload.object
+    },
+
 };
 export default createReducer(initState, reducers);

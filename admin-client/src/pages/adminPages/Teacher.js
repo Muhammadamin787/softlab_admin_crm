@@ -114,7 +114,7 @@ class Teacher extends Component {
                 avatarId: attachmentId,
                 regionId: v.regionId,
                 description: v.description,
-                birthDate: moment(v.birthDate).format('YYYY-MM-DD').toString(),
+                birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
             }
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
@@ -308,7 +308,7 @@ class Teacher extends Component {
                         <ModalHeader isOpen={archiveModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                            Bu O`qituvchini Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -347,7 +347,7 @@ class Teacher extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         required/>

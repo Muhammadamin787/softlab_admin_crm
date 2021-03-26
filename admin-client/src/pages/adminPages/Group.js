@@ -15,20 +15,8 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
-    changeGroupStatusAction, changeGroupStatusActions,
-    changeGroupStatusToActiveAction,
-    changeGroupStatusToArchiveAction, changeGroupStautsActions,
-    deleteGroupAction,
-    deleteRegionAction,
-    getCoursesAction,
-    getGroupsAction,
-    getGroupsByStatusAction,
-    getRoomListAction,
-    getStudentPaymentAction,
-    getTeachersAction,
-    getTeachersForSelectAction,
-    saveGroupAction,
-    toChangeTeacherStatusAction,
+    changeGroupStatusActions, deleteGroupAction, getCoursesAction, getGroupsAction,
+    getRoomListAction, getTeachersForSelectAction, saveGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -55,6 +43,7 @@ class Group extends Component {
         currentObject: "",
         selectRegion: [],
         selectParentRegion: "",
+        showOptionDiv: false,
         parentRegionDisable: false,
         type: '',
         activeTab: "ACTIVE",
@@ -112,7 +101,7 @@ class Group extends Component {
             dispatch(saveGroupAction(v))
         }
 
-        ///////////////////////////////////////// Change status
+        //  Change status
 
         const a = (tab) => {
             this.setState({activeTab: tab})
@@ -147,8 +136,9 @@ class Group extends Component {
                 status: activeTab === "ACTIVE" ? "ARCHIVE" : "ACTIVE"
             }))
         }
+
         return (
-            <AdminLayout className="" pathname={this.props.location.pathname}>
+            <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Guruhlar</h1>
                     <div align={"right"}>
@@ -157,7 +147,8 @@ class Group extends Component {
                         </Button>
                     </div>
                     <Nav tabs>
-                        <NavItem className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ACTIVE');
@@ -166,7 +157,8 @@ class Group extends Component {
                                 Faol Guruhlar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ARCHIVE');
@@ -300,7 +292,7 @@ class Group extends Component {
                         <ModalHeader isOpen={archiveGroupModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu Talabani Arxiv ro'yxatga Qo'shmoqchimisiz 🤨❓
+                            Bu Guruhni arxiv ro'yxatga qo'shmoqchimisiz 😕 ❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToArchive("")}>Yo'q</Button>
@@ -312,13 +304,14 @@ class Group extends Component {
                         <ModalHeader isOpen={activeGroupModal} toggle={() => openToActive("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Bu Talabani Active ro'yxatga Qo'shmoqchimisiz 🤨❓
+                            Bu Guruhni active ro'yxatga qo'shmoqchimisiz 😊 ❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openToActive("")}>Yo'q</Button>
                             <Button color="light" onClick={() => changeStatus(currentObject)}>Ha</Button>
                         </ModalFooter>
                     </Modal>
+
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -398,7 +391,7 @@ class Group extends Component {
                         <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                      charCode="X">O'chirish</ModalHeader>
                         <ModalBody>
-                            Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                            Rostdan ham ushbu guruhni o'chirishni istaysizmi 🤨 ❓
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
@@ -439,7 +432,7 @@ export default connect(({
         getItems, teachers,
         groups, rooms,
         loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
-    activeGroupModal,
+        activeGroupModal,
     })
 )(Group);
 //

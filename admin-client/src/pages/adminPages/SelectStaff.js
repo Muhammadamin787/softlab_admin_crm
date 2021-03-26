@@ -1,26 +1,31 @@
 import React, {Component} from 'react';
 import {
-
-    getEmployeeListAction,
     deleteEmployeeAction,
+    getEmployeeAction,
+    getRegionsAction,
     saveEmployeeAction,
-    getRegionsAction, getGroupsAction
+
+
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon, EditIcon, GlobusIcon} from "../../component/Icons";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
-import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
-import Pagination from "react-js-pagination";
+import {AiOutlineUsergroupAdd} from "react-icons/all";
+import {Link} from "react-router-dom";
 
-class Staff extends Component {
+class SelectStaff extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getEmployeeListAction({page: 0, size: this.props.size}))
-        this.props.dispatch(getRegionsAction())
+        let id = 0
+        if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            id = this.props.match.params.id;
+            this.props.dispatch(getEmployeeAction({id: id}))
+            this.props.dispatch(getRegionsAction())
+        }
     }
 
     state = {
@@ -29,22 +34,9 @@ class Staff extends Component {
         currentObject: ''
     }
 
-    handlePageChange(pageNumber) {
-        this.props.dispatch(getEmployeeListAction({page: (pageNumber - 1), size: this.props.size}))
-    }
-
     render() {
         const {currentObject} = this.state;
-        const {
-            dispatch,
-            showModal,
-            deleteModal,
-            employees,
-            regions,
-            page,
-            size,
-            totalElements,
-        } = this.props;
+        const {dispatch, showModal, deleteModal,history,regions,currentItem} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -55,76 +47,83 @@ class Staff extends Component {
             })
         }
         const openDeleteModal = (item) => {
-            this.setState({currentObject: item.id, showDeleteModal: !this.state.showDeleteModal})
+            this.setState({currentObject: item})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
         }
-        const deleteItem = () => {
-            dispatch(deleteEmployeeAction(currentObject))
-            this.setState({showDeleteModal: !this.state.showDeleteModal})
+        const deleteItem = (item) => {
+            dispatch(deleteEmployeeAction({...item, history: history}))
         }
+
         const saveItem = (e, v) => {
-            if (currentObject) {
-                v.id = currentObject.id
-            }
-            let employeeDto
-            employeeDto = {
-                fullName: v.fullName,
-                gender: v.gender,
-                phoneNumber: v.phoneNumber,
-                parentPhone: v.parentPhone,
-                avatarId: v.attachmentId,
-                regionId: v.regionId,
-                description: v.description,
-                birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
-                roleName: v.roleName
-            }
-            dispatch(saveEmployeeAction(employeeDto))
+            console.log(currentObject)
+            v.id = currentObject.id
+            v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
+            dispatch(saveEmployeeAction(v))
         }
 
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
-                    <h1>Xodimlar</h1>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
+                    <hgroup className={"course-select-header ml-2"}>
+                        <h3>{currentItem && currentItem.fullName} </h3>
+                        <Link to={"/admin/staffs"} className={"text-decoration-none"}><span
+                            className={""}> Xodimlar</span></Link>
+                    </hgroup>
 
+                    <div
+                        className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-staff-style"}>
+                        <div className="row">
+                            <div className="col-8">
+                                {console.log(currentItem)}
+                                <hgroup>
+                                    <small className={"text-secondary"}>FISH: </small>
+                                    <p className={"d-inline"}> {currentItem.fullName}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Telefon
+                                        raqam: </small>
+                                    <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Tug'ilgan
+                                        sana: </small>
+                                    <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Manzil: </small>
+                                    <p className={"d-inline"}>{currentItem.region && currentItem.region.name}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Kasbi: </small>
+                                    {console.log(currentItem)}
+                                    <p className={"d-inline"}>{currentItem && currentItem.roleName ? currentItem.roleName[0].roleName: ''}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Jinsi: </small>
+                                    <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Tavsif: </small>
+                                    <p className={"d-inline"}> {currentItem.description}</p>
+                                </hgroup>
+                            </div>
+                            <div className="col-4 button-block">
+                                <Button className="table-icon"
+                                        onClick={() => openModal(currentItem)}>
+                                    <EditIcon className="button-icon"/>
+                                </Button>
+                                <Button className="table-icon"
+                                        onClick={() => openDeleteModal(currentItem)}>
+                                    <DeleteIcon className="button-icon"/>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                    <Table className={"table-style"}>
-                        <thead>
-                        <tr className={"text-center"}>
-                            <th>№</th>
-                            <th>ISMI</th>
-                            <th className={"mb-0"}>TELEFON</th>
-                            <th>KASBI</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            employees && employees.length > 0 ? employees.map((item, i) =>
-                                <tr key={i} className={"table-tr"}>
-                                    <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
-                                    <td><Link className={"text-dark"}
-                                              to={"/admin/staff/" + (item.id)}>{item.fullName}</Link>
-                                    </td>
-                                    <td>
-                                        {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
-                                    </td>
-                                    <td>{item.roleName === "ADMIN" ? "Admin" : item.roleName === "RECEPTION" ? "Administrator"  :item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
-                                </tr>
-                            ) : ''}
-                        </tbody>
-                    </Table>
-
-                    <Pagination
-                        activePage={page + 1}
-                        itemsCountPerPage={size}
-                        totalItemsCount={totalElements}
-                        pageRangeDisplayed={5}
-                        onChange={this.handlePageChange.bind(this)} itemClass="page-item"
-                        linkClass="page-link"
-                    />
-
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                         <AvForm className={""} onValidSubmit={saveItem}>
@@ -202,27 +201,10 @@ class Staff extends Component {
     }
 }
 
-Staff.propTypes = {}
+SelectStaff.propTypes = {}
 export default connect(({
-                            app: {
-                                loading,
-                                employees,
-                                showModal,
-                                deleteModal,
-                                regions,
-                                page,
-                                size,
-                                totalElements,
-                            }
+                            app: {loading, history,employees,currentItem, showModal, deleteModal,regions},
                         }) => ({
-        loading,
-        employees,
-        showModal,
-        deleteModal,
-        regions,
-        page,
-        size,
-        totalElements,
-
+        loading, employees, showModal,history,currentItem, deleteModal,regions
     })
-)(Staff);
+)(SelectStaff);

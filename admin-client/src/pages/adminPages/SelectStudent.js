@@ -18,12 +18,8 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, deleteStudentPaymentAction, getCashbackListAction,
-    getGroupsForSelectAction,
-    getPayTypeListAction,
-    getRegionsAction,
-    getStudentAction, getStudentGroupAction, getStudentPaymentAction,
-    saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
+    deleteStudentAction, deleteStudentPaymentAction, getGroupsForSelectAction, getPayTypeListAction, getRegionsAction,
+    getStudentAction, getStudentGroupAction, getStudentPaymentAction, saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -95,6 +91,7 @@ class SelectStudent extends Component {
         }
         const openPaymentModal = (item) => {
             this.setState({currentObject: item, showPaymentModal: !showPaymentModal})
+            dispatch(getStudentGroupAction(this.props.match.params.id));
             dispatch(getPayTypeListAction())
             dispatch({
                 type: "updateState",
@@ -103,6 +100,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openAddGroupModal = (item) => {
             this.props.dispatch(getGroupsForSelectAction())
             this.setState({currentObject: item})
@@ -113,6 +111,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -122,6 +121,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const openStudentPayDelModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -131,6 +131,7 @@ class SelectStudent extends Component {
                 }
             })
         }
+
         const deleteItem = (item) => {
             dispatch(deleteStudentAction({...item, history: history}))
         }
@@ -161,11 +162,11 @@ class SelectStudent extends Component {
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
-                    v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('DD-MM-YYYY hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
-                    v.birthDate = moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString()
+                    v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
                     dispatch(saveStudentAction(v))
                 }
             }
@@ -180,8 +181,10 @@ class SelectStudent extends Component {
                     v.id = currentObject.id
                     v.groupId = addGroup;
                     v.studentId = this.props.match.params.id;
-                    v.payDate = moment(v.payDate).format('YYYY/MM/DD hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('DD-MM-YYYY hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
+                    dispatch(getStudentPaymentAction(this.props.match.params.id))
+
                 }
             }
         }
@@ -416,23 +419,22 @@ class SelectStudent extends Component {
                                         />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
-                                            // defaultValue={currentObject ? currentObject.gender : ""}
+                                            defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                       label="" required className="pay-form-style d-block"
                                                       errorMessage="Birini tanlang!">
+
                                             {payTypes ? payTypes.map((item, i) =>
                                                 <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
                                             ) : ""}
                                         </AvRadioGroup>
                                         <AvField
-                                            // defaultValue={currentObject ? currentObject.phoneNumber : ""}
-                                            type={"number"} id={"price"}
+                                            defaultValue={currentObject ? currentObject.sum : ""}
+                                            type={"number"}
                                             label={"So'm"} name={"sum"} className={"form-control"}
                                             placeholer={""} required/>
-
-
                                         <AvField
                                             type={"datetime-local"}
-                                            defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('YYYY-MM-DD')
+                                            defaultValue={currentObject && currentObject.name ? moment(currentObject.payDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
                                             required/>
@@ -461,7 +463,7 @@ class SelectStudent extends Component {
                                             placeholer={"nomi"}/>
                                         <AvField
                                             type={"date"}
-                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('YYYY-MM-DD')
+                                            defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                             required/>
@@ -508,14 +510,12 @@ class SelectStudent extends Component {
                                     disabled={showPaymentEditModal}
                                     type={"text"}
                                     label={"FISH"} name={"fullName"} className={"form-control"}
-                                    placeholer={"nomi"} required/>
-
+                                    placeholer={"nomi"} disabled/>
                                 <>
-                                    {console.log(selectGroups)}
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
                                             value: currentObject.group.id,
-                                            label: (currentObject.group.name)
+                                            label: (currentObject.group.name + " ["+ currentObject.group.course.name +"]")
                                         }}
                                         placeholder="Guruhni tanlang..."
                                         name="groupId"
@@ -536,7 +536,6 @@ class SelectStudent extends Component {
                                             <AvRadio key={i} className="d-block" label={item.name} value={item.id}/>
                                         ) : ""}
                                     </AvRadioGroup>
-                                    {console.log(currentObject)}
                                     <AvField
                                         defaultValue={currentObject ? currentObject.sum : ""}
                                         type={"number"}
@@ -544,7 +543,7 @@ class SelectStudent extends Component {
                                         placeholer={""} required/>
                                     <AvField
                                         type={"datetime-local"}
-                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.payDate).format('YYYY-MM-DD hh:mm:ss')
+                                        defaultValue={currentObject && currentObject.payDate ? moment(currentObject.payDate).format('DD-MM-YYYY hh:mm:ss')
                                             : ""}
                                         label={"Tolov qilingan sana"} name={"payDate"} className={"form-control"}
                                         required/>
@@ -561,7 +560,6 @@ class SelectStudent extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
                 <Modal isOpen={showAddGroupModal} toggle={openAddGroupModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveAddGroup}>
                         <ModalHeader isOpen={showAddGroupModal} toggle={openAddGroupModal} charCode="X">

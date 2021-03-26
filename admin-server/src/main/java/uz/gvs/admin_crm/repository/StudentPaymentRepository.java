@@ -36,6 +36,9 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
     @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2")
     Integer getStudentPaymentByDateCount(Date date1, Date date2);
 
-//    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 ")
-//    Integer getByDateCount(Date date1, Date date2);
+    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 ")
+    Integer getByDateCount(Date date1, Date date2);
+
+    @Query(nativeQuery = true, value = "select concat(u.full_name,' / ',u.phone_number) as student, sp.sum as tolov, sp.cash_sum as kashbeck, (sp.sum+sp.cash_sum) as barcha, cast(TO_CHAR(cast(sp.pay_date as date), 'yyyy-MM-dd hh:mi') as varchar) as vaqt,cast(TO_CHAR(cast(sp.pay_date as date), 'yyyy-MM-dd') as varchar) as date_vaqt, pt.name as tolov_usuli, concat(g.name,' • ', c.name) as guruh  from student_payment sp inner join student s on s.id = sp.student_id inner join groups g on g.id = sp.group_id inner join course c on c.id=g.course_id inner join users u on u.id = s.user_id inner join pay_type pt on pt.id = sp.pay_type_id where sp.pay_date between cast(:start_vaqt as date) and cast(:finish_vaqt as date) order by sp.pay_date")
+    List<Object> getStudentPaymentForExcel(String start_vaqt, String finish_vaqt);
 }

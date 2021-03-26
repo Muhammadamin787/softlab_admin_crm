@@ -78,18 +78,6 @@ public class GroupController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
-    @PatchMapping("/changeToArchiveStatus")
-    public HttpEntity<?> changeToArchiveStatus(@RequestBody GroupDto groupDto) {
-        ApiResponse apiResponse = groupService.changeToArchiveStatus(groupDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
-
-    @PatchMapping("/changeToActiveStatus")
-    public HttpEntity<?> changeToActiveStatus(@RequestBody GroupDto groupDto) {
-        ApiResponse apiResponse = groupService.changeToActiveStatus(groupDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
-    }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteGroup(@PathVariable Integer id) {
