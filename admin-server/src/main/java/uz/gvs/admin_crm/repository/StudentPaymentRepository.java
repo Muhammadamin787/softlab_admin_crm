@@ -24,17 +24,17 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
     @Query(nativeQuery = true, value = "select count(*) from student_payment sp where sp.cashback_id is not null")
     Integer getStudentPaymentByCashbackCount();
 
-    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= :date1 and sp.pay_date < :date2 order by sp.created_at desc limit :size offset (:size * :page)")
-    List<StudentPayment> getByDate(Date date1, Date date2, int size, int page);
+    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= cast(:date1 as date) and sp.pay_date < cast(:date2 as date) order by sp.created_at desc limit :size offset (:size * :page)")
+    List<StudentPayment> getByDate(String date1, String date2, int size, int page);
 
-    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= :date1 and sp.pay_date < :date2 and sp.cashback_id is not null order by sp.created_at desc limit :size offset (:size * :page)")
-    List<StudentPayment> getByDateAndCashback(Date date1, Date date2, int size, int page);
+    @Query(nativeQuery = true, value = "select * from student_payment sp where sp.pay_date >= cast(:date1 as date) and sp.pay_date < cast(:date2 as date) and sp.cashback_id is not null order by sp.created_at desc limit :size offset (:size * :page)")
+    List<StudentPayment> getByDateAndCashback(String date1, String date2, int size, int page);
 
-    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 and cashback_id is not null")
-    Integer getByDateAndCashbackCount(Date date1, Date date2);
+    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= cast(:date1 as date) and pay_date < cast(:date2 as date) and cashback_id is not null")
+    Integer getByDateAndCashbackCount(String date1, String date2);
 
-    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2")
-    Integer getStudentPaymentByDateCount(Date date1, Date date2);
+    @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= cast(:date1 as date) and pay_date < cast(:date2 as date)")
+    Integer getStudentPaymentByDateCount(String date1, String date2);
 
     @Query(nativeQuery = true, value = "select count(*) from student_payment where pay_date >= :date1 and pay_date < :date2 ")
     Integer getByDateCount(Date date1, Date date2);

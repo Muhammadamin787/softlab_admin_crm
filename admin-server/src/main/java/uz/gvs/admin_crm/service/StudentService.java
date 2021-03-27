@@ -466,34 +466,34 @@ public class StudentService {
 
     public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
         try {
-            Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
-            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+            Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
+            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
                 case "all":
-                    List<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<StudentPayment> all = studentPaymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(studentPaymentRepository.getStudentPaymentByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(studentPaymentRepository.getStudentPaymentByDateCount(data1, data2)),
                                     page,
                                     size,
                                     all.stream().map(this::makeStudentPaymentDto).collect(Collectors.toList())
                             )
                     );
                 case "byCashbacks":
-                    List<StudentPayment> byCashback = studentPaymentRepository.getByDateAndCashback(firstDate, secondDate, page, size);
+                    List<StudentPayment> byCashback = studentPaymentRepository.getByDateAndCashback(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(studentPaymentRepository.getByDateAndCashbackCount(firstDate, secondDate)),
+                                    Long.valueOf(studentPaymentRepository.getByDateAndCashbackCount(data1, data2)),
                                     page,
                                     size,
                                     byCashback.stream().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
                             )
                     );
                 case "getPrice":
-                    List<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<Payment> getPrice = paymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(paymentRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(paymentRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
                                     getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())

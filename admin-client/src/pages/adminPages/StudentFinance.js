@@ -79,8 +79,9 @@ class StudentFinance extends Component {
             dispatch(getStudentPaymentListByDateAction({
                 page: 0,
                 size: this.props.size,
-                date1: v.date1,
-                date2: v.date2,
+                date1: moment(v.date1).format('YYYY-MM-DD').toString(),
+                date2: moment(v.date2).format('YYYY-MM-DD').toString(),
+
                 type: this.state.type
             }))
         }

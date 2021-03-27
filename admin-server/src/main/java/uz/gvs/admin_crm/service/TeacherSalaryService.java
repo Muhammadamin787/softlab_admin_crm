@@ -195,26 +195,26 @@ public class TeacherSalaryService {
         }
     }
 
-    public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
+    public ApiResponse getTeacherPaymentByDate(int size, int page, String data1, String data2, String type) {
         try {
             java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
             Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
                 case "minusSalary":
-                    List<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate, secondDate, page, size);
+                    List<TeacherSalary> all = teacherSalaryRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(teacherSalaryRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(teacherSalaryRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
                                     all.stream().map(this::makeSalaryList).collect(Collectors.toList())
                             )
                     );
                 case "plusSalary":
-                    List<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<Payment> getPrice = paymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(paymentRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(paymentRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
                                     getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())
