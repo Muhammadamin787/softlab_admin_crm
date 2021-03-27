@@ -7,7 +7,7 @@ function LogoIcon() {
             <path
                 d="M68.7471 23.6055L71.4814 10.2266H74.5454L70.4438 28H67.4897L64.1084 15.0239L60.6538 28H57.6875L53.5859 10.2266H56.6499L59.4087 23.5811L62.8022 10.2266H65.3901L68.7471 23.6055ZM75.5708 21.2739C75.5708 19.98 75.8271 18.8162 76.3398 17.7827C76.8525 16.741 77.5728 15.9435 78.5005 15.3901C79.4282 14.8286 80.4943 14.5479 81.6987 14.5479C83.481 14.5479 84.9255 15.1216 86.0322 16.269C87.1471 17.4165 87.7493 18.9383 87.8389 20.8345L87.8511 21.5303C87.8511 22.8324 87.5988 23.9961 87.0942 25.0215C86.5978 26.0469 85.8817 26.8403 84.9458 27.4019C84.0181 27.9634 82.9438 28.2441 81.7231 28.2441C79.8595 28.2441 78.3662 27.6257 77.2432 26.3887C76.1283 25.1436 75.5708 23.4875 75.5708 21.4204V21.2739ZM78.5371 21.5303C78.5371 22.8893 78.8179 23.9554 79.3794 24.7285C79.9409 25.4935 80.7222 25.876 81.7231 25.876C82.7241 25.876 83.5013 25.4854 84.0547 24.7041C84.6162 23.9229 84.897 22.7795 84.897 21.2739C84.897 19.9393 84.6081 18.8813 84.0303 18.1001C83.4606 17.3188 82.6834 16.9282 81.6987 16.9282C80.7303 16.9282 79.9613 17.3148 79.3916 18.0879C78.8219 18.8529 78.5371 20.0003 78.5371 21.5303ZM97.2749 17.502C96.8843 17.4368 96.4814 17.4043 96.0664 17.4043C94.7074 17.4043 93.7918 17.9251 93.3198 18.9668V28H90.3535V14.792H93.1855L93.2588 16.269C93.9749 15.1216 94.9678 14.5479 96.2373 14.5479C96.6605 14.5479 97.0104 14.6048 97.2871 14.7188L97.2749 17.502ZM103.439 22.3359L102.121 23.6909V28H99.1548V9.25H102.121V20.0654L103.049 18.9058L106.699 14.792H110.263L105.356 20.2974L110.788 28H107.358L103.439 22.3359ZM120.761 11.606C119.931 11.492 119.215 11.4351 118.613 11.4351C117.018 11.4351 116.22 12.1838 116.22 13.6812V14.792H118.906V16.9893H116.22V28H113.254V16.9893H111.24V14.792H113.254V13.6079C113.262 12.1187 113.701 10.9793 114.572 10.1899C115.451 9.39242 116.688 8.99365 118.283 8.99365C119.276 8.99365 121.091 9.18896 123.728 9.57959V28H120.761V11.606ZM126.45 21.2739C126.45 19.98 126.706 18.8162 127.219 17.7827C127.731 16.741 128.452 15.9435 129.379 15.3901C130.307 14.8286 131.373 14.5479 132.578 14.5479C134.36 14.5479 135.804 15.1216 136.911 16.269C138.026 17.4165 138.628 18.9383 138.718 20.8345L138.73 21.5303C138.73 22.8324 138.478 23.9961 137.973 25.0215C137.477 26.0469 136.761 26.8403 135.825 27.4019C134.897 27.9634 133.823 28.2441 132.602 28.2441C130.738 28.2441 129.245 27.6257 128.122 26.3887C127.007 25.1436 126.45 23.4875 126.45 21.4204V21.2739ZM129.416 21.5303C129.416 22.8893 129.697 23.9554 130.258 24.7285C130.82 25.4935 131.601 25.876 132.602 25.876C133.603 25.876 134.38 25.4854 134.934 24.7041C135.495 23.9229 135.776 22.7795 135.776 21.2739C135.776 19.9393 135.487 18.8813 134.909 18.1001C134.34 17.3188 133.562 16.9282 132.578 16.9282C131.609 16.9282 130.84 17.3148 130.271 18.0879C129.701 18.8529 129.416 20.0003 129.416 21.5303ZM152.841 23.9106L154.941 14.792H157.834L154.233 28H151.792L148.959 18.9302L146.176 28H143.735L140.122 14.792H143.015L145.151 23.813L147.861 14.792H150.095L152.841 23.9106Z"
                 fill="#313E47"/>
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M35.3747   4.60635C35.3747 7.15037 33.1053 9.21271 30.3059 9.21271C27.5065 9.21271 25.2371 7.15037 25.2371 4.60635C25.2371 2.06234 27.5065 0 30.3059 0C33.1053 0 35.3747 2.06234 35.3747 4.60635ZM43.9998 17.9354C43.9998 20.4794 41.7304 22.5418 38.931 22.5418C36.1316 22.5418 33.8622 20.4794 33.8622 17.9354C33.8622 15.3914 36.1316 13.3291 38.931 13.3291C41.7304 13.3291 43.9998 15.3914 43.9998 17.9354ZM30.7369 35.871C33.5364 35.871 35.8057 33.8087 35.8057 31.2647C35.8057 28.7206 33.5364 26.6583 30.7369 26.6583C27.9375 26.6583 25.6681 28.7206 25.6681 31.2647C25.6681 33.8087 27.9375 35.871 30.7369 35.871ZM10.1376 17.9354C10.1376 20.4794 7.86822 22.5418 5.0688 22.5418C2.26938 22.5418 0 20.4794 0 17.9354C0 15.3914 2.26938 13.3291 5.0688 13.3291C7.86822 13.3291 10.1376 15.3914 10.1376 17.9354ZM16.384 17.9349C16.384 17.6355 16.4141 17.3424 16.4719 17.0581L16.4585 17.0656C16.3681 13.9978 14.6991 11.0048 11.6816 9.14696C11.4139 8.98211 11.141 8.82958 10.8638 8.68923L10.8239 8.62002C8.5379 7.1789 7.93542 4.33801 9.48316 2.24893C11.0416 0.145445 14.1898 -0.399279 16.5149 1.03225C18.085 1.9989 18.8783 3.6195 18.7481 5.21778C18.8623 8.20383 20.2652 11.1214 22.7991 13.2427C25.1531 13.709 26.9211 15.601 26.9525 17.8733C26.9926 18.8507 26.7057 19.8461 26.061 20.7164C25.4232 21.5773 24.5299 22.1877 23.5335 22.5214C20.8981 24.3083 19.1917 27.1639 19.1917 30.3817C19.1917 30.6751 19.2059 30.9654 19.2336 31.2522L19.1907 31.3243C19.1553 33.8407 16.8997 35.8706 14.1223 35.8706C11.3229 35.8706 9.0535 33.8083 9.0535 31.2643C9.0535 29.54 10.096 28.037 11.6395 27.2474C14.3349 25.4741 16.2216 22.748 16.7015 19.6129C16.5399 19.2039 16.4395 18.7772 16.403 18.3451C16.3904 18.2099 16.384 18.0731 16.384 17.9349Z"
                   fill="#04A6FB"/>
         </svg>
@@ -35,12 +35,12 @@ function WarehouseIcon() {
 function ToggleIcon(props) {
     return (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.5 10H17.5" stroke="#313E47" stroke-width="1.66667" stroke-linecap="round"
-                  stroke-linejoin="round"/>
-            <path d="M2.5 5H17.5" stroke="#313E47" stroke-width="1.66667" stroke-linecap="round"
-                  stroke-linejoin="round"/>
-            <path d="M2.5 15H17.5" stroke="#313E47" stroke-width="1.66667" stroke-linecap="round"
-                  stroke-linejoin="round"/>
+            <path d="M2.5 10H17.5" stroke="#313E47" strokeWidth="1.66667" strokeLinecap="round"
+                  strokeLinejoin="round"/>
+            <path d="M2.5 5H17.5" stroke="#313E47" strokeWidth="1.66667" strokeLinecap="round"
+                  strokeLinejoin="round"/>
+            <path d="M2.5 15H17.5" stroke="#313E47" strokeWidth="1.66667" strokeLinecap="round"
+                  strokeLinejoin="round"/>
         </svg>
 
     )
@@ -54,34 +54,34 @@ function LogoMiniIcon(props) {
             <ellipse cx="38.9301" cy="18.9355" rx="5.0688" ry="4.60635" fill="url(#paint1_linear)"/>
             <ellipse cx="30.7368" cy="32.2646" rx="5.0688" ry="4.60635" fill="url(#paint2_linear)"/>
             <ellipse cx="5.0688" cy="18.9355" rx="5.0688" ry="4.60635" fill="url(#paint3_linear)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M17.8474 16.8246C17.7897 17.1089 17.7595 17.402 17.7595 17.7015C17.7595 17.8396 17.7659 17.9764 17.7785 18.1116C17.815 18.5437 17.9154 18.9705 18.077 19.3794C17.5972 22.5145 15.7104 25.2406 13.015 27.0139C11.4715 27.8035 10.429 29.3065 10.429 31.0308C10.429 33.5748 12.6984 35.6371 15.4978 35.6371C18.2752 35.6371 20.5308 33.6072 20.5662 31.0909L20.6092 31.0188C20.5814 30.732 20.5672 30.4416 20.5672 30.1482C20.5672 26.9304 22.2736 24.0748 24.909 22.2879C25.9055 21.9542 26.7987 21.3438 27.4365 20.4829C28.0813 19.6127 28.3681 18.6173 28.3281 17.6398C28.2966 15.3676 26.5286 13.4755 24.1746 13.0093C21.6408 10.8879 20.2378 7.97036 20.1236 4.98431C20.2538 3.38604 19.4605 1.76543 17.8905 0.79878C15.5653 -0.632747 12.4171 -0.0880226 10.8587 2.01546C9.31095 4.10454 9.91343 6.94543 12.1995 8.38656L12.2393 8.45576C12.5165 8.59612 12.7894 8.74865 13.0572 8.9135C16.0747 10.7713 17.7436 13.7643 17.8341 16.8322L17.8474 16.8246Z"
                   fill="url(#paint4_linear)"/>
             <defs>
                 <linearGradient id="paint0_linear" x1="30.3051" y1="1" x2="30.3051" y2="10.2127"
                                 gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#1455B5"/>
-                    <stop offset="1" stop-color="#2ECFFF"/>
+                    <stop stopColor="#1455B5"/>
+                    <stop offset="1" stopColor="#2ECFFF"/>
                 </linearGradient>
                 <linearGradient id="paint1_linear" x1="38.9301" y1="14.3291" x2="38.9301"
                                 y2="23.5418" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#1455B5"/>
-                    <stop offset="1" stop-color="#2ECFFF"/>
+                    <stop stopColor="#1455B5"/>
+                    <stop offset="1" stopColor="#2ECFFF"/>
                 </linearGradient>
                 <linearGradient id="paint2_linear" x1="30.7368" y1="27.6582" x2="30.7368"
                                 y2="36.8709" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#1455B5"/>
-                    <stop offset="1" stop-color="#2ECFFF"/>
+                    <stop stopColor="#1455B5"/>
+                    <stop offset="1" stopColor="#2ECFFF"/>
                 </linearGradient>
                 <linearGradient id="paint3_linear" x1="5.0688" y1="14.3291" x2="5.0688" y2="23.5418"
                                 gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#1455B5"/>
-                    <stop offset="1" stop-color="#2ECFFF"/>
+                    <stop stopColor="#1455B5"/>
+                    <stop offset="1" stopColor="#2ECFFF"/>
                 </linearGradient>
                 <linearGradient id="paint4_linear" x1="19.1659" y1="0" x2="19.1659" y2="35.6371"
                                 gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#1455B5"/>
-                    <stop offset="1" stop-color="#2ECFFF"/>
+                    <stop stopColor="#1455B5"/>
+                    <stop offset="1" stopColor="#2ECFFF"/>
                 </linearGradient>
             </defs>
         </svg>
@@ -94,14 +94,14 @@ function DashboardIcon(props) {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M10 3H14V21H10V3Z"
                   stroke={props.color}
-                  stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+                  strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evienodd" clipRule="evenodd" d="M18 8H22V21H18V8Z"
-                  stroke={props.color} stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+                  stroke={props.color} strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M2 13H6V21H2V13Z"
-                  stroke={props.color} stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+                  stroke={props.color} strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
     );
@@ -119,14 +119,14 @@ function EditIcon(props) {
 
 function GlobusIcon(props) {
     return (<svg width="24" height="24" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M7.00033 12.8333C10.222 12.8333 12.8337 10.2216 12.8337 6.99996C12.8337 3.7783 10.222 1.16663 7.00033 1.16663C3.77866 1.16663 1.16699 3.7783 1.16699 6.99996C1.16699 10.2216 3.77866 12.8333 7.00033 12.8333Z"
-                  stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M1.16699 7H12.8337" stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round"
-                  stroke-linejoin="round"/>
-            <path fill-rule="evenodd" clip-rule="evenodd"
+                  stroke="#D0D1D2" strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M1.16699 7H12.8337" stroke="#D0D1D2" strokeWidth="1.16667" strokeLinecap="round"
+                  strokeLinejoin="round"/>
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M7.00033 1.16663C8.45941 2.764 9.2886 4.83698 9.33366 6.99996C9.2886 9.16294 8.45941 11.2359 7.00033 12.8333C5.54125 11.2359 4.71205 9.16294 4.66699 6.99996C4.71205 4.83698 5.54125 2.764 7.00033 1.16663V1.16663Z"
-                  stroke="#D0D1D2" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+                  stroke="#D0D1D2" strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
     );
@@ -137,7 +137,7 @@ function DeleteIcon(props) {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M10 11V17M14 11V17M4 7H20M19 7L18.133 19.142C18.0971 19.6466 17.8713 20.1188 17.5011 20.4636C17.1309 20.8083 16.6439 21 16.138 21H7.862C7.35614 21 6.86907 20.8083 6.49889 20.4636C6.1287 20.1188 5.90292 19.6466 5.867 19.142L5 7H19ZM15 7V4C15 3.73478 14.8946 3.48043 14.7071 3.29289C14.5196 3.10536 14.2652 3 14 3H10C9.73478 3 9.48043 3.10536 9.29289 3.29289C9.10536 3.48043 9 3.73478 9 4V7H15Z"
-                stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                stroke="#dc3545" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
     );
@@ -160,7 +160,7 @@ function UserIcon(props) {
 function HisobotIcon(props) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M5 1H15.4142L21 6.58579V21C21 22.1046 20.1046 23 19 23H5C3.89543 23 3 22.1046 3 21V3C3 1.89543 3.89543 1 5 1ZM13 3H5V21H19V9H15C13.8954 9 13 8.10457 13 7V3ZM15 3.41421V7H18.5858L15 3.41421Z"
                   stroke={props.color}
                   fill={props.color}
@@ -185,10 +185,10 @@ function RegionIcon(props) {
 function MessageIcon(props) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M21 15C21 16.1046 20.1046 17 19 17H7L3 21V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15Z"
                   stroke={props.color}
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
 
@@ -212,12 +212,12 @@ function HourIcon(props) {
                   d="M6.99984 12.8333C10.2215 12.8333 12.8332 10.2216 12.8332 6.99996C12.8332 3.7783 10.2215 1.16663 6.99984 1.16663C3.77818 1.16663 1.1665 3.7783 1.1665 6.99996C1.1665 10.2216 3.77818 12.8333 6.99984 12.8333Z"
                   stroke={props.color}
                 // stroke="#D0D1D2"
-                  stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+                  strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M7 3.5V7L8.75 8.75"
                   stroke={props.color}
                 // stroke="#D0D1D2"
-                  stroke-width="1.16667" stroke-linecap="round"
-                  stroke-linejoin="round"/>
+                  strokeWidth="1.16667" strokeLinecap="round"
+                  strokeLinejoin="round"/>
         </svg>
 
 
@@ -234,8 +234,8 @@ function AddSectionIcon() {
             <path d="M26 22V16H28V22H34V24H28V30H26V24H20V22H26Z" fill="white"/>
             <defs>
                 <filter id="filter0_d" x="0" y="0" width="53" height="53" filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB">
-                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix"/>
                     <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
                     <feOffset dy="4"/>
                     <feGaussianBlur stdDeviation="2"/>
@@ -257,7 +257,7 @@ function BrandIcon() {
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M13 10.3333C10.1343 10.3333 8.70149 11.6667 8.70149 14.3333C8.70149 16.3333 10.8421 19.0467 13 21.6667C14.4328 23 15.1493 23.6667 16.5821 24.3333C18.0149 25 20.1642 25.6667 23.0299 23.6667C25.8955 21.6667 25.1791 19 23.7463 15.6667C22.3134 12.3333 20.4035 8.33333 16.5821 3C15.3871 1.66667 14.4328 1 12.9957 1C11.5629 1 10.6702 1.6 9.41791 3C5.59654 8.33333 3.68657 12.3333 2.25373 15.6667C0.820896 19 0.104478 21.6667 2.97015 23.6667C5.83582 25.6667 7.98507 25 9.41791 24.3333C10.8507 23.6667 11.5672 23 13 21.6667C15.1579 19.0467 17.2985 16.3333 17.2985 14.3333C17.2985 11.6667 15.8657 10.3333 13 10.3333Z"
-                stroke="black" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                stroke="black" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     );
 }
@@ -279,14 +279,14 @@ function ShowIcon() {
 function BgIcon() {
     return (
         <svg width="394" height="154" viewBox="0 0 394 154" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M-75 144.694L36.5146 68.2889L174.471 103.696L266.442 29.1544L382.555 86.9243L555 -40.7285V199.669H-75V144.694Z"
                   fill="url(#paint0_radial)"/>
             <defs>
                 <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
                                 gradientTransform="translate(240 30.1856) rotate(90) scale(158.042 414.176)">
-                    <stop stop-color="white" stop-opacity="0.401825"/>
-                    <stop offset="1" stop-color="#3EC566" stop-opacity="0.0356753"/>
+                    <stop stopColor="white" stopOpacity="0.401825"/>
+                    <stop offset="1" stopColor="#3EC566" stopOpacity="0.0356753"/>
                 </radialGradient>
             </defs>
         </svg>

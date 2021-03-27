@@ -1,25 +1,19 @@
 import React, {Component} from 'react';
 import {
-    changeAppalTypeAction, changeAppalTypeByToplamAction,
-    deleteReklamaAction,
+     changeAppalTypeByToplamAction,
     getAppealListByEnumTypeAction, getClientStatusListForSelectAction,
     getCourseListForSelectAction,
-    getCoursesAction,
-    getOneAppeal,
     getOneToplamAction,
-    getReklamaAction,
     getTeachersForSelectAction,
-    getToplamListAction, getToplamListForSelectAction,
-    saveReklamaAction,
+     getToplamListForSelectAction,
     saveToplamAction
 } from "../../redux/actions/AppActions";
-import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {connect} from "react-redux";
 import {AvForm, AvField, AvCheckbox, AvCheckboxGroup} from "availity-reactstrap-validation"
 import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
-import Pagination from "react-js-pagination";
 import {formatPhoneNumber, formatSelectList} from "../../utils/addFunctions";
 import Select from "react-select";
 import {Link} from "react-router-dom";

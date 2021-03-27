@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, deleteCourseCategoryAction, getCourseCategoriesAction, getCourseCategoryAction,
+    deleteCourseCategoryAction, getCourseCategoriesAction, getCourseCategoryAction,
     getCoursesAction,
     saveCourseAction, saveCourseCategoryAction,
 } from "../../redux/actions/AppActions";

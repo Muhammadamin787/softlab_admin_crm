@@ -336,6 +336,12 @@ class Teacher extends Component {
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
