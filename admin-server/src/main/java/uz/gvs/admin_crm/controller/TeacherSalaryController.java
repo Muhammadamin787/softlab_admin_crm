@@ -73,6 +73,6 @@ public class TeacherSalaryController {
                                                  @RequestParam(value = "date2", defaultValue = "") String data2,
                                                  @RequestParam(value = "type", defaultValue = "minusSalary")String type) {
         ApiResponse apiResponse = service.getTeacherPaymentByDate(size, page, data1, data2,type);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+            return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }

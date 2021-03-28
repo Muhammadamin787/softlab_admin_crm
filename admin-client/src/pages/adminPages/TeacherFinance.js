@@ -64,8 +64,8 @@ class TeacherFinance extends Component {
             dispatch(getTeacherPaymentListByDateAction({
                 page: 0,
                 size: this.props.size,
-                date1: v.date1,
-                date2: v.date2,
+                date1: moment(v.date1).format('YYYY-MM-DD').toString(),
+                date2: moment(v.date2).format('YYYY-MM-DD').toString(),
                 type: this.state.type
             }))
         }
@@ -185,7 +185,7 @@ class TeacherFinance extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{item.amountTeacher}</td>
-                                                <td>{moment(item.payDate).format('LLL').toString()}</td>
+                                                <td>{moment(item.attendance && item.attendance.attendDate).format('LLL').toString()}23</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
 
                                             </tr>
