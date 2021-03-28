@@ -466,7 +466,7 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                            required/>
+                                            />
                                         <AvField className={'form-control'} label={'Hudud:'} type="select"
                                                  name="regionId"
                                                  defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>

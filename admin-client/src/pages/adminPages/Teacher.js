@@ -348,7 +348,7 @@ class Teacher extends Component {
                                         defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        required/>
+                                        />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
