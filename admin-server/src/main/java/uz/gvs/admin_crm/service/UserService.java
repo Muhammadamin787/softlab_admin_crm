@@ -43,7 +43,7 @@ public class UserService {
             user.setFullName(userDto.getFullName());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setDescription(userDto.getDescription());
-            user.setRegion(userDto.getRegionId() != null ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
+            user.setRegion(userDto.getRegionId() != null && userDto.getRegionId() != 0 ? regionRepository.findById(userDto.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("get region")) : null);
             user.setGender(Gender.valueOf(userDto.getGender()));
             user.setStatus(roleName.equals(RoleName.STUDENT) ? UserStatusEnum.DEFAULT : UserStatusEnum.ACTIVE);
             user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
@@ -60,7 +60,7 @@ public class UserService {
         return !userRepository.existsByPhoneNumber(phoneNumber);
     }
 
-    public User editUser(UserDto userDto, User user,RoleName roleName) {
+    public User editUser(UserDto userDto, User user, RoleName roleName) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             user.setFullName(userDto.getFullName());
@@ -71,7 +71,7 @@ public class UserService {
             user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
             user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
             return userRepository.save(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

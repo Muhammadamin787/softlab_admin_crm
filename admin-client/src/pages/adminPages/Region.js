@@ -27,7 +27,7 @@ class Region extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, loading, regions, selectItems} = this.props;
+        const {dispatch, showModal, deleteModal, regions} = this.props;
 
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -49,11 +49,6 @@ class Region extends Component {
         }
         const deleteItem = (item) => {
             dispatch(deleteRegionAction(item))
-        }
-        const parentRegion = (e, v) => {
-            if (e && e.value) {
-                this.setState({selectParentRegion: e.value})
-            }
         }
         const saveItem = (e, v) => {
             if (v.regionId === "0") {

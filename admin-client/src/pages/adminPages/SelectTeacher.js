@@ -469,24 +469,6 @@ class SelectTeacher extends Component {
                     </ModalFooter>
                 </Modal>
 
-
-                <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                    <AvForm className={""} onValidSubmit={saveItem}>
-                        <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
-                            {currentObject && currentObject.id ? "Tahrirlash" : "Yangi o'qituvchi qo'shish"}
-                        </ModalHeader>
-                        <ModalBody>
-                            <div className={"w-100 modal-form"}>
-
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                            <Button color="primary">Saqlash</Button>
-                        </ModalFooter>
-                    </AvForm>
-                </Modal>
-
                 <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
@@ -516,7 +498,7 @@ class SelectTeacher extends Component {
                                     defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                    required/>
+                                    />
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>

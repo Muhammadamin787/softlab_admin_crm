@@ -23,8 +23,11 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     boolean deleteByBalans(double balans);
 
-    @Query(nativeQuery = true, value="select cast(u.id as varchar) from users u  where u.phone_number=:telefon_raqam")
+    @Query(nativeQuery = true, value="select cast(s.id as varchar) from student s inner join users u on u.id = s.user_id where u.phone_number=:telefon_raqam")
     String getStudentId(String telefon_raqam);
+
+    @Query(nativeQuery = true, value="select cast(u.id as varchar) from users u where u.phone_number=:telefon_raqam")
+    String existsPhoneNumber(String telefon_raqam);
 
     @Query(nativeQuery = true, value = "select cast(st.id as varchar ),concat(ur.full_name, ' / ', ur.phone_number) from student st inner join users ur on st.user_id = ur.id where (case when length(coalesce((select cast(ssg.student_group_id as varchar) from student_student_group ssg where ssg.student_id=st.id),''))>0 then :guruh_id<>any(select sg.group_id from student_group sg where (select  ssg.student_group_id from student_student_group ssg where ssg.student_id=st.id)=sg.id) else true end) and  (LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%'))  limit 10")
     List<Object> searchStudent(String objName, Integer guruh_id);

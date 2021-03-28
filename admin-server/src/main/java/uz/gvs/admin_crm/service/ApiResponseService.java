@@ -10,6 +10,10 @@ public class ApiResponseService {
         return new ApiResponse(MessageConst.SAVED_MESSAGE, true);
     }
 
+    public ApiResponse saveResponse(Object object) {
+        return new ApiResponse(MessageConst.SAVED_MESSAGE, true, object);
+    }
+
     public ApiResponse existResponse() {
         return new ApiResponse(MessageConst.EXISTS_MESSAGE, false);
     }

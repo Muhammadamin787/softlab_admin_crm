@@ -1,20 +1,15 @@
 import React, {Component} from 'react';
 import {
-    deleteReklamaAction,
     deleteToplamAction,
     getAppealListByEnumTypeAction,
     getCourseListForSelectAction,
-    getCoursesAction,
-    getReklamaAction,
     getTeachersForSelectAction,
     getToplamListAction,
-    saveReklamaAction,
     saveToplamAction
 } from "../../redux/actions/AppActions";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {connect} from "react-redux";
 import {AvForm, AvField, AvCheckbox, AvCheckboxGroup} from "availity-reactstrap-validation"
-import {toast} from "react-toastify";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import Pagination from "react-js-pagination";
@@ -50,9 +45,9 @@ class Toplam extends Component {
 
     render() {
         const {
-            dispatch, showModal, deleteModal, reklamas, toplamList, size,
+            dispatch, showModal, deleteModal, toplamList, size,
             page,
-            totalElements, selectItems, teachers, getItems
+            totalElements, teachers, getItems
         } = this.props
         const {currentObject} = this.state
 
@@ -88,10 +83,10 @@ class Toplam extends Component {
             dispatch(deleteToplamAction(currentObject))
             this.setState({deleteModal: !this.state.deleteModal})
         }
-        const setToplamCourse = (e, v) => {
+        const setToplamCourse = (e) => {
             this.setState({courseId: e.value})
         }
-        const setToplamTeacher = (e, v) => {
+        const setToplamTeacher = (e) => {
             this.setState({teacherId: e.value})
         }
 
@@ -166,7 +161,7 @@ class Toplam extends Component {
                                         defaultValue={currentObject && currentObject.courseId ? {
                                             value: currentObject.courseId,
                                             label: (currentObject.courseName)
-                                        }: ""}
+                                        } : ""}
                                         placeholder="Kursni tanlang..."
                                         name="courseId"
                                         isSearchable={true}
@@ -187,14 +182,14 @@ class Toplam extends Component {
                                     <Select defaultValue={currentObject && currentObject.teacherId ? {
                                         value: currentObject.teacherId,
                                         label: (currentObject.teacherName)
-                                    }: ""}
-                                        placeholder="O'qituvchini tanlang..."
-                                        name="teacherId"
-                                        isSearchable={true}
-                                        options={teachers && teachers.length > 0 && formatSelectList(teachers)}
-                                        onChange={setToplamTeacher}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
+                                    } : ""}
+                                            placeholder="O'qituvchini tanlang..."
+                                            name="teacherId"
+                                            isSearchable={true}
+                                            options={teachers && teachers.length > 0 ? formatSelectList(teachers) : []}
+                                            onChange={setToplamTeacher}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
                                     />
                                     <AvField type="time"
                                              defaultValue={currentObject ? currentObject.time : false}

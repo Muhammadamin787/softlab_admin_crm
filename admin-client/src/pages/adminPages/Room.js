@@ -26,7 +26,7 @@ class Room extends Component {
     render() {
 
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, rooms} = this.props;
+        const {dispatch, showModal, rooms} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({

@@ -1598,11 +1598,12 @@ export const makeStudentByAppealAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res.statusCode === 201) {
+        if (res.statusCode === 201 && res.payload && res.payload.object) {
             toast.success("Talaba saqlandi!")
-            // data.history.push(config.BASE_URL + "/admin/student/" + res)
+            data.history.push("/admin/student/" + res.payload.object)
+        } else {
+            dispatch(getAppealListAllAction())
         }
-        dispatch(getAppealListAllAction())
     }).catch((e) => {
         toast.error('Telefon raqam allaqachon mavjud!')
     })
