@@ -4,13 +4,12 @@ import {
     getEmployeeListAction,
     deleteEmployeeAction,
     saveEmployeeAction,
-    getRegionsAction, getGroupsAction
+    getRegionsAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon, EditIcon, GlobusIcon} from "../../component/Icons";
 import moment from "moment";
 import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
@@ -142,6 +141,12 @@ class Staff extends Component {
                                         defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}

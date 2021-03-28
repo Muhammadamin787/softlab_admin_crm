@@ -184,8 +184,8 @@ public class AppealService {
                     if (apiResponse.isSuccess()) {
                         client.setClientEnum(ClientEnum.STUDENT);
                         clientRepository.save(client);
-                        clientStatusConnectRepository.deleteByClient_id(client.getId());
-                        return apiResponseService.saveResponse();
+                        studentId = studentRepository.getStudentId(client.getPhoneNumber());
+                        return apiResponseService.saveResponse(studentId);
                     } else return apiResponse;
                 }
             }

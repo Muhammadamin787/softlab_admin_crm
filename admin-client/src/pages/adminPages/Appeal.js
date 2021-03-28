@@ -133,26 +133,17 @@ class Appeal extends Component {
         const drag = (e) => {
             this.setState({object: e.target.id})
             e.dataTransfer.setData("text", e.target.id);
-            console.log(e.target.id);
-            console.log(e);
-            // if (window.getComputedStyle(document.getElementById(e.target.id)).cursor == 'pointer')
-            // var element = document.getElementById(e.target.id);
-            // element.classList.add("appeal-drag");
         }
 
         const drop = (e) => {
             e.preventDefault();
             let data = e.dataTransfer.getData("text");
-            console.log(appealList, "royhat");
-            console.log(data, "data");
             openChangeModal(...appealList.filter(item => item.id === data))
             if (this.state.changeLocationType === "COLLECTION") {
                 dispatch(getToplamListForSelectAction())
             } else {
                 dispatch(getClientStatusListForSelectAction({type: this.state.changeLocationType}))
             }
-            // var element = document.getElementById(data);
-            // element.classList.remove("appeal-drag");
         }
         const openChangeModal = (item) => {
             this.setState({currentObject: item})
