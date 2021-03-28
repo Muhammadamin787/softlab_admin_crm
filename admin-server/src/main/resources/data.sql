@@ -43,7 +43,7 @@ VALUES ('true', 'Chet tili filologiya', 'Ingliz tili'),
        ('true', 'Aniq fan', 'Fizika');
 
 INSERT INTO course(active, description, name, price, course_category_id)
-VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 200000, 1),
-       ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 200000, 1),
-       ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 250000, 1),
-       ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 250000, 1);
+VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 20000, 1),
+       ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 20000, 1),
+       ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 25000, 1),
+       ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 25000, 1);

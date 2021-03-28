@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
-import {Button, Col, Input, Nav, NavItem, NavLink, Row, TabContent, Table, TabPane} from "reactstrap";
-import moment from "moment";
-import {DeleteIcon, EditIcon} from "../../component/Icons";
+import {Input, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getDailySchedule,
     getDashboardStatAction, getDashboardStudentStatAction,
@@ -13,9 +11,7 @@ import {
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
-import MultiLine from "../../component/dashboard/MultiLine";
 import Donut from "../../component/dashboard/Donut";
-import ApexChart from "../../component/dashboard/ApexChart";
 import BarColumn from "../../component/dashboard/BarColumn";
 import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
@@ -27,7 +23,7 @@ class Dashboard extends Component {
         this.props.dispatch(getWeeklySchedule())
         this.props.dispatch(getDailySchedule('MONDAY'))
         this.props.dispatch(getDashboardStudentStatAction())
-        const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
+        const {startHour, endHour} = this.state;
 
         /*kunlik*/
         let arr = []
@@ -66,18 +62,12 @@ class Dashboard extends Component {
 
     render() {
         const {
-            currentObject,
             activeTab,
-            startHour,
-            endHour,
-            minute,
             list
         } = this.state;
         const {
             sortAges,
-            studentStat,
             dispatch,
-            teacherSalaryList,
             size,
             rooms,
             dailySchedule,
