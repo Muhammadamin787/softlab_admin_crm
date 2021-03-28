@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseCategoryAction,
-    getCourseCategoriesAction, getCoursesAction, getGroupsByCourseAction,
+    getCourseCategoriesAction,
     saveCourseCategoryAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -14,7 +13,6 @@ import {Link} from "react-router-dom";
 
 class CourseCategory extends Component {
     componentDidMount() {
-        let id = 0
         if (this.props.match.path === "/admin/courses")
             this.props.history.push("/admin/courses/list")
         // if (this.props.match && this.props.match.params && this.props.match.params.id)
@@ -29,7 +27,7 @@ class CourseCategory extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {history, dispatch, showModal, deleteModal, loading, courseCategories} = this.props;
+        const {dispatch, showModal, deleteModal, courseCategories} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import AdminLayout from "../../component/AdminLayout";
 
 class GeneralSetting extends Component {

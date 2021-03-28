@@ -45,9 +45,9 @@ class Toplam extends Component {
 
     render() {
         const {
-            dispatch, showModal, deleteModal, reklamas, toplamList, size,
+            dispatch, showModal, deleteModal, toplamList, size,
             page,
-            totalElements, selectItems, teachers, getItems
+            totalElements, teachers, getItems
         } = this.props
         const {currentObject} = this.state
 
@@ -83,10 +83,10 @@ class Toplam extends Component {
             dispatch(deleteToplamAction(currentObject))
             this.setState({deleteModal: !this.state.deleteModal})
         }
-        const setToplamCourse = (e, v) => {
+        const setToplamCourse = (e) => {
             this.setState({courseId: e.value})
         }
-        const setToplamTeacher = (e, v) => {
+        const setToplamTeacher = (e) => {
             this.setState({teacherId: e.value})
         }
 

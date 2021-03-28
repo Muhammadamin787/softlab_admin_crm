@@ -16,13 +16,13 @@ import {
     TabPane
 } from "reactstrap";
 import AsyncSelect from "react-select";
-import {AvForm, AvField, AvGroup, AvInput, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
+import {AvForm, AvField, AvCheckboxGroup, AvCheckbox} from "availity-reactstrap-validation";
 import {
     changeStudentGroupStatusAction,
-    deleteCourseAction, deleteGroupAction, getAttendanceListAction,
+    deleteGroupAction, getAttendanceListAction,
     getCoursesAction,
     getGroupAction, getGroupsForSelectAction, getGroupStudentsAction,
-    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction, getStudentsByGroupAction,
+    getRoomListAction, getStudentOnSearchAction, getStudentPaymentAction,
     getTeachersForSelectAction, saveAttendanceAction,
     saveGroupAction, saveStudentToGroupAction,
 } from "../../redux/actions/AppActions";
@@ -90,7 +90,7 @@ class SelectGroup extends Component {
 
     render() {
         const {
-            days, months, year, month, daysOfMonth, activeTab, openModal1, currentDay, currentObject, dropdownOpen
+            days, months, year, month, daysOfMonth, activeTab, openModal1, currentDay, currentObject
         } = this.state
         const {
             selectItems,

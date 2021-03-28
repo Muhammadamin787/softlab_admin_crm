@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, downloadFileAction, downloadStudentFileAction, getDebtorsAction,
+    deleteStudentAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction, getStudentsBySearchAction,
     saveStudentAction, toChangeStatusAction,
     uploadFileAction
@@ -27,7 +27,6 @@ import moment from 'moment';
 import Pagination from "react-js-pagination";
 import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
-import Select from "react-select";
 
 
 class Student extends Component {
@@ -89,13 +88,6 @@ class Student extends Component {
             }
             this.setState({secondPage: !this.state.secondPage})
         }
-        const openStudentInfo = (item) => {
-            this.setState({currentObject: item})
-            dispatch({
-                type: 'updateState',
-                payload: {}
-            })
-        }
         const openDeleteModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -107,13 +99,6 @@ class Student extends Component {
         }
         const deleteItem = (item) => {
             dispatch(deleteStudentAction(item))
-        }
-        const multiChange = (e, v) => {
-            let specList = []
-            for (let i = 0; i < e.length; i++) {
-                specList.push(e[i].value)
-            }
-            this.setState({specs: specList})
         }
         const saveItem = (e, v) => {
             if (currentObject) {
@@ -133,17 +118,11 @@ class Student extends Component {
             }
             dispatch(saveStudentAction(studentDto))
         }
-        const uploadImg = (e) => {
-            this.props.dispatch(uploadFileAction(e.target.files[0]))
-        }
         const downloadExcel = (e, v) => {
             dispatch(downloadStudentFileAction(v))
         }
         //
 
-        const a = (tab) => {
-            this.setState({activeTab: tab})
-        }
         const toggle = (tab) => {
             this.setState({activeTab: tab})
             this.setState({type: tab})
@@ -175,7 +154,7 @@ class Student extends Component {
         }
 
         //  Written By Muhammadamin
-        const searchStudent = (e, v) => {
+        const searchStudent = () => {
             let value = document.getElementById("searchStudent").value;
             if (value.length === 0) {
                 this.props.dispatch(getStudentsAction({page: 0, size: this.props.size, type: "DEFAULT"}))
@@ -212,9 +191,9 @@ class Student extends Component {
                                     Arxiv talabalar
                                 </NavLink>
                             </NavItem>
-                            <NavItem>
+                            <NavItem align={"right"}>
                                 <input type={"search"} name={"studentSearch"} id={"searchStudent"}
-                                       className={"form-control"}
+                                       className={"form-control"} placeholder={"Qidirish..."}
                                        onChange={searchStudent}/>
                             </NavItem>
                         </Nav>
@@ -229,7 +208,7 @@ class Student extends Component {
                                             <Button color={"btn btn-outline-info rounded"} size={"sm"}
                                                     className={"btn mx-2 border-none rounded"}
                                                     onClick={downloadExcel}>
-                                                <span className={"icon icon-download"}></span></Button>
+                                                <span className={"icon icon-download"}/></Button>
                                         </div>
                                         <Table className={"table-style w-100"}>
                                             <thead className={""}>

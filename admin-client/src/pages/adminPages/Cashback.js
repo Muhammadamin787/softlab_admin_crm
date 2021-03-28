@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {
-    getRoomListAction,
-    saveRoomAction,
-    deleteRoomAction, getCashbackListAction, deleteCashbackAction, saveCashbackAction
+    getCashbackListAction, deleteCashbackAction, saveCashbackAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
@@ -23,11 +21,10 @@ class Cashback extends Component {
     }
 
 
-
     render() {
 
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, cashbacks} = this.props;
+        const {dispatch, showModal, cashbacks} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
