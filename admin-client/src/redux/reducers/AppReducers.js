@@ -184,7 +184,9 @@ const reducers = {
         state.showModal = false;
     },
     [types.REQUEST_GET_GROUP_STUDENTS_SUCCESS](state, payload) {
-        state.students = payload.payload.object
+        state.students = payload.payload.object.sort((a, b) =>
+            a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+        );
     },
     [types.REQUEST_GET_GROUP_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
