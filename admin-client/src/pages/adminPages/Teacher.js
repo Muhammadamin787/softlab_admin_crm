@@ -17,7 +17,6 @@ import {
     getRegionsAction,
     getTeachersAction,
     saveTeacherAction, toChangeTeacherStatusAction,
-    uploadFileAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -84,13 +83,6 @@ class Teacher extends Component {
             dispatch(deleteTeacherAction(item))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
-        const multiChange = (e, v) => {
-            let specList = []
-            for (let i = 0; i < e.length; i++) {
-                specList.push(e[i].value)
-            }
-            this.setState({specs: specList})
-        }
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
@@ -111,16 +103,10 @@ class Teacher extends Component {
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
         }
-        const uploadImg = (e) => {
-            this.props.dispatch(uploadFileAction(e.target.files[0]))
-        }
         const downloadTecherFile = (e, v) => {
             dispatch(downloadTeacherFileAction(v))
         }
 
-        const a = (tab) => {
-            this.setState({activeTab: tab})
-        }
         const toggle = (tab) => {
             this.setState({activeTab: tab})
             this.setState({type: tab})
@@ -190,7 +176,7 @@ class Teacher extends Component {
                                         <Button color={"btn btn-outline-info rounded"} size={"sm"}
                                                 className={"btn mx-2 border-none rounded"}
                                                 onClick={downloadTecherFile}>
-                                            <span className={"icon icon-download"}></span>
+                                            <span className={"icon icon-download"}/>
                                         </Button>
                                     </div>
                                     <Table className={"table-style w-100"}>
@@ -246,7 +232,7 @@ class Teacher extends Component {
                                         <Button color={"btn btn-outline-info rounded"} size={"sm"}
                                                 className={"btn mx-2 border-none rounded"}
                                                 onClick={downloadTecherFile}>
-                                            <span className={"icon icon-download"}></span>
+                                            <span className={"icon icon-download"}/>
                                         </Button>
                                     </div>
                                     <Table className={"table-style w-100"}>
@@ -348,7 +334,7 @@ class Teacher extends Component {
                                         defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        required/>
+                                        />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>

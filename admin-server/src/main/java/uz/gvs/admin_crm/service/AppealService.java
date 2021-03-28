@@ -170,7 +170,8 @@ public class AppealService {
             if (byId.isPresent()) {
                 Client client = byId.get();
                 String studentId = studentRepository.getStudentId(client.getPhoneNumber());
-                if (studentId != null) {
+                String existPhone = studentRepository.existsPhoneNumber(client.getPhoneNumber());
+                if (studentId != null || existPhone != null) {
                     return apiResponseService.existResponse();
                 } else {
                     ApiResponse apiResponse = studentService.saveStudent(

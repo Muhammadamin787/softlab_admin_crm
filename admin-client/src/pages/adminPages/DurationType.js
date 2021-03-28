@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Button, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {deleteDurationTypeAction, getDurationTypesAction, saveDurationTypeAction} from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -19,7 +18,7 @@ class DurationType extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, loading, durationTypes} = this.props;
+        const {dispatch, showModal, deleteModal, durationTypes} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({

@@ -4,17 +4,14 @@ import {
     getEmployeeAction,
     getRegionsAction,
     saveEmployeeAction,
-
-
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
 import {DeleteIcon, EditIcon} from "../../component/Icons";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
-import {AiOutlineUsergroupAdd} from "react-icons/all";
 import {Link} from "react-router-dom";
 
 class SelectStaff extends Component {
@@ -36,7 +33,7 @@ class SelectStaff extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal,history,regions,currentItem} = this.props;
+        const {dispatch, showModal, deleteModal, history, regions, currentItem} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -101,7 +98,7 @@ class SelectStaff extends Component {
                                 <hgroup>
                                     <small className={"text-secondary"}>Kasbi: </small>
                                     {console.log(currentItem)}
-                                    <p className={"d-inline"}>{currentItem && currentItem.roleName ? currentItem.roleName[0].roleName: ''}</p>
+                                    <p className={"d-inline"}>{currentItem && currentItem.roleName ? currentItem.roleName[0].roleName : ''}</p>
                                 </hgroup>
                                 <hgroup>
                                     <small className={"text-secondary"}>Jinsi: </small>
@@ -147,7 +144,7 @@ class SelectStaff extends Component {
                                         defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        required/>
+                                    />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
@@ -203,8 +200,8 @@ class SelectStaff extends Component {
 
 SelectStaff.propTypes = {}
 export default connect(({
-                            app: {loading, history,employees,currentItem, showModal, deleteModal,regions},
+                            app: {loading, history, employees, currentItem, showModal, deleteModal, regions},
                         }) => ({
-        loading, employees, showModal,history,currentItem, deleteModal,regions
+        loading, employees, showModal, history, currentItem, deleteModal, regions
     })
 )(SelectStaff);
