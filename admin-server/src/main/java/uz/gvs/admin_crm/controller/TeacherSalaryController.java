@@ -34,19 +34,20 @@ public class TeacherSalaryController {
 
     @GetMapping("/{id}")
     public HttpEntity<?> getSalaries(@PathVariable UUID id, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
+                                     @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         ApiResponse apiResponse = service.getSalaries(id, page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
     @GetMapping
     public HttpEntity<?> getAllSalaries(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
+                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         ApiResponse apiResponse = service.getAllSalaries(page, size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> editSalary(@PathVariable UUID id, @RequestBody TeacherSalaryDto teacherSalaryDto){
+    public HttpEntity<?> editSalary(@PathVariable UUID id, @RequestBody TeacherSalaryDto teacherSalaryDto) {
         ApiResponse apiResponse = service.editSalary(id, teacherSalaryDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
@@ -71,8 +72,8 @@ public class TeacherSalaryController {
                                                  @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
                                                  @RequestParam(value = "date1", defaultValue = "") String data1,
                                                  @RequestParam(value = "date2", defaultValue = "") String data2,
-                                                 @RequestParam(value = "type", defaultValue = "minusSalary")String type) {
-        ApiResponse apiResponse = service.getTeacherPaymentByDate(page, size, data1, data2,type);
+                                                 @RequestParam(value = "type", defaultValue = "minusSalary") String type) {
+        ApiResponse apiResponse = service.getTeacherPaymentByDate(size, page, data1, data2, type);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }
