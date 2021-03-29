@@ -186,6 +186,7 @@ public class TeacherSalaryService {
     }
 
     public ApiResponse  getFinance(int page, int size, String type) {
+
         try {
             switch (type) {
                 case "minusSalary":
