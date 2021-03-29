@@ -37,6 +37,7 @@ import Finance from "../pages/adminPages/TeacherFinance";
 import StudentFinance from "../pages/adminPages/StudentFinance";
 import Attandance from "../pages/adminPages/Attandance";
 import SelectStaff from "../pages/adminPages/SelectStaff";
+import DashboardEski from "../pages/adminPages/Dashboard (Eski) ";
 
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
                 <PublicRoute exact path="/" component={HomePage}/>
                 <PublicRoute exact path="/login" component={Login}/>
                 <PrivateRoute exact path="/admin" component={Dashboard}/>
+                <PrivateRoute exact path="/admins" component={DashboardEski}/>
                 <PrivateRoute exact path="/admin/durationType" component={DurationType}/>
                 <PrivateRoute exact path="/admin/region" component={Region}/>
                 <PrivateRoute exact path="/admin/course/select/:id" component={SelectCourse}/>
