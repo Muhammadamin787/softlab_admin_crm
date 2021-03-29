@@ -1,10 +1,9 @@
 package uz.gvs.admin_crm.payload.financeDTO;
 
 import lombok.Data;
-import uz.gvs.admin_crm.entity.PayType;
-
 import java.util.UUID;
 @Data
+
 public class ResTeacher {
     private String teacherName;
     private UUID teacherId;
@@ -12,6 +11,7 @@ public class ResTeacher {
     private UUID studentId;
     private double amount;
     private String amountDate;
+    private String createdAt;
     private String payTypeName;
     private String groupName;
     private String description;
@@ -26,13 +26,13 @@ public class ResTeacher {
 
     }
 
-    public ResTeacher(String teacherName, UUID teacherId, String studentName, UUID studentId, double amount, String amountDate, String groupName) {
+    public ResTeacher(String teacherName, UUID teacherId, String studentName, UUID studentId, double amount, String createdAt, String groupName) {
         this.teacherName = teacherName;
         this.teacherId = teacherId;
         this.studentName = studentName;
         this.studentId = studentId;
         this.amount = amount;
-        this.amountDate = amountDate;
+        this.createdAt = createdAt;
         this.groupName = groupName;
     }
 }
