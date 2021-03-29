@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
-import {Button, Col, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
+import {Button, Col, Nav, NavItem, NavLink, Row, TabContent, Table, TabPane} from "reactstrap";
 import {
     getFinanceAction, getFinanceTeacherAction, getStudentPaymentListByDateAction,
 
@@ -16,7 +16,11 @@ import moment from "moment";
 class TeacherFinance extends Component {
 
     handlePageChange(pageNumber) {
-        this.props.dispatch(getFinanceTeacherAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
+        this.props.dispatch(getFinanceTeacherAction({
+            page: (pageNumber - 1),
+            size: this.props.size,
+            type: this.state.type
+        }))
     }
 
     componentDidMount(pageNumber) {
@@ -74,22 +78,29 @@ class TeacherFinance extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className="container">
                     <h3>Moliya</h3>
-                    <h5 className="mb-3" onClick={showHide}>Filtr</h5>
+                    <h5 className="mb-3 teacherFinanceFiltrLink" onClick={showHide}>Filtr</h5>
                     <div id="filtrMenu">
                         <div className="row mb-4">
-                            <Col>
-                                <AvForm onValidSubmit={filtrByDate}>
-                                    <AvField type="date" className="form-control" name={"date1"}/>
-
-                                    <AvField type="date" className="form-control" name={"date2"}/>
-
-                                    <Button type={"submit"}>Saqlash</Button>
-                                </AvForm>
-                            </Col>
+                            <AvForm onValidSubmit={filtrByDate}>
+                                <div className="container">
+                                <div className="row">
+                                    <div className="col-4">
+                                        <AvField type="date" className="form-control" name={"date1"}/>
+                                    </div>
+                                    <div className="col-4">
+                                        <AvField type="date" className="form-control" name={"date2"}/>
+                                    </div>
+                                    <div className="col-4">
+                                        <Button type={"submit"}>Saqlash</Button>
+                                    </div>
+                                </div>
+                                </div>
+                            </AvForm>
                         </div>
                     </div>
                     <Nav tabs>
-                        <NavItem className={activeTab === 'minusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'minusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('minusSalary');
@@ -98,7 +109,8 @@ class TeacherFinance extends Component {
                                 Olingan Summalar
                             </NavLink>
                         </NavItem>
-                        <NavItem className={activeTab === 'plusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
+                        <NavItem
+                            className={activeTab === 'plusSalary' ? "tab-item-style-active" : "tab-item-style-default"}>
                             <NavLink
                                 onClick={() => {
                                     toggle('plusSalary');
@@ -134,8 +146,8 @@ class TeacherFinance extends Component {
                                                         {item ? item.teacherName : ''}
                                                     </Link>
                                                 </td>
-                                                <td>{item && item.amount ? item.amount : ""}</td>
-                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item && item.amount}</td>
+                                                <td>{item.payTypeName}</td>
                                                 <td>{item.description}</td>
                                                 <td>{moment(item.amountDate).format('LLL').toString()}</td>
                                             </tr>
@@ -168,25 +180,25 @@ class TeacherFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {console.log(teacherPaymentFinance)}
                                         {teacherPaymentFinance ? teacherPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/teacher/" + (item && item.attendance && item.attendance.teacher
-                                                        ? item.attendance.teacher.id : '')}>
-                                                        {item && item.attendance && item.attendance.teacher && item.attendance.teacher.user ? item.attendance.teacher.user.fullName + " / " + item.attendance.teacher.user.phoneNumber : ''}
+                                                    <Link
+                                                        to={"/admin/teacher/" + (item && item.teacherId)}>
+                                                        {item && item.teacherName}
                                                     </Link>
                                                 </td>
                                                 <td>
                                                     <Link
-                                                        to={"/admin/student/" + (item && item.attendance && item.attendance.student
-                                                            ? item.attendance.student.id : '')}>
-                                                        {item && item.attendance && item.attendance.student && item.attendance.student.user ? item.attendance.student.user.fullName + " / " + item.attendance.student.user.phoneNumber : ''}
+                                                        to={"/admin/student/" + (item && item.studentId)}>
+                                                        {item && item.studentName}
                                                     </Link>
                                                 </td>
-                                                <td>{item.amountTeacher}</td>
-                                                <td>{moment(item.attendance && item.attendance.attendDate).format('LLL').toString()}23</td>
-                                                <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
+                                                <td>{item.amount}</td>
+                                                <td>{moment(item.createdAt).format('LLL').toString()}</td>
+                                                <td>{item && item.groupName}</td>
 
                                             </tr>
                                         ) : 'Malumot topilmadi'}

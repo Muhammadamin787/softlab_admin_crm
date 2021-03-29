@@ -156,14 +156,14 @@ public class TeacherSalaryService {
 
     public ResTeacher makeSalaryRes(TeacherSalary teacherSalary) {
         return new ResTeacher(
-                teacherSalary.getTeacher().getUser().getFullName() + "/" + teacherSalary.getTeacher().getUser().getPhoneNumber(),
+                teacherSalary.getTeacher().getUser().getFullName() + " / " + teacherSalary.getTeacher().getUser().getPhoneNumber(),
                 teacherSalary.getTeacher().getId(),
                 teacherSalary.getAmount(),
                 teacherSalary.getAmountDate().toString(),
-                teacherSalary.getPayType()
+                teacherSalary.getPayType().getName(),
+                teacherSalary.getDescription()
         );
     }
-
 
     public PaymentDto getAllPrices(Payment payment) {
         return new PaymentDto(
@@ -173,8 +173,19 @@ public class TeacherSalaryService {
                 payment.getAmountTeacher()
         );
     }
+    public ResTeacher getAllPayments(Payment payment) {
+        return new ResTeacher(
+                payment.getAttendance().getTeacher().getUser().getFullName() + " / " + payment.getAttendance().getTeacher().getUser().getPhoneNumber(),
+                payment.getAttendance().getTeacher().getId(),
+                payment.getAttendance().getStudent().getUser().getFullName() + " / " + payment.getAttendance().getStudent().getUser().getPhoneNumber(),
+                payment.getAttendance().getStudent().getId(),
+                payment.getAmountTeacher(),
+                payment.getCreatedAt().toString(),
+                payment.getAttendance().getGroup().getName() + "  [" + payment.getAttendance().getGroup().getCourse().getName() + "  ]"
+        );
+    }
 
-    public ApiResponse getFinance(int page, int size, String type) {
+    public ApiResponse  getFinance(int page, int size, String type) {
         try {
             switch (type) {
                 case "minusSalary":
@@ -196,7 +207,7 @@ public class TeacherSalaryService {
                                     all.getTotalElements(),
                                     all.getNumber(),
                                     all.getSize(),
-                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                                    all.get().map(this::getAllPayments).collect(Collectors.toList())
                             )
                     );
                 default:
@@ -207,7 +218,7 @@ public class TeacherSalaryService {
         }
     }
 
-    public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
+    public ApiResponse getTeacherPaymentByDate(int size, int page, String data1, String data2, String type) {
         try {
             switch (type) {
                 case "minusSalary":
@@ -217,7 +228,7 @@ public class TeacherSalaryService {
                                     Long.valueOf(teacherSalaryRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    all.stream().map(this::makeSalaryList).collect(Collectors.toList())
+                                    all.stream().map(this::makeSalaryRes).collect(Collectors.toList())
                             )
                     );
                 case "plusSalary":
@@ -227,7 +238,7 @@ public class TeacherSalaryService {
                                     Long.valueOf(paymentRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())
+                                    getPrice.stream().map(this::getAllPayments).collect(Collectors.toList())
                             )
                     );
                 default:

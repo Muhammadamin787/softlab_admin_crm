@@ -111,18 +111,25 @@ class StudentFinance extends Component {
                     <h5 className="mb-3" onClick={showHide}>Filtr</h5>
                     <br/>
                     <Button onClick={openAccountantModal} color={"danger"}>Accountant</Button>
+                    <br/>
+                    <br/>
                     <div id="filtrMenu">
                         <div className="row mb-4">
-                            <Col>
-                                <AvForm onValidSubmit={filtrByDate}>
-                                    <AvField type="date" className="form-control" name={"date1"}/>
-
-                                    <AvField type="date" className="form-control" name={"date2"}/>
-
-                                    <Button type={"submit"}>Saqlash</Button>
-
-                                </AvForm>
-                            </Col>
+                            <AvForm onValidSubmit={filtrByDate}>
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-4">
+                                            <AvField type="date" className="form-control" name={"date1"}/>
+                                        </div>
+                                        <div className="col-4">
+                                            <AvField type="date" className="form-control" name={"date2"}/>
+                                        </div>
+                                        <div className="col-4">
+                                            <Button type={"submit"}>Saqlash</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </AvForm>
                         </div>
                     </div>
                     <Nav tabs>
@@ -272,7 +279,7 @@ class StudentFinance extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{item.amount}</td>
-                                                <td>{moment(item && item.attendance ? item.attendance.attendDate : "").format('LLL').toString()}</td>
+                                                <td>{moment(item && item.createdAt).format('LLL').toString()}</td>
                                                 <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}

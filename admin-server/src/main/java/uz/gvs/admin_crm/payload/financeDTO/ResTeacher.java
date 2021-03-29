@@ -12,13 +12,27 @@ public class ResTeacher {
     private UUID studentId;
     private double amount;
     private String amountDate;
-    private PayType payType;
+    private String payTypeName;
+    private String groupName;
+    private String description;
 
-    public ResTeacher(String teacherName, UUID teacherId, double amount, String amountDate, PayType payType) {
+    public ResTeacher(String teacherName, UUID teacherId, double amount, String amountDate, String payTypeName,String description) {
         this.teacherName = teacherName;
         this.teacherId = teacherId;
         this.amount = amount;
         this.amountDate = amountDate;
-        this.payType = payType;
+        this.payTypeName = payTypeName;
+        this.description = description;
+
+    }
+
+    public ResTeacher(String teacherName, UUID teacherId, String studentName, UUID studentId, double amount, String amountDate, String groupName) {
+        this.teacherName = teacherName;
+        this.teacherId = teacherId;
+        this.studentName = studentName;
+        this.studentId = studentId;
+        this.amount = amount;
+        this.amountDate = amountDate;
+        this.groupName = groupName;
     }
 }

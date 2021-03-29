@@ -464,7 +464,7 @@ public class StudentService {
         return null;
     }
 
-    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
+    public ApiResponse getStudentPaymentByDate(int size, int page, String data1, String data2, String type) {
         try {
             Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
             Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
