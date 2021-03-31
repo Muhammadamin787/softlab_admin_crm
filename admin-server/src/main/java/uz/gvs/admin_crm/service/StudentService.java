@@ -594,7 +594,7 @@ public class StudentService {
 
     public ApiResponse searchStudent(String name, Integer groupId) {
         try {
-            List<Object> objects = studentRepository.searchStudent(name, groupId);
+            List<Object> objects = studentRepository.searchStudent(name.toLowerCase(), groupId);
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] student = (Object[]) obj;
@@ -670,7 +670,7 @@ public class StudentService {
 
     public ApiResponse searchAllStudent(String name) {
         try {
-            List<Object> objects = studentRepository.searchAllStudent(name);
+            List<Object> objects = studentRepository.searchAllStudent(name.toLowerCase());
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] student = (Object[]) obj;

@@ -180,7 +180,7 @@ public class TeacherService {
 
     public ApiResponse searchTeacher(String name) {
         try {
-            List<Object> objects = teacherRepository.searchTeacher(name);
+            List<Object> objects = teacherRepository.searchTeacher(name.toLowerCase());
             List<ResSelect> resSelects = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] teacher = (Object[]) obj;
