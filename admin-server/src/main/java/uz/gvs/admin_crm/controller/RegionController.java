@@ -24,7 +24,6 @@ public class RegionController {
     RegionService regionService;
     @Autowired
     RegionRepository regionRepository;
-
     @Autowired
     ApiResponseService apiResponseService;
 

@@ -153,7 +153,7 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi, deleteCArdApi,
+    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi,deleteCArdApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1700,25 +1700,28 @@ export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
         data
     })
 }
+export const deleteOneAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteOneAppealApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then(res => {
+        dispatch(getAppealListAllAction());
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
+    })
+}
 // FINISH APPEAL ACTIONS
 
 // START TOPLAM ACTIONS
-// export const deleteCardAction = (data) => (dispatch) => {
-//     console.log(data)
-//     dispatch({
-//         api: deleteCArdApi,
-//         types: [
-//             types.REQUEST_START,
-//             types.REQUEST_SUCCESS,
-//             types.REQUEST_ERROR
-//         ],
-//         data
-//     }).then(res => {
-//         toast("Malumot o`child")
-//     })
-// }
-
-
 export const getToplamListAction = (data) => (dispatch) => {
     dispatch({
         api: getToplamListApi,
@@ -1755,28 +1758,6 @@ export const saveToplamAction = (data) => (dispatch) => {
             toast.success(res.payload.message)
         dispatch(getToplamListAction({page: 0, size: 20}));
     })
-}
-export const deleteMurojaatAction = (data) => (dispatch) => {
-    dispatch({
-        api: deleteToplamApi,
-        types:[
-            types.REQUEST_START,
-            types.REQUEST_SUCCESS,
-            types.REQUEST_ERROR
-        ],
-        data
-    }).then(res => {
-        dispatch({
-            type:'updateState',
-            payload:{
-                deleteModal : false
-            }
-        })
-        toast.success("Malumot o`chirildi")
-        dispatch(getToplamListAction({page: 0, size: 20}))
-    }).catch(err => (
-        toast.error("Xatolik")
-    ))
 }
 export const deleteToplamAction = (data) => (dispatch) => {
     dispatch({
