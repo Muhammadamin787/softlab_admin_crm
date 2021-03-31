@@ -32,6 +32,12 @@ import {Link} from "react-router-dom";
 class Group extends Component {
 
     componentDidMount() {
+        this.props.dispatch({
+            type: "updateState",
+            payload: {
+                groups: []
+            }
+        })
         this.props.dispatch(getGroupsAction({page: 0, size: this.props.size, type: "ACTIVE"}))
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getCoursesAction())
@@ -53,7 +59,7 @@ class Group extends Component {
         this.props.dispatch(getGroupsAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
-    render() {
+    render(value1, value2) {
         const {currentObject, activeTab,} = this.state;
         const {
             page,
@@ -195,8 +201,9 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
-                                                    <span>{week}, </span>) : ""}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week, i) =>
+                                                    <span
+                                                        key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
@@ -229,7 +236,7 @@ class Group extends Component {
                             />
                         </TabPane>
                         <TabPane tabId="ARCHIVE">
-                            <Table className={"table-style"}>
+                            <table className={"table-style"}>
                                 <thead className={""}>
                                 <tr className={""}>
                                     <td>T/r</td>
@@ -255,8 +262,10 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
-                                                    <span>{week}, </span>) : ""}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week, i) =>
+                                                    <span
+                                                        key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
+                                                {/*<span>{week}, </span>) : ""}*/}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
@@ -276,7 +285,7 @@ class Group extends Component {
                                         </tr>
                                 ) : "Guruhlar mavjud emas"}
                                 </tbody>
-                            </Table>
+                            </table>
                             <Pagination
                                 activePage={page + 1}
                                 itemsCountPerPage={size}
