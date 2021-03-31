@@ -46,8 +46,8 @@ const App = () => {
             <Switch>
                 <PublicRoute exact path="/" component={HomePage}/>
                 <PublicRoute exact path="/login" component={Login}/>
-                <PrivateRoute exact path="/admin" component={Dashboard}/>
-                <PrivateRoute exact path="/admins" component={DashboardEski}/>
+                <PrivateRoute exact path="/admins" component={Dashboard}/>
+                <PrivateRoute exact path="/admin" component={DashboardEski}/>
                 <PrivateRoute exact path="/admin/durationType" component={DurationType}/>
                 <PrivateRoute exact path="/admin/region" component={Region}/>
                 <PrivateRoute exact path="/admin/course/select/:id" component={SelectCourse}/>
