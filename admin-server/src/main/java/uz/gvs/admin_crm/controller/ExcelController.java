@@ -71,7 +71,7 @@ public class ExcelController {
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=qarzdorlar" + dtf.format(now) + ".xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=qarzdorlar(" + dtf.format(now) + ").xlsx")
                 .body(file);
     }
 

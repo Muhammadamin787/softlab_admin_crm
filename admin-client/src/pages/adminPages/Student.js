@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, downloadStudentFileAction, getDebtorsAction,
+    deleteStudentAction, downloadQarzdorlarFileAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction, getStudentsBySearchAction,
     saveStudentAction, toChangeStatusAction,
     uploadFileAction
