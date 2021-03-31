@@ -153,7 +153,7 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi,
+    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi,deleteCArdApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -243,6 +243,13 @@ export const downloadAccountantFileAction = (v) => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/accountant?startDate=" + v.startDate.toString() + "&finishDate=" + v.finishDate.toString())
     link.setAttribute("download", "accountant.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+export const downloadQarzdorlarFileAction = (v) => () =>{
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/qarzdor")
+    link.setAttribute("download","qarzdorlar.xlsx")
     document.body.appendChild(link)
     link.click();
 }

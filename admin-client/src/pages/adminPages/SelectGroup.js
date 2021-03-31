@@ -48,6 +48,7 @@ class SelectGroup extends Component {
             dispatch(getCoursesAction())
             dispatch(getGroupsForSelectAction())
             dispatch(getTeachersForSelectAction())
+
             dispatch(getAttendanceListAction(id))
 
             let year = new Date().getFullYear()
@@ -206,24 +207,28 @@ class SelectGroup extends Component {
                 dispatch(saveGroupAction(v))
             }
         }
-        const checkAttendence = (bool, id) => {
-            let activeBtn = document.getElementById("active" + id);
-            let notActiveBtn = document.getElementById("notActive" + id);
-            if (bool) {
-                activeBtn.classList.remove("not-active-btn-style");
-                activeBtn.classList.add("active-btn-style");
-                notActiveBtn.classList.remove("active-btn-style");
-                notActiveBtn.classList.add("not-active-btn-style");
-            } else {
-                notActiveBtn.classList.remove("not-active-btn-style");
-                notActiveBtn.classList.add("active-danger-btn-style");
-                activeBtn.classList.remove("active-btn-style");
-                activeBtn.classList.add("not-active-btn-style");
+        const checkAttendence = (bool, id, isDesktop) => {
+            console.log(bool, id, isDesktop)
+            if (!isDesktop) {
+                let activeBtn = document.getElementById("active" + id);
+                let notActiveBtn = document.getElementById("notActive" + id);
+                if (bool) {
+                    activeBtn.classList.remove("not-active-btn-style");
+                    activeBtn.classList.add("active-btn-style");
+                    notActiveBtn.classList.remove("active-btn-style");
+                    notActiveBtn.classList.add("not-active-btn-style");
+                } else {
+                    notActiveBtn.classList.remove("not-active-btn-style");
+                    notActiveBtn.classList.add("active-danger-btn-style");
+                    activeBtn.classList.remove("active-btn-style");
+                    activeBtn.classList.add("not-active-btn-style");
+                }
             }
             let array = this.state.allAttendance;
             if (array.length > 0) {
                 for (let i = 0; i < array.length; i++) {
-                    if (array[i].studentId === id) {
+                    let studentId = isDesktop ? "desktop" + array[i].studentId : array[i].studentId;
+                    if (studentId === id) {
                         array[i].attended = bool;
                         break;
                     }
@@ -233,12 +238,14 @@ class SelectGroup extends Component {
                 array[0].studentId = id;
                 array[0].student = id;
                 for (let i = 0; i < array.length; i++) {
-                    if (array[i].studentId === id) {
+                    let studentId = isDesktop ? "desktop" + array[i].studentId : array[i].studentId;
+                    if (studentId === id) {
                         array[i].attended = bool;
                         break;
                     }
                 }
             }
+            console.log(array);
             this.setState({allAttendence: array})
         }
         const saveAttendance = (e, v, fromMobile) => {
@@ -255,7 +262,7 @@ class SelectGroup extends Component {
                     item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
                         arr.push({
                             studentId: item.id,
-                            active: document.getElementById(item.id).checked
+                            active: document.getElementById("desktop" + item.id).checked
                         })
                     ) : ""
                 )
@@ -794,16 +801,16 @@ class SelectGroup extends Component {
                             <AvField type={"hidden"} name={"groupId"}
                                      defaultValue={currentItem ? currentItem.id : ''}/>
                             <Table>
-                                {students ? students.map((item, i) =>
-                                    item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
-                                        <tr key={i}>
-                                            <td>{item.fullName}</td>
-                                            <td>
-                                                <Input type={"checkbox"} id={item.id}/>
-                                            </td>
-                                        </tr>
-                                    ) : ""
-                                ) : ''}
+                                {this.state.allAttendance && this.state.allAttendance.map((item, i) =>
+                                    <tr key={i}>
+                                        <td>{item.student}</td>
+                                        <td>
+                                            <Input type={"checkbox"} checked={item.attended}
+                                                   onChange={() => checkAttendence(!item.attended, "desktop" + item.studentId, true)}
+                                                   id={"desktop" + item.studentId}/>
+                                        </td>
+                                    </tr>
+                                )}
                             </Table>
 
                             <ModalFooter>

@@ -313,7 +313,6 @@ class Group extends Component {
                     </Modal>
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                        {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
@@ -325,7 +324,9 @@ class Group extends Component {
                                              placeholer={"nomi"} required/>
                                     <AvField className={'form-control'} label={'Kurs:'} type="select"
                                              name="courseId"
-                                             defaultValue={currentObject && currentObject.courseId ? currentObject.courseId : "0"}>
+                                             defaultValue={currentObject &&
+                                             currentObject.courseId ?
+                                                 currentObject.courseId : "0"}>
                                         <option key={0} value={"0"}>Kursni tanlang</option>
                                         {getItems ? getItems.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -333,7 +334,8 @@ class Group extends Component {
                                     </AvField>
                                     <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
                                              name="teacherId"
-                                             defaultValue={currentObject && currentObject.teacherId ? currentObject.teacherId : "0"}>
+                                             defaultValue={currentObject
+                                             && currentObject.teacherId ? currentObject.teacherId : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>

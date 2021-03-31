@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
-import {Input, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
+import {Button, Col, Input, Nav, NavItem, NavLink, Row, TabContent, Table, TabPane} from "reactstrap";
+import moment from "moment";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 import {
     getDailySchedule,
     getDashboardStatAction, getDashboardStudentStatAction,
@@ -11,19 +13,23 @@ import {
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
 import {Funnel} from 'funnel-react';
+import MultiLine from "../../component/dashboard/MultiLine";
 import Donut from "../../component/dashboard/Donut";
+import ApexChart from "../../component/dashboard/ApexChart";
 import BarColumn from "../../component/dashboard/BarColumn";
 import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
-class Dashboard extends Component {
+class DashboardEski extends Component {
 
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getDashboardStatAction())
         this.props.dispatch(getWeeklySchedule())
-        this.props.dispatch(getDailySchedule('MONDAY'))
+        console.clear()
+
         this.props.dispatch(getDashboardStudentStatAction())
-        const {startHour, endHour} = this.state;
+        const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
+
 
         /*kunlik*/
         let arr = []
@@ -62,12 +68,18 @@ class Dashboard extends Component {
 
     render() {
         const {
+            currentObject,
             activeTab,
+            startHour,
+            endHour,
+            minute,
             list
         } = this.state;
         const {
             sortAges,
+            studentStat,
             dispatch,
+            teacherSalaryList,
             size,
             rooms,
             dailySchedule,
@@ -106,132 +118,97 @@ class Dashboard extends Component {
             }
             return arr;
         }
-        const selectDailySchedule = (e) => {
+        const l = (e) => {
             this.props.dispatch(getDailySchedule(e.target.value))
         }
-        // console.log(dailySchedule)
-        const dd = () => {
-            dailySchedule && dailySchedule.map(item => {
-                list && list.map((item2, i) => {
-                    let lastCell = true;
-                    if (item.finishTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                console.log(("cell" + i + k));
-                                lastCell = document.getElementById("cell" + i + k);
-                            }
-                        })
-                    }
-                    if (item.startTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                for (let j = 0; j < 30 - i; j++) {
-                                    let el = document.getElementById("cell" + (i + j) + k);
-                                    if (lastCell !== undefined) {
-                                        console.log((el.innerText + " **** " + lastCell && lastCell.innerText));
-                                        // console.log("cell" + (i + j) + k + " = " + lastCell.innerText);
-                                        if (el.innerText && (el.innerText !== lastCell.innerText)) {
-                                            el.classList && el.classList.add("awesome");
-                                        } else {
-                                            el.classList && el.classList.add("awesome2");
-                                        }
-                                    }
-                                }
-                                // console.log("cell" + i + k);
-                            }
-                        })
-                    }
-                });
-            });
-        }
-        dd()
+
         return (
-            <AdminLayout pathname={this.props.location.pathname}>
+            <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div>
                     <div className={"flex-column container"}>
                         {dashboardStat && dashboardStat.length > 7 ?
                             <div className={"row dashboard-style"}>
-                                {/*<div className={"col-md-12 row"}>*/}
-                                {/*    <div className="col-md-3 col-analytics-dashboard shadow-sm">*/}
-                                {/*        <div className="card">*/}
-                                {/*            <hgroup>*/}
-                                {/*                <h2 className="text-warning">*/}
-                                {/*                    {dashboardStat[5].data}*/}
-                                {/*                </h2>*/}
-                                {/*                <h6>{dashboardStat[5].label}</h6>*/}
+                                <div className={"col-md-12 row"}>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[5].data}
+                                                </h2>
+                                                <h6>{dashboardStat[5].label}</h6>
 
-                                {/*            </hgroup>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="col-md-3 col-analytics-dashboard shadow-sm">*/}
-                                {/*        <div className="card">*/}
-                                {/*            <hgroup>*/}
-                                {/*                <h2 className="text-warning">*/}
-                                {/*                    {dashboardStat[6].data}*/}
-                                {/*                </h2>*/}
-                                {/*                <h6>{dashboardStat[6].label}</h6>*/}
+                                            </hgroup>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[6].data}
+                                                </h2>
+                                                <h6>{dashboardStat[6].label}</h6>
 
-                                {/*            </hgroup>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="col-md-3 col-analytics-dashboard shadow-sm">*/}
-                                {/*        <div className="card">*/}
-                                {/*            <hgroup>*/}
-                                {/*                <h2 className="text-warning">*/}
-                                {/*                    {dashboardStat[7].data}*/}
-                                {/*                </h2>*/}
-                                {/*                <h6>{dashboardStat[7].label}</h6>*/}
-                                {/*            </hgroup>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="col-md-3 col-analytics-dashboard shadow-sm">*/}
-                                {/*        <div className="card">*/}
-                                {/*            <hgroup>*/}
-                                {/*                <h2 className="text-warning">*/}
-                                {/*                    {dashboardStat[8].data}*/}
-                                {/*                </h2>*/}
-                                {/*                <h6>{dashboardStat[8].label}</h6>*/}
-                                {/*            </hgroup>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                                {/*<div className={"col-md-12 my-3 row"}>*/}
-                                {/*    <div className={"col-md-5 bg-white p-3 shadow-sm"}>*/}
-                                {/*        <h5>Mijozlar manbalari</h5>*/}
-                                {/*        <ReklamaChart/>*/}
-                                {/*    </div>*/}
-                                {/*    <div className={"ml-auto col-md-6 bg-white p-3 shadow-sm"}>*/}
-                                {/*        <h5>Sotuv voronkasi</h5>*/}
-                                {/*        <Funnel*/}
-                                {/*            labelKey='label'*/}
-                                {/*            height={250}*/}
-                                {/*            colors={{*/}
-                                {/*                graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'*/}
-                                {/*                percent: 'red',*/}
-                                {/*                label: 'secondary',*/}
-                                {/*                value: 'orange'*/}
-                                {/*            }}*/}
-                                {/*            valueKey='quantity'*/}
-                                {/*            displayPercent={true}*/}
-                                {/*            data={[{*/}
-                                {/*                "label": dashboardStat[0].label,*/}
-                                {/*                "quantity": dashboardStat[0].data*/}
-                                {/*            }, {*/}
-                                {/*                "label": dashboardStat[1].label,*/}
-                                {/*                "quantity": dashboardStat[1].data*/}
-                                {/*            }, {*/}
-                                {/*                "label": dashboardStat[2].label,*/}
-                                {/*                "quantity": dashboardStat[2].data*/}
-                                {/*            }, {*/}
-                                {/*                "label": dashboardStat[3].label,*/}
-                                {/*                "quantity": dashboardStat[3].data*/}
-                                {/*            }, {*/}
-                                {/*                "label": dashboardStat[4].label,*/}
-                                {/*                "quantity": dashboardStat[4].data*/}
-                                {/*            },*/}
-                                {/*            ]}/>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
+                                            </hgroup>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[7].data}
+                                                </h2>
+                                                <h6>{dashboardStat[7].label}</h6>
+                                            </hgroup>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3 col-analytics-dashboard shadow-sm">
+                                        <div className="card">
+                                            <hgroup>
+                                                <h2 className="text-warning">
+                                                    {dashboardStat[8].data}
+                                                </h2>
+                                                <h6>{dashboardStat[8].label}</h6>
+                                            </hgroup>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"col-md-12 my-3 row"}>
+                                    <div className={"col-md-5 bg-white p-3 shadow-sm"}>
+                                        <h5>Mijozlar manbalari</h5>
+                                        <ReklamaChart/>
+                                    </div>
+                                    <div className={"ml-auto col-md-6 bg-white p-3 shadow-sm"}>
+                                        <h5>Sotuv voronkasi</h5>
+                                        <Funnel
+                                            labelKey='label'
+                                            height={250}
+                                            colors={{
+                                                graph: ['purple', 'orange', 'orange', 'green'], // array or string : 'red' || '#666'
+                                                percent: 'red',
+                                                label: 'secondary',
+                                                value: 'orange'
+                                            }}
+                                            valueKey='quantity'
+                                            displayPercent={true}
+                                            data={[{
+                                                "label": dashboardStat[0].label,
+                                                "quantity": dashboardStat[0].data
+                                            }, {
+                                                "label": dashboardStat[1].label,
+                                                "quantity": dashboardStat[1].data
+                                            }, {
+                                                "label": dashboardStat[2].label,
+                                                "quantity": dashboardStat[2].data
+                                            }, {
+                                                "label": dashboardStat[3].label,
+                                                "quantity": dashboardStat[3].data
+                                            }, {
+                                                "label": dashboardStat[4].label,
+                                                "quantity": dashboardStat[4].data
+                                            },
+                                            ]}/>
+                                    </div>
+                                </div>
                                 <div className="col-md-12 my-2 row">
                                     <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">
                                         <h5>Talabalar statistikasi</h5>
@@ -281,7 +258,7 @@ class Dashboard extends Component {
                             <TabContent activeTab={activeTab}>
                                 <br/>
                                 <TabPane tabId="1">
-                                    <Input type={"select"} onChange={selectDailySchedule}>
+                                    <Input label={"To'lov turi"} type={"select"} onChange={l}>
                                         <option value={"MONDAY"}>Dushanba</option>
                                         <option value={"TUESDAY"}>Seshanba</option>
                                         <option value={"WEDNESDAY"}>Chorshanba</option>
@@ -293,10 +270,10 @@ class Dashboard extends Component {
                                     <br/>
                                     <Table bordered>
                                         <thead>
-                                        <tr id={"ketmon"}>
-                                            <td className={"text-center"}>Time</td>
+                                        <tr>
+                                            <td>Time</td>
                                             {rooms ? rooms.map((item, i) =>
-                                                <td className={"text-center"}>
+                                                <td>
                                                     {item.name}
                                                 </td>
                                             ) : ''}
@@ -306,19 +283,66 @@ class Dashboard extends Component {
                                         {
                                             list ? list.map((item, i) =>
                                                 <tr key={i}>
-                                                    <td className={"text-center"}>{item}</td>
-                                                    {
-                                                        rooms ? rooms.map((item2, k) =>
-                                                            <td id={"cell" + i + k}>{"cell" + i + k}</td>
+                                                    <td className={"border-style-table-dashboard"}>{item}</td>
+                                                    {rooms ? rooms.map((item2, i) =>
+                                                        dailySchedule ? dailySchedule.map((item3, i) =>
+                                                            item === item3.startTime ?
+                                                                item3 && item3.room && item3.room.id === item2.id ?
+                                                                    <>
+                                                                        {d(item3.room.id)}
+                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}
+                                                                            className={"table-group-style"}>
+                                                                            <div style={{backgroundColor: setBg()}}
+                                                                                 className={"inside-td-block container"}>
+                                                                                <div className={"row"}>
+                                                                                   <span
+                                                                                       className={"group-name-style-dash"}>
+                                                                                       #{item3.name}
+                                                                                   </span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
+                                                                                       {item3.courseName}
+                                                                                   </span>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <span>
+                                                                                       {item3.teacherName}
+                                                                                   </span>
+                                                                                </div>
+                                                                                <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startTime}
+                                                                                   </span>--
+                                                                                    <span>
+                                                                                       {item3.finishTime}
+                                                                                   </span>
+                                                                                    <span
+                                                                                        className={"ml-auto group-name-style-dash"}>
+                                                                                       ST:{item3.countStudent}
+                                                                                   </span>
+                                                                                </div>
+                                                                                <div className={"row"}>
+                                                                                   <span>
+                                                                                       {item3.startDates.substring(0, 10)}
+                                                                                   </span>
+                                                                                    --
+                                                                                    <span>
+                                                                                       {item3.finishDates.substring(0, 10)}
+                                                                                   </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </>
+                                                                    : ''
+                                                                : ''
                                                         ) : ''
-                                                    }
+                                                    ) : ''}
+
                                                 </tr>
                                             ) : ''
                                         }
                                         </tbody>
                                     </Table>
                                 </TabPane>
-
                                 <TabPane tabId="2" className={"teacher-salary-block"}>
                                     <br/>
                                     <Table bordered>
@@ -333,9 +357,9 @@ class Dashboard extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {/*{*/}
-                                        {/*    console.log(weeklySchedule)*/}
-                                        {/*}*/}
+                                        {
+                                            console.log(weeklySchedule)
+                                        }
                                         {
 
                                             list ? list.map((item, i) =>
@@ -400,7 +424,7 @@ class Dashboard extends Component {
     }
 }
 
-Dashboard.propTypes = {};
+DashboardEski.propTypes = {};
 
 export default connect(({
                             app: {
@@ -455,4 +479,4 @@ export default connect(({
         dashboardStat,
         weeklySchedule
     })
-)(Dashboard);
+)(DashboardEski);
