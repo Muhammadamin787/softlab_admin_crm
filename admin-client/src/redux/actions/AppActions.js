@@ -246,10 +246,10 @@ export const downloadAccountantFileAction = (v) => () => {
     document.body.appendChild(link)
     link.click();
 }
-export const downloadQarzdorlarFileAction = (v) => () =>{
+export const downloadQarzdorlarFileAction = (v) => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/qarzdor")
-    link.setAttribute("download","qarzdorlar.xlsx")
+    link.setAttribute("download", "qarzdorlar.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -1759,7 +1759,7 @@ export const saveToplamAction = (data) => (dispatch) => {
 export const deleteMurojaatAction = (data) => (dispatch) => {
     dispatch({
         api: deleteToplamApi,
-        types:[
+        types: [
             types.REQUEST_START,
             types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
@@ -1767,9 +1767,9 @@ export const deleteMurojaatAction = (data) => (dispatch) => {
         data
     }).then(res => {
         dispatch({
-            type:'updateState',
-            payload:{
-                deleteModal : false
+            type: 'updateState',
+            payload: {
+                deleteModal: false
             }
         })
         toast.success("Malumot o`chirildi")
@@ -2056,12 +2056,11 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.history) {
-            data.history.go(-1)
-        }
-        dispatch(getEmployeeListAction())
-        dispatch(getRegionsAction())
-
+        console.log(1212);
+        console.log(data);
+        data.history.push("/admin/staffs")
+        console.log(45);
+        dispatch(getEmployeeListAction({page: 0, size: 20}))
     }).catch((err) => {
         toast.error("Xatolik")
         dispatch({

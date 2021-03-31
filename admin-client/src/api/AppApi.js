@@ -509,7 +509,7 @@ export const getEmployeeListApi = (data) => {
 }
 
 export const deleteEmployeeApi = (data) => {
-    return HttpClient.doDelete(api.employee + "/" + data)
+    return HttpClient.doDelete(api.employee + "/" + data.id)
 }
 // FINSIH EMPLOYEE
 

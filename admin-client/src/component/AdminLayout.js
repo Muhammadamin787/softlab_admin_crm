@@ -195,7 +195,7 @@ class AdminLayout extends Component {
                                     Hududlar
                                 </Link>
                             </Link>
-                            <Link to="/admin/staff" className={
+                            <Link to="/admin/staffs" className={
                                 this.props.pathname === "/admin/staffs" ?
                                     "active-link" : "default-link"
                             }>
