@@ -459,7 +459,6 @@ const reducers = {
     [types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
         state.showModal = true
-        console.log(payload.payload.object, 243);
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {

@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import AdminLayout from "../../component/AdminLayout";
 import {
-    changeAppalTypeAction,
+    changeAppalTypeAction, deleteOneAppealAction,
     getAppealListAllAction,
     getClientStatusListAction, getOneAppealForEdit, getRegionsAction, getReklamaAction,
     getToplamListForSelectAction, makeStudentByAppealAction,
@@ -85,6 +85,21 @@ class Card extends Component {
                 }
             })
         }
+        const deleteItem = (item) => {
+            console.log(currentObject);
+            dispatch(deleteOneAppealAction({id: item}))
+        }
+        const openDeleteModal = (item) => {
+            console.log(item);
+            this.setState({currentObject: item.id})
+            dispatch({
+                type: "updateState",
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
+        }
+
         const openEditModal = (item, statusEnum) => {
             if (item.length > 0) {
                 dispatch(getOneAppealForEdit({id: item}))
@@ -98,7 +113,6 @@ class Card extends Component {
                 })
             }
         }
-
         const setClientStatus = (e, v) => {
             this.setState({statusTypeId: e.value})
         }
@@ -114,7 +128,7 @@ class Card extends Component {
             v.reklamaId = reklamaId
             v.clientStatusId = statusTypeId
             if (this.state.editModal) {
-                v.id = currentItem && currentItem.id
+                v.id = (currentItem && currentItem.id)
                 if (!reklamaId)
                     v.reklamaId = currentItem.reklamaId
                 if (!regionId)
@@ -131,7 +145,6 @@ class Card extends Component {
 
         }
         const makeGroup = (id) => {
-            dispatch(makeStudentByAppealAction({id: id, history: history}));
         }
 
         const allowDrop = (e) => {
@@ -179,19 +192,6 @@ class Card extends Component {
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
-        const openDeleteModal = (item) => {
-            this.setState({currentObject: item})
-            dispatch({
-                type: 'updateState',
-                payload: {
-                    deleteModal: !deleteModal
-                }
-            })
-        }
-        // const deleteItem = (item) => {
-        //     console.log(item)
-        //     dispatch(deleteCardAction(item))
-        // }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
@@ -233,7 +233,7 @@ class Card extends Component {
                                                             <DropdownMenu>
                                                                 <DropdownItem
                                                                     onClick={() => makeGroupModal(section.id)}>Guruh
-                                                                    tayyorlash</DropdownItem>
+                                                                    ochish</DropdownItem>
                                                             </DropdownMenu>
                                                         </Dropdown>
                                                     </Col>
@@ -272,8 +272,9 @@ class Card extends Component {
                                                                         qo'shish</DropdownItem>
                                                                     <DropdownItem
                                                                         onClick={() => openEditModal(appeal.id, item.title)}>Tahrirlash</DropdownItem>
+                                                                    <hr/>
                                                                     <DropdownItem
-                                                                        onClick={() => openDeleteModal(item.id)}>O'chirish</DropdownItem>
+                                                                        onClick={() => openDeleteModal(appeal)}>O'chirish</DropdownItem>
                                                                 </DropdownMenu>
                                                             </Dropdown>
                                                         </Col>
@@ -288,11 +289,10 @@ class Card extends Component {
                     </Container>
                 </div>
 
-
                 <Modal id={""} isOpen={showModal} toggle={openModal} className={""} size={"md"}>
                     <AvForm className={""} onValidSubmit={saveItem}>
                         <ModalHeader isOpen={showModal} toggle={() => openModal("", false)} charCode="X">
-                            {currentObject && currentObject.id ? "Talabani tahrirlash" : "Yangi talaba qo'shish"}
+                            {this.state.editModal ? "Tahrirlash" : "Yangi qo'shish"}
                         </ModalHeader>
                         <ModalBody>
                             <Row>
@@ -389,18 +389,17 @@ class Card extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
-                {/*<Modal isOpen={deleteModal} toggle={openDeleteModal} className={""}>*/}
-                {/*    <ModalHeader isOpen={showModal} toggle={openDeleteModal} charCode={"X"}>*/}
-                {/*        O`chirish*/}
-                {/*    </ModalHeader>*/}
-                {/*    <ModalBody>Rostdanham o`chirmoqchimisiz</ModalBody>*/}
-                {/*    <ModalFooter>*/}
-                {/*        <Button color={"secondary"} onClick={openDeleteModal}>Yo`q</Button>*/}
-                {/*        <Button color={"primary"} onClick={() => deleteItem(currentObject)}>Ha</Button>*/}
-                {/*    </ModalFooter>*/}
-                {/*</Modal>*/}
-
+                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                                 charCode="x">O'chirish</ModalHeader>
+                    <ModalBody>
+                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                    </ModalFooter>
+                </Modal>
             </AdminLayout>
         )
     }
