@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, downloadFileAction, downloadStudentFileAction, getDebtorsAction,
+    deleteStudentAction, downloadFileAction, downloadQarzdorlarFileAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction, getStudentsBySearchAction,
     saveStudentAction, toChangeStatusAction,
     uploadFileAction
@@ -71,6 +71,7 @@ class Student extends Component {
             toArchiveModal,
             toActiveModal,
         } = this.props;
+
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -138,6 +139,9 @@ class Student extends Component {
         }
         const downloadExcel = (e, v) => {
             dispatch(downloadStudentFileAction(v))
+        }
+        const downloadQarzdorlar = (e, v) => {
+            dispatch(downloadQarzdorlarFileAction(v))
         }
         //
 
@@ -334,8 +338,16 @@ class Student extends Component {
                     </div>
                     :
                     <div className={"flex-column container"}>
-                        <h1>Qazdorlar</h1>
-                        <Button color={"primary mt-5"} onClick={openFiltrDebtors}>Talabalar</Button>
+                        <h1>Qazdorlar</h1><br/>
+                        <div align={"left"} className={"mb-1"}>
+                            <Button color={"btn btn-outline-info"} size={"sm"}
+                                    className={"rounded"}
+                                    onClick={openFiltrDebtors}>Talabalar</Button>
+                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
+                                    className={"btn mx-2 border-none rounded"}
+                                    onClick={downloadQarzdorlar}>
+                                <span className={"icon icon-download"}></span></Button>
+                        </div>
                         <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>
@@ -485,13 +497,14 @@ class Student extends Component {
 
 }
 
-Student.propTypes = {}
+Student.propTypes = {
+}
 
 
 export default connect((
-    {
-        app: {
-            page,
+{
+    app: {
+        page,
             size,
             totalElements,
             students,
@@ -511,31 +524,31 @@ export default connect((
             teacherDto,
             toArchiveModal,
             toActiveModal,
-        }
-        ,
     }
-    ) => (
-        {
-            page,
-            size,
-            selectDebtors,
-            totalElements,
-            students,
-            specializationDto,
-            loading,
-            courseCategories,
-            showModal,
-            deleteModal,
-            selectItems,
-            spec,
-            selectItemsFromSpec,
-            regions,
-            attachmentId,
-            readModal,
-            teachers,
-            teacherDto,
-            toArchiveModal,
-            toActiveModal,
-        }
-    )
+,
+}
+) => (
+{
+    page,
+        size,
+        selectDebtors,
+        totalElements,
+        students,
+        specializationDto,
+        loading,
+        courseCategories,
+        showModal,
+        deleteModal,
+        selectItems,
+        spec,
+        selectItemsFromSpec,
+        regions,
+        attachmentId,
+        readModal,
+        teachers,
+        teacherDto,
+        toArchiveModal,
+        toActiveModal,
+}
+)
 )(Student);

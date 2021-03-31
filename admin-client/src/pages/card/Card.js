@@ -191,10 +191,10 @@ class Card extends Component {
                 }
             })
         }
-        const deleteItem = (item) => {
-            console.log(item)
-            dispatch(deleteCardAction(item))
-        }
+        // const deleteItem = (item) => {
+        //     console.log(item)
+        //     dispatch(deleteCardAction(item))
+        // }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
@@ -399,16 +399,16 @@ class Card extends Component {
                     </AvForm>
                 </Modal>
 
-                <Modal isOpen={deleteModal} toggle={openDeleteModal} className={""}>
-                    <ModalHeader isOpen={showModal} toggle={openDeleteModal} charCode={"X"}>
-                        O`chirish
-                    </ModalHeader>
-                    <ModalBody>Rostdanham o`chirmoqchimisiz</ModalBody>
-                    <ModalFooter>
-                        <Button color={"secondary"} onClick={openDeleteModal}>Yo`q</Button>
-                        <Button color={"primary"} onClick={() => deleteItem(currentObject)}>Ha</Button>
-                    </ModalFooter>
-                </Modal>
+                {/*<Modal isOpen={deleteModal} toggle={openDeleteModal} className={""}>*/}
+                {/*    <ModalHeader isOpen={showModal} toggle={openDeleteModal} charCode={"X"}>*/}
+                {/*        O`chirish*/}
+                {/*    </ModalHeader>*/}
+                {/*    <ModalBody>Rostdanham o`chirmoqchimisiz</ModalBody>*/}
+                {/*    <ModalFooter>*/}
+                {/*        <Button color={"secondary"} onClick={openDeleteModal}>Yo`q</Button>*/}
+                {/*        <Button color={"primary"} onClick={() => deleteItem(currentObject)}>Ha</Button>*/}
+                {/*    </ModalFooter>*/}
+                {/*</Modal>*/}
 
             </AdminLayout>
         )

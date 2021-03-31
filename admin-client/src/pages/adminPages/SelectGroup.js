@@ -580,178 +580,178 @@ class SelectGroup extends Component {
                                              placeholer={"nomi"} required/>
                                     <AvField className={'form-control'} label={'Kurs:'} type="select"
                                              name="courseId"
-                                             defaultValue={currentObject &&
-                                             currentObject.course && currentObject.course.courseCategory &&
-                                             currentObject.course.courseCategory &&
-                                             currentObject.course.courseCategory.id ?
-                                                 currentObject.course.courseCategory.id : "0"}>
-                                        <option key={0} value={"0"}>Kursni tanlang</option>
+                                        defaultValue={
+                                        currentObject &&
+                                        currentObject.course && currentObject.course.courseCategory &&
+                                        currentObject.course.courseCategory.name ?
+                                        currentObject.course.courseCategory.name : "0"}>
+                                    <option key={0} value={"0"}>Kursni tanlang</option>
                                         {getItems ? getItems.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
-                                    </AvField>
-                                    <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
-                                             name="teacherId"
-                                             defaultValue={currentObject
-                                             && currentObject.teacher && currentObject.teacher.user &&
-                                             currentObject.teacher.user.fullName ? currentObject.teacher.user.fullName : "0"}>
-                                        <option key={0} value={"0"}>O'qituvchini tanlang</option>
-                                        {teachers && teachers.length > 0 ? teachers.map((item, i) =>
-                                            <option key={i} value={item.uuid}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
+                                </AvField>
+                                <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
+                                         name="teacherId"
+                                         defaultValue={currentObject
+                                         && currentObject.teacher && currentObject.teacher.user &&
+                                         currentObject.teacher.user.fullName ? currentObject.teacher.user.fullName : "0"}>
+                                    <option key={0} value={"0"}>O'qituvchini tanlang</option>
+                                    {teachers && teachers.length > 0 ? teachers.map((item, i) =>
+                                        <option key={i} value={item.uuid}>{item.name}</option>
+                                    ) : ""}
+                                </AvField>
 
-                                    <AvCheckboxGroup inline name="weekdays"
-                                                     label="Dars kunlari" required>
-                                        <AvCheckbox label="Dush" value="MONDAY"/>
-                                        <AvCheckbox label="Sesh" value="TUESDAY"/>
-                                        <AvCheckbox label="Chor" value="WEDNESDAY"/>
-                                        <AvCheckbox label="Pay" value="THURSDAY"/>
-                                        <AvCheckbox label="Ju" value="FRIDAY"/>
-                                        <AvCheckbox label="Shan" value="SATURDAY"/>
-                                        <AvCheckbox label="Yak" value="SUNDAY"/>
-                                    </AvCheckboxGroup>
+                                <AvCheckboxGroup inline name="weekdays"
+                                                 label="Dars kunlari" required>
+                                    <AvCheckbox label="Dush" value="MONDAY"/>
+                                    <AvCheckbox label="Sesh" value="TUESDAY"/>
+                                    <AvCheckbox label="Chor" value="WEDNESDAY"/>
+                                    <AvCheckbox label="Pay" value="THURSDAY"/>
+                                    <AvCheckbox label="Ju" value="FRIDAY"/>
+                                    <AvCheckbox label="Shan" value="SATURDAY"/>
+                                    <AvCheckbox label="Yak" value="SUNDAY"/>
+                                </AvCheckboxGroup>
 
-                                    <AvField className={'form-control'} label={"Xona:"} type="select"
-                                             name="roomId"
-                                             defaultValue={currentObject && currentObject.room ? currentObject.room.id : "0"}>
-                                        <option key={0} value={"0"}> tanlang</option>
-                                        {rooms && rooms.length > 0 ? rooms.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
-                                    <Row>
-                                        <Col md={6}>
-                                            <AvField type="time"
-                                                     defaultValue={currentObject ? currentObject.startTime : false}
-                                                     label={"Boshlanish vaqti"} name={"startTime"}/>
-                                        </Col>
-                                        <Col md={6}>
-                                            <AvField type="time"
-                                                     defaultValue={currentObject ? currentObject.finishTime : false}
-                                                     label={"Tugash vaqti"} name={"finishTime"}/>
-                                        </Col>
-                                    </Row>
-                                    <AvField type="date"
-                                             defaultValue={currentObject && currentObject.startDate ? moment(currentObject.startDate).format('YYYY-MM-DD') : ""}
-                                             label={"Kursning boshlanish sanasi"} name={"startDate"}/>
-                                    <AvField type="date"
-                                             defaultValue={currentObject && currentItem.finishDate ? moment(currentObject.finishDate).format('YYYY-MM-DD') : ""}
-                                             label={"Kursning tugash sanasi"} name={"finishDate"}/>
-                                    <AvField type="checkbox"
-                                             defaultValue={currentObject ? currentObject.active : false}
-                                             label={"Active"} name={"active"}/>
-                                </div>
-                            </ModalBody>
+                                <AvField className={'form-control'} label={"Xona:"} type="select"
+                                         name="roomId"
+                                         defaultValue={currentObject && currentObject.room ? currentObject.room.id : "0"}>
+                                    <option key={0} value={"0"}> tanlang</option>
+                                    {rooms && rooms.length > 0 ? rooms.map((item, i) =>
+                                        <option key={i} value={item.id}>{item.name}</option>
+                                    ) : ""}
+                                </AvField>
+                                <Row>
+                                    <Col md={6}>
+                                        <AvField type="time"
+                                                 defaultValue={currentObject ? currentObject.startTime : false}
+                                                 label={"Boshlanish vaqti"} name={"startTime"}/>
+                                    </Col>
+                                    <Col md={6}>
+                                        <AvField type="time"
+                                                 defaultValue={currentObject ? currentObject.finishTime : false}
+                                                 label={"Tugash vaqti"} name={"finishTime"}/>
+                                    </Col>
+                                </Row>
+                                <AvField type="date"
+                                         defaultValue={currentObject && currentObject.startDate ? moment(currentObject.startDate).format('YYYY-MM-DD') : ""}
+                                         label={"Kursning boshlanish sanasi"} name={"startDate"}/>
+                                <AvField type="date"
+                                         defaultValue={currentObject && currentItem.finishDate ? moment(currentObject.finishDate).format('YYYY-MM-DD') : ""}
+                                         label={"Kursning tugash sanasi"} name={"finishDate"}/>
+                                <AvField type="checkbox"
+                                         defaultValue={currentObject ? currentObject.active : false}
+                                         label={"Active"} name={"active"}/>
+                            </div>
                         </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
-                            <Button color="primary">Saqlash</Button>
-                        </ModalFooter>
-                    </AvForm>
-                </Modal>
-                <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
-                    <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
-                                 charCode="X">O'chirish</ModalHeader>
-                    <ModalBody>
-                        Rostdan ham ushbu elementni o'chirishni istaysizmi?
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
-                        <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+                        <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                        <Button color="primary">Saqlash</Button>
                     </ModalFooter>
-                </Modal>
-                <Modal isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")} className={""}>
-                    <AvForm onValidSubmit={changeStudentStatus}>
-                        <ModalHeader isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")}
-                                     charCode="X">O'chirish</ModalHeader>
-                        <ModalBody>
-                            <AvField className={'form-control'} onChange={openGroupSelects} label={"Status:"}
-                                     type="select"
-                                     name="situation" required>
-                                <option value={"0"}>Statusni tanglang</option>
-                                <option value={"TRANSFER"}>Boshqa guruhga ko'chirish</option>
-                                <option value={"ACTIVE"}>Faollashtirish</option>
-                                <option value={"FROZEN"}>Muzlatish</option>
-                                <option value={"ARCHIVE"}>Arxivlash</option>
-                            </AvField>
-                            {this.state.groupInput ?
-                                <Select
-                                    placeholder="Guruhni tanlang..."
-                                    name="newGroupId"
-                                    isSearchable={true}
-                                    options={selectItems}
-                                    onChange={getTransferGroup}
-                                    className="basic-multi-select"
-                                    classNamePrefix="select"
-                                />
-                                : ""}
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
-                            <Button color="primary">Saqlash</Button>
-                        </ModalFooter>
-                    </AvForm>
-                </Modal>
-                <Modal isOpen={openModal1}>
-                    <ModalHeader>Kunlik davomat</ModalHeader>
-                    <ModalBody>
-                        <AvForm onValidSubmit={saveAttendance}>
-                            {/*<AvField type={"date"} name={"date"}/>*/}
-                            <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''}
-                                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
-                            <AvField type={"hidden"} name={"teacherId"}
-                                     defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
-                            <AvField type={"hidden"} name={"groupId"}
-                                     defaultValue={currentItem ? currentItem.id : ''}/>
-                            <Table>
-                                {students ? students.map((item, i) =>
-                                    item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
-                                        <tr key={i}>
-                                            <td>{item.fullName}</td>
-                                            <td>
-                                                <Input type={"checkbox"} id={item.id}/>
-                                            </td>
-                                        </tr>
-                                    ) : ""
-                                ) : ''}
-                            </Table>
+                </AvForm>
+            </Modal>
+        <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
+            <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
+                         charCode="X">O'chirish</ModalHeader>
+            <ModalBody>
+                Rostdan ham ushbu elementni o'chirishni istaysizmi?
+            </ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={() => openDeleteModal("")}>Yo'q</Button>
+                <Button color="light" onClick={() => deleteItem(currentObject)}>Ha</Button>
+            </ModalFooter>
+        </Modal>
+        <Modal isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")} className={""}>
+            <AvForm onValidSubmit={changeStudentStatus}>
+                <ModalHeader isOpen={changeStatusModal} toggle={() => changeStatusOpenModal("")}
+                             charCode="X">O'chirish</ModalHeader>
+                <ModalBody>
+                    <AvField className={'form-control'} onChange={openGroupSelects} label={"Status:"}
+                             type="select"
+                             name="situation" required>
+                        <option value={"0"}>Statusni tanglang</option>
+                        <option value={"TRANSFER"}>Boshqa guruhga ko'chirish</option>
+                        <option value={"ACTIVE"}>Faollashtirish</option>
+                        <option value={"FROZEN"}>Muzlatish</option>
+                        <option value={"ARCHIVE"}>Arxivlash</option>
+                    </AvField>
+                    {this.state.groupInput ?
+                        <Select
+                            placeholder="Guruhni tanlang..."
+                            name="newGroupId"
+                            isSearchable={true}
+                            options={selectItems}
+                            onChange={getTransferGroup}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                        />
+                        : ""}
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={() => changeStatusOpenModal("")}>Yo'q</Button>
+                    <Button color="primary">Saqlash</Button>
+                </ModalFooter>
+            </AvForm>
+        </Modal>
+        <Modal isOpen={openModal1}>
+            <ModalHeader>Kunlik davomat</ModalHeader>
+            <ModalBody>
+                <AvForm onValidSubmit={saveAttendance}>
+                    {/*<AvField type={"date"} name={"date"}/>*/}
+                    <AvField type={"hidden"} name={"date"} defaultValue={currentDay ? currentDay : ''}
+                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                    <AvField type={"hidden"} name={"teacherId"}
+                             defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
+                    <AvField type={"hidden"} name={"groupId"}
+                             defaultValue={currentItem ? currentItem.id : ''}/>
+                    <Table>
+                        {students ? students.map((item, i) =>
+                            item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
+                                <tr key={i}>
+                                    <td>{item.fullName}</td>
+                                    <td>
+                                        <Input type={"checkbox"} id={item.id}/>
+                                    </td>
+                                </tr>
+                            ) : ""
+                        ) : ''}
+                    </Table>
 
-                            <ModalFooter>
-                                <Button outline onClick={showHideModal}>Bekor qilish</Button>
-                                <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
-                            </ModalFooter>
-                        </AvForm>
-                    </ModalBody>
+                    <ModalFooter>
+                        <Button outline onClick={showHideModal}>Bekor qilish</Button>
+                        <Button outline color={"primary"} type={"submit"}>Saqlash</Button>
+                    </ModalFooter>
+                </AvForm>
+            </ModalBody>
 
-                </Modal>
+        </Modal>
 
-                <Modal isOpen={addStudentInGroupModal} method={"post"} toggle={() => openAddStudentModal("")}
-                       className={""}>
-                    <AvForm onValidSubmit={addStudentSaveItem}>
-                        <ModalHeader>
-                            <p>Guruhga o'quvchi qo'shish : </p>
-                        </ModalHeader>
-                        <ModalBody className={"ml-1"}>
-                            <AsyncSelect
-                                placeholder={"Qidirish..."}
-                                onChange={selectStudentOption}
-                                isSearchable={true}
-                                onInputChange={handleInputChange}
-                                loadOptions={selectedOptions}
-                                isClearable={true}
-                                options={studentsOption}
-                                classNamePrefix={"select"}
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color={"success"} type={"submit"}>Qo'shish</Button>
-                            <Button color="secondary" onClick={openAddStudentInGroupModal}>Bekor qilish</Button>
-                        </ModalFooter>
-                    </AvForm>
-                </Modal>
-            </AdminLayout>
-        );
+        <Modal isOpen={addStudentInGroupModal} method={"post"} toggle={() => openAddStudentModal("")}
+               className={""}>
+            <AvForm onValidSubmit={addStudentSaveItem}>
+                <ModalHeader>
+                    <p>Guruhga o'quvchi qo'shish : </p>
+                </ModalHeader>
+                <ModalBody className={"ml-1"}>
+                    <AsyncSelect
+                        placeholder={"Qidirish..."}
+                        onChange={selectStudentOption}
+                        isSearchable={true}
+                        onInputChange={handleInputChange}
+                        loadOptions={selectedOptions}
+                        isClearable={true}
+                        options={studentsOption}
+                        classNamePrefix={"select"}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button color={"success"} type={"submit"}>Qo'shish</Button>
+                    <Button color="secondary" onClick={openAddStudentInGroupModal}>Bekor qilish</Button>
+                </ModalFooter>
+            </AvForm>
+        </Modal>
+    </AdminLayout>
+    );
     }
 }
 

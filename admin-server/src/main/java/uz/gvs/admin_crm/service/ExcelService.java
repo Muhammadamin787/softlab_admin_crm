@@ -6,6 +6,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uz.gvs.admin_crm.entity.Student;
+import uz.gvs.admin_crm.entity.StudentPayment;
+import uz.gvs.admin_crm.payload.StudentDto;
 import uz.gvs.admin_crm.payload.excelDtos.PaymentDtos;
 import uz.gvs.admin_crm.payload.excelDtos.PaymentExcelDtos;
 import uz.gvs.admin_crm.repository.StudentPaymentRepository;
@@ -42,7 +45,6 @@ public class ExcelService {
             String payTypeName = client[6].toString();
             String group = client[7].toString();
 
-
             PaymentDtos paymentDto = new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group);
             if (paymentExcelDtos.size() > 0) {
                 boolean isHave = false;
@@ -71,10 +73,11 @@ public class ExcelService {
                                         new PaymentDtos(studentName, tolov, keshbek, all, payDate, payTypeName, group))));
             }
         }
-            byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
+        byte[] file = makeExcelService.listForToAccountant(paymentExcelDtos);
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=accountant.xlsx")
                 .body(file);
     }
+
 }
