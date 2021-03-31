@@ -39,6 +39,12 @@ import {AiOutlinePlusCircle, FaRegCalendarCheck, FaRegCalendarPlus} from "react-
 class SelectGroup extends Component {
     componentDidMount() {
         let id = 0
+        this.props.dispatch({
+            type: "updateState",
+            payload: {
+                groups: []
+            }
+        })
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             const {dispatch} = this.props
             id = this.props.match.params.id;
@@ -48,7 +54,6 @@ class SelectGroup extends Component {
             dispatch(getCoursesAction())
             dispatch(getGroupsForSelectAction())
             dispatch(getTeachersForSelectAction())
-
             dispatch(getAttendanceListAction(id))
 
             let year = new Date().getFullYear()
@@ -431,8 +436,8 @@ class SelectGroup extends Component {
                                                     </hgroup>
                                                     <hgroup>
                                                         <small className={"text-secondary"}>Vaqti: </small>
-                                                        <h6>{currentItem.weekdays && currentItem.weekdays.map(i =>
-                                                            <span> {i}, </span>)}</h6>
+                                                        <h6>{currentItem.weekdays && currentItem.weekdays.map((i, k) =>
+                                                            <span key={k}> {i}, </span>)}</h6>
                                                         <h6>{currentItem.startTime + " - " + currentItem.finishTime}</h6>
                                                     </hgroup>
                                                     <hgroup>
@@ -561,14 +566,16 @@ class SelectGroup extends Component {
                                                     </div>
                                                 </div>
                                                 <div style={gg}>
-                                                    <Table>
+                                                    <table>
+                                                        <thead>
                                                         <tr>
                                                             <td className={"py-2"}>Talaba</td>
                                                             {
-                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
-                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map((item, l) =>
+                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map((c_item, o) =>
                                                                         c_item === days[new Date(year, month, item).getDay()] ?
-                                                                            <td className={"text-center py-2 attandance-block_table_td__days"}>
+                                                                            <td key={l * o}
+                                                                                className={"text-center py-2 attandance-block_table_td__days"}>
                                                                                 {item}/{days[new Date(year, month, item).getDay()]}
                                                                             </td>
                                                                             : ''
@@ -576,19 +583,22 @@ class SelectGroup extends Component {
                                                                 ) : ''
                                                             }
                                                         </tr>
+                                                        </thead>
+                                                        <tbody>
                                                         {students ? students.map((item, i) =>
                                                             item.studentGroupDto && item.studentGroupDto.studentGroupStatus === "ACTIVE" ? (
                                                                 <tr key={i}>
                                                                     <td className={"attandance-block_td py-auto"}>{item.fullName}</td>
-
-                                                                    {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item2 =>
-                                                                        currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                    {daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map((item2, l) =>
+                                                                        currentItem && currentItem.weekdays ? currentItem.weekdays.map((c_item, m) =>
                                                                             c_item === days[new Date(year, month, item2).getDay()] ?
-                                                                                <td className={"text-center py-auto"}>
+                                                                                <td key={l * m}
+                                                                                    className={"text-center py-auto"}>
                                                                                     {
-                                                                                        attendanceList ? attendanceList.map(item3 =>
+                                                                                        attendanceList ? attendanceList.map((item3, f) =>
                                                                                             (year + "-" + ((month + 1) > 9 ? (month + 1) : "0" + (month + 1)) + "-" + (item2 > 9 ? item2 : "0" + item2)) === moment(item3.attendDate).format('YYYY-MM-DD') && item.id === item3.student.id && item3.attandanceEnum === "YES" ?
                                                                                                 <FaRegCalendarCheck
+                                                                                                    key={f}
                                                                                                     color={"#33cc33"}
                                                                                                     className={"my-2"}
                                                                                                 /> : ''
@@ -604,10 +614,10 @@ class SelectGroup extends Component {
                                                         <tr>
                                                             <td></td>
                                                             {
-                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map(item =>
-                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map(c_item =>
+                                                                daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.map((item, j) =>
+                                                                    currentItem && currentItem.weekdays ? currentItem.weekdays.map((c_item, q) =>
                                                                         c_item === days[new Date(year, month, item).getDay()] ?
-                                                                            <td className={"text-center"}>
+                                                                            <td key={j * q} className={"text-center"}>
                                                                                 <FaRegCalendarPlus
                                                                                     color={"#EE8033"}
                                                                                     onClick={() => showHideModal(year, month, item)}
@@ -618,7 +628,8 @@ class SelectGroup extends Component {
                                                                 ) : ''
                                                             }
                                                         </tr>
-                                                    </Table>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </TabPane>
@@ -800,7 +811,8 @@ class SelectGroup extends Component {
                                      defaultValue={currentItem && currentItem.teacher ? currentItem.teacher.id : ''}/>
                             <AvField type={"hidden"} name={"groupId"}
                                      defaultValue={currentItem ? currentItem.id : ''}/>
-                            <Table>
+                            <table>
+                                <tbody>
                                 {this.state.allAttendance && this.state.allAttendance.map((item, i) =>
                                     <tr key={i}>
                                         <td>{item.student}</td>
@@ -811,7 +823,8 @@ class SelectGroup extends Component {
                                         </td>
                                     </tr>
                                 )}
-                            </Table>
+                                </tbody>
+                            </table>
 
                             <ModalFooter>
                                 <Button outline onClick={showHideModal}>Bekor
@@ -831,8 +844,8 @@ class SelectGroup extends Component {
                                      defaultValue={currentItem ? currentItem.id : ''}/>
                             <div className={"px-3"}>
                                 {
-                                    this.state.allAttendance && this.state.allAttendance.map(item => (
-                                        <div key={item.studentId} className={"mt-2 mb-3"}>
+                                    this.state.allAttendance && this.state.allAttendance.map((item, k) => (
+                                        <div key={k} className={"mt-2 mb-3"}>
                                             <div className={"my-1"}>{item.student}</div>
                                             <div className={"row"}>
                                                 <div className={"col-6"}>

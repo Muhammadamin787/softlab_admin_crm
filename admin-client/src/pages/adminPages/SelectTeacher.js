@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
     Button,
     Col,
-    CustomInput, Input,
     Modal,
     ModalBody,
     ModalFooter,
@@ -14,13 +13,10 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteCourseAction, deleteGroupAction, deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
-    getPayTypeListAction,
-    getRegionsAction, getStudentPaymentAction, getStudentsAction,
-
-    getTeacherAction, getTeacherGroupAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
-    saveCourseAction,
-    saveStudentAction, saveStudentPaymentAction, saveTeacherAction, saveTeacherSalaryAction,
+    deleteTeacherAction, deleteTeacherSalaryAction, editTeacherSalaryListAction,
+    getPayTypeListAction, getRegionsAction,
+    getTeacherAction, getTeacherGroupsAction, getTeacherSalaryListAction, giveSalaryAction,
+    saveTeacherAction, saveTeacherSalaryAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -29,13 +25,18 @@ import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import {formatPhoneNumber} from "../../utils/addFunctions";
-import Select from "react-select";
 import Pagination from "react-js-pagination";
-import {FcCurrencyExchange, GiReceiveMoney, MdAttachMoney} from "react-icons/all";
+import {FcCurrencyExchange} from "react-icons/all";
 
 class SelectTeacher extends Component {
     componentDidMount() {
         let id = 0
+        this.props.dispatch({
+            type: "updateState",
+            payload: {
+                groups: []
+            }
+        })
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
             this.props.dispatch(getTeacherAction({id: id}))
@@ -77,7 +78,6 @@ class SelectTeacher extends Component {
             deleteModal,
             currentItem,
             regions,
-            teacherSalary,
             teacherSalaryList,
             showEditSalaryModal,
             deleteSalaryModal,
@@ -207,7 +207,7 @@ class SelectTeacher extends Component {
             if (v.payTypeId === "") {
                 v.payTypeId = currentObject.payType.id
             }
-                v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
+            v.amountDate = moment(v.amountDate).format('YYYY-MM-DD hh:mm:ss').toString()
             console.log(v)
             this.props.dispatch(editTeacherSalaryListAction(v))
         }
@@ -224,11 +224,8 @@ class SelectTeacher extends Component {
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
                         <h3>{currentItem && currentItem.userDto && currentItem.userDto.fullName} </h3>
-                        <Link
-                            to={"/admin/teachers"}
-                            className={"text-decoration-none"}>
-                        <span
-                            className={""}> O'qituvchilar</span>
+                        <Link to={"/admin/teachers"} className={"text-decoration-none"}>
+                            <span className={""}> O'qituvchilar</span>
                         </Link>
                     </hgroup>
 
@@ -345,8 +342,9 @@ class SelectTeacher extends Component {
                                                                     </Col>
                                                                     <Col md={3}>
                                                                         <span
-                                                                            className={"text-secondary"}>{item.weekdays && item.weekdays.map(i =>
-                                                                            <span> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
+                                                                            className={"text-secondary"}>{item.weekdays && item.weekdays.map((i, k) =>
+                                                                            <span
+                                                                                key={k}> {i.weekdayName && i.weekdayName.length > 3 && i.weekdayName.charAt(0).toUpperCase() + i.weekdayName.substring(1, 3).toLowerCase()}, </span>)}
                                                                         </span>
                                                                     </Col>
                                                                 </Row>
@@ -376,7 +374,7 @@ class SelectTeacher extends Component {
                                                 </thead>
                                                 <tbody>
                                                 {teacherSalaryList ? teacherSalaryList.map((item, i) =>
-                                                    <tr key={i + 1} className={"table-row-data"}>
+                                                    <tr key={i} className={"table-row-data"}>
                                                         <td>{i + 1}</td>
                                                         <td>{item.amount}</td>
                                                         <td>{item.payType ? item.payType.name : ''}</td>
@@ -438,13 +436,11 @@ class SelectTeacher extends Component {
                                 </AvField>
                                 <AvField label={"Izoh"} name={"description"} type={"text"}
                                          defaultValue={currentObject ? currentObject.description : ''}/>
-                                {/*<AvField name={"payDate"} type={"date"}/>*/}
                                 <AvField
                                     type={"datetime-local"}
                                     defaultValue={currentObject ? moment(currentObject.amountDate).format('DD-MM-YYYY') : ""}
                                     label={"To'langan vaqti"} name={"amountDate"}
                                     required/>
-                                {console.log(currentObject)}
                                 <ModalFooter>
                                     <Button color={"secondary"} onClick={openSalaryEditModal}>Bekor qilish</Button>
                                     <Button color={"primary"} type={"submit"}>Saqlash</Button>
@@ -498,7 +494,7 @@ class SelectTeacher extends Component {
                                     defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                    />
+                                />
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
@@ -553,12 +549,10 @@ class SelectTeacher extends Component {
                                 placeholer={"nomi"} required disabled/>
                             <div className={"w-100 modal-form"}>
                                 <AvField
-                                    // defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                     type={"number"}
                                     label={"So'm"} name={"amount"} className={"form-control"}
                                     placeholer={""} required/>
                                 <AvRadioGroup name="payTypeId"
-                                    // defaultValue={currentObject ? currentObject.gender : ""}
                                               label="" required className="pay-form-style d-block"
                                               errorMessage="Birini tanlang!">
                                     {payTypes ? payTypes.map((item, i) =>
