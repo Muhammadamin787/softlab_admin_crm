@@ -4,13 +4,12 @@ import {
     getEmployeeListAction,
     deleteEmployeeAction,
     saveEmployeeAction,
-    getRegionsAction, getGroupsAction
+    getRegionsAction
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
-import {DeleteIcon, EditIcon, GlobusIcon} from "../../component/Icons";
 import moment from "moment";
 import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
@@ -100,16 +99,17 @@ class Staff extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {console.log(employees)}
                         {
                             employees && employees.length > 0 ? employees.map((item, i) =>
                                 <tr key={i} className={"table-tr"}>
-                                    <td>{i + 1}</td>
-                                    <td>{item.fullName}</td>
+                                    <td>{page > 0 ? page * size + i + 1 : i + 1}</td>
+                                    <td><Link className={"text-dark"}
+                                              to={"/admin/staff/" + (item.id)}>{item.fullName}</Link>
+                                    </td>
                                     <td>
                                         {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                     </td>
-                                    <td>{item.roleName}</td>
+                                    <td>{item.roleName === "ADMIN" ? "Admin" : item.roleName === "RECEPTION" ? "Administrator"  :item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
                                 </tr>
                             ) : ''}
                         </tbody>
@@ -141,13 +141,19 @@ class Staff extends Component {
                                         defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
                                         defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        required/>
+                                        />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
@@ -203,23 +209,25 @@ class Staff extends Component {
 
 Staff.propTypes = {}
 export default connect(({
-                            app: {loading,
+                            app: {
+                                loading,
                                 employees,
                                 showModal,
                                 deleteModal,
                                 regions,
                                 page,
                                 size,
-                                totalElements,}
+                                totalElements,
+                            }
                         }) => ({
         loading,
-    employees,
-    showModal,
-    deleteModal,
-    regions,
-    page,
-    size,
-    totalElements,
+        employees,
+        showModal,
+        deleteModal,
+        regions,
+        page,
+        size,
+        totalElements,
 
     })
 )(Staff);

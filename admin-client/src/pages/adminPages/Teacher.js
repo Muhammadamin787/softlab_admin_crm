@@ -3,9 +3,7 @@ import {
     ModalHeader,
     Modal,
     Button,
-    Col,
     ModalBody,
-    Row,
     Table,
     ModalFooter,
     Nav,
@@ -16,16 +14,13 @@ import {
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction, downloadTeacherFileAction,
-    getCourseCategoriesAction, getDebtorsAction,
-    getRegionsAction, getStudentsAction,
-    getTeacherAction, getTeachersAction,
-    saveTeacherAction, toChangeStatusAction, toChangeTeacherStatusAction,
-    uploadFileAction
+    getRegionsAction,
+    getTeachersAction,
+    saveTeacherAction, toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
-import {CloseIcon, DeleteIcon, EditIcon, GlobusIcon, ShowIcon} from "../../component/Icons";
-import Select from "react-select";
+import {DeleteIcon, GlobusIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import moment from "moment";
 import Pagination from "react-js-pagination";
@@ -35,8 +30,6 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 class Teacher extends Component {
     componentDidMount() {
         this.props.dispatch(getRegionsAction())
-
-        this.props.dispatch(getDebtorsAction({page: 0, size: 20}))
         this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
     }
 
@@ -59,10 +52,8 @@ class Teacher extends Component {
             page,
             size,
             totalElements,
-            totalPages,
             dispatch,
             attachmentId,
-            secondPage,
             showModal,
             deleteModal,
             teachers,
@@ -92,13 +83,6 @@ class Teacher extends Component {
             dispatch(deleteTeacherAction(item))
             this.setState({showDeleteModal: !this.state.showDeleteModal})
         }
-        const multiChange = (e, v) => {
-            let specList = []
-            for (let i = 0; i < e.length; i++) {
-                specList.push(e[i].value)
-            }
-            this.setState({specs: specList})
-        }
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
@@ -119,16 +103,10 @@ class Teacher extends Component {
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
         }
-        const uploadImg = (e) => {
-            this.props.dispatch(uploadFileAction(e.target.files[0]))
-        }
         const downloadTecherFile = (e, v) => {
             dispatch(downloadTeacherFileAction(v))
         }
 
-        const a = (tab) => {
-            this.setState({activeTab: tab})
-        }
         const toggle = (tab) => {
             this.setState({activeTab: tab})
             this.setState({type: tab})
@@ -198,7 +176,7 @@ class Teacher extends Component {
                                         <Button color={"btn btn-outline-info rounded"} size={"sm"}
                                                 className={"btn mx-2 border-none rounded"}
                                                 onClick={downloadTecherFile}>
-                                            <span className={"icon icon-download"}></span>
+                                            <span className={"icon icon-download"}/>
                                         </Button>
                                     </div>
                                     <Table className={"table-style w-100"}>
@@ -254,7 +232,7 @@ class Teacher extends Component {
                                         <Button color={"btn btn-outline-info rounded"} size={"sm"}
                                                 className={"btn mx-2 border-none rounded"}
                                                 onClick={downloadTecherFile}>
-                                            <span className={"icon icon-download"}></span>
+                                            <span className={"icon icon-download"}/>
                                         </Button>
                                     </div>
                                     <Table className={"table-style w-100"}>
@@ -344,13 +322,19 @@ class Teacher extends Component {
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
+                                        validate={{
+                                            required: {value: true},
+                                            pattern: {value: "^[0-9]+$"},
+                                            minLength: {value: 9},
+                                            maxLength: {value: 9}
+                                        }}
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
                                         defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        required/>
+                                        />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>

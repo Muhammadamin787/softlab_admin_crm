@@ -15,9 +15,9 @@ import java.util.UUID;
 public interface TeacherSalaryRepository extends JpaRepository<TeacherSalary, UUID> {
     Page<TeacherSalary> findAllByTeacher(Teacher teacher, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2 order by sp.created_at desc limit :size offset (:size * :page)")
-    List<TeacherSalary> getByDate(Date date1, Date date2, int page, int size);
+    @Query(nativeQuery = true, value = "select * from teacher_salary sp where amount_date >= cast(:date1 as date) and amount_date < cast(:date2 as date) order by sp.created_at desc limit :size offset (:size * :page)")
+    List<TeacherSalary>getByDate(String date1, String date2, int size, int page);
 
-    @Query(nativeQuery = true, value = "select * from student_payment where pay_date >= :date1 and pay_date < :date2")
-    Integer getByDateCount(Date date1, Date date2);
+    @Query(nativeQuery = true, value = "select count(*) from teacher_salary where amount_date >= cast(:date1 as date) and amount_date < cast(:date2 as date)")
+    Integer getByDateCount(String date1, String date2);
 }

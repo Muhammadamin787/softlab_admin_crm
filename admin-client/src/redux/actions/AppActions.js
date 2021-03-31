@@ -1269,7 +1269,7 @@ export const deleteStudentAction = (data) => (dispatch) => {
         if (data && data.history) {
             data.history.go(-1)
         }
-        dispatch(getStudentsAction())
+        dispatch(getStudentsAction({page: 0, size: 20, type: data.status === "DEFAULT" ? "ARCHIVE" : "DEFAULT"}))
         dispatch(getRegionsAction())
 
     }).catch((err) => {
@@ -1605,11 +1605,12 @@ export const makeStudentByAppealAction = (data) => (dispatch) => {
         ],
         data
     }).then((res) => {
-        if (res.statusCode === 201) {
+        if (res.statusCode === 201 && res.payload && res.payload.object) {
             toast.success("Talaba saqlandi!")
-            // data.history.push(config.BASE_URL + "/admin/student/" + res)
+            data.history.push("/admin/student/" + res.payload.object)
+        } else {
+            dispatch(getAppealListAllAction())
         }
-        dispatch(getAppealListAllAction())
     }).catch((e) => {
         toast.error('Telefon raqam allaqachon mavjud!')
     })
@@ -1999,14 +2000,15 @@ export const getEmployeeListAction = (data) => (dispatch) => {
         data
     })
 }
-export const getEmployeeAction = () => (dispatch) => {
+export const getEmployeeAction = (data) => (dispatch) => {
     dispatch({
         api: getEmployeeApi,
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_EMPLOYEE_SUCCESS,
             types.REQUEST_ERROR,
-        ]
+        ],
+        data: data
     })
 }
 
@@ -2042,23 +2044,34 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
         api: deleteEmployeeApi,
         types: [
             types.REQUEST_START,
-            types.REQUEST_GET_EMPLOYEE_SUCCESS,
+            types.REQUEST_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data: data
+        data
     }).then((res) => {
         dispatch({
             type: "updateState",
             payload: {
-                employee: null
+                deleteModal: false,
             }
         })
-        toast.success("Malumot ochirildi")
+        toast.success("Ma'lumot o'chirildi!")
+        if (data && data.history) {
+            data.history.go(-1)
+        }
         dispatch(getEmployeeListAction())
+        dispatch(getRegionsAction())
+
     }).catch((err) => {
         toast.error("Xatolik")
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false,
+            }
+        })
     })
-};
+}
 // FINISH EMPLOYEE
 
 

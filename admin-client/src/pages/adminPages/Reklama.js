@@ -21,7 +21,7 @@ class Reklama extends Component {
     }
 
     render() {
-        const {dispatch, showModal, deleteModal, reklamas, selectItems} = this.props
+        const {dispatch, showModal, deleteModal, reklamas} = this.props
         const {currentObject} = this.state
 
         const openModal = (item) => {
@@ -59,11 +59,6 @@ class Reklama extends Component {
 
                     dispatch(saveReklamaAction(v))
                 }
-            }
-        }
-        const parentReklama = (e, v) => {
-            if (e && e.value) {
-                this.setState({selectParentReklama: e.value})
             }
         }
         const deleteNumber = (item) => {

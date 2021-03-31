@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
-import {Button, Col, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table} from "reactstrap";
+import {Button, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row} from "reactstrap";
 import {AvForm, AvField} from "availity-reactstrap-validation";
 import {
     deleteCourseAction, getCourseAction, getCourseCategoriesAction,
-    getCoursesAction,
-    getDurationTypesAction, getGroupsByCourseAction, saveCourseAction,
+    getGroupsByCourseAction, saveCourseAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
-import {DeleteIcon, EditIcon, ShowIcon} from "../../component/Icons";
+import {DeleteIcon, EditIcon} from "../../component/Icons";
 import AdminLayout from "../../component/AdminLayout";
 import {Link} from "react-router-dom";
-import moment from "moment";
 
 class SelectCourse extends Component {
     componentDidMount() {
@@ -128,7 +126,7 @@ class SelectCourse extends Component {
                             : ""}
                         <div className={"col-md-8"}>
                             {byCource ? byCource.map((item, i) =>
-                                <div className="p-3 mb-2 bg-white rounded">
+                                <div key={i} className="p-3 mb-2 bg-white rounded">
                                     {item.id ?
                                         <Row>
                                             <Col md={3}>
@@ -202,7 +200,7 @@ class SelectCourse extends Component {
                                 <AvField className={'form-control'} label={"Kurs bo'limi:"} type="select"
                                          name="courseCategoryId"
                                          defaultValue={currentObject && currentObject.courseCategory ? currentObject.courseCategory.id : "0"}>
-                                    <option key={0} value={"0"}>Kurs bo'limi</option>
+                                    <option key={100} value={"0"}>Kurs bo'limi</option>
                                     {courseCategories ? courseCategories.map((item, i) =>
                                         item.category ? "" :
                                             <option key={i} value={item.id}>{item.name}</option>

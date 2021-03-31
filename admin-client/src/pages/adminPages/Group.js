@@ -101,7 +101,7 @@ class Group extends Component {
             dispatch(saveGroupAction(v))
         }
 
-        ///////////////////////////////////////// Change status
+        //  Change status
 
         const a = (tab) => {
             this.setState({activeTab: tab})

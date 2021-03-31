@@ -5,10 +5,7 @@ import {
     Nav,
     NavItem,
     NavLink,
-    Card,
     Button,
-    CardTitle,
-    CardText,
     Col,
     Modal,
     ModalBody,
@@ -18,8 +15,17 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, deleteStudentPaymentAction, getGroupsForSelectAction, getPayTypeListAction, getRegionsAction,
-    getStudentAction, getStudentGroupAction, getStudentPaymentAction, saveStudentAction, saveStudentPaymentAction, studentAddGroupAction,
+    deleteStudentAction,
+    deleteStudentPaymentAction,
+    getGroupsForSelectAction,
+    getPayTypeListAction,
+    getRegionsAction,
+    getStudentAction,
+    getStudentGroupAction,
+    getStudentPaymentAction,
+    saveStudentAction,
+    saveStudentPaymentAction,
+    studentAddGroupAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import './adminPages.scss';
@@ -59,7 +65,6 @@ class SelectStudent extends Component {
         const {currentObject, activeTab, showPaymentModal, showPaymentEditModal, addGroup} = this.state;
         const {
             getItems,
-            selectItems,
             showAddGroupModal,
             history,
             dispatch,
@@ -68,7 +73,6 @@ class SelectStudent extends Component {
             deleteModal,
             currentItem,
             regions,
-            cashbacks,
             payTypes, studentPayment, selectGroups
         } = this.props;
         const openModal = (item) => {
@@ -139,17 +143,17 @@ class SelectStudent extends Component {
             dispatch(deleteStudentPaymentAction({...item, history: history}))
         }
 
-        const getAddGroup = (e, v) => {
+        const getAddGroup = (e) => {
             if (e && e.value) {
                 this.setState({addGroup: e.value})
             }
         }
-        const setPaymentGroup = (e, v) => {
+        const setPaymentGroup = (e) => {
             if (e && e.value) {
                 this.setState({addGroup: e.value})
             }
         }
-        const saveAddGroup = (e, v) => {
+        const saveAddGroup = () => {
             if (currentObject && currentObject.id && addGroup)
                 dispatch(studentAddGroupAction({
                     studentId: currentObject.id,
@@ -186,18 +190,6 @@ class SelectStudent extends Component {
                     dispatch(getStudentPaymentAction(this.props.match.params.id))
 
                 }
-            }
-        }
-
-        const calc = (e) => {
-            let price = document.getElementById("price").value * 1
-            let array = e.target.value.split(',');
-
-            if ((array[0] * 1) < price) {
-                price = (price) / 100 * (array[1] * 1)
-                this.setState({cashBackSumm: price})
-            } else {
-                console.log("NO")
             }
         }
 
@@ -419,7 +411,7 @@ class SelectStudent extends Component {
                                         />
                                         To'lov usuli
                                         <AvRadioGroup name="payTypeId"
-                                            defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
+                                                      defaultValue={currentObject && currentObject.payType ? currentObject.payType.id : ""}
                                                       label="" required className="pay-form-style d-block"
                                                       errorMessage="Birini tanlang!">
 
@@ -466,7 +458,7 @@ class SelectStudent extends Component {
                                             defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                                 : ""}
                                             label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                            required/>
+                                        />
                                         <AvField className={'form-control'} label={'Hudud:'} type="select"
                                                  name="regionId"
                                                  defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
@@ -510,12 +502,12 @@ class SelectStudent extends Component {
                                     disabled={showPaymentEditModal}
                                     type={"text"}
                                     label={"FISH"} name={"fullName"} className={"form-control"}
-                                    placeholer={"nomi"} disabled/>
+                                    placeholer={"nomi"}/>
                                 <>
                                     <Select
                                         defaultValue={currentObject && currentObject.group && {
                                             value: currentObject.group.id,
-                                            label: (currentObject.group.name + " ["+ currentObject.group.course.name +"]")
+                                            label: (currentObject.group.name + " [" + currentObject.group.course.name + "]")
                                         }}
                                         placeholder="Guruhni tanlang..."
                                         name="groupId"
@@ -560,7 +552,6 @@ class SelectStudent extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
-
                 <Modal isOpen={showAddGroupModal} toggle={openAddGroupModal} className={""}>
                     <AvForm className={""} onValidSubmit={saveAddGroup}>
                         <ModalHeader isOpen={showAddGroupModal} toggle={openAddGroupModal} charCode="X">

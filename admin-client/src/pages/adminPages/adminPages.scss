@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
-
 body {
   overflow: auto !important;
 }
@@ -8,7 +6,10 @@ body {
 /*START DASHBOARD*/
 
 .schedule-block {
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px,
+  rgba(0, 0, 0, 0.04) 0px 1px 6px 0px,
+  0 1px 15px rgba(0, 0, 0, .04),
+  0 1px 6px rgba(0, 0, 0, .04);
 
   &__title {
     padding: 1.5rem 1rem;
@@ -43,6 +44,7 @@ body {
   border-bottom: 2px solid #007BFF !important;
   cursor: pointer;
 }
+
 .tab-item-style-active1 {
   background-color: white;
   cursor: pointer;
@@ -56,7 +58,8 @@ body {
   margin-left: 1rem;
   cursor: pointer;
 }
-.hide{
+
+.hide {
   display: none;
 }
 
@@ -74,7 +77,95 @@ body {
 
 .inside-td-block {
   padding: 2rem !important;
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04);
   color: #000;
   border-radius: 5px;
+}
+
+//  Written By Muhammadmin this is a for responsibility of the group page!
+
+.tab-item-style-active1,
+.tab-item-style-default1 {
+  cursor: pointer;
+}
+
+#tableStyleInSelectGroup_mobile {
+  display: none;
+}
+
+.allMonthAttandence .btn-outline-danger:focus,
+.allMonthAttandence .btn-outline-success:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.active-danger-btn-style {
+  background-color: #E33545;
+  color: #fff;
+}
+
+.active-btn-style {
+  background-color: #28A745;
+  color: #fff;
+}
+
+.not-active-btn-style {
+  border-color: #aaa;
+  background-color: #fff;
+  color: #aaa;
+}
+
+.not-active-btn-style:hover {
+  color: #fff;
+}
+
+.btn-submit {
+  width: 91%;
+}
+
+.modalMobile {
+  display: none;
+}
+
+@media only screen and (max-width: 767px) {
+  #tableStyleInSelectGroup {
+    .dataOfMobile {
+      display: block;
+    }
+  }
+
+  #allModalStyle {
+    display: none !important;
+  }
+
+  .modalMobile {
+    display: block;
+  }
+  .modalDesktop {
+    display: none;
+  }
+
+}
+
+//  ---
+// OLLOYOR
+.teacherFinanceFiltrLink {
+  font-size: 28px;
+  transition: 0.2s;
+}
+
+.teacherFinanceFiltrLink:hover {
+  color: blue;
+
+  cursor: pointer;
+}
+
+
+// Schedule Styles
+
+.awesome {
+  background-color: red;
+}
+.awesome2 {
+  background-color: green;
 }

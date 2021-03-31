@@ -18,7 +18,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 public class TeacherSalary extends AbsEntity {
-
     @OneToOne
     private Teacher teacher;
     @ManyToOne

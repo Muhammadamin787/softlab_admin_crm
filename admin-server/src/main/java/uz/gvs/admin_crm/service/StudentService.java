@@ -12,6 +12,7 @@ import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
 import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
+import uz.gvs.admin_crm.payload.financeDTO.ResStudent;
 import uz.gvs.admin_crm.repository.*;
 
 import java.text.SimpleDateFormat;
@@ -317,6 +318,48 @@ public class StudentService {
         );
     }
 
+    ///new Student Gets start
+    public ResStudent getAllAmounts(Payment payment) {
+        return new ResStudent(
+                payment.getAttendance().getStudent().getId(),
+                payment.getAttendance().getStudent().getUser().getFullName() + " / " + payment.getAttendance().getStudent().getUser().getPhoneNumber(),
+                payment.getAmount(),
+                payment.getCreatedAt().toString(),
+                payment.getAttendance().getGroup().getName() + " [ " + payment.getAttendance().getGroup().getCourse().getName() + " ]"
+        );
+    }
+
+    public ResStudent makeResStudent(StudentPayment studentPayment) {
+        return new ResStudent(
+                studentPayment.getStudent().getId(),
+                studentPayment.getStudent().getUser().getFullName() + " / " + studentPayment.getStudent().getUser().getPhoneNumber(),
+                studentPayment.getSum(),
+                studentPayment.getCashSum(),
+                studentPayment.getCashback().getPercent(),
+                studentPayment.getPayType().getName(),
+                studentPayment.getComment(),
+                studentPayment.getPayDate().toString()
+
+        );
+    }
+
+    public ResStudent makeResStudentCashbacks(StudentPayment studentPayment) {
+        return new ResStudent(
+                studentPayment.getStudent().getId(),
+                studentPayment.getStudent().getUser().getFullName() + " / " + studentPayment.getStudent().getUser().getPhoneNumber(),
+                studentPayment.getSum(),
+                studentPayment.getCashSum(),
+                studentPayment.getCashback().getPercent(),
+                studentPayment.getPayType().getName(),
+                studentPayment.getComment(),
+                studentPayment.getPayDate().toString()
+
+        );
+    }
+
+///// new Student Gets finished
+
+
     public ApiResponse getStudentPaymentListStudent(UUID id, int page, int size) {
         try {
             Sort sort;
@@ -464,39 +507,38 @@ public class StudentService {
         return null;
     }
 
-    public ApiResponse getStudentPaymentByDate(int page, int size, String data1, String data2, String type) {
+    public ApiResponse getStudentPaymentByDate(int size, int page, String data1, String data2, String type) {
         try {
-            Date firstDate = new SimpleDateFormat("dd-MM-yyyy").parse(data1);
-            Date secondDate = new SimpleDateFormat("dd-MM-yyyy").parse(data2);
+
             switch (type) {
                 case "all":
-                    List<StudentPayment> all = studentPaymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<StudentPayment> all = studentPaymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(studentPaymentRepository.getStudentPaymentByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(studentPaymentRepository.getStudentPaymentByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    all.stream().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                                    all.stream().map(this::makeResStudent).collect(Collectors.toList())
                             )
                     );
                 case "byCashbacks":
-                    List<StudentPayment> byCashback = studentPaymentRepository.getByDateAndCashback(firstDate, secondDate, page, size);
+                    List<StudentPayment> byCashback = studentPaymentRepository.getByDateAndCashback(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(studentPaymentRepository.getByDateAndCashbackCount(firstDate, secondDate)),
+                                    Long.valueOf(studentPaymentRepository.getByDateAndCashbackCount(data1, data2)),
                                     page,
                                     size,
-                                    byCashback.stream().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                                    byCashback.stream().map(this::makeResStudentCashbacks).collect(Collectors.toList())
                             )
                     );
                 case "getPrice":
-                    List<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<Payment> getPrice = paymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(paymentRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(paymentRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())
+                                    getPrice.stream().map(this::getAllAmounts).collect(Collectors.toList())
                             )
                     );
                 default:
@@ -518,7 +560,7 @@ public class StudentService {
                                     optional.getTotalElements(),
                                     optional.getNumber(),
                                     optional.getSize(),
-                                    optional.get().map(this::makeStudentPaymentDto).collect(Collectors.toList())
+                                    optional.get().map(this::makeResStudent).collect(Collectors.toList())
                             )
                     );
                 case "byCashbacks":
@@ -528,7 +570,7 @@ public class StudentService {
                                     Long.valueOf(studentPaymentRepository.getStudentPaymentByCashbackCount()),
                                     page,
                                     size,
-                                    byCashback.stream().map(this::makeStudentPaymentCashbacks).collect(Collectors.toList())
+                                    byCashback.stream().map(this::makeResStudentCashbacks).collect(Collectors.toList())
                             )
                     );
                 case "getPrice":
@@ -539,7 +581,7 @@ public class StudentService {
                                     all.getTotalElements(),
                                     all.getNumber(),
                                     all.getSize(),
-                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                                    all.get().map(this::getAllAmounts).collect(Collectors.toList())
                             )
                     );
                 default:

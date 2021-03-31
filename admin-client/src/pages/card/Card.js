@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import "./Card.css";
 
 import {
@@ -16,8 +16,8 @@ import {
 import AdminLayout from "../../component/AdminLayout";
 import {
     changeAppalTypeAction,
-    getAppealListAllAction, getAppealListByEnumTypeAction, getAppealListByStatusTypeAction,
-    getClientStatusListAction, getOneAppeal, getOneAppealForEdit, getRegionsAction, getReklamaAction,
+    getAppealListAllAction,
+    getClientStatusListAction, getOneAppealForEdit, getRegionsAction, getReklamaAction,
     getToplamListForSelectAction, makeStudentByAppealAction,
     saveAppealAction
 } from "../../redux/actions/AppActions";
@@ -26,7 +26,6 @@ import {Link} from "react-router-dom";
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import Select from "react-select";
 import {formatPhoneNumber, formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
-import LoaderMini from "../../component/LoaderMini";
 import moment from "moment";
 
 class Card extends Component {
@@ -71,8 +70,8 @@ class Card extends Component {
     render() {
         const {
             history,
-            appealList, clientStatusList, size, page, totalElements, dispatch, showModal, regions, deleteModal,
-            reklamas, selectItems, showChangeModal, toplamList, loading, currentItem
+            appealList, clientStatusList, dispatch, showModal, regions, deleteModal,
+            reklamas, selectItems, toplamList, loading, currentItem
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
@@ -154,8 +153,6 @@ class Card extends Component {
                     e.target.appendChild(document.getElementById(data));
                     statusId = e.target.id.substring(0, e.target.id.indexOf(enumStatus));
                 } else {
-                    console.log(e);
-                    console.log(this.state.object);
                     e.target.parentElement.appendChild(document.getElementById(this.state.object));
                     data = this.state.object;
                     statusId = e.target.parentElement.id.substring(0, e.target.parentElement.id.indexOf(enumStatus))
@@ -336,24 +333,18 @@ class Card extends Component {
                                     }
                                     Jinsi
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentItem ? currentItem.gender : ""}
+                                                  defaultValue={currentItem && currentItem.id ? currentItem.gender : ""}
                                                   required
                                                   className={""}
                                                   errorMessage="Birini tanlang!">
-                                        <Row>
-                                            <Col>
-                                                <AvRadio label="Erkak" value="MALE"/>
-                                            </Col>
-                                            <Col>
-                                                <AvRadio label="Ayol" value="FEMALE"/>
-                                            </Col>
-                                        </Row>
+                                        <AvRadio label="Erkak" value="MALE"/>
+                                        <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                 </Col>
                                 <Col>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentItem && currentItem.birthDate ? moment(currentItem.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentItem && currentItem.id && currentItem.birthDate ? moment(currentItem.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}/>
                                     Hudud
