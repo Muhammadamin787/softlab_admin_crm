@@ -10,6 +10,7 @@ import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.ResSelect;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
@@ -18,4 +19,16 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
     List<Object> searchTeacher(String objName);
     Page<Teacher> findAllByUser_status(UserStatusEnum user_status, Pageable pageable);
 
+    @Query(nativeQuery = true, value = "select cast(t.id as varchar), u.full_name, u.phone_number, u.birth_date, u.gender, t.balance, t.is_percent, t.salary, u.description, " +
+            "(case when u.region_id is not null then (select r.name from region r where r.id=u.region_id) else '' end) as hudud_nomi, " +
+            "coalesce(u.region_id,0) as hudud_id from teacher t inner join users u on u.id = t.user_id " +
+            "where t.id=:teacherId")
+    List<Object> findTeacher(UUID teacherId);
+
+    @Query(nativeQuery = true, value = "select cast(t.id as varchar), u.full_name, u.phone_number " +
+            "from teacher t inner join users u on u.id = t.user_id " +
+            "where u.status=:type " +
+            "order by u.updated_at desc " +
+            "limit :size offset (:size * :page)")
+    List<Object> findTeacherPageable(int page, int size, String type);
 }
