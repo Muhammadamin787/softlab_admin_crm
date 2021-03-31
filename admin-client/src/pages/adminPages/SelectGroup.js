@@ -48,6 +48,7 @@ class SelectGroup extends Component {
             dispatch(getCoursesAction())
             dispatch(getGroupsForSelectAction())
             dispatch(getTeachersForSelectAction())
+
             dispatch(getAttendanceListAction(id))
 
             let year = new Date().getFullYear()

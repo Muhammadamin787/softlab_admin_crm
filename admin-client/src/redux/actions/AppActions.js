@@ -153,7 +153,7 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi, deleteCArdApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -243,6 +243,13 @@ export const downloadAccountantFileAction = (v) => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/accountant?startDate=" + v.startDate.toString() + "&finishDate=" + v.finishDate.toString())
     link.setAttribute("download", "accountant.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+export const downloadQarzdorlarFileAction = (v) => () =>{
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/qarzdor")
+    link.setAttribute("download","qarzdorlar.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -1696,6 +1703,22 @@ export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
 // FINISH APPEAL ACTIONS
 
 // START TOPLAM ACTIONS
+// export const deleteCardAction = (data) => (dispatch) => {
+//     console.log(data)
+//     dispatch({
+//         api: deleteCArdApi,
+//         types: [
+//             types.REQUEST_START,
+//             types.REQUEST_SUCCESS,
+//             types.REQUEST_ERROR
+//         ],
+//         data
+//     }).then(res => {
+//         toast("Malumot o`child")
+//     })
+// }
+
+
 export const getToplamListAction = (data) => (dispatch) => {
     dispatch({
         api: getToplamListApi,
@@ -1732,6 +1755,28 @@ export const saveToplamAction = (data) => (dispatch) => {
             toast.success(res.payload.message)
         dispatch(getToplamListAction({page: 0, size: 20}));
     })
+}
+export const deleteMurojaatAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteToplamApi,
+        types:[
+            types.REQUEST_START,
+            types.REQUEST_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        dispatch({
+            type:'updateState',
+            payload:{
+                deleteModal : false
+            }
+        })
+        toast.success("Malumot o`chirildi")
+        dispatch(getToplamListAction({page: 0, size: 20}))
+    }).catch(err => (
+        toast.error("Xatolik")
+    ))
 }
 export const deleteToplamAction = (data) => (dispatch) => {
     dispatch({
