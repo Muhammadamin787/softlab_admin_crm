@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    deleteCourseAction,
     deleteEmployeeAction,
     getEmployeeAction,
     getRegionsAction,
@@ -57,7 +58,6 @@ class SelectStaff extends Component {
         }
 
         const saveItem = (e, v) => {
-            console.log(currentObject)
             v.id = currentObject.id
             v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
             dispatch(saveEmployeeAction(v))
