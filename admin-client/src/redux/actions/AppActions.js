@@ -153,7 +153,7 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi,
+    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1691,6 +1691,25 @@ export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
             types.REQUEST_ERROR,
         ],
         data
+    })
+}
+export const deleteOneAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteOneAppealApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then(res => {
+        dispatch(getAppealListAllAction());
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
     })
 }
 // FINISH APPEAL ACTIONS

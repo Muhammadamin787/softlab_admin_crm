@@ -409,6 +409,9 @@ export const getOneAppealApi = (data) => {
 export const getOneAppealForEditApi = (data) => {
     return HttpClient.doGet(api.appeal + "/edit/" + data.id)
 }
+export const deleteOneAppealApi = (data) => {
+    return HttpClient.doDelete(api.appeal + "/" + data.id)
+}
 export const getAppealListByStatusTypeApi = (data) => {
     return HttpClient.doGet(api.appeal + "?enumType=" + data.enumType + "&typeId=" + data.typeId + "&page=" + data.page + "&size=" + data.size)
 }
