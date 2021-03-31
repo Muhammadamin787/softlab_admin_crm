@@ -179,6 +179,19 @@ class Card extends Component {
             this.setState({currentObject: '', object: '', changeLocationType: ''})
         }
 
+        const openDeleteModal = (item) => {
+            this.setState({currentObject: item})
+            dispatch({
+                type: 'updateState',
+                payload: {
+                    deleteModal: !deleteModal
+                }
+            })
+        }
+        // const deleteItem = (item) => {
+        //     console.log(item)
+        //     dispatch(deleteCardAction(item))
+        // }
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
@@ -260,7 +273,7 @@ class Card extends Component {
                                                                     <DropdownItem
                                                                         onClick={() => openEditModal(appeal.id, item.title)}>Tahrirlash</DropdownItem>
                                                                     <DropdownItem
-                                                                        onClick={() => openModal(item.id)}>O'chirish</DropdownItem>
+                                                                        onClick={() => openDeleteModal(item.id)}>O'chirish</DropdownItem>
                                                                 </DropdownMenu>
                                                             </Dropdown>
                                                         </Col>
@@ -376,6 +389,17 @@ class Card extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
+                {/*<Modal isOpen={deleteModal} toggle={openDeleteModal} className={""}>*/}
+                {/*    <ModalHeader isOpen={showModal} toggle={openDeleteModal} charCode={"X"}>*/}
+                {/*        O`chirish*/}
+                {/*    </ModalHeader>*/}
+                {/*    <ModalBody>Rostdanham o`chirmoqchimisiz</ModalBody>*/}
+                {/*    <ModalFooter>*/}
+                {/*        <Button color={"secondary"} onClick={openDeleteModal}>Yo`q</Button>*/}
+                {/*        <Button color={"primary"} onClick={() => deleteItem(currentObject)}>Ha</Button>*/}
+                {/*    </ModalFooter>*/}
+                {/*</Modal>*/}
 
             </AdminLayout>
         )

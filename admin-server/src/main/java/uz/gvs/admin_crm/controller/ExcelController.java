@@ -12,7 +12,12 @@ import uz.gvs.admin_crm.repository.TeacherRepository;
 import uz.gvs.admin_crm.service.ExcelService;
 import uz.gvs.admin_crm.service.MakeExcelService;
 
+import javax.swing.text.DateFormatter;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 @RestController
@@ -30,9 +35,11 @@ public class ExcelController {
     @GetMapping("/student")
     public HttpEntity<?> downloadStudent() {
         byte[] file = makeExcelService.contactListToExcelStudentFile(studentRepository.findAll());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime localDateTime = LocalDateTime.now();
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=student.xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=student(" +  dateTimeFormatter.format(localDateTime) +").xlsx")
                 .body(file);
     }
 
@@ -44,9 +51,27 @@ public class ExcelController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime now = LocalDateTime.now();
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=teacher.xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=teacher(" + dtf.format(now) +").xlsx")
+                .body(file);
+    }
+
+    @GetMapping("/qarzdor")
+    public HttpEntity<?> downloadAccountant(){
+        byte[] file = new byte[0];
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime now = LocalDateTime.now();
+        try{
+            file = makeExcelService.listToQarzdorlar(studentRepository.getByBalansDebt());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=qarzdorlar(" + dtf.format(now) + ").xlsx")
                 .body(file);
     }
 
