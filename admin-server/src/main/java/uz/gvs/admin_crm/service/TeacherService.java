@@ -83,9 +83,10 @@ public class TeacherService {
         return apiResponseService.getResponse(resSelects);
     }
 
-    public ApiResponse getTeacherList(int page, int size,String type) {
-        try{
+    public ApiResponse getTeacherList(int page, int size, String type) {
+        try {
             List<Object> teachers = teacherRepository.findTeacherPageable(page, size, type);
+            Integer totalElements = teacherRepository.findTeacherPageableCount(type);
             List<TeacherDto> teacherDtoList = new ArrayList<>();
             for (Object obj : teachers) {
                 Object[] teacher = (Object[]) obj;
@@ -95,8 +96,8 @@ public class TeacherService {
                 TeacherDto teacherDto = new TeacherDto(teacherId, name, phoneNumber);
                 teacherDtoList.add(teacherDto);
             }
-            return apiResponseService.getResponse(teacherDtoList);
-        }catch (Exception e){
+            return apiResponseService.getResponse(new PageableDto(Long.valueOf(totalElements), page, size, teacherDtoList));
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
 
@@ -178,7 +179,7 @@ public class TeacherService {
                 for (Group group : groups) {
                     groupDtos.add(makeGroupForTeacher(group));
                 }
-                TeacherDto teacherDto = new TeacherDto(teacherId, fullName, phoneNumber, birthDate, gender, regionId, regionName, description,groupDtos, balance, isPersent, salary);
+                TeacherDto teacherDto = new TeacherDto(teacherId, fullName, phoneNumber, birthDate, gender, regionId, regionName, description, groupDtos, balance, isPersent, salary);
                 teacherDtoList.add(teacherDto);
             }
             return apiResponseService.getResponse(teacherDtoList);
@@ -188,7 +189,7 @@ public class TeacherService {
         }
     }
 
-    public GroupDto makeGroupForTeacher(Group group){
+    public GroupDto makeGroupForTeacher(Group group) {
         try {
             Set<String> stringSet = new HashSet<>();
             for (Weekday weekday : group.getWeekdays()) {
@@ -202,7 +203,7 @@ public class TeacherService {
                     group.getCourse().getName(),
                     stringSet
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

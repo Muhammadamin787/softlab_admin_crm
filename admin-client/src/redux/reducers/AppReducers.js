@@ -353,8 +353,8 @@ const reducers = {
         state.teachers = teachersList
     },
     [types.REQUEST_GET_TEACHERS_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object) {
-            state.teachers = payload.payload.object.sort((a, b) =>
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.teachers = payload.payload.object.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
             state.page = payload.payload.object.number

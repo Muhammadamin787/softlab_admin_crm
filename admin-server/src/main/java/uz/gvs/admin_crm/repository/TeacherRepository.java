@@ -31,4 +31,9 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
             "order by u.updated_at desc " +
             "limit :size offset (:size * :page)")
     List<Object> findTeacherPageable(int page, int size, String type);
+
+    @Query(nativeQuery = true, value = "select count(*) " +
+            "from teacher t inner join users u on u.id = t.user_id " +
+            "where u.status=:type ")
+    Integer findTeacherPageableCount(String type);
 }
