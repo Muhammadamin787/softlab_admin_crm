@@ -246,6 +246,7 @@ class SelectStudent extends Component {
                                                     className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-student-style"}>
                                                     <div className="row">
                                                         <div className="col-8">
+                                                            {console.log(currentItem)}
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>FISH: </small>
                                                                 <p className={"d-inline"}> {currentItem.fullName}</p>
