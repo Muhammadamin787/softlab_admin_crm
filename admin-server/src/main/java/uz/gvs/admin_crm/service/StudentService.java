@@ -68,7 +68,7 @@ public class StudentService {
     public ApiResponse editStudent(UUID id, StudentDto studentDto) {
         try {
             Optional<Student> byId = studentRepository.findById(id);
-            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
             if (byId.isPresent()) {
                 Student student = byId.get();
                 User user = student.getUser();
@@ -84,7 +84,6 @@ public class StudentService {
                 user.setRegion(studentDto.getRegionId() != null && studentDto.getRegionId() > 0 ? regionRepository.findById(studentDto.getRegionId()).get() : null);
                 student.setUser(userRepository.save(user));
                 student.setParentPhone(studentDto.getParentPhone());
-//                student.setBalans(studentDto.getBalans());
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
             }

@@ -170,7 +170,7 @@ class SelectStudent extends Component {
                     dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id
-                    v.birthDate = moment(v.birthDate).format('YYYY-MM-DD').toString()
+                    v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
                     dispatch(saveStudentAction(v))
                 }
             }
@@ -269,7 +269,7 @@ class SelectStudent extends Component {
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tug'ilgan
                                                                     sana: </small>
-                                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-yyyy")}</p>
+                                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-YYYY")}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Manzil: </small>
