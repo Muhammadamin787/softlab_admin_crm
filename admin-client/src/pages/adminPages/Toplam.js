@@ -53,6 +53,9 @@ class Toplam extends Component {
 
         const openModal = (item) => {
             this.setState({currentObject: item})
+            if (item && item.id) {
+                this.setState({courseId: item.courseId, teacherId: item.teacherId})
+            }
             dispatch({
                 type: "updateState",
                 payload: {
@@ -77,7 +80,6 @@ class Toplam extends Component {
             v.courseId = this.state.courseId
             if (v.courseId && v.teacherId)
                 dispatch(saveToplamAction(v))
-            console.log(v);
         }
         const deleteNumber = () => {
             dispatch(deleteToplamAction(currentObject))

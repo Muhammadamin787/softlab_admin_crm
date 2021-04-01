@@ -846,9 +846,10 @@ export const deleteGroupAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.id) {
-            data.history.go(-1)
+        if (data && data.id && data.history) {
+            data.history.push("/admin/groups")
         }
+
         dispatch(getGroupsAction({page: 0, size: 20}))
         dispatch(getRoomListAction())
         dispatch(getCoursesAction())
@@ -1775,11 +1776,23 @@ export const makeGroupByToplamAction = (data) => (dispatch) => {
             // types.REQUEST_SAVE_TOPLAM_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data
+        data: data.data
     }).then(res => {
-        // if (res && res.payload && res.payload.message)
-        //     toast.success(res.payload.message)
-        // dispatch(getToplamListAction({page: 0, size: 20}));
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch({
+            type: "updateState",
+            payload: {
+                secondPage: false
+            }
+        })
+        if (data && data.history) {
+            data.history.push("/admin/group/" + res.payload.object)
+        } else {
+            dispatch(getAppealListAllAction())
+        }
+    }).catch(() => {
+        toast.error("Xatolik!");
     })
 }
 export const deleteToplamAction = (data) => (dispatch) => {
@@ -2100,7 +2113,7 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
             types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data: data
+        data: data.obj
     }).then((res) => {
         dispatch({
             type: "updateState",
@@ -2108,6 +2121,7 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
                 addStudentInGroupModal: false
             }
         })
+        dispatch(getGroupStudentsAction({id: data.id}))
         toast.success(res.payload.message)
     }).catch((err) => {
         toast.error("Xatolik")

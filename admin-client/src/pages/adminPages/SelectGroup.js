@@ -399,7 +399,7 @@ class SelectGroup extends Component {
                 studentId: this.state.selectedStudent.id,
                 groupId: currentItem.id
             }
-            this.props.dispatch(saveStudentToGroupAction(obj));
+            this.props.dispatch(saveStudentToGroupAction({obj: obj, id: currentItem.id}));
         }
 
         return (
