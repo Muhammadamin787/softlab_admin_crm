@@ -122,7 +122,6 @@ class Toplam extends Component {
             // element.classList.remove("appeal-drag");
         }
         const openChangeModal = (item) => {
-            console.log(item);
             this.setState({currentObject: item})
             dispatch({
                 type: "updateState",
@@ -136,7 +135,6 @@ class Toplam extends Component {
         }
         const saveTransfer = (e, v) => {
             e.preventDefault();
-            console.log(currentObject);
             if (currentObject && currentObject.id) {
                 if (this.props.match && this.props.match.params && this.props.match.params.id) {
                     v.id = currentObject.id

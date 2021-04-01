@@ -153,7 +153,7 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi,deleteCArdApi,
+    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi, deleteCArdApi, makeGroupByToplamApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -246,10 +246,10 @@ export const downloadAccountantFileAction = (v) => () => {
     document.body.appendChild(link)
     link.click();
 }
-export const downloadQarzdorlarFileAction = (v) => () =>{
+export const downloadQarzdorlarFileAction = (v) => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/qarzdor")
-    link.setAttribute("download","qarzdorlar.xlsx")
+    link.setAttribute("download", "qarzdorlar.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -1742,6 +1742,13 @@ export const getOneToplamAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
+    }).then(() => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                secondPage: true
+            }
+        })
     })
 }
 export const saveToplamAction = (data) => (dispatch) => {
@@ -1757,6 +1764,22 @@ export const saveToplamAction = (data) => (dispatch) => {
         if (res && res.payload && res.payload.message)
             toast.success(res.payload.message)
         dispatch(getToplamListAction({page: 0, size: 20}));
+    })
+}
+export const makeGroupByToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: makeGroupByToplamApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            // types.REQUEST_SAVE_TOPLAM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data
+    }).then(res => {
+        // if (res && res.payload && res.payload.message)
+        //     toast.success(res.payload.message)
+        // dispatch(getToplamListAction({page: 0, size: 20}));
     })
 }
 export const deleteToplamAction = (data) => (dispatch) => {
