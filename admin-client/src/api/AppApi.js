@@ -421,6 +421,9 @@ export const getAppealListByStatusTypeApi = (data) => {
 export const saveToplamApi = (data) => {
     return HttpClient.doPost(api.toplam, data)
 }
+export const makeGroupByToplamApi = (data) => {
+    return HttpClient.doPost(api.toplam + "/makeGroup/" + data.id, data)
+}
 export const editToplamApi = (data) => {
     return HttpClient.doPut(api.toplam + "/" + data.id, data)
 }
