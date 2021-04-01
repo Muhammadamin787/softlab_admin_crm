@@ -104,7 +104,6 @@ class SelectTeacher extends Component {
                     currentObject: item
                 }
             })
-            console.log(currentObject)
         }
 
         const openSalaryModal = (item) => {
@@ -220,17 +219,18 @@ class SelectTeacher extends Component {
         }
 
         return (
+
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>{currentItem && currentItem.userDto && currentItem.userDto.fullName} </h3>
+                        <h3>{currentItem && currentItem.teacherName} </h3>
                         <Link to={"/admin/teachers"} className={"text-decoration-none"}>
                             <span className={""}> O'qituvchilar</span>
                         </Link>
                     </hgroup>
-
+                    {console.log(currentItem)}
                     <div className="row">
-                        {currentItem.id && currentItem.id ?
+                        {currentItem && currentItem.id ?
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
@@ -264,26 +264,26 @@ class SelectTeacher extends Component {
                                                         <div className="col-8">
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>FISH: </small>
-                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
+                                                                <p className={"d-inline"}> {currentItem.teacherName}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Telefon
                                                                     raqam: </small>
-                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
+                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tug'ilgan
                                                                     sana: </small>
-                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-YYYY")}</p>
+                                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-YYYY")}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Manzil: </small>
-                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
+                                                                <p className={"d-inline"}>{currentItem.regionName}</p>
                                                             </hgroup>
 
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Jinsi: </small>
-                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                                                <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Maosh : </small>
@@ -291,7 +291,7 @@ class SelectTeacher extends Component {
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
-                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
+                                                                <p className={"d-inline"}> {currentItem.description}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>

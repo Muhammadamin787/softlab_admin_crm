@@ -160,7 +160,6 @@ public class TeacherService {
     public ApiResponse getTeacher(UUID id) {
         try {
             List<Object> objects = teacherRepository.findTeacher(id);
-            List<TeacherDto> teacherDtoList = new ArrayList<>();
             for (Object obj : objects) {
                 Object[] teacher = (Object[]) obj;
                 UUID teacherId = UUID.fromString(teacher[0].toString());
@@ -169,7 +168,7 @@ public class TeacherService {
                 String birthDate = teacher[3].toString();
                 String gender = teacher[4].toString();
                 Double balance = Double.parseDouble(teacher[5].toString());
-                Boolean isPersent = Boolean.parseBoolean(teacher[6].toString());
+                Boolean isPersent = Boolean.parseBoolean(teacher[6] != null ? teacher[6].toString() : null);
                 Double salary = Double.parseDouble(teacher[7].toString());
                 String description = teacher[8].toString();
                 Integer regionId = Integer.parseInt(teacher[10].toString());
@@ -180,10 +179,9 @@ public class TeacherService {
                     groupDtos.add(makeGroupForTeacher(group));
                 }
                 TeacherDto teacherDto = new TeacherDto(teacherId, fullName, phoneNumber, birthDate, gender, regionId, regionName, description, groupDtos, balance, isPersent, salary);
-                teacherDtoList.add(teacherDto);
+                return apiResponseService.getResponse(teacherDto);
             }
-            return apiResponseService.getResponse(teacherDtoList);
-
+            return apiResponseService.notFoundResponse();
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
         }
