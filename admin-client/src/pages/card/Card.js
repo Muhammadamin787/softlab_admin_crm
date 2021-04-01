@@ -22,7 +22,7 @@ import {
     getOneAppealForEdit,
     getOneToplamAction,
     getRegionsAction,
-    getReklamaAction,
+    getReklamaAction, getRoomListAction,
     getTeachersForSelectAction,
     getToplamListForSelectAction,
     makeStudentByAppealAction,
@@ -78,7 +78,7 @@ class Card extends Component {
         const {
             history,
             appealList, clientStatusList, dispatch, showModal, regions, deleteModal,
-            reklamas, selectItems, toplamList, loading, currentItem, secondPage, teachers, getItems
+            reklamas, selectItems, toplamList, loading, currentItem, secondPage, teachers, getItems, checkboxes, rooms
         } = this.props
         const {currentObject, reklamaId, regionId, statusTypeId, currentPage, dropdownOpen, curDropdownID} = this.state
 
@@ -148,19 +148,30 @@ class Card extends Component {
             dispatch(makeStudentByAppealAction({id: id, history: history}));
         }
         const makeGroupModal = (id) => {
-            dispatch(getTeachersForSelectAction())
-            dispatch(getCourseListForSelectAction())
-            console.log(id);
-            dispatch({
-                type: "updateState",
-                payload: {
-                    secondPage: !secondPage
-                }
-            })
-            dispatch(getOneToplamAction({id: id}))
+            if (id) {
+                dispatch(getTeachersForSelectAction())
+                dispatch(getCourseListForSelectAction())
+                dispatch(getRoomListAction())
+                console.log(id);
+                dispatch(getOneToplamAction({id: id}))
+            } else {
+                dispatch({
+                    type: "updateState",
+                    payload: {
+                        secondPage: false
+                    }
+                })
+            }
         }
         const saveMakeGroup = (e, v) => {
             console.log(v);
+            if (currentItem) {
+                v.id = currentItem.id
+                v.teacherId = this.state.teacherId
+                v.courseId = this.state.courseId
+                if (v.courseId && v.teacherId)
+                    console.log(v);
+            }
         }
 
         const allowDrop = (e) => {
@@ -210,6 +221,15 @@ class Card extends Component {
 
         const setToplamCourse = (e) => {
             this.setState({courseId: e.value})
+        }
+        const changeCheckbox = (e, v) => {
+            let newCheckboxes = []
+            console.log(v);
+            console.log(e);
+            // for (let i = 0; i < checkboxes.length; i++) {
+            //     if (checkboxes[i]===)
+            // }
+            // dispatch({})
         }
         const setToplamTeacher = (e) => {
             this.setState({teacherId: e.value})
@@ -330,6 +350,7 @@ class Card extends Component {
                                     } : ""}
                                     placeholder="Kursni tanlang..."
                                     name="courseId"
+                                    isClearable={true}
                                     isSearchable={true}
                                     options={getItems && getItems.length > 0 && formatSelectList(getItems)}
                                     onChange={setToplamCourse}
@@ -337,7 +358,11 @@ class Card extends Component {
                                     classNamePrefix="select"
                                 />
                                 <AvCheckboxGroup inline name="weekdays" label="Dars kunlari" required>
-                                    <AvCheckbox label="Dush" value="MONDAY"/>
+                                    {/*{console.log(checkboxes)}*/}
+                                    <AvCheckbox label="Dush" value="MONDAY"
+                                        // checked={checkboxes.some(checkbox => checkbox === "Dush")}
+                                        // onChange={(e, v) => changeCheckbox(e, v)}
+                                    />
                                     <AvCheckbox label="Sesh" value="TUESDAY"/>
                                     <AvCheckbox label="Chor" value="WEDNESDAY"/>
                                     <AvCheckbox label="Pay" value="THURSDAY"/>
@@ -351,22 +376,46 @@ class Card extends Component {
                                 } : ""}
                                         placeholder="O'qituvchini tanlang..."
                                         name="teacherId"
+                                        isClearable={true}
                                         isSearchable={true}
                                         options={teachers && teachers.length > 0 ? formatSelectList(teachers) : []}
                                         onChange={setToplamTeacher}
                                         className="basic-multi-select"
                                         classNamePrefix="select"
                                 />
-                                <AvField type="time"
-                                         defaultValue={currentItem ? currentItem.time : false}
-                                         label={"Boshlanish vaqti"} name={"time"}/>
-                                <AvField defaultValue={currentItem ? currentItem.active : false}
-                                         label={"Active"} type="checkbox" name={"active"}/>
+                                <AvField className={'form-control'} label={"Xona:"} type="select"
+                                         name="roomId" required
+                                         defaultValue={currentObject && currentObject.roomId ? currentObject.roomId : "0"}>
+                                    <option key={0} value={"0"}> tanlang</option>
+                                    {rooms && rooms.length > 0 ? rooms.map((item, i) =>
+                                        <option key={i} value={item.id}>{item.name}</option>
+                                    ) : ""}
+                                </AvField>
+                                <Row>
+                                    <Col md={6}>
+                                        <AvField type="time"
+                                                 defaultValue={currentItem ? currentItem.time : false}
+                                                 label={"Boshlanish vaqti"} name={"startTime"}/>
+                                    </Col>
+                                    <Col md={6}>
+                                        <AvField type="time"
+                                                 defaultValue={currentItem ? currentItem.finishTime : false}
+                                                 label={"Tugash vaqti"} name={"finishTime"}/>
+                                    </Col>
+                                </Row>
+                                <AvField type="date"
+                                         defaultValue={currentItem ? currentItem.startDate : false}
+                                         label={"Kursning boshlanish sanasi"} name={"startDate"}/>
+                                <AvField type="date"
+                                         defaultValue={currentItem ? currentItem.finishDate : false}
+                                         label={"Kursning tugash sanasi"} name={"finishDate"}/>
+                                <AvField type="checkbox" defaultValue={currentItem ? currentItem.active : false}
+                                         label={"Active"} name={"active"}/>
                             </div>
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button color="secondary" onClick={openModal}>Bekor qilish</Button>
+                            <Button color="secondary" onClick={makeGroupModal}>Bekor qilish</Button>
                             <Button color="primary">Saqlash</Button>
                         </ModalFooter>
                     </AvForm>
@@ -504,7 +553,7 @@ export default connect(({
                                 loading,
                                 reklamas,
                                 showModal,
-                                deleteModal, secondPage,
+                                deleteModal, secondPage, checkboxes, rooms, teachers, getItems
                             },
                         }) => ({
         currentItem,
@@ -520,7 +569,7 @@ export default connect(({
         loading,
         reklamas,
         showModal,
-        deleteModal, secondPage
+        deleteModal, secondPage, checkboxes, rooms, teachers, getItems
     })
 )(Card);
 
