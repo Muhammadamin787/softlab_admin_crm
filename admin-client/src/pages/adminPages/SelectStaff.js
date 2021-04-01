@@ -54,7 +54,9 @@ class SelectStaff extends Component {
             })
         }
         const deleteItem = (item) => {
+            // console.log(this.props.history);
             dispatch(deleteEmployeeAction({...item, history: history}))
+            // console.log(history);
         }
 
         const saveItem = (e, v) => {
