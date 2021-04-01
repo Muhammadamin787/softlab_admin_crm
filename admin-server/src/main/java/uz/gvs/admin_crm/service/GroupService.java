@@ -48,7 +48,7 @@ public class GroupService {
             group.setFinishTime(groupDto.getFinishTime());
             group.setCourse(courseRepository.findById(groupDto.getCourseId()).orElseThrow(() -> new ResourceNotFoundException("get course")));
             group.setRoom(roomRepository.findById(groupDto.getRoomId()).orElseThrow(() -> new ResourceNotFoundException("get room")));
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             group.setStartDate(groupDto.getStartDate() != null ? formatter.parse(groupDto.getStartDate()) : null);
             group.setFinishDate(groupDto.getFinishDate() != null ? formatter.parse(groupDto.getFinishDate()) : null);
             group.setGroupStatus(GroupStatus.ACTIVE);

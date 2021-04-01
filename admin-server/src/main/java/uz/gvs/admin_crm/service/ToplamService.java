@@ -187,13 +187,12 @@ public class ToplamService {
 
                                 client.setClientEnum(ClientEnum.STUDENT);
                                 clientRepository.save(client);
-                                clientStatusConnectRepository.deleteByClient_id(client.getId());
-
+//                                clientStatusConnectRepository.deleteByClient_id(client.getId());
                                 groupService.addStudentForGroup(new AddGroupDto(save.getId(), group.getId()));
                             }
                         }
                     }
-                    return apiResponseService.saveResponse();
+                    return apiResponseService.saveResponse(group.getId());
                 } else {
                     return apiResponseService.errorResponse();
                 }

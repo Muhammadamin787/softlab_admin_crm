@@ -24,7 +24,7 @@ import {
     getRegionsAction,
     getReklamaAction, getRoomListAction,
     getTeachersForSelectAction,
-    getToplamListForSelectAction,
+    getToplamListForSelectAction, makeGroupByToplamAction,
     makeStudentByAppealAction,
     saveAppealAction
 } from "../../redux/actions/AppActions";
@@ -34,6 +34,7 @@ import {AvCheckbox, AvCheckboxGroup, AvField, AvForm, AvRadio, AvRadioGroup} fro
 import Select from "react-select";
 import {formatPhoneNumber, formatSelectList, sortByEnumType, sortList} from "../../utils/addFunctions";
 import moment from "moment";
+import {toast} from "react-toastify";
 
 class Card extends Component {
     componentDidMount() {
@@ -148,11 +149,10 @@ class Card extends Component {
             dispatch(makeStudentByAppealAction({id: id, history: history}));
         }
         const makeGroupModal = (id) => {
-            if (id) {
+            if (id && id > 0) {
                 dispatch(getTeachersForSelectAction())
                 dispatch(getCourseListForSelectAction())
                 dispatch(getRoomListAction())
-                console.log(id);
                 dispatch(getOneToplamAction({id: id}))
             } else {
                 dispatch({
@@ -165,12 +165,19 @@ class Card extends Component {
         }
         const saveMakeGroup = (e, v) => {
             console.log(v);
-            if (currentItem) {
+            if (currentItem && v.roomId !== 0) {
                 v.id = currentItem.id
                 v.teacherId = this.state.teacherId
                 v.courseId = this.state.courseId
+                if (!this.state.teacherId) {
+                    v.teacherId = currentItem.teacherId
+                }
+                if (!this.state.courseId)
+                    v.courseId = currentItem.courseId
                 if (v.courseId && v.teacherId)
-                    console.log(v);
+                    dispatch(makeGroupByToplamAction({data: v, history: history}))
+            } else {
+                toast.warning("Ma'lumotlarni xato kiritdingiz!")
             }
         }
 
@@ -398,18 +405,19 @@ class Card extends Component {
                                                  label={"Boshlanish vaqti"} name={"startTime"}/>
                                     </Col>
                                     <Col md={6}>
-                                        <AvField type="time"
+                                        <AvField type="time" required
                                                  defaultValue={currentItem ? currentItem.finishTime : false}
                                                  label={"Tugash vaqti"} name={"finishTime"}/>
                                     </Col>
                                 </Row>
-                                <AvField type="date"
+                                <AvField type="date" required
                                          defaultValue={currentItem ? currentItem.startDate : false}
                                          label={"Kursning boshlanish sanasi"} name={"startDate"}/>
                                 <AvField type="date"
                                          defaultValue={currentItem ? currentItem.finishDate : false}
                                          label={"Kursning tugash sanasi"} name={"finishDate"}/>
-                                <AvField type="checkbox" defaultValue={currentItem ? currentItem.active : false}
+                                <AvField type="checkbox" required
+                                         defaultValue={currentItem ? currentItem.active : false}
                                          label={"Active"} name={"active"}/>
                             </div>
                         </ModalBody>

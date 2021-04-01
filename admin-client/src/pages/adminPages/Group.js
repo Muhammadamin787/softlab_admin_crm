@@ -73,7 +73,7 @@ class Group extends Component {
             getItems,
             archiveGroupModal,
             activeGroupModal,
-            rooms,
+            rooms, history
         } = this.props;
 
         const openModal = (item) => {
@@ -97,7 +97,7 @@ class Group extends Component {
         }
 
         const deleteItem = (item) => {
-            dispatch(deleteGroupAction({...item}))
+            dispatch(deleteGroupAction({...item, history: history}))
         }
 
         const saveItem = (e, v) => {
