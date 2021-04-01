@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    deleteCourseAction,
     deleteEmployeeAction,
     getEmployeeAction,
     getRegionsAction,
@@ -53,11 +54,12 @@ class SelectStaff extends Component {
             })
         }
         const deleteItem = (item) => {
+            // console.log(this.props.history);
             dispatch(deleteEmployeeAction({...item, history: history}))
+            // console.log(history);
         }
 
         const saveItem = (e, v) => {
-            console.log(currentObject)
             v.id = currentObject.id
             v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
             dispatch(saveEmployeeAction(v))

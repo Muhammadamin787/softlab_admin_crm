@@ -49,5 +49,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(nativeQuery = true, value = "select gr.id, gr.name from groups gr" +
             " where LOWER(gr.name) like LOWER(concat('%', :objName, '%')) limit 10")
     List<Object> searchGroup(String objName);
+
+    List<Group> findAllByTeacherId(UUID uuid);
 }
 //

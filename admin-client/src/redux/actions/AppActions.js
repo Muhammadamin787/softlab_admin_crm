@@ -2038,7 +2038,7 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
         })
         toast.success("Ma'lumot o'chirildi!")
         if (data && data.history) {
-            data.history.go(-1)
+            data.history.go("admin/staffs")
         }
         dispatch(getEmployeeListAction())
         dispatch(getRegionsAction())
