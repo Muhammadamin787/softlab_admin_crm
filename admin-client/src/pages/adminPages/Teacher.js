@@ -86,7 +86,6 @@ class Teacher extends Component {
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
-                console.clear();
             }
             let teacherDto;
             teacherDto = {userDto: ""}
@@ -194,10 +193,10 @@ class Teacher extends Component {
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                                        {item.userDto && item.userDto.fullName}
+                                                        {item.teacherName}
                                                     </Link>
                                                 </td>
-                                                <td>{item.userDto && item.userDto.phoneNumber && formatPhoneNumber(item.userDto.phoneNumber)}</td>
+                                                <td>{formatPhoneNumber(item.phoneNumber)}</td>
                                                 <td>
                                                     <Button className={"table-info"}
                                                             onClick={() => openToArchive(item)}>
@@ -250,10 +249,10 @@ class Teacher extends Component {
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                                        {item.userDto && item.userDto.fullName}
+                                                        {item.teacherName}
                                                     </Link>
                                                 </td>
-                                                <td>{item.userDto && item.userDto.phoneNumber && formatPhoneNumber(item.userDto.phoneNumber)}</td>
+                                                <td>{formatPhoneNumber(item.phoneNumber)}</td>
                                                 <td>
                                                     <Button className={"table-info"}
                                                             onClick={() => openToActive(item)}>
@@ -282,6 +281,7 @@ class Teacher extends Component {
                             </div>
                         </TabPane>
                     </TabContent>
+
                     <Modal isOpen={archiveModal} toggle={() => openToArchive("")} className={""}>
                         <ModalHeader isOpen={archiveModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
@@ -362,6 +362,7 @@ class Teacher extends Component {
                             </ModalFooter>
                         </AvForm>
                     </Modal>
+
                     <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                         <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                      charCode="X">O'chirish</ModalHeader>
