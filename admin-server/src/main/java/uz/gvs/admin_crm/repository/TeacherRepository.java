@@ -17,6 +17,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
     @Query(nativeQuery = true, value = "select cast(tr.id as varchar ), ur.full_name from teacher tr inner join users ur on tr.user_id = ur.id" +
             " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
     List<Object> searchTeacher(String objName);
+
     Page<Teacher> findAllByUser_status(UserStatusEnum user_status, Pageable pageable);
 
     @Query(nativeQuery = true, value = "select cast(t.id as varchar), u.full_name, u.phone_number, u.birth_date, u.gender, t.balance, t.is_percent, coalesce(t.salary,0), u.description, " +
@@ -36,4 +37,12 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
             "from teacher t inner join users u on u.id = t.user_id " +
             "where u.status=:type ")
     Integer findTeacherPageableCount(String type);
+
+
+
+    @Query(nativeQuery = true, value = "select cast(tr.id as varchar), ur.full_name, ur.phone_number from teacher tr inner join users ur on tr.user_id = ur.id" +
+            " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
+    List<Object> searchAllTeacher(String objName);
+
+
 }

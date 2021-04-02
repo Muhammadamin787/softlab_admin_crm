@@ -531,4 +531,7 @@ export const saveStudentToGroupApi = (data) => {
 export const getStudentsBySearchApi = (data) => {
     return HttpClient.doGet(api.student + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
 }
+export const getTeachersBySearchApi = (data) => {
+    return HttpClient.doGet(api.teacher + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
+}
 // ---

@@ -81,4 +81,10 @@ public class TeacherController {
         ApiResponse apiResponse = teacherService.searchTeacher(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
+
+    @GetMapping("/searchAll")
+    public HttpEntity<?> searchAllStudent(@RequestParam(value = "name") String name) {
+        ApiResponse apiResponse = teacherService.searchAllTeacher(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
 }

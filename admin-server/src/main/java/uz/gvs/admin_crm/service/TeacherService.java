@@ -16,6 +16,7 @@ import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
+import uz.gvs.admin_crm.payload.searchTeacher.ResTeacherSearch;
 import uz.gvs.admin_crm.repository.GroupRepository;
 import uz.gvs.admin_crm.repository.RoleRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
@@ -237,6 +238,24 @@ public class TeacherService {
             }
         } catch (Exception exception) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse searchAllTeacher(String name) {
+        try {
+                List<Object> objects = teacherRepository.searchAllTeacher(name.toLowerCase());
+            List<ResTeacherSearch> resTeacherSearchesDto = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] teacher = (Object[]) obj;
+                UUID id = UUID.fromString(teacher[0].toString());
+                String name1 = teacher[1].toString();
+                String phoneNumber = teacher[2].toString();
+                ResTeacherSearch resTeacherSearch = new ResTeacherSearch(id, name1, phoneNumber);
+                resTeacherSearchesDto.add(resTeacherSearch);
+            }
+            return apiResponseService.getResponse(resTeacherSearchesDto);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 }

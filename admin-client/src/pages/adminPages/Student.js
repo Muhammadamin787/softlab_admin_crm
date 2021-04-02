@@ -458,6 +458,7 @@ class Student extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>

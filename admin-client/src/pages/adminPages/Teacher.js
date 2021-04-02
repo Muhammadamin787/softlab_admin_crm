@@ -14,8 +14,8 @@ import {
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction, downloadTeacherFileAction,
-    getRegionsAction,
-    getTeachersAction,
+    getRegionsAction, getStudentsAction, getStudentsBySearchAction,
+    getTeachersAction, getTeachersBySearchAction,
     saveTeacherAction, toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -136,6 +136,16 @@ class Teacher extends Component {
             }))
         }
 
+        ////// Teacher Search
+
+        const searchTeacher = () => {
+            let value = document.getElementById("searchTeacher").value;
+            if (value.length === 0) {
+                this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+            }
+            dispatch(getTeachersBySearchAction({name: value}));
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -165,6 +175,11 @@ class Teacher extends Component {
                             >
                                 Arxiv O'qituvchilar
                             </NavLink>
+                        </NavItem>
+                        <NavItem align={"right"}>
+                            <input type={"search"} name={"teacherSearch"} id={"searchTeacher"}
+                                   className={"form-control"} placeholder={"Qidirish..."}
+                                   onChange={searchTeacher}/>
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
