@@ -153,7 +153,12 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi, deleteOneAppealApi, deleteCArdApi, makeGroupByToplamApi,
+    saveStudentToGroupApi,
+    getStudentsBySearchApi,
+    deleteOneAppealApi,
+    deleteCArdApi,
+    makeGroupByToplamApi,
+    getTeachersBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -1216,6 +1221,18 @@ export const getStudentsBySearchAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+/// get Teachers Search
+export const getTeachersBySearchAction  = (data) => (dispatch) => {
+    dispatch({
+        api: getTeachersBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHERS_BY_SEARCH_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data

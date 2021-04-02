@@ -102,8 +102,8 @@ class Group extends Component {
 
         const saveItem = (e, v) => {
 
-            v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
-            v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
+            v.finishDate = moment(v.finishDate).format('DD-MM-YYYY hh:mm:ss').toString()
+            v.startDate = moment(v.startDate).format('DD-MM-YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
         }
 
@@ -206,8 +206,8 @@ class Group extends Component {
                                                         key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
-                                                moment(item.startDate).format("DD-MM-yyyy") + " -- " +
-                                                moment(item.finishDate).format("DD-MM-yyyy")
+                                                moment(item.startDate).format("DD-MM-YYYY") + " -- " +
+                                                moment(item.finishDate).format("DD-MM-YYYY")
                                             }</td>
                                             <td>
                                                 <Button className={"table-info"}
