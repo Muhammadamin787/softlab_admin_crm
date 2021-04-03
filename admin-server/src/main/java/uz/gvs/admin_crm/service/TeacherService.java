@@ -8,21 +8,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Group;
-import uz.gvs.admin_crm.entity.Teacher;
-import uz.gvs.admin_crm.entity.User;
-import uz.gvs.admin_crm.entity.Weekday;
+import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.payload.searchTeacher.ResTeacherSearch;
-import uz.gvs.admin_crm.repository.GroupRepository;
-import uz.gvs.admin_crm.repository.RoleRepository;
-import uz.gvs.admin_crm.repository.TeacherRepository;
-import uz.gvs.admin_crm.repository.UserRepository;
+import uz.gvs.admin_crm.repository.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,19 +37,25 @@ public class TeacherService {
     @Autowired
     GroupRepository groupRepository;
 
+    @Autowired
+    RegionRepository regionRepository;
+
     public ApiResponse saveTeacher(TeacherDto teacherDto) {
         try {
-            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 0))
+            if (!(teacherDto.getTeacherName().replaceAll(" ", "").length() > 0))
                 return apiResponseService.notEnoughErrorResponse();
-            if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
-                User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
-                if (user != null) {
-                    Teacher teacher = new Teacher();
-                    teacher.setUser(user);
-                    teacherRepository.save(teacher);
-                    return apiResponseService.saveResponse();
-                }
-                return apiResponseService.existResponse();
+            if (!userRepository.existsByPhoneNumber(teacherDto.getPhoneNumber())) {
+                Teacher teacher = new Teacher();
+                User user = userservice.makeUser(new UserDto(
+                        teacherDto.getTeacherName(),
+                        teacherDto.getPhoneNumber(),
+                        teacherDto.getDescription(),
+                        teacherDto.getRegionId(),
+                        teacherDto.getGender(),
+                        teacherDto.getBirthDate()), RoleName.TEACHER);
+                teacher.setUser(user);
+                teacherRepository.save(teacher);
+                return apiResponseService.saveResponse();
             }
             return apiResponseService.existResponse();
         } catch (Exception exception) {
@@ -92,9 +93,9 @@ public class TeacherService {
             for (Object obj : teachers) {
                 Object[] teacher = (Object[]) obj;
                 UUID teacherId = UUID.fromString(teacher[0].toString());
-                String name = teacher[1].toString();
+                String teacherName = teacher[1].toString();
                 String phoneNumber = teacher[2].toString();
-                TeacherDto teacherDto = new TeacherDto(teacherId, name, phoneNumber);
+                TeacherDto teacherDto = new TeacherDto(teacherId, teacherName, phoneNumber);
                 teacherDtoList.add(teacherDto);
             }
             return apiResponseService.getResponse(new PageableDto(Long.valueOf(totalElements), page, size, teacherDtoList));
@@ -113,17 +114,44 @@ public class TeacherService {
         );
     }
 
+//    public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
+//        try {
+//            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+//            if (optional.isEmpty()) {
+//                return apiResponseService.notFoundResponse();
+//            }
+//            Teacher teacher = optional.get();
+//            User user = userservice.editUser(teacherDto.getUserDto(), teacher.getUser(), RoleName.TEACHER);
+//            teacher.setUser(user);
+//            teacherRepository.save(teacher);
+//            return apiResponseService.updatedResponse();
+//        } catch (Exception e) {
+//            return apiResponseService.tryErrorResponse();
+//        }
+//    }
+
     public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
         try {
-            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
-            if (optional.isEmpty()) {
-                return apiResponseService.notFoundResponse();
+            Optional<Teacher> byId = teacherRepository.findById(id);
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+            if (byId.isPresent()) {
+                Teacher teacher = byId.get();
+                User user = teacher.getUser();
+                boolean b = userRepository.existsByPhoneNumberAndIdNot(teacherDto.getPhoneNumber(), user.getId());
+                if (b) {
+                    return apiResponseService.existResponse();
+                }
+                user.setPhoneNumber(teacherDto.getPhoneNumber());
+                user.setFullName(teacherDto.getTeacherName());
+                user.setDescription(teacherDto.getDescription());
+                user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(teacherDto.getBirthDate()) : null);
+                user.setGender(Gender.valueOf(teacherDto.getGender()));
+                user.setRegion(teacherDto.getRegionId() != null && teacherDto.getRegionId() > 0 ? regionRepository.findById(teacherDto.getRegionId()).get() : null);
+                teacher.setUser(userRepository.save(user));
+                teacherRepository.save(teacher);
+                return apiResponseService.saveResponse();
             }
-            Teacher teacher = optional.get();
-            User user = userservice.editUser(teacherDto.getUserDto(), teacher.getUser(), RoleName.TEACHER);
-            teacher.setUser(user);
-            teacherRepository.save(teacher);
-            return apiResponseService.updatedResponse();
+            return apiResponseService.notFoundResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }

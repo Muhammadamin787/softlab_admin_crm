@@ -166,7 +166,7 @@ class SelectStudent extends Component {
                 if (showPaymentModal) {
                     v.groupId = addGroup;
                     v.studentId = currentObject.id;
-                    v.payDate = moment(v.payDate).format('YYYY-MM-DD hh:mm:ss').toString()
+                    v.payDate = moment(v.payDate).format('DD-MM-YYYY hh:mm:ss').toString()
                     dispatch(saveStudentPaymentAction(v));
                 } else {
                     v.id = currentObject.id

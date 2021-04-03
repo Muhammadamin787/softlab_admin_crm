@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class TeacherDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -30,8 +29,6 @@ public class TeacherDto {
     private String description;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<GroupDto> groupDtos;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private UserDto userDto;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Double balance;
 
@@ -62,10 +59,7 @@ public class TeacherDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public TeacherDto(UserDto userDto, Double balance) {
-        this.userDto = userDto;
-        this.balance = balance;
-    }
+
 
 
 }
