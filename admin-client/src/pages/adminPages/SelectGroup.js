@@ -213,7 +213,6 @@ class SelectGroup extends Component {
             }
         }
         const checkAttendence = (bool, id, isDesktop) => {
-            console.log(bool, id, isDesktop)
             if (!isDesktop) {
                 let activeBtn = document.getElementById("active" + id);
                 let notActiveBtn = document.getElementById("notActive" + id);
@@ -250,7 +249,6 @@ class SelectGroup extends Component {
                     }
                 }
             }
-            console.log(array);
             this.setState({allAttendence: array})
         }
         const saveAttendance = (e, v, fromMobile) => {

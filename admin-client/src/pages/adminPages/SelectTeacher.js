@@ -533,7 +533,7 @@ class SelectTeacher extends Component {
                                 defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
                                 type={"text"}
                                 label={"FISH"} name={"fullName"} className={"form-control"}
-                                placeholer={"nomi"} required disabled/>
+                                placeholer={"nomi"}  disabled/>
                             <div className={"w-100 modal-form"}>
                                 <AvField
                                     type={"number"}
