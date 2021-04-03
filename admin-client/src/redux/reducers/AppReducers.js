@@ -389,6 +389,17 @@ const reducers = {
     [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
     },
+    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.students = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
+    },
     [types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS](state, payload) {
         state.students = [];
         console.log(payload.payload.object);
