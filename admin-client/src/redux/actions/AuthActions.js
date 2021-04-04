@@ -30,7 +30,6 @@ export const login = (payload) => async (dispatch) => {
         return true;
     } catch (err) {
         if (err.response) toast.error(err.response.data.message);
-
         return false;
     }
 };
@@ -124,6 +123,8 @@ const pushHisPage = (roles, history) => {
             push("/admin");
         } else if (roleName === "TEACHER") {
             push("/admin/groups");
+        } else if (roleName === "FINANCIER") {
+            push("/admin/finance");
         }
     });
 };
