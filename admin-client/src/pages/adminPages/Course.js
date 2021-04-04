@@ -17,6 +17,12 @@ class Course extends Component {
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
+            this.props.dispatch({
+                type: "updateState",
+                payload:{
+                    getItems:[],
+                }
+            })
             this.props.dispatch(getCoursesAction({id: id}))
             this.props.dispatch(getCourseCategoriesAction())
             this.props.dispatch(getCourseCategoryAction({id: id}))
