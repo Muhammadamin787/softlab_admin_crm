@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import './adminLayout.scss'
 import '../pages/universal.scss'
 import {LogoIcon, LogoMiniIcon, ToggleIcon} from "./Icons";
 import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
 import {config} from "../utils/config";
+import {TOKEN} from "../utils/constants";
 
 
 class AdminLayout extends Component {
@@ -40,6 +41,11 @@ class AdminLayout extends Component {
             this.setState({addMenu: !addMenu})
         }
 
+        const signOut = () => {
+            localStorage.removeItem('role');
+            localStorage.removeItem(TOKEN);
+            this.props.history.push("/login")
+        }
         const thirdMenu = () => {
             this.setState({addMenu1: !addMenu1})
         }
@@ -61,15 +67,18 @@ class AdminLayout extends Component {
                                     </div>
                                 </Link>
                                 : ""}
-                            <Link to="/admin/card" className={
-                                this.props.pathname === "/admin/card" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-dashboard"/>
-                                <div className="main-link">
-                                    Murojaatlar
-                                </div>
-                            </Link>
+                            {isSuperAdmin ?
+                                <Link to="/admin/card" className={
+                                    this.props.pathname === "/admin/card" ?
+                                        "active-link" : "default-link"
+                                }>
+                                    <span className="icon icon-dashboard"/>
+                                    <div className="main-link">
+                                        Murojaatlar
+                                    </div>
+                                </Link>
+                                : ""}
+
                             <Link to="/admin/students" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/student") ?
                                     "active-link" : "default-link"
@@ -99,26 +108,27 @@ class AdminLayout extends Component {
                                     Guruhlar
                                 </div>
                             </Link>
-                            <Link to="/admin/teachers" className={
-                                this.props.pathname && this.props.pathname.startsWith("/admin/teacher") ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <div className="main-link">
-                                    O'qituvchilar
-                                </div>
-                            </Link>
                             {isSuperAdmin ?
-
-                                <Link to="#" onClick={thirdMenu} className={
-                                    this.props.pathname === "/admin/finance" ?
-                                        "active-link" : "default-link"
-                                }>
-                                    <span className="icon icon-teacher"/>
-                                    <div className="main-link">
-                                        Moliya
-                                    </div>
-                                </Link>
+                                <>
+                                    <Link to="/admin/teachers" className={
+                                        this.props.pathname && this.props.pathname.startsWith("/admin/teacher") ?
+                                            "active-link" : "default-link"
+                                    }>
+                                        <span className="icon icon-teacher"/>
+                                        <div className="main-link">
+                                            O'qituvchilar
+                                        </div>
+                                    </Link>
+                                    <Link to="#" onClick={thirdMenu} className={
+                                        this.props.pathname === "/admin/finance" ?
+                                            "active-link" : "default-link"
+                                    }>
+                                        <span className="icon icon-teacher"/>
+                                        <div className="main-link">
+                                            Moliya
+                                        </div>
+                                    </Link>
+                                </>
                                 : ""}
                             {isSuperAdmin ?
                                 <Link to="#" onClick={secondMenu} className={
@@ -276,6 +286,7 @@ class AdminLayout extends Component {
                                 <div className="name-title my-auto">
                                     {currentUser ? currentUser.fullName : ""}
                                 </div>
+                                <button className={"btn btn-secondary"} onClick={signOut}>Chiqish</button>
                             </div>
                         </Col>
                     </Row>
@@ -285,7 +296,7 @@ class AdminLayout extends Component {
     }
 }
 
-export default connect(
+export default withRouter(connect(
     ({
          app: {
              isOpenGeneral,
@@ -322,4 +333,4 @@ export default connect(
             notifications
         })
 )
-(AdminLayout);
+(AdminLayout));
