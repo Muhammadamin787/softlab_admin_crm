@@ -64,7 +64,7 @@ export const userMe = (payload) => async (dispatch, getState) => {
             });
             if (payload) {
                 dispatch({
-                    type: "updateStateOrder",
+                    type: "updateState",
                     payload: {currentUser: response.payload},
                 });
             }
@@ -100,9 +100,9 @@ const setStateRole = (roles, dispatch) => {
         } else if (item.roleName === "ADMIN") {
             dispatch({type: "updateState", payload: {isAdmin: true}});
             roleStatus = 'admin'
-        } else if (item.roleName === "AGENT") {
-            dispatch({type: "updateState", payload: {isAgent: true}});
-            roleStatus = 'agent'
+        } else if (item.roleName === "TEACHER") {
+            dispatch({type: "updateState", payload: {isTeacher: true}});
+            roleStatus = 'teacher'
         } else if (item.roleName === "SUPPLIER") {
             dispatch({type: "updateState", payload: {isSupplier: true}});
             roleStatus = 'supplier'
@@ -122,8 +122,8 @@ const pushHisPage = (roles, history) => {
     roles.forEach(({roleName}) => {
         if (roleName === "SUPER_ADMIN") {
             push("/admin");
-        } else if (roleName === "ADMIN") {
-            push("/agent");
+        } else if (roleName === "TEACHER") {
+            push("/admin/groups");
         }
     });
 };
