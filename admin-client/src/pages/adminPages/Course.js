@@ -44,7 +44,7 @@ class Course extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    showModal: !showModal
+                    showModal: !showModal,
                 }
             })
         }

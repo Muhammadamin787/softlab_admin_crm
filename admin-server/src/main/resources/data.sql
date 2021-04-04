@@ -34,13 +34,13 @@ VALUES ('true', 'Farg`ona viloyati', 'Farg`ona'),
        ('true', 'Toshkent viloyati', 'Toshkent'),
        ('true', 'Samarqand viloyati', 'Samarqand');
 
-INSERT INTO course_category(active, description, name)
-VALUES ('true', 'Chet tili', 'Ingliz tili'),
-       ('true', 'Aniq fan', 'Matematika'),
-       ('true', 'Dasturlash', 'Dasturlash');
-
-INSERT INTO course(active, description, name, price, course_category_id)
-VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 20000, 1),
-       ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 20000, 1),
-       ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 25000, 1),
-       ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 25000, 1);
+-- INSERT INTO course_category(active, description, name)
+-- VALUES ('true', 'Chet tili', 'Ingliz tili'),
+--        ('true', 'Aniq fan', 'Matematika'),
+--        ('true', 'Dasturlash', 'Dasturlash');
+--
+-- INSERT INTO course(active, description, name, price, course_category_id)
+-- VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 20000, 1),
+--        ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 20000, 1),
+--        ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 25000, 1),
+--        ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 25000, 1);

@@ -88,18 +88,15 @@ class Teacher extends Component {
                 v.id = currentObject.id
             }
             let teacherDto;
-            teacherDto = {userDto: ""}
-            teacherDto.userDto = {
-                id: v.id,
-                fullName: v.fullName,
-                gender: v.gender,
+            teacherDto = {
+                teacherName: v.teacherName,
                 phoneNumber: v.phoneNumber,
-                avatarId: attachmentId,
+                gender: v.gender,
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
             }
-            teacherDto.id = currentObject.id
+            // teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
         }
         const downloadTecherFile = (e, v) => {
@@ -329,12 +326,12 @@ class Teacher extends Component {
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        defaultValue={currentObject ? currentObject.teacherName : ""}
                                         type={"text"}
-                                        label={"FISH"} name={"fullName"} className={"form-control"}
+                                        label={"FISH"} name={"teacherName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         validate={{
@@ -346,27 +343,27 @@ class Teacher extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
+                                        defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                         />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
-                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                             defaultValue={currentObject ? currentObject.regionName : "0"}>
                                         <option key={0} value={"0"}>Ota hududni tanlang</option>
                                         {regions ? regions.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  defaultValue={currentObject ? currentObject.gender : ""}
                                                   label="Jins" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Erkak" value="MALE"/>
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}/>
                                 </div>
