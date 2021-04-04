@@ -334,7 +334,7 @@ public class StudentService {
                 studentPayment.getStudent().getUser().getFullName() + " / " + studentPayment.getStudent().getUser().getPhoneNumber(),
                 studentPayment.getSum(),
                 studentPayment.getCashSum(),
-                studentPayment.getCashback().getPercent(),
+                studentPayment.getCashback() != null ? studentPayment.getCashback().getPercent() : 0,
                 studentPayment.getPayType().getName(),
                 studentPayment.getComment(),
                 studentPayment.getPayDate().toString()
