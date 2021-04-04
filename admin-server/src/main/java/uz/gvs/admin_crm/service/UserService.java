@@ -48,6 +48,11 @@ public class UserService {
             user.setStatus(roleName.equals(RoleName.STUDENT) ? UserStatusEnum.DEFAULT : UserStatusEnum.ACTIVE);
             user.setBirthDate(userDto.getBirthDate() != null ? formatter1.parse(userDto.getBirthDate()) : null);
             user.setRoles(new HashSet<>(roleRepository.findAllByRoleName(roleName)));
+            if (!RoleName.STUDENT.equals(roleName)) {
+                if (userDto.getPhoneNumber().length() > 0) {
+                    user.setPassword(passwordEncoder.encode(userDto.getPhoneNumber()));
+                }
+            }
             return userRepository.save(user);
         } catch (Exception e) {
             return null;

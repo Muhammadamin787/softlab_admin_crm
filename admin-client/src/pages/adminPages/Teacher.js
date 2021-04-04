@@ -29,8 +29,12 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class Teacher extends Component {
     componentDidMount() {
-        this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+        if (this.props.isSuperAdmin) {
+            this.props.dispatch(getRegionsAction())
+            this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+        } else {
+            this.props.history.push("/notFound")
+        }
     }
 
     state = {
@@ -60,6 +64,7 @@ class Teacher extends Component {
             regions,
             archiveModal,
             activeModal,
+            isSuperAdmin
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -346,7 +351,7 @@ class Teacher extends Component {
                                         defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        />
+                                    />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
                                              defaultValue={currentObject ? currentObject.regionName : "0"}>
@@ -419,6 +424,9 @@ export default connect((
             archiveModal,
             activeModal,
         },
+        auth: {
+            isSuperAdmin
+        }
     }) => ({
         page,
         size,
@@ -439,6 +447,6 @@ export default connect((
         teachers,
         teacherDto,
         archiveModal,
-        activeModal,
+        activeModal, isSuperAdmin
     })
 )(Teacher);

@@ -3,13 +3,11 @@ package uz.gvs.admin_crm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.GroupStatus;
 import uz.gvs.admin_crm.entity.enums.StudentGroupStatus;
-import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.entity.enums.WeekdayName;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.*;
@@ -36,6 +34,8 @@ public class GroupService {
     StudentRepository studentRepository;
     @Autowired
     StudentGroupRepository studentGroupRepository;
+    @Autowired
+    CheckRole checkRole;
 
     public Group makeGroup(GroupDto groupDto) {
         try {
@@ -186,9 +186,14 @@ public class GroupService {
 
     }
 
-    public ApiResponse getGroupList(int page, int size, String type) {
+    public ApiResponse getGroupList(int page, int size, String type, User user) {
         try {
-            Page<Group> all = groupRepository.findAllByGroupStatus(GroupStatus.valueOf(type), PageRequest.of(page, size));
+            Page<Group> all = null;
+            if (checkRole.isSuperAdmin(user) || checkRole.isFinancier(user) || checkRole.isReception(user))
+                all = groupRepository.findAllByGroupStatus(GroupStatus.valueOf(type), PageRequest.of(page, size));
+            else if (checkRole.isTeacher(user)) {
+                all = groupRepository.findAllByGroupStatusAndTeacher_user(GroupStatus.valueOf(type), user, PageRequest.of(page, size));
+            }
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
