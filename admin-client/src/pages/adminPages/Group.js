@@ -446,4 +446,4 @@ export default connect(({
         activeGroupModal,
     })
 )(Group);
-//
+

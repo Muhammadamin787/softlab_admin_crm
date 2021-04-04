@@ -17,6 +17,12 @@ class Course extends Component {
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
+            this.props.dispatch({
+                type: "updateState",
+                payload: {
+                    getItems: [],
+                }
+            })
             this.props.dispatch(getCoursesAction({id: id}))
             this.props.dispatch(getCourseCategoriesAction())
             this.props.dispatch(getCourseCategoryAction({id: id}))
@@ -129,7 +135,8 @@ class Course extends Component {
                             <div className="row">
                                 {
                                     getItems && getItems.length > 0 ? getItems.map((item, i) =>
-                                            <div key={i} className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                            <div key={i}
+                                                 className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
                                                 <Link to={"/admin/course/select/" + item.id}
                                                       className={"w-100 text-decoration-none "}>
                                                     <h5>{item.name}</h5>
