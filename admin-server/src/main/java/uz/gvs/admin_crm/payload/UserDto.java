@@ -22,23 +22,23 @@ public class UserDto {
     private UUID id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String fullName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String phoneNumber;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String description;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int age;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Region region;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer regionId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String gender;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Attachment avatar;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String birthDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String password;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Role> roles;
