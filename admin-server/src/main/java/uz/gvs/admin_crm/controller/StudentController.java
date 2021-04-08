@@ -51,7 +51,7 @@ public class StudentController {
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
                                         @RequestParam(value = "status", defaultValue = "DEFAULT") String status,
                                         @CurrentUser User user) {
-        ApiResponse apiResponse = studentService.getStudents(page, size, status);
+        ApiResponse apiResponse = studentService.getStudents(page, size, status,user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 

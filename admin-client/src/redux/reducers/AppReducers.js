@@ -197,7 +197,7 @@ const reducers = {
         let groupsForSelect = payload.payload.object
         let ketmon = []
         for (let i = 0; i < groupsForSelect.length; i++) {
-            ketmon.push({value: groupsForSelect[i].uuid, label: groupsForSelect[i].name})
+            ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
         }
         state.getItems = ketmon
     },

@@ -20,9 +20,37 @@ public class CheckRole {
         }
         return false;
     }
+
     public boolean isSuperAdmin(User user) {
         for (Role role : user.getRoles()) {
             if (role.getRoleName() == RoleName.SUPER_ADMIN) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isTeacher(User user) {
+        for (Role role : user.getRoles()) {
+            if (role.getRoleName() == RoleName.TEACHER) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isFinancier(User user) {
+        for (Role role : user.getRoles()) {
+            if (role.getRoleName() == RoleName.FINANCIER) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isReception(User user) {
+        for (Role role : user.getRoles()) {
+            if (role.getRoleName() == RoleName.RECEPTION) {
                 return true;
             }
         }

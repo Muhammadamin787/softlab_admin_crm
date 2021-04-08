@@ -43,6 +43,8 @@ public class StudentService {
     CashbackRepository cashbackRepository;
     @Autowired
     PaymentRepository paymentRepository;
+    @Autowired
+    CheckRole checkRole;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -128,9 +130,14 @@ public class StudentService {
         );
     }
 
-    public ApiResponse getStudents(int page, int size, String type) {
+    public ApiResponse getStudents(int page, int size, String type, User user) {
         try {
-            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            Page<Student> all = null;
+            if (checkRole.isSuperAdmin(user) || checkRole.isFinancier(user) || checkRole.isReception(user)) {
+                all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            } else {
+                all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            }
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),

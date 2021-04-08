@@ -82,6 +82,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/StudentFinance" component={StudentFinance}/>
                 <PrivateRoute exact path="/admin/card" component={Card}/>
                 <Route component={NotFound}/>
+                <PublicRoute exact path="/notFound" component={NotFound}/>
             </Switch>
         </Provider>
     );
