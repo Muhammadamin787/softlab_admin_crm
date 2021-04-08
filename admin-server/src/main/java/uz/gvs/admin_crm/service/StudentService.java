@@ -335,13 +335,13 @@ public class StudentService {
         );
     }
 
-    public ResStudent makeResStudent(StudentPayment studentPayment) {
+    public ResStudent   makeResStudent(StudentPayment studentPayment) {
         return new ResStudent(
                 studentPayment.getStudent().getId(),
                 studentPayment.getStudent().getUser().getFullName() + " / " + studentPayment.getStudent().getUser().getPhoneNumber(),
                 studentPayment.getSum(),
                 studentPayment.getCashSum(),
-                studentPayment.getCashback() != null ? studentPayment.getCashback().getPercent() : 0,
+                studentPayment.getCashback() != null ? studentPayment.getCashback().getPercent() :0,
                 studentPayment.getPayType().getName(),
                 studentPayment.getComment(),
                 studentPayment.getPayDate().toString()

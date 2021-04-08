@@ -4,6 +4,7 @@ package uz.gvs.admin_crm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.ApiResponse;
@@ -26,18 +27,21 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
     @PostMapping
     public HttpEntity<?> saveEmployee(@RequestBody EmployeeDto employeeDto) {
         ApiResponse apiResponse = employeeService.saveEmployee(employeeDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
     @PutMapping("/{id}")
     public HttpEntity<?> editEmployee(@PathVariable UUID id, @RequestBody EmployeeDto employeeDto) {
         ApiResponse apiResponse = employeeService.editEmployee(id, employeeDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
     @GetMapping
     public HttpEntity<?> getStudentList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {

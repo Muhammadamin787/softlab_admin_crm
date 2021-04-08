@@ -189,7 +189,7 @@ public class GroupService {
     public ApiResponse getGroupList(int page, int size, String type, User user) {
         try {
             Page<Group> all = null;
-            if (checkRole.isSuperAdmin(user) || checkRole.isFinancier(user) || checkRole.isReception(user))
+            if (checkRole.isSuperAdmin(user) || checkRole.isFinancier(user) || checkRole.isReception(user) || checkRole.isTeacher(user))
                 all = groupRepository.findAllByGroupStatus(GroupStatus.valueOf(type), PageRequest.of(page, size));
             else if (checkRole.isTeacher(user)) {
                 all = groupRepository.findAllByGroupStatusAndTeacher_user(GroupStatus.valueOf(type), user, PageRequest.of(page, size));

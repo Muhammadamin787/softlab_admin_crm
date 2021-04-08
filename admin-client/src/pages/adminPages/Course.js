@@ -135,8 +135,7 @@ class Course extends Component {
                             <div className="row">
                                 {
                                     getItems && getItems.length > 0 ? getItems.map((item, i) =>
-                                            <div key={i}
-                                                 className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                            <div key={i} className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
                                                 <Link to={"/admin/course/select/" + item.id}
                                                       className={"w-100 text-decoration-none "}>
                                                     <h5>{item.name}</h5>

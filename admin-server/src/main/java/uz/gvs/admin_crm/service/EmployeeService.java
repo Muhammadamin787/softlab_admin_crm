@@ -38,12 +38,13 @@ public class EmployeeService {
                 return apiResponseService.notEnoughErrorResponse();
             if (userService.checkPhoneNumber(employeeDto.getPhoneNumber())) {
                 User user = userService.makeUser(new UserDto(
-                        employeeDto.getFullName(),
-                        employeeDto.getPhoneNumber(),
-                        employeeDto.getDescription(),
-                        employeeDto.getRegionId(),
-                        employeeDto.getGender(),
-                        employeeDto.getBirthDate()),
+                                employeeDto.getFullName(),
+                                employeeDto.getPhoneNumber(),
+                                employeeDto.getDescription(),
+                                employeeDto.getRegionId(),
+                                employeeDto.getGender(),
+                                employeeDto.getBirthDate(),
+                                employeeDto.getPassword()),
                         RoleName.valueOf(employeeDto.getRoleName()));
                 Employee employee = new Employee();
                 employee.setUser(user);
@@ -55,7 +56,8 @@ public class EmployeeService {
             return apiResponseService.tryErrorResponse();
         }
     }
-//
+
+    //
     public ApiResponse editEmployee(UUID id, EmployeeDto employeeDto) {
         try {
             Optional<Employee> byId = employeeRepository.findById(id);
@@ -93,7 +95,7 @@ public class EmployeeService {
                 String fullName = employee[1].toString();
                 String phoneNumber = employee[2].toString();
                 String roleName = employee[3].toString();
-                EmployeeDto employeeDto = new EmployeeDto(id,fullName, phoneNumber, roleName);
+                EmployeeDto employeeDto = new EmployeeDto(id, fullName, phoneNumber, roleName);
                 employeeDtos.add(employeeDto);
             }
             return apiResponseService.getResponse(employeeDtos);
