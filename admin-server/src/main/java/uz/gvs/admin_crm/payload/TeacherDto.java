@@ -20,6 +20,8 @@ public class TeacherDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String birthDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String password;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String gender;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer regionId;

@@ -95,6 +95,7 @@ class Teacher extends Component {
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
+                password: v.password,
             }
             // teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
@@ -365,7 +366,13 @@ class Teacher extends Component {
                                     <AvField
                                         defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
-                                        label={"Izoh"} name={"description"} className={"form-control"}/>
+                                        label={"Izoh"} name={"description"} className={"form-control"}
+                                    />
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.password : ""}
+                                        type={"text"} placeholder={"abc_123!*"}
+                                        label={"Parol"} name={"password"} className={"form-control"}
+                                    />
                                 </div>
                             </ModalBody>
                             <ModalFooter>

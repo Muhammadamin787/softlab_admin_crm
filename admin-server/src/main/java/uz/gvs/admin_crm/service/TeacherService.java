@@ -52,7 +52,9 @@ public class TeacherService {
                         teacherDto.getDescription(),
                         teacherDto.getRegionId(),
                         teacherDto.getGender(),
-                        teacherDto.getBirthDate()), RoleName.TEACHER);
+                        teacherDto.getBirthDate(),
+                        teacherDto.getPassword()),
+                        RoleName.TEACHER);
                 teacher.setUser(user);
                 teacherRepository.save(teacher);
                 return apiResponseService.saveResponse();
