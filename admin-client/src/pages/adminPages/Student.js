@@ -59,6 +59,7 @@ class Student extends Component {
     render() {
         const {currentObject, activeTab} = this.state;
         const {
+            isSuperAdmin,isAdmin,isReception,isFinancier,
             page,
             size,
             totalElements,
@@ -170,9 +171,12 @@ class Student extends Component {
                 {this.state.secondPage ?
                     <div className={"flex-column container"}>
                         <h1>Talablar</h1>
-                        <div align={"right"}><Button color={"success"} onClick={openModal}
-                                                     className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
-                        </div>
+                        {isSuperAdmin || isAdmin || isReception ?
+                            <div align={"right"}><Button color={"success"} onClick={openModal}
+                                                         className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
+                            </div>
+                            :""
+                        }
                         <Nav tabs>
                             <NavItem
                                 className={activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -219,7 +223,10 @@ class Student extends Component {
                                                 <th>No</th>
                                                 <th>Ism</th>
                                                 <th>Telefon</th>
-                                                <th colSpan="2">Amal</th>
+                                                {isSuperAdmin || isAdmin ?
+                                                    <th colSpan="2">Amal</th>
+                                                    : ""
+                                                }
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -233,16 +240,19 @@ class Student extends Component {
                                                         <td>
                                                             {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                                         </td>
-                                                        <td>
-                                                            <Button className={"table-icon"}
-                                                                    onClick={() => openToArchive(item)}>
-                                                                <GlobusIcon/>
-                                                            </Button>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(item)}>
-                                                                <DeleteIcon/>
-                                                            </Button>
-                                                        </td>
+                                                        {isSuperAdmin || isAdmin ?
+                                                            <td>
+                                                                <Button className={"table-icon"}
+                                                                        onClick={() => openToArchive(item)}>
+                                                                    <GlobusIcon/>
+                                                                </Button>
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openDeleteModal(item)}>
+                                                                    <DeleteIcon/>
+                                                                </Button>
+                                                            </td>
+                                                            :""
+                                                        }
                                                     </tr>
                                                 ) : ''
                                             }
@@ -458,6 +468,7 @@ class Student extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>
@@ -501,11 +512,11 @@ export default connect((
             teacherDto,
             toArchiveModal,
             toActiveModal,
-        }
-        ,
-    }
-    ) => (
+        },
+        auth:{isSuperAdmin,isAdmin,isReception,isFinancier}
+    }) => (
         {
+            isSuperAdmin,isAdmin,isReception,isFinancier,
             page,
             size,
             selectDebtors,

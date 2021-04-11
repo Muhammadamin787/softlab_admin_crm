@@ -43,6 +43,8 @@ public class StudentService {
     CashbackRepository cashbackRepository;
     @Autowired
     PaymentRepository paymentRepository;
+    @Autowired
+    CheckRole checkRole;
 
     public ApiResponse saveStudent(StudentDto studentDto) {
         try {
@@ -84,7 +86,6 @@ public class StudentService {
                 user.setRegion(studentDto.getRegionId() != null && studentDto.getRegionId() > 0 ? regionRepository.findById(studentDto.getRegionId()).get() : null);
                 student.setUser(userRepository.save(user));
                 student.setParentPhone(studentDto.getParentPhone());
-                student.setBalans(studentDto.getBalans());
                 studentRepository.save(student);
                 return apiResponseService.saveResponse();
             }
@@ -129,9 +130,14 @@ public class StudentService {
         );
     }
 
-    public ApiResponse getStudents(int page, int size, String type) {
+    public ApiResponse getStudents(int page, int size, String type, User user) {
         try {
-            Page<Student> all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            Page<Student> all = null;
+            if (checkRole.isSuperAdmin(user) || checkRole.isFinancier(user) || checkRole.isReception(user)) {
+                all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            } else {
+                all = studentRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+            }
             return apiResponseService.getResponse(
                     new PageableDto(
                             all.getTotalPages(),
@@ -329,13 +335,13 @@ public class StudentService {
         );
     }
 
-    public ResStudent makeResStudent(StudentPayment studentPayment) {
+    public ResStudent   makeResStudent(StudentPayment studentPayment) {
         return new ResStudent(
                 studentPayment.getStudent().getId(),
                 studentPayment.getStudent().getUser().getFullName() + " / " + studentPayment.getStudent().getUser().getPhoneNumber(),
                 studentPayment.getSum(),
                 studentPayment.getCashSum(),
-                studentPayment.getCashback().getPercent(),
+                studentPayment.getCashback() != null ? studentPayment.getCashback().getPercent() :0,
                 studentPayment.getPayType().getName(),
                 studentPayment.getComment(),
                 studentPayment.getPayDate().toString()

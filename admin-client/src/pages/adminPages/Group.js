@@ -73,7 +73,7 @@ class Group extends Component {
             getItems,
             archiveGroupModal,
             activeGroupModal,
-            rooms,
+            rooms, history, isSuperAdmin,isAdmin
         } = this.props;
 
         const openModal = (item) => {
@@ -97,13 +97,13 @@ class Group extends Component {
         }
 
         const deleteItem = (item) => {
-            dispatch(deleteGroupAction({...item}))
+            dispatch(deleteGroupAction({...item, history: history}))
         }
 
         const saveItem = (e, v) => {
 
-            v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
-            v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
+            v.finishDate = moment(v.finishDate).format('DD-MM-YYYY hh:mm:ss').toString()
+            v.startDate = moment(v.startDate).format('DD-MM-YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
         }
 
@@ -147,11 +147,14 @@ class Group extends Component {
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Guruhlar</h1>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
+                    { isSuperAdmin || isAdmin ?
+                        <div align={"right"}>
+                            <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                                qo'shish
+                            </Button>
+                        </div>
+                        :""
+                    }
                     <Nav tabs>
                         <NavItem
                             className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -185,7 +188,9 @@ class Group extends Component {
                                     <td>O'qituvchi</td>
                                     <td>Kunlari</td>
                                     <td>Dars sanalari</td>
-                                    <td>Amal</td>
+                                    {isSuperAdmin ?
+                                        <td>Amal</td>
+                                        : ""}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -206,20 +211,25 @@ class Group extends Component {
                                                         key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
-                                                moment(item.startDate).format("DD-MM-yyyy") + " -- " +
-                                                moment(item.finishDate).format("DD-MM-yyyy")
+                                                moment(item.startDate).format("DD-MM-YYYY") + " -- " +
+                                                moment(item.finishDate).format("DD-MM-YYYY")
                                             }</td>
-                                            <td>
-                                                <Button className={"table-info"}
-                                                        onClick={() => openToArchive(item)}>
-                                                    <GlobusIcon/>
-                                                </Button>
-                                            </td>
-                                            <td>
-                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </td>
+                                            {isSuperAdmin ?
+                                                <>
+                                                    <td>
+                                                        <Button className={"table-info"}
+                                                                onClick={() => openToArchive(item)}>
+                                                            <GlobusIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    <td>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                </>
+                                                : ""}
                                         </tr>
                                         :
                                         ''
@@ -245,7 +255,9 @@ class Group extends Component {
                                     <td>O'qituvchi</td>
                                     <td>Kunlari</td>
                                     <td>Dars sanalari</td>
-                                    <td>Amal</td>
+                                    {isSuperAdmin ?
+                                        <td>Amal</td>
+                                        : ""}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -271,17 +283,22 @@ class Group extends Component {
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
                                                 moment(item.finishDate).format("DD-MM-yyyy")
                                             }</td>
-                                            <td>
-                                                <Button className={"table-info"}
-                                                        onClick={() => openToActive(item)}>
-                                                    <GlobusIcon/>
-                                                </Button>
-                                            </td>
-                                            <td>
-                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </td>
+                                            {isSuperAdmin ?
+                                                <>
+                                                    <td>
+                                                        <Button className={"table-info"}
+                                                                onClick={() => openToActive(item)}>
+                                                            <GlobusIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    <td>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                </>
+                                                : ""}
                                         </tr>
                                 ) : "Guruhlar mavjud emas"}
                                 </tbody>
@@ -436,6 +453,9 @@ export default connect(({
                                 archiveGroupModal,
                                 activeGroupModal,
                             },
+                            auth: {
+                                isSuperAdmin,isAdmin
+                            }
                         }) => ({
         page,
         size,
@@ -444,6 +464,7 @@ export default connect(({
         groups, rooms,
         loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
         activeGroupModal,
+        isSuperAdmin,isAdmin
     })
 )(Group);
-//
+

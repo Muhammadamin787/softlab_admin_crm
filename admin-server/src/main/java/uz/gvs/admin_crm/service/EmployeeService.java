@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
@@ -31,6 +32,8 @@ public class EmployeeService {
     @Autowired
     RegionRepository regionRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public ApiResponse saveEmployee(EmployeeDto employeeDto) {
         try {
@@ -38,12 +41,13 @@ public class EmployeeService {
                 return apiResponseService.notEnoughErrorResponse();
             if (userService.checkPhoneNumber(employeeDto.getPhoneNumber())) {
                 User user = userService.makeUser(new UserDto(
-                        employeeDto.getFullName(),
-                        employeeDto.getPhoneNumber(),
-                        employeeDto.getDescription(),
-                        employeeDto.getRegionId(),
-                        employeeDto.getGender(),
-                        employeeDto.getBirthDate()),
+                                employeeDto.getFullName(),
+                                employeeDto.getPhoneNumber(),
+                                employeeDto.getDescription(),
+                                employeeDto.getRegionId(),
+                                employeeDto.getGender(),
+                                employeeDto.getBirthDate(),
+                                employeeDto.getPassword()),
                         RoleName.valueOf(employeeDto.getRoleName()));
                 Employee employee = new Employee();
                 employee.setUser(user);
@@ -55,7 +59,8 @@ public class EmployeeService {
             return apiResponseService.tryErrorResponse();
         }
     }
-//
+
+    //
     public ApiResponse editEmployee(UUID id, EmployeeDto employeeDto) {
         try {
             Optional<Employee> byId = employeeRepository.findById(id);
@@ -72,6 +77,7 @@ public class EmployeeService {
                 user.setDescription(employeeDto.getDescription());
                 user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(employeeDto.getBirthDate()) : null);
                 user.setGender(Gender.valueOf(employeeDto.getGender()));
+                user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
                 user.setRegion(employeeDto.getRegionId() != null && employeeDto.getRegionId() > 0 ? regionRepository.findById(employeeDto.getRegionId()).get() : null);
                 employee.setUser(userRepository.save(user));
                 employeeRepository.save(employee);
@@ -93,7 +99,7 @@ public class EmployeeService {
                 String fullName = employee[1].toString();
                 String phoneNumber = employee[2].toString();
                 String roleName = employee[3].toString();
-                EmployeeDto employeeDto = new EmployeeDto(id,fullName, phoneNumber, roleName);
+                EmployeeDto employeeDto = new EmployeeDto(id, fullName, phoneNumber, roleName);
                 employeeDtos.add(employeeDto);
             }
             return apiResponseService.getResponse(employeeDtos);

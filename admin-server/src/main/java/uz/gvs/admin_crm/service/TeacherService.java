@@ -8,18 +8,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.gvs.admin_crm.entity.Group;
-import uz.gvs.admin_crm.entity.Teacher;
-import uz.gvs.admin_crm.entity.User;
+import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
 import uz.gvs.admin_crm.entity.enums.RoleName;
 import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
-import uz.gvs.admin_crm.repository.GroupRepository;
-import uz.gvs.admin_crm.repository.RoleRepository;
-import uz.gvs.admin_crm.repository.TeacherRepository;
-import uz.gvs.admin_crm.repository.UserRepository;
+import uz.gvs.admin_crm.payload.searchTeacher.ResTeacherSearch;
+import uz.gvs.admin_crm.repository.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,19 +37,27 @@ public class TeacherService {
     @Autowired
     GroupRepository groupRepository;
 
+    @Autowired
+    RegionRepository regionRepository;
+
     public ApiResponse saveTeacher(TeacherDto teacherDto) {
         try {
-            if (!(teacherDto.getUserDto().getFullName().replaceAll(" ", "").length() > 0))
+            if (!(teacherDto.getTeacherName().replaceAll(" ", "").length() > 0))
                 return apiResponseService.notEnoughErrorResponse();
-            if (userservice.checkPhoneNumber(teacherDto.getUserDto().getPhoneNumber())) {
-                User user = userservice.makeUser(teacherDto.getUserDto(), RoleName.TEACHER);
-                if (user != null) {
-                    Teacher teacher = new Teacher();
-                    teacher.setUser(user);
-                    teacherRepository.save(teacher);
-                    return apiResponseService.saveResponse();
-                }
-                return apiResponseService.existResponse();
+            if (!userRepository.existsByPhoneNumber(teacherDto.getPhoneNumber())) {
+                Teacher teacher = new Teacher();
+                User user = userservice.makeUser(new UserDto(
+                        teacherDto.getTeacherName(),
+                        teacherDto.getPhoneNumber(),
+                        teacherDto.getDescription(),
+                        teacherDto.getRegionId(),
+                        teacherDto.getGender(),
+                        teacherDto.getBirthDate(),
+                        teacherDto.getPassword()),
+                        RoleName.TEACHER);
+                teacher.setUser(user);
+                teacherRepository.save(teacher);
+                return apiResponseService.saveResponse();
             }
             return apiResponseService.existResponse();
         } catch (Exception exception) {
@@ -81,20 +87,21 @@ public class TeacherService {
         return apiResponseService.getResponse(resSelects);
     }
 
-    public ApiResponse getTeacherList(int page, int size,String type) {
-        try{
-            Sort sort;
-            Page<Teacher> all = teacherRepository.findAllByUser_status(UserStatusEnum.valueOf(type), PageRequest.of(page, size));
-            return apiResponseService.getResponse(
-                    new PageableDto(
-                            all.getTotalPages(),
-                            all.getTotalElements(),
-                            all.getNumber(),
-                            all.getSize(),
-                            all.get().map(this::makeTeacherDto).collect(Collectors.toList())
-                    )
-            );
-        }catch (Exception e){
+    public ApiResponse getTeacherList(int page, int size, String type) {
+        try {
+            List<Object> teachers = teacherRepository.findTeacherPageable(page, size, type);
+            Integer totalElements = teacherRepository.findTeacherPageableCount(type);
+            List<TeacherDto> teacherDtoList = new ArrayList<>();
+            for (Object obj : teachers) {
+                Object[] teacher = (Object[]) obj;
+                UUID teacherId = UUID.fromString(teacher[0].toString());
+                String teacherName = teacher[1].toString();
+                String phoneNumber = teacher[2].toString();
+                TeacherDto teacherDto = new TeacherDto(teacherId, teacherName, phoneNumber);
+                teacherDtoList.add(teacherDto);
+            }
+            return apiResponseService.getResponse(new PageableDto(Long.valueOf(totalElements), page, size, teacherDtoList));
+        } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
 
@@ -103,34 +110,51 @@ public class TeacherService {
     public TeacherDto makeTeacherDto(Teacher teacher) {
         return new TeacherDto(
                 teacher.getId(),
-                new UserDto(
-                        teacher.getUser().getId(),
-                        teacher.getUser().getFullName(),
-                        teacher.getUser().getPhoneNumber(),
-                        teacher.getUser().getDescription(),
-                        teacher.getUser().getRegion(),
-                        teacher.getUser().getGender().toString(),
-                        teacher.getUser().getBirthDate() != null ? teacher.getUser().getBirthDate().toString() : "",
-                        teacher.getUser().getRoles()
-                ),
-                teacher.getBalance(),
-                teacher.getIsPercent(),
-                teacher.getSalary()
+                teacher.getUser().getFullName(),
+                teacher.getUser().getPhoneNumber()
 
         );
     }
 
+//    public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
+//        try {
+//            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
+//            if (optional.isEmpty()) {
+//                return apiResponseService.notFoundResponse();
+//            }
+//            Teacher teacher = optional.get();
+//            User user = userservice.editUser(teacherDto.getUserDto(), teacher.getUser(), RoleName.TEACHER);
+//            teacher.setUser(user);
+//            teacherRepository.save(teacher);
+//            return apiResponseService.updatedResponse();
+//        } catch (Exception e) {
+//            return apiResponseService.tryErrorResponse();
+//        }
+//    }
+
     public ApiResponse editTeacher(UUID id, TeacherDto teacherDto) {
         try {
-            Optional<Teacher> optional = teacherRepository.findById(teacherDto.getId());
-            if (optional.isEmpty()) {
-                return apiResponseService.notFoundResponse();
+            Optional<Teacher> byId = teacherRepository.findById(id);
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+            if (byId.isPresent()) {
+                Teacher teacher = byId.get();
+                User user = teacher.getUser();
+                boolean b = userRepository.existsByPhoneNumberAndIdNot(teacherDto.getPhoneNumber(), user.getId());
+                if (b) {
+                    return apiResponseService.existResponse();
+                }
+                user.setPhoneNumber(teacherDto.getPhoneNumber());
+                user.setFullName(teacherDto.getTeacherName());
+                user.setDescription(teacherDto.getDescription());
+                user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(teacherDto.getBirthDate()) : null);
+                user.setGender(Gender.valueOf(teacherDto.getGender()));
+                user.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
+                user.setRegion(teacherDto.getRegionId() != null && teacherDto.getRegionId() > 0 ? regionRepository.findById(teacherDto.getRegionId()).get() : null);
+                teacher.setUser(userRepository.save(user));
+                teacherRepository.save(teacher);
+                return apiResponseService.saveResponse();
             }
-            Teacher teacher = optional.get();
-            User user = userservice.editUser(teacherDto.getUserDto(), teacher.getUser(), RoleName.TEACHER);
-            teacher.setUser(user);
-            teacherRepository.save(teacher);
-            return apiResponseService.updatedResponse();
+            return apiResponseService.notFoundResponse();
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
@@ -167,14 +191,50 @@ public class TeacherService {
 
     public ApiResponse getTeacher(UUID id) {
         try {
-            Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
-            if (optionalTeacher.isPresent()) {
-                return apiResponseService.getResponse(makeTeacherDto(optionalTeacher.get()));
-            } else {
-                return apiResponseService.notFoundResponse();
+            List<Object> objects = teacherRepository.findTeacher(id);
+            for (Object obj : objects) {
+                Object[] teacher = (Object[]) obj;
+                UUID teacherId = UUID.fromString(teacher[0].toString());
+                String fullName = teacher[1].toString();
+                String phoneNumber = teacher[2].toString();
+                String birthDate = teacher[3].toString();
+                String gender = teacher[4].toString();
+                Double balance = Double.parseDouble(teacher[5].toString());
+                Boolean isPersent = Boolean.parseBoolean(teacher[6] != null ? teacher[6].toString() : null);
+                Double salary = Double.parseDouble(teacher[7].toString());
+                String description = teacher[8].toString();
+                String regionName = teacher[9].toString();
+                Integer regionId = Integer.parseInt(teacher[10].toString());
+                List<Group> groups = groupRepository.findAllByTeacherId(teacherId);
+                List<GroupDto> groupDtos = new ArrayList<>();
+                for (Group group : groups) {
+                    groupDtos.add(makeGroupForTeacher(group));
+                }
+                TeacherDto teacherDto = new TeacherDto(teacherId, fullName, phoneNumber, birthDate, gender, regionId, regionName, description, groupDtos, balance, isPersent, salary);
+                return apiResponseService.getResponse(teacherDto);
             }
+            return apiResponseService.notFoundResponse();
         } catch (Exception exception) {
             return apiResponseService.tryErrorResponse();
+        }
+    }
+
+    public GroupDto makeGroupForTeacher(Group group) {
+        try {
+            Set<String> stringSet = new HashSet<>();
+            for (Weekday weekday : group.getWeekdays()) {
+                stringSet.add(weekday.getWeekdayName().name);
+            }
+            return new GroupDto(
+                    group.getId(),
+                    group.getName(),
+                    group.getStartTime(),
+                    group.getFinishTime(),
+                    group.getCourse().getName(),
+                    stringSet
+            );
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -209,6 +269,24 @@ public class TeacherService {
             }
         } catch (Exception exception) {
             return apiResponseService.errorResponse();
+        }
+    }
+
+    public ApiResponse searchAllTeacher(String name) {
+        try {
+                List<Object> objects = teacherRepository.searchAllTeacher(name.toLowerCase());
+            List<ResTeacherSearch> resTeacherSearchesDto = new ArrayList<>();
+            for (Object obj : objects) {
+                Object[] teacher = (Object[]) obj;
+                UUID id = UUID.fromString(teacher[0].toString());
+                String name1 = teacher[1].toString();
+                String phoneNumber = teacher[2].toString();
+                ResTeacherSearch resTeacherSearch = new ResTeacherSearch(id, name1, phoneNumber);
+                resTeacherSearchesDto.add(resTeacherSearch);
+            }
+            return apiResponseService.getResponse(resTeacherSearchesDto);
+        } catch (Exception e) {
+            return apiResponseService.tryErrorResponse();
         }
     }
 }

@@ -17,10 +17,10 @@ insert into weekday("weekday_name") values
 
 
 INSERT INTO room(active, name)
-VALUES ('true', 'Java room'),
-       ('true', 'Python room'),
-       ('true', 'JavaScript room'),
-       ('true', 'C#');
+VALUES ('true', '№1'),
+       ('true', '№2'),
+       ('true', '№3'),
+       ('true', '№4');
 
 INSERT INTO pay_type(active, name)
 VALUES ('true', 'Click'),
@@ -34,16 +34,13 @@ VALUES ('true', 'Farg`ona viloyati', 'Farg`ona'),
        ('true', 'Toshkent viloyati', 'Toshkent'),
        ('true', 'Samarqand viloyati', 'Samarqand');
 
-INSERT INTO course_category(active, description, name)
-VALUES ('true', 'Chet tili filologiya', 'Ingliz tili'),
-       ('true', 'Chet tili filologiya', 'Rus tili'),
-       ('true', 'Chet tili filologiya', 'Arab tili'),
-       ('true', 'Aniq fan', 'Matematika'),
-       ('true', 'Aniq fan', 'Tarix'),
-       ('true', 'Aniq fan', 'Fizika');
-
-INSERT INTO course(active, description, name, price, course_category_id)
-VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 20000, 1),
-       ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 20000, 1),
-       ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 25000, 1),
-       ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 25000, 1);
+-- INSERT INTO course_category(active, description, name)
+-- VALUES ('true', 'Chet tili', 'Ingliz tili'),
+--        ('true', 'Aniq fan', 'Matematika'),
+--        ('true', 'Dasturlash', 'Dasturlash');
+--
+-- INSERT INTO course(active, description, name, price, course_category_id)
+-- VALUES ('true', 'Ingliz tili boshlang`ich daraja', 'Beginner', 20000, 1),
+--        ('true', 'Ingliz tili o`rta daraja', 'Intermediate', 20000, 1),
+--        ('true', 'Ingliz tili yuqori daraja', 'Pre-Intermediate', 25000, 1),
+--        ('true', 'Ingliz tili IELTS TEST', 'IELTS +6', 25000, 1);

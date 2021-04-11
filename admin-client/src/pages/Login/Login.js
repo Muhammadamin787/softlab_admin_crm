@@ -57,11 +57,12 @@ class Login extends Component {
 export default connect(
     ({
          app: {showModal},
-         auth: {isAdmin, isSuperAdmin, currentUser}
+         auth: {isAdmin, isSuperAdmin,isFinancier, currentUser}
      }) => ({
         showModal,
         isAdmin,
         isSuperAdmin,
+        isFinancier,
         currentUser
     })
 )(Login);

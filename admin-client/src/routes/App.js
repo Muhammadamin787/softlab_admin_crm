@@ -46,8 +46,8 @@ const App = () => {
             <Switch>
                 <PublicRoute exact path="/" component={HomePage}/>
                 <PublicRoute exact path="/login" component={Login}/>
-                <PrivateRoute exact path="/admins" component={Dashboard}/>
-                <PrivateRoute exact path="/admin" component={DashboardEski}/>
+                {/*<PrivateRoute exact path="/admins" component={DashboardEski}/>*/}
+                <PrivateRoute exact path="/admin" component={Dashboard}/>
                 <PrivateRoute exact path="/admin/durationType" component={DurationType}/>
                 <PrivateRoute exact path="/admin/region" component={Region}/>
                 <PrivateRoute exact path="/admin/course/select/:id" component={SelectCourse}/>
@@ -61,7 +61,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/student/:id" component={SelectStudent}/>
                 {/*<PrivateRoute exact path="/admin/courseCategory/:id" component={CourseCategory}/>*/}
                 <PrivateRoute exact path="/admin/teachers" component={AddTeacher}/>
-                <PrivateRoute exact path="/admin/teachers" component={AddTeacher}/>
+                {/*<PrivateRoute exact path="/admin/teachers" component={AddTeacher}/>*/}
                 <PrivateRoute exact path="/admin/teacher/:id" component={SelectTeacher}/>
                 {/*<PrivateRoute exact path="/admin/reklama" component={Reklama}/>*/}
                 <PrivateRoute exact path="/admin/room" component={Room}/>
@@ -82,6 +82,7 @@ const App = () => {
                 <PrivateRoute exact path="/admin/StudentFinance" component={StudentFinance}/>
                 <PrivateRoute exact path="/admin/card" component={Card}/>
                 <Route component={NotFound}/>
+                <PublicRoute exact path="/notFound" component={NotFound}/>
             </Switch>
         </Provider>
     );

@@ -28,7 +28,7 @@ public class ToplamController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);
     }
 
-    @PutMapping("/makeGroup/{id}")
+    @PostMapping("/makeGroup/{id}")
     public HttpEntity<?> makeGroupByToplam(@PathVariable Integer id, @RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = toplamService.makeGroupByToplam(id, groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 202 : 409).body(apiResponse);

@@ -112,7 +112,7 @@ class SelectGroup extends Component {
             getItems,
             rooms,
             studentsOption,
-            attendanceList
+            attendanceList, isSuperAdmin
         } = this.props;
 
         const plusM = () => {
@@ -213,7 +213,6 @@ class SelectGroup extends Component {
             }
         }
         const checkAttendence = (bool, id, isDesktop) => {
-            console.log(bool, id, isDesktop)
             if (!isDesktop) {
                 let activeBtn = document.getElementById("active" + id);
                 let notActiveBtn = document.getElementById("notActive" + id);
@@ -250,7 +249,6 @@ class SelectGroup extends Component {
                     }
                 }
             }
-            console.log(array);
             this.setState({allAttendence: array})
         }
         const saveAttendance = (e, v, fromMobile) => {
@@ -399,7 +397,7 @@ class SelectGroup extends Component {
                 studentId: this.state.selectedStudent.id,
                 groupId: currentItem.id
             }
-            this.props.dispatch(saveStudentToGroupAction(obj));
+            this.props.dispatch(saveStudentToGroupAction({obj: obj, id: currentItem.id}));
         }
 
         return (
@@ -461,16 +459,18 @@ class SelectGroup extends Component {
                                                         </Button>
                                                     </div>
                                                 </div>
-                                                <div className="col-4">
-                                                    <Button className="table-icon"
-                                                            onClick={() => openModal(currentItem)}>
-                                                        <EditIcon/>
-                                                    </Button>
-                                                    <Button className="table-icon"
-                                                            onClick={() => openDeleteModal(currentItem)}>
-                                                        <DeleteIcon/>
-                                                    </Button>
-                                                </div>
+                                                {isSuperAdmin ?
+                                                    <div className="col-4">
+                                                        <Button className="table-icon"
+                                                                onClick={() => openModal(currentItem)}>
+                                                            <EditIcon/>
+                                                        </Button>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(currentItem)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </div>
+                                                    : ""}
                                             </div>
                                             {/* START GURUHDAGI STUDENTLAR RO'YHATI*/}
                                             <div className={"student-list border-top py-3 px-1"}>
@@ -936,8 +936,10 @@ export default connect(
              durationTypes,
              readModal,
              attendanceList,
+         },
+         auth: {
+             isSuperAdmin
          }
-         ,
      }
     ) =>
         ({
@@ -952,7 +954,7 @@ export default connect(
             attendanceList,
             addStudentInGroupModal,
             studentsOption,
-            loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal
+            loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, readModal, isSuperAdmin
         })
 )
 (SelectGroup);

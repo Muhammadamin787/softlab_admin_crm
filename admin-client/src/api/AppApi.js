@@ -421,6 +421,9 @@ export const getAppealListByStatusTypeApi = (data) => {
 export const saveToplamApi = (data) => {
     return HttpClient.doPost(api.toplam, data)
 }
+export const makeGroupByToplamApi = (data) => {
+    return HttpClient.doPost(api.toplam + "/makeGroup/" + data.id, data)
+}
 export const editToplamApi = (data) => {
     return HttpClient.doPut(api.toplam + "/" + data.id, data)
 }
@@ -527,5 +530,8 @@ export const saveStudentToGroupApi = (data) => {
 
 export const getStudentsBySearchApi = (data) => {
     return HttpClient.doGet(api.student + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
+}
+export const getTeachersBySearchApi = (data) => {
+    return HttpClient.doGet(api.teacher + "/searchAll" + (data && data.name != null ? "?name=" + data.name : ""))
 }
 // ---

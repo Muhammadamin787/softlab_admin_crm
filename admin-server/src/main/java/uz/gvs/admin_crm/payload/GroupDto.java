@@ -1,5 +1,6 @@
 package uz.gvs.admin_crm.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,23 +18,49 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class GroupDto {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private boolean active;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID teacherId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String startTime;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String finishTime;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer courseId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String courseName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer roomId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String startDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String finishDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<String> weekdays;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Teacher teacher;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Course course;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Room room;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private GroupStatus groupStatus;
 
+    public GroupDto(Integer id, String name, String startTime, String finishTime, String courseName, Set<String> weekdays) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.courseName = courseName;
+        this.weekdays = weekdays;
+    }
     public GroupDto(String name,  UUID teacherId, String startTime, String finishTime, Integer courseId, Integer roomId, String startDate, String finishDate, Set<String> weekdays) {
         this.name = name;
         this.teacherId = teacherId;

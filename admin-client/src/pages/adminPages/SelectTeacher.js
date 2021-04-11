@@ -81,7 +81,7 @@ class SelectTeacher extends Component {
             teacherSalaryList,
             showEditSalaryModal,
             deleteSalaryModal,
-            page, size, totalElements
+            page, size, totalElements,isSuperAdmin
         } = this.props;
 
 
@@ -104,7 +104,6 @@ class SelectTeacher extends Component {
                     currentObject: item
                 }
             })
-            console.log(currentObject)
         }
 
         const openSalaryModal = (item) => {
@@ -139,22 +138,10 @@ class SelectTeacher extends Component {
             dispatch(deleteTeacherAction({...item, history: history}))
         }
         const saveItem = (e, v) => {
-            if (currentObject && currentObject.id && currentObject.userDto) {
+            if (currentObject && currentObject.id) {
                 v.id = currentObject.id
-                let teacherDto;
-                teacherDto = {userDto: ""}
-                teacherDto.userDto = {
-                    id: currentObject.userDto.id,
-                    fullName: v.fullName,
-                    gender: v.gender,
-                    phoneNumber: v.phoneNumber,
-                    regionId: v.regionId,
-                    description: v.description,
-                    // birthDate: moment(v.birthDate).format('DD/MM/YYYY hh:mm:ss').toString(),
-                    birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
-                }
-                teacherDto.id = currentObject.id
-                dispatch(saveTeacherAction(teacherDto))
+                v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
+                dispatch(saveTeacherAction(v))
             }
 
         }
@@ -220,17 +207,17 @@ class SelectTeacher extends Component {
         }
 
         return (
+
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <hgroup className={"course-select-header"}>
-                        <h3>{currentItem && currentItem.userDto && currentItem.userDto.fullName} </h3>
+                        <h3>{currentItem && currentItem.teacherName} </h3>
                         <Link to={"/admin/teachers"} className={"text-decoration-none"}>
                             <span className={""}> O'qituvchilar</span>
                         </Link>
                     </hgroup>
-
                     <div className="row">
-                        {currentItem.id && currentItem.id ?
+                        {currentItem && currentItem.id ?
                             <>
                                 <div className="d-block col-12">
                                     <Nav tabs>
@@ -264,26 +251,26 @@ class SelectTeacher extends Component {
                                                         <div className="col-8">
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>FISH: </small>
-                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.fullName}</p>
+                                                                <p className={"d-inline"}> {currentItem.teacherName}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Telefon
                                                                     raqam: </small>
-                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.userDto && currentItem.userDto.phoneNumber)} </p>
+                                                                <p className={"d-inline"}> {formatPhoneNumber(currentItem.phoneNumber)} </p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tug'ilgan
                                                                     sana: </small>
-                                                                <p className={"d-inline"}> {moment(currentItem.userDto && currentItem.birthDate).format("DD-MM-YYYY")}</p>
+                                                                <p className={"d-inline"}> {moment(currentItem.birthDate).format("DD-MM-YYYY")}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Manzil: </small>
-                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.region && currentItem.userDto.region.name}</p>
+                                                                <p className={"d-inline"}>{currentItem.regionName}</p>
                                                             </hgroup>
 
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Jinsi: </small>
-                                                                <p className={"d-inline"}>{currentItem.userDto && currentItem.userDto.gender === "MALE" ? "Erkak" : "Ayol"}</p>
+                                                                <p className={"d-inline"}>{currentItem.gender === "MALE" ? "Erkak" : "Ayol"}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Maosh : </small>
@@ -291,7 +278,7 @@ class SelectTeacher extends Component {
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Tavsif: </small>
-                                                                <p className={"d-inline"}> {currentItem.userDto && currentItem.userDto.description}</p>
+                                                                <p className={"d-inline"}> {currentItem.description}</p>
                                                             </hgroup>
                                                             <hgroup>
                                                                 <small className={"text-secondary"}>Balance: </small>
@@ -473,12 +460,12 @@ class SelectTeacher extends Component {
                         <ModalBody>
                             <div className={"w-100 modal-form"}>
                                 <AvField
-                                    defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                    defaultValue={currentObject ? currentObject.teacherName : ""}
                                     type={"text"}
-                                    label={"FISH"} name={"fullName"} className={"form-control"}
+                                    label={"FISH"} name={"teacherName"} className={"form-control"}
                                     placeholer={"nomi"} required/>
                                 <AvField
-                                    defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                    defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                     type={"text"}
                                     label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                     validate={{
@@ -491,29 +478,35 @@ class SelectTeacher extends Component {
                                 <AvField
                                     type={"date"}
 
-                                    defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
+                                    defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                 />
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
-                                         defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                         defaultValue={currentObject ? currentObject.regionId : "0"}>
                                     <option key={0} value={"0"}>Ota hududni tanlang</option>
                                     {regions ? regions.map((item, i) =>
                                         <option key={i} value={item.id}>{item.name}</option>
                                     ) : ""}
                                 </AvField>
                                 <AvRadioGroup name="gender"
-                                              defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                              defaultValue={currentObject ? currentObject.gender : ""}
                                               label="Jins" required
                                               errorMessage="Birini tanlang!">
                                     <AvRadio label="Erkak" value="MALE"/>
                                     <AvRadio label="Ayol" value="FEMALE"/>
                                 </AvRadioGroup>
                                 <AvField
-                                    defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                    defaultValue={currentObject ? currentObject.description : ""}
                                     type={"textarea"}
-                                    label={"Izoh"} name={"description"} className={"form-control"}/>
+                                    label={"Izoh"} name={"description"} className={"form-control"}
+                                />
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.password : ""}
+                                    type={"password"} placeholder={"abc_123!*"}
+                                    label={"Parol"} name={"password"} className={"form-control"}
+                                />
                             </div>
                         </ModalBody>
                         <ModalFooter>
@@ -546,7 +539,7 @@ class SelectTeacher extends Component {
                                 defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
                                 type={"text"}
                                 label={"FISH"} name={"fullName"} className={"form-control"}
-                                placeholer={"nomi"} required disabled/>
+                                placeholer={"nomi"} disabled/>
                             <div className={"w-100 modal-form"}>
                                 <AvField
                                     type={"number"}
@@ -577,6 +570,7 @@ class SelectTeacher extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal id={""} isOpen={showOpenSalaryModal1} toggle={() => openSalaryModal1("")}
                        className={""}>
                     <AvForm onValidSubmit={saveSalaryItem}>
@@ -648,6 +642,7 @@ export default connect(({
                                 deleteSalaryModal,
                                 page, size, totalElements
                             },
+                            auth: {isSuperAdmin}
                         }) => ({
         groups,
         payTypes,
@@ -666,6 +661,7 @@ export default connect(({
         teacherSalaryList,
         showEditSalaryModal,
         deleteSalaryModal,
-        page, size, totalElements
+        page, size, totalElements,
+        isSuperAdmin
     })
 )(SelectTeacher);
