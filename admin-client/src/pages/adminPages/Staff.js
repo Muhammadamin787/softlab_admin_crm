@@ -110,7 +110,7 @@ class Staff extends Component {
                                     <td>
                                         {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                     </td>
-                                    <td>{item.roleName === "ADMIN" ? "Admin" : item.roleName === "RECEPTION" ? "Administrator"  :item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
+                                    <td>{item.roleName === "ADMIN" ? "Menejr" : item.roleName === "RECEPTION" ? "Reception"  :item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
                                 </tr>
                             ) : ''}
                         </tbody>
@@ -167,9 +167,9 @@ class Staff extends Component {
                                                   defaultValue={currentObject ? currentObject.roleName : ""}
                                                   label="Kasbi" required
                                                   errorMessage="Birini tanlang!">
-                                        <AvRadio label="Adminstrator" value="RECEPTION"/>
+                                        <AvRadio label="Reception" value="RECEPTION"/>
                                         <AvRadio label="Hisobchi" value="FINANCIER"/>
-                                        <AvRadio label="Admin" value="ADMIN"/>
+                                        <AvRadio label="Menejr" value="ADMIN"/>
                                     </AvRadioGroup>
                                     <AvRadioGroup name="gender"
                                                   defaultValue={currentObject ? currentObject.gender : ""}

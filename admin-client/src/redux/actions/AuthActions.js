@@ -11,12 +11,24 @@ import jwt from "jwt-decode";
 
 export const login = (payload) => async (dispatch) => {
     try {
+        localStorage.clear();
+        dispatch({
+            type: 'updateState',
+            payload: {
+                isSuperAdmin: false,
+                isAdmin: false,
+                isTeacher: false,
+                isFinancier: false,
+                isReception: false,
+                currentUser: ''
+            }
+        })
         const res = await dispatch({
             api: loginUser,
             types:
                 [types.REQUEST_AUTH_START,
-                "",
-                types.REQUEST_API_ERROR],
+                    "",
+                    types.REQUEST_API_ERROR],
             data: payload.v,
         });
         if (res.success) {
@@ -117,7 +129,7 @@ const setStateRole = (roles, dispatch) => {
         } else if (item.roleName === "FINANCIER") {
             dispatch({type: "updateState", payload: {isFinancier: true}});
             roleStatus = 'financier'
-        }else if (item.roleName === "RECEPTION") {
+        } else if (item.roleName === "RECEPTION") {
             dispatch({type: "updateState", payload: {isReception: true}});
             roleStatus = 'reception'
         }
@@ -134,8 +146,11 @@ const pushHisPage = (roles, history) => {
             push("/admin/groups");
         } else if (roleName === "FINANCIER") {
             push("/admin/StudentFinance");
-        }else if (roleName === "RECEPTION") {
+        } else if (roleName === "RECEPTION") {
             push("/admin/card");
+        }else if (roleName === "ADMIN") {
+            push("/admin");
         }
     });
+    window.location.reload();
 };
