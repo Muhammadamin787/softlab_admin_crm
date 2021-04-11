@@ -67,7 +67,8 @@ class Teacher extends Component {
             archiveModal,
             activeModal,
             isSuperAdmin,
-            isFinancier
+            isFinancier,
+            isAdmin
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -156,11 +157,15 @@ class Teacher extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>O'qituvchilar</h1>
-                    <div align={"right"}>
-                        <Button size={"lg"} color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
+                    {isSuperAdmin || isAdmin ?
+                        <div align={"right"}>
+                            <Button size={"lg"} color={"success"} onClick={openModal}
+                                    className={"mb-2 add-button px-4"}>Yangisini
+                                qo'shish
+                            </Button>
+                        </div>
+                        : ""
+                    }
                     <Nav tabs>
                         <NavItem
                             className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -205,7 +210,10 @@ class Teacher extends Component {
                                             <th>No</th>
                                             <th>Ism</th>
                                             <th>Telefon</th>
-                                            <th colSpan="2">Amal</th>
+                                            {isSuperAdmin || isAdmin ?
+                                                <th colSpan="2">Amal</th>
+                                                : ""
+                                            }
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -218,18 +226,24 @@ class Teacher extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{formatPhoneNumber(item.phoneNumber)}</td>
-                                                <td>
-                                                    <Button className={"table-info"}
-                                                            onClick={() => openToArchive(item)}>
-                                                        <GlobusIcon/>
-                                                    </Button>
-                                                </td>
-                                                <td>
-                                                    <Button className="table-icon"
-                                                            onClick={() => openDeleteModal(item)}>
-                                                        <DeleteIcon/>
-                                                    </Button>
-                                                </td>
+                                                {isSuperAdmin || isAdmin ?
+                                                    <td>
+                                                        <Button className={"table-info"}
+                                                                onClick={() => openToArchive(item)}>
+                                                            <GlobusIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    : ""
+                                                }
+                                                {isSuperAdmin || isAdmin ?
+                                                    < td>
+                                                        < Button className="table-icon"
+                                                                 onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    : ""
+                                                }
                                             </tr>
                                         ) : ''}
                                         </tbody>
@@ -261,7 +275,10 @@ class Teacher extends Component {
                                             <th>No</th>
                                             <th>Ism</th>
                                             <th>Telefon</th>
-                                            <th colSpan="2">Amal</th>
+                                            {isAdmin || isSuperAdmin ?
+                                                <th colSpan="2">Amal</th>
+                                                : ""
+                                            }
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -274,18 +291,22 @@ class Teacher extends Component {
                                                     </Link>
                                                 </td>
                                                 <td>{formatPhoneNumber(item.phoneNumber)}</td>
+                                                {isSuperAdmin}
                                                 <td>
                                                     <Button className={"table-info"}
                                                             onClick={() => openToActive(item)}>
                                                         <GlobusIcon/>
                                                     </Button>
                                                 </td>
-                                                <td>
-                                                    <Button className="table-icon"
-                                                            onClick={() => openDeleteModal(item)}>
-                                                        <DeleteIcon/>
-                                                    </Button>
-                                                </td>
+                                                {isSuperAdmin || isAdmin ?
+                                                    <td>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    : ""
+                                                }
                                             </tr>
                                         ) : ''}
                                         </tbody>
@@ -437,7 +458,7 @@ export default connect((
         },
         auth: {
             isSuperAdmin,
-            isFinancier
+            isFinancier, isAdmin
         }
     }) => ({
         page,
@@ -460,7 +481,7 @@ export default connect((
         teacherDto,
         archiveModal,
         activeModal,
-    isSuperAdmin,
-    isFinancier
+        isSuperAdmin, isAdmin,
+        isFinancier
     })
 )(Teacher);
