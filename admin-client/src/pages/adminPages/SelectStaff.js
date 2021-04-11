@@ -173,9 +173,14 @@ class SelectStaff extends Component {
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        defaultValue={currentObject? currentObject.description : ""}
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}/>
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.password : ""}
+                                        type={"text"} placeholder={"abc_123!*"}
+                                        label={"Parol"} name={"password"} className={"form-control"}
+                                    />
                                 </div>
                             </ModalBody>
                             <ModalFooter>
