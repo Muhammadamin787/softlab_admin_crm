@@ -18,37 +18,43 @@ import ReklamaChart from "../../component/dashboard/ReklamaChart";
 class Dashboard extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getRoomListAction())
-        this.props.dispatch(getDashboardStatAction())
-        this.props.dispatch(getWeeklySchedule())
-        this.props.dispatch(getDailySchedule('MONDAY'))
-        this.props.dispatch(getDashboardStudentStatAction())
-        const {startHour, endHour} = this.state;
+        if (this.props.isSuperAdmin) {
+            console.log(this.props.isSuperAdmin);
+            this.props.dispatch(getRoomListAction())
+            this.props.dispatch(getDashboardStatAction())
+            this.props.dispatch(getWeeklySchedule())
+            this.props.dispatch(getDailySchedule('MONDAY'))
+            this.props.dispatch(getDashboardStudentStatAction())
+            const {startHour, endHour} = this.state;
 
-        /*kunlik*/
-        let arr = []
-        for (let i = startHour; i < endHour; i++) {
-            for (let g = 0; g < 2; g++) {
-                if (g === 0) {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "00")
+            /*kunlik*/
+            let arr = []
+            for (let i = startHour; i < endHour; i++) {
+                for (let g = 0; g < 2; g++) {
+                    if (g === 0) {
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "00")
+                        } else {
+                            arr.push(i + ":" + "00")
+                        }
                     } else {
-                        arr.push(i + ":" + "00")
-                    }
-                } else {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "30")
-                    } else {
-                        arr.push(i + ":" + "30")
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "30")
+                        } else {
+                            arr.push(i + ":" + "30")
+                        }
                     }
                 }
             }
-        }
 
-        /*set-state*/
-        this.setState({
-            list: arr,
-        })
+            /*set-state*/
+            this.setState({
+                list: arr,
+            })
+        }else {
+            console.log(this.props.isSuperAdmin);
+            this.props.history.push("/notFound")
+        }
     }
 
     state = {
@@ -72,7 +78,8 @@ class Dashboard extends Component {
             rooms,
             dailySchedule,
             dashboardStat,
-            weeklySchedule
+            weeklySchedule,
+            isSuperAdmin
         } = this.props;
 
 
@@ -111,38 +118,38 @@ class Dashboard extends Component {
         }
         // console.log(dailySchedule)
         const dd = () => {
-            dailySchedule && dailySchedule.map(item => {
-                list && list.map((item2, i) => {
-                    let lastCell = true;
-                    if (item.finishTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                console.log(("cell" + i + k));
-                                lastCell = document.getElementById("cell" + i + k);
-                            }
-                        })
-                    }
-                    if (item.startTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                for (let j = 0; j < 30 - i; j++) {
-                                    let el = document.getElementById("cell" + (i + j) + k);
-                                    if (lastCell !== undefined) {
-                                        console.log((el.innerText + " **** " + lastCell && lastCell.innerText));
-                                        // console.log("cell" + (i + j) + k + " = " + lastCell.innerText);
-                                        if (el.innerText && (el.innerText !== lastCell.innerText)) {
-                                            el.classList && el.classList.add("awesome");
-                                        } else {
-                                            el.classList && el.classList.add("awesome2");
-                                        }
-                                    }
-                                }
-                                // console.log("cell" + i + k);
-                            }
-                        })
-                    }
-                });
-            });
+            // dailySchedule && dailySchedule.map(item => {
+            //     list && list.map((item2, i) => {
+            //         let lastCell = true;
+            //         if (item.finishTime === item2) {
+            //             rooms && rooms.map((item3, k) => {
+            //                 if (item.room.name === item3.name) {
+            //                     console.log(("cell" + i + k));
+            //                     lastCell = document.getElementById("cell" + i + k);
+            //                 }
+            //             })
+            //         }
+            //         if (item.startTime === item2) {
+            //             rooms && rooms.map((item3, k) => {
+            //                 if (item.room.name === item3.name) {
+            //                     for (let j = 0; j < 30 - i; j++) {
+            //                         let el = document.getElementById("cell" + (i + j) + k);
+            //                         if (lastCell !== undefined) {
+            //                             console.log((el.innerText + " **** " + lastCell && lastCell.innerText));
+            //                             // console.log("cell" + (i + j) + k + " = " + lastCell.innerText);
+            //                             if (el.innerText && (el.innerText !== lastCell.innerText)) {
+            //                                 el.classList && el.classList.add("awesome");
+            //                             } else {
+            //                                 el.classList && el.classList.add("awesome2");
+            //                             }
+            //                         }
+            //                     }
+            //                     // console.log("cell" + i + k);
+            //                 }
+            //             })
+            //         }
+            //     });
+            // });
         }
         dd()
         return (
@@ -429,6 +436,7 @@ export default connect(({
                                 dashboardStat,
                                 weeklySchedule
                             },
+    auth: {isSuperAdmin}
                         }) => ({
         sortAges,
         studentStat,
@@ -453,6 +461,7 @@ export default connect(({
         rooms,
         dailySchedule,
         dashboardStat,
-        weeklySchedule
+        weeklySchedule,
+    isSuperAdmin
     })
 )(Dashboard);

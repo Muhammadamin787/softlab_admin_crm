@@ -73,7 +73,7 @@ class Group extends Component {
             getItems,
             archiveGroupModal,
             activeGroupModal,
-            rooms, history, isSuperAdmin
+            rooms, history, isSuperAdmin,isAdmin
         } = this.props;
 
         const openModal = (item) => {
@@ -147,11 +147,14 @@ class Group extends Component {
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Guruhlar</h1>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
+                    { isSuperAdmin || isAdmin ?
+                        <div align={"right"}>
+                            <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                                qo'shish
+                            </Button>
+                        </div>
+                        :""
+                    }
                     <Nav tabs>
                         <NavItem
                             className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -451,7 +454,7 @@ export default connect(({
                                 activeGroupModal,
                             },
                             auth: {
-                                isSuperAdmin
+                                isSuperAdmin,isAdmin
                             }
                         }) => ({
         page,
@@ -461,7 +464,7 @@ export default connect(({
         groups, rooms,
         loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
         activeGroupModal,
-        isSuperAdmin
+        isSuperAdmin,isAdmin
     })
 )(Group);
 

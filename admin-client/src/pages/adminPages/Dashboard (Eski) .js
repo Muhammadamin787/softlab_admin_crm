@@ -23,6 +23,7 @@ class DashboardEski extends Component {
 
     componentDidMount() {
         if (this.props.isSuperAdmin) {
+            console.log(this.props.isSuperAdmin);
             this.props.dispatch(getRoomListAction())
             this.props.dispatch(getDashboardStatAction())
             this.props.dispatch(getWeeklySchedule())
@@ -57,7 +58,7 @@ class DashboardEski extends Component {
                 list: arr,
             })
         } else {
-            this.props.history.push("/notFound")
+            this.props.history.push("/admin/card")
         }
     }
 

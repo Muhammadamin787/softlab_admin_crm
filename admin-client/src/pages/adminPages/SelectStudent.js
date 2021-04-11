@@ -64,6 +64,7 @@ class SelectStudent extends Component {
     render() {
         const {currentObject, activeTab, showPaymentModal, showPaymentEditModal, addGroup} = this.state;
         const {
+            isSupperAdmin, isAdmin,isFinancier,
             getItems,
             showAddGroupModal,
             history,
@@ -284,28 +285,36 @@ class SelectStudent extends Component {
                                                                 <p className={"d-inline"}> {currentItem.description}</p>
                                                             </hgroup>
                                                             <div className="button-block">
-                                                                <Button className="table-icon px-2"
-                                                                        onClick={() => openAddGroupModal(currentItem)}>
-                                                                    <AiOutlineUsergroupAdd
-                                                                        color={"#EE8033"}
-                                                                    />
-                                                                </Button>
-                                                                <Button className="table-icon px-2"
-                                                                        onClick={() => openPaymentModal(currentItem)}>
-                                                                    <span className="icon icon-wallet bg-success "/>
-                                                                </Button>
+                                                                {isSupperAdmin || isAdmin ?
+                                                                    <Button className="table-icon px-2"
+                                                                            onClick={() => openAddGroupModal(currentItem)}>
+                                                                        <AiOutlineUsergroupAdd
+                                                                            color={"#EE8033"}
+                                                                        />
+                                                                    </Button> : ""
+                                                                }
+                                                                { isSupperAdmin || isAdmin || isFinancier ?
+                                                                    <Button className="table-icon px-2"
+                                                                            onClick={() => openPaymentModal(currentItem)}>
+                                                                        <span className="icon icon-wallet bg-success "/>
+                                                                    </Button>
+                                                                    :""
+                                                                }
                                                             </div>
                                                         </div>
-                                                        <div className="col-4 button-block">
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openModal(currentItem)}>
-                                                                <EditIcon className="button-icon"/>
-                                                            </Button>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(currentItem)}>
-                                                                <DeleteIcon className="button-icon"/>
-                                                            </Button>
-                                                        </div>
+                                                        {isSupperAdmin || isAdmin ?
+                                                            <div className="col-4 button-block">
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openModal(currentItem)}>
+                                                                    <EditIcon className="button-icon"/>
+                                                                </Button>
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openDeleteModal(currentItem)}>
+                                                                    <DeleteIcon className="button-icon"/>
+                                                                </Button>
+                                                            </div>
+                                                            : ""
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div className={"col-md-5"}>
@@ -361,16 +370,19 @@ class SelectStudent extends Component {
                                                         <td>{item.payType ? item.payType.name : ''}</td>
                                                         <td>{item.comment}</td>
                                                         <td>{moment(item.payDate).format('LLL').toString()}</td>
-                                                        <td>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openModal1(item)}>
-                                                                <EditIcon/>
-                                                            </Button>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openStudentPayDelModal(item)}>
-                                                                <DeleteIcon/>
-                                                            </Button>
-                                                        </td>
+                                                        {isSupperAdmin || isAdmin ?
+                                                            <td>
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openModal1(item)}>
+                                                                    <EditIcon/>
+                                                                </Button>
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openStudentPayDelModal(item)}>
+                                                                    <DeleteIcon/>
+                                                                </Button>
+                                                            </td>
+                                                            :""
+                                                        }
                                                     </tr>
                                                 ) : 'Malumot topilmadi'}
                                                 </tbody>
@@ -626,7 +638,9 @@ export default connect(({
                                 selectGroups, cashbacks
 
                             },
+                            auth: {isSupperAdmin, isAdmin,isFinancier}
                         }) => ({
+        isSupperAdmin, isAdmin,isFinancier,
         selectItems,
         showAddGroupModal,
         payTypes,

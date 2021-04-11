@@ -20,7 +20,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
 
     Page<Teacher> findAllByUser_status(UserStatusEnum user_status, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select cast(t.id as varchar), u.full_name, u.phone_number, u.birth_date, u.gender, t.balance, t.is_percent, coalesce(t.salary,0), u.description, " +
+    @Query(nativeQuery = true, value = "select cast(t.id as varchar), u.full_name, u.phone_number, u.birth_date, u.gender,t.balance, t.is_percent, coalesce(t.salary,0), u.description, " +
             "(case when u.region_id is not null then (select r.name from region r where r.id=u.region_id) else '' end) as hudud_nomi, " +
             " coalesce(u.region_id,0) as hudud_id from teacher t inner join users u on u.id = t.user_id " +
             "where t.id=:teacherId")

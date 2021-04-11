@@ -33,7 +33,7 @@ class SelectStaff extends Component {
     }
 
     render() {
-        const {currentObject} = this.state;
+        const {currentObject, isSuperAdmin} = this.state;
         const {dispatch, showModal, deleteModal, history, regions, currentItem} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -78,7 +78,6 @@ class SelectStaff extends Component {
                         className={"m-2 p-3 bg-white rounded col-md-4 col-10 col-8 select-staff-style"}>
                         <div className="row">
                             <div className="col-8">
-                                {console.log(currentItem)}
                                 <hgroup>
                                     <small className={"text-secondary"}>FISH: </small>
                                     <p className={"d-inline"}> {currentItem.fullName}</p>
@@ -99,7 +98,6 @@ class SelectStaff extends Component {
                                 </hgroup>
                                 <hgroup>
                                     <small className={"text-secondary"}>Kasbi: </small>
-                                    {console.log(currentItem)}
                                     <p className={"d-inline"}>{currentItem && currentItem.roleName ? currentItem.roleName[0].roleName : ''}</p>
                                 </hgroup>
                                 <hgroup>
@@ -109,6 +107,10 @@ class SelectStaff extends Component {
                                 <hgroup>
                                     <small className={"text-secondary"}>Tavsif: </small>
                                     <p className={"d-inline"}> {currentItem.description}</p>
+                                </hgroup>
+                                <hgroup>
+                                    <small className={"text-secondary"}>Parol: </small>
+                                    <p className={"d-inline"}> {currentItem.password}</p>
                                 </hgroup>
                             </div>
                             <div className="col-4 button-block">
@@ -203,7 +205,8 @@ class SelectStaff extends Component {
 SelectStaff.propTypes = {}
 export default connect(({
                             app: {loading, history, employees, currentItem, showModal, deleteModal, regions},
+                            auth: {isSuperAdmin}
                         }) => ({
-        loading, employees, showModal, history, currentItem, deleteModal, regions
+        loading, employees, showModal, history, currentItem, deleteModal, regions, isSuperAdmin
     })
 )(SelectStaff);

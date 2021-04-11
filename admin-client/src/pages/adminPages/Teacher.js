@@ -102,7 +102,7 @@ class Teacher extends Component {
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
                 password: v.password,
             }
-            // teacherDto.id = currentObject.id
+            teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
         }
         const downloadTecherFile = (e, v) => {
@@ -373,9 +373,10 @@ class Teacher extends Component {
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}
                                     />
+
                                     <AvField
                                         defaultValue={currentObject ? currentObject.password : ""}
-                                        type={"text"} placeholder={"abc_123!*"}
+                                        type={"password"} placeholder={"abc_123!*"}
                                         label={"Parol"} name={"password"} className={"form-control"}
                                     />
                                 </div>
