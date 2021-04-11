@@ -141,7 +141,7 @@ class Card extends Component {
                 if (!regionId)
                     v.regionId = currentItem.regionId
             }
-            v.birthDate = v.birthDate ? moment(v.birthDate).format('DD/MM/YYYY').toString() : ""
+            v.birthDate = v.birthDate ? moment(v.birthDate).format('DD-MM-YYYY').toString() : ""
             v.statusEnum = currentPage
             dispatch(saveAppealAction(v));
         }
@@ -487,7 +487,7 @@ class Card extends Component {
                                 <Col>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentItem && currentItem.id && currentItem.birthDate ? moment(currentItem.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentItem && currentItem.id && currentItem.birthDate ? moment(currentItem.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}/>
                                     Hudud

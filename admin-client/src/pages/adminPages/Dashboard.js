@@ -25,6 +25,7 @@ class Dashboard extends Component {
         // const {startHour, endHour} = this.state;
         if (this.props.isSuperAdmin) {
             console.log(this.props.isSuperAdmin);
+            console.log(this.props.list);
             this.props.dispatch(getRoomListAction())
             this.props.dispatch(getDashboardStatAction())
             this.props.dispatch(getWeeklySchedule())
@@ -33,7 +34,7 @@ class Dashboard extends Component {
             const {startHour, endHour} = this.state;
 
         /*kunlik*/
-        let arr = []
+        let arr = [];
         for (let i = startHour; i < endHour; i++) {
             for (let g = 0; g < 2; g++) {
                 if (g === 0) {
@@ -51,11 +52,11 @@ class Dashboard extends Component {
                 }
             }
         }
-        }
         /*set-state*/
         this.setState({
-            list: arr,
+            list: arr
         })
+        }
     }
 
     state = {
