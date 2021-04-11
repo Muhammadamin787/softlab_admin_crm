@@ -71,10 +71,10 @@ class Staff extends Component {
                 phoneNumber: v.phoneNumber,
                 parentPhone: v.parentPhone,
                 avatarId: v.attachmentId,
-                regionId: v.regionId,
+                // regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
-                password :v.password,
+                password: v.password,
                 roleName: v.roleName
             }
             dispatch(saveEmployeeAction(employeeDto))
@@ -110,7 +110,7 @@ class Staff extends Component {
                                     <td>
                                         {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                     </td>
-                                    <td>{item.roleName === "ADMIN" ? "Menejr" : item.roleName === "RECEPTION" ? "Reception"  :item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
+                                    <td>{item.roleName === "ADMIN" ? "Menejr" : item.roleName === "RECEPTION" ? "Reception" : item.roleName === "FINANCIER" ? "Hisobchi" : ""}</td>
                                 </tr>
                             ) : ''}
                         </tbody>
@@ -154,15 +154,15 @@ class Staff extends Component {
                                         defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('YYYY-MM-DD')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        />
-                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
-                                             name="regionId"
-                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
-                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
-                                        {regions ? regions.map((item, i) =>
-                                            <option key={i} value={item.id}>{item.name}</option>
-                                        ) : ""}
-                                    </AvField>
+                                    />
+                                    {/*<AvField className={'form-control'} label={'Hudud:'} type="select"*/}
+                                    {/*         name="regionId"*/}
+                                    {/*         defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>*/}
+                                    {/*    <option key={0} value={"0"}>Ota hududni tanlang</option>*/}
+                                    {/*    {regions ? regions.map((item, i) =>*/}
+                                    {/*        <option key={i} value={item.id}>{item.name}</option>*/}
+                                    {/*    ) : ""}*/}
+                                    {/*</AvField>*/}
                                     <AvRadioGroup name="roleName"
                                                   defaultValue={currentObject ? currentObject.roleName : ""}
                                                   label="Kasbi" required
