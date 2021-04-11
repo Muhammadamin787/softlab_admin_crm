@@ -81,7 +81,7 @@ class SelectTeacher extends Component {
             teacherSalaryList,
             showEditSalaryModal,
             deleteSalaryModal,
-            page, size, totalElements
+            page, size, totalElements,isSuperAdmin
         } = this.props;
 
 
@@ -500,7 +500,13 @@ class SelectTeacher extends Component {
                                 <AvField
                                     defaultValue={currentObject ? currentObject.description : ""}
                                     type={"textarea"}
-                                    label={"Izoh"} name={"description"} className={"form-control"}/>
+                                    label={"Izoh"} name={"description"} className={"form-control"}
+                                />
+                                <AvField
+                                    defaultValue={currentObject ? currentObject.password : ""}
+                                    type={"password"} placeholder={"abc_123!*"}
+                                    label={"Parol"} name={"password"} className={"form-control"}
+                                />
                             </div>
                         </ModalBody>
                         <ModalFooter>
@@ -533,7 +539,7 @@ class SelectTeacher extends Component {
                                 defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
                                 type={"text"}
                                 label={"FISH"} name={"fullName"} className={"form-control"}
-                                placeholer={"nomi"}  disabled/>
+                                placeholer={"nomi"} disabled/>
                             <div className={"w-100 modal-form"}>
                                 <AvField
                                     type={"number"}
@@ -564,6 +570,7 @@ class SelectTeacher extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal id={""} isOpen={showOpenSalaryModal1} toggle={() => openSalaryModal1("")}
                        className={""}>
                     <AvForm onValidSubmit={saveSalaryItem}>
@@ -635,6 +642,7 @@ export default connect(({
                                 deleteSalaryModal,
                                 page, size, totalElements
                             },
+                            auth: {isSuperAdmin}
                         }) => ({
         groups,
         payTypes,
@@ -653,6 +661,7 @@ export default connect(({
         teacherSalaryList,
         showEditSalaryModal,
         deleteSalaryModal,
-        page, size, totalElements
+        page, size, totalElements,
+        isSuperAdmin
     })
 )(SelectTeacher);

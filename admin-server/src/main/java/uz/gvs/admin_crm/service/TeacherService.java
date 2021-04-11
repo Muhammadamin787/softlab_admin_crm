@@ -148,6 +148,7 @@ public class TeacherService {
                 user.setDescription(teacherDto.getDescription());
                 user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(teacherDto.getBirthDate()) : null);
                 user.setGender(Gender.valueOf(teacherDto.getGender()));
+                user.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
                 user.setRegion(teacherDto.getRegionId() != null && teacherDto.getRegionId() > 0 ? regionRepository.findById(teacherDto.getRegionId()).get() : null);
                 teacher.setUser(userRepository.save(user));
                 teacherRepository.save(teacher);
@@ -202,8 +203,8 @@ public class TeacherService {
                 Boolean isPersent = Boolean.parseBoolean(teacher[6] != null ? teacher[6].toString() : null);
                 Double salary = Double.parseDouble(teacher[7].toString());
                 String description = teacher[8].toString();
-                Integer regionId = Integer.parseInt(teacher[10].toString());
                 String regionName = teacher[9].toString();
+                Integer regionId = Integer.parseInt(teacher[10].toString());
                 List<Group> groups = groupRepository.findAllByTeacherId(teacherId);
                 List<GroupDto> groupDtos = new ArrayList<>();
                 for (Group group : groups) {

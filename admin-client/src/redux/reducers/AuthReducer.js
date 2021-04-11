@@ -15,6 +15,7 @@ const initState = {
     isAdmin: false,
     isAgent: false,
     isTeacher: false,
+    isFinancier: false,
     isClient: false,
     isUser: false,
     verifyEmail: false,

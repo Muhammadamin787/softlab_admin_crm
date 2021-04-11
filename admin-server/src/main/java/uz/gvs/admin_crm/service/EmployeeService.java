@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.*;
 import uz.gvs.admin_crm.entity.enums.Gender;
@@ -31,6 +32,8 @@ public class EmployeeService {
     @Autowired
     RegionRepository regionRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public ApiResponse saveEmployee(EmployeeDto employeeDto) {
         try {
@@ -74,6 +77,7 @@ public class EmployeeService {
                 user.setDescription(employeeDto.getDescription());
                 user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(employeeDto.getBirthDate()) : null);
                 user.setGender(Gender.valueOf(employeeDto.getGender()));
+                user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
                 user.setRegion(employeeDto.getRegionId() != null && employeeDto.getRegionId() > 0 ? regionRepository.findById(employeeDto.getRegionId()).get() : null);
                 employee.setUser(userRepository.save(user));
                 employeeRepository.save(employee);

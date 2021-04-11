@@ -19,6 +19,14 @@ const PrivateRoute = ({dispatch, auth, path, history, location, component: Compo
             if (path.includes('/admin')) {
                 return <Component {...props} />
             } else return <Redirect to={'/badRequest'}/>
+        }else if (role === 'financier') {
+            if (path.includes('/admin')) {
+                return <Component {...props} />
+            } else return <Redirect to={'/badRequest'}/>
+        }else if (role === 'reception') {
+            if (path.includes('/admin')) {
+                return <Component {...props} />
+            } else return <Redirect to={'/badRequest'}/>
         } else if (role === 'user') {
             if (path.includes('/client')) {
                 return <Component {...props} />

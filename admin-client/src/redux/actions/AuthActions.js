@@ -13,7 +13,10 @@ export const login = (payload) => async (dispatch) => {
     try {
         const res = await dispatch({
             api: loginUser,
-            types: [types.REQUEST_AUTH_START, "", types.REQUEST_API_ERROR],
+            types:
+                [types.REQUEST_AUTH_START,
+                "",
+                types.REQUEST_API_ERROR],
             data: payload.v,
         });
         if (res.success) {
@@ -111,6 +114,12 @@ const setStateRole = (roles, dispatch) => {
         } else if (item.roleName === "CLIENT") {
             dispatch({type: "updateState", payload: {isClient: true}});
             roleStatus = 'client'
+        } else if (item.roleName === "FINANCIER") {
+            dispatch({type: "updateState", payload: {isFinancier: true}});
+            roleStatus = 'financier'
+        }else if (item.roleName === "RECEPTION") {
+            dispatch({type: "updateState", payload: {isReception: true}});
+            roleStatus = 'reception'
         }
         localStorage.setItem('role', roleStatus);
     });
@@ -124,7 +133,9 @@ const pushHisPage = (roles, history) => {
         } else if (roleName === "TEACHER") {
             push("/admin/groups");
         } else if (roleName === "FINANCIER") {
-            push("/admin/finance");
+            push("/admin/StudentFinance");
+        }else if (roleName === "RECEPTION") {
+            push("/admin/card");
         }
     });
 };
