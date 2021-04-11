@@ -14,8 +14,6 @@ class Login extends Component {
 
     handleSignIn = async (e, v) => {
         this.props.dispatch(authActions.login({v, history: this.props.history}))
-        // localStorage.removeItem("role");
-        // localStorage.removeItem(TOKEN);
     };
 
     render() {

@@ -136,6 +136,8 @@ const pushHisPage = (roles, history) => {
             push("/admin/StudentFinance");
         }else if (roleName === "RECEPTION") {
             push("/admin/card");
+        }else if (roleName === "ADMIN") {
+            push("/admin");
         }
     });
 };
