@@ -29,7 +29,9 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class Teacher extends Component {
     componentDidMount() {
-        if (this.props.isSuperAdmin) {
+        console.log(this.props.isFinancier)
+        console.log(this.props.isSup)
+        if (this.props.isSuperAdmin || this.props.isFinancier) {
             this.props.dispatch(getRegionsAction())
             this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
         } else {
@@ -64,7 +66,8 @@ class Teacher extends Component {
             regions,
             archiveModal,
             activeModal,
-            isSuperAdmin
+            isSuperAdmin,
+            isFinancier
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -433,7 +436,8 @@ export default connect((
             activeModal,
         },
         auth: {
-            isSuperAdmin
+            isSuperAdmin,
+            isFinancier
         }
     }) => ({
         page,
@@ -455,6 +459,8 @@ export default connect((
         teachers,
         teacherDto,
         archiveModal,
-        activeModal, isSuperAdmin
+        activeModal,
+    isSuperAdmin,
+    isFinancier
     })
 )(Teacher);

@@ -141,7 +141,7 @@ class Card extends Component {
                 if (!regionId)
                     v.regionId = currentItem.regionId
             }
-            v.birthDate = v.birthDate ? moment(v.birthDate).format('DD/MM/YYYY').toString() : ""
+            v.birthDate = v.birthDate ? moment(v.birthDate).format('DD-MM-YYYY').toString() : ""
             v.statusEnum = currentPage
             dispatch(saveAppealAction(v));
         }
@@ -249,13 +249,16 @@ class Card extends Component {
                     <Container className={"py-3 bg-white px-5"}>
                         <Row id={""}>
                             {appealList && !loading && appealList.length > 0 ? appealList.map((item, i) =>
-                                <Col key={i + 1} id={item.title}>
-                                    <h4>
+                                <Col id={item.title}>
+                                    <h5 className={"appeal-section mt-2"} onClick={() => openModal(item.title)}>
+                                        <span className={"p-2 d-inline-block"}>
                                         {item.title === "COLLECTION" ? "To'plamlar" : item.title === "WAITING" ? "Kutish" : "So'rovlar"}
-                                    </h4>
-                                    <button className={"btn btn-default btn-sm rounded-circle border-secondary"}
+                                        </span>
+                                        <button
+                                            className={"float-right px-5 d-inline-block btn btn-default btn-sm"}
                                             onClick={() => openModal(item.title)}>+
-                                    </button>
+                                        </button>
+                                    </h5>
                                     <hr/>
                                     {item.sectionDtos && item.sectionDtos.length > 0 ? sortList(item.sectionDtos).map((section, s) =>
                                         <div key={(s + 1) * (i + 1)} className={"section"}
@@ -484,7 +487,7 @@ class Card extends Component {
                                 <Col>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentItem && currentItem.id && currentItem.birthDate ? moment(currentItem.birthDate).format('YYYY-MM-DD')
+                                        defaultValue={currentItem && currentItem.id && currentItem.birthDate ? moment(currentItem.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}/>
                                     Hudud

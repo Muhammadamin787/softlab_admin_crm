@@ -11,6 +11,7 @@
     "availity-reactstrap-validation": "^2.7.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "daypilot-pro-react": "https://npm.daypilot.org/daypilot-pro-react/trial/2021.1.4833.tar.gz",
     "funnel-react": "^0.0.6",
     "immer": "^8.0.1",
     "jquery": "^3.6.0",
