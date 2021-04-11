@@ -39,6 +39,8 @@ public class EmployeeDto {
     private Attachment avatar;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String birthDate;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private String password;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Role> roles;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

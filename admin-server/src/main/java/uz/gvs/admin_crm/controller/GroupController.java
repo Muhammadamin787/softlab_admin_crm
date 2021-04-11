@@ -3,9 +3,12 @@ package uz.gvs.admin_crm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.gvs.admin_crm.entity.User;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.GroupRepository;
+import uz.gvs.admin_crm.security.CurrentUser;
 import uz.gvs.admin_crm.service.ApiResponseService;
 import uz.gvs.admin_crm.service.GroupService;
 import uz.gvs.admin_crm.utils.AppConstants;
@@ -22,12 +25,14 @@ public class GroupController {
     @Autowired
     GroupRepository groupRepository;
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
     @PostMapping
     public HttpEntity<?> saveGroup(@RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = groupService.saveGroup(groupDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','TEACHER')")
     @GetMapping("/{id}")
     HttpEntity<?> getOneGroup(@PathVariable Integer id) {
         ApiResponse apiResponse = groupService.getOneGroup(id);
@@ -37,8 +42,9 @@ public class GroupController {
     @GetMapping
     public HttpEntity<?> getGroupList(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                      @RequestParam(value = "status", defaultValue = "ACTIVE") String status) {
-        ApiResponse apiResponse = groupService.getGroupList(page, size,status);
+                                      @RequestParam(value = "status", defaultValue = "ACTIVE") String status,
+                                      @CurrentUser User user) {
+        ApiResponse apiResponse = groupService.getGroupList(page, size, status, user);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
@@ -72,6 +78,7 @@ public class GroupController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
     @PutMapping("/{id}")
     public HttpEntity<?> editGroup(@PathVariable Integer id, @RequestBody GroupDto groupDto) {
         ApiResponse apiResponse = groupService.editGroup(groupDto, id);
@@ -79,6 +86,7 @@ public class GroupController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteGroup(@PathVariable Integer id) {
         try {
@@ -91,6 +99,7 @@ public class GroupController {
 
     // Change Status
 
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
     @GetMapping("/changeStatus")
     public HttpEntity<?> changeStatus(@RequestParam(value = "groupId") Integer groupId,
                                       @RequestParam(value = "status") String status) {

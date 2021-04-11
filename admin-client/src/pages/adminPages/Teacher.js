@@ -14,8 +14,8 @@ import {
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction, downloadTeacherFileAction,
-    getRegionsAction,
-    getTeachersAction,
+    getRegionsAction, getStudentsAction, getStudentsBySearchAction,
+    getTeachersAction, getTeachersBySearchAction,
     saveTeacherAction, toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
@@ -29,8 +29,12 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class Teacher extends Component {
     componentDidMount() {
-        this.props.dispatch(getRegionsAction())
-        this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+        if (this.props.isSuperAdmin) {
+            this.props.dispatch(getRegionsAction())
+            this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+        } else {
+            this.props.history.push("/notFound")
+        }
     }
 
     state = {
@@ -60,6 +64,7 @@ class Teacher extends Component {
             regions,
             archiveModal,
             activeModal,
+            isSuperAdmin
         } = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
@@ -86,19 +91,16 @@ class Teacher extends Component {
         const saveItem = (e, v) => {
             if (currentObject) {
                 v.id = currentObject.id
-                console.clear();
             }
             let teacherDto;
-            teacherDto = {userDto: ""}
-            teacherDto.userDto = {
-                id: v.id,
-                fullName: v.fullName,
-                gender: v.gender,
+            teacherDto = {
+                teacherName: v.teacherName,
                 phoneNumber: v.phoneNumber,
-                avatarId: attachmentId,
+                gender: v.gender,
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
+                password: v.password,
             }
             teacherDto.id = currentObject.id
             dispatch(saveTeacherAction(teacherDto))
@@ -137,6 +139,16 @@ class Teacher extends Component {
             }))
         }
 
+        ////// Teacher Search
+
+        const searchTeacher = () => {
+            let value = document.getElementById("searchTeacher").value;
+            if (value.length === 0) {
+                this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))
+            }
+            dispatch(getTeachersBySearchAction({name: value}));
+        }
+
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -167,6 +179,11 @@ class Teacher extends Component {
                                 Arxiv O'qituvchilar
                             </NavLink>
                         </NavItem>
+                        <NavItem align={"right"}>
+                            <input type={"search"} name={"teacherSearch"} id={"searchTeacher"}
+                                   className={"form-control"} placeholder={"Qidirish..."}
+                                   onChange={searchTeacher}/>
+                        </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId="ACTIVE">
@@ -194,10 +211,10 @@ class Teacher extends Component {
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                                        {item.userDto && item.userDto.fullName}
+                                                        {item.teacherName}
                                                     </Link>
                                                 </td>
-                                                <td>{item.userDto && item.userDto.phoneNumber && formatPhoneNumber(item.userDto.phoneNumber)}</td>
+                                                <td>{formatPhoneNumber(item.phoneNumber)}</td>
                                                 <td>
                                                     <Button className={"table-info"}
                                                             onClick={() => openToArchive(item)}>
@@ -250,10 +267,10 @@ class Teacher extends Component {
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link className={"text-dark"} to={"/admin/teacher/" + (item.id)}>
-                                                        {item.userDto && item.userDto.fullName}
+                                                        {item.teacherName}
                                                     </Link>
                                                 </td>
-                                                <td>{item.userDto && item.userDto.phoneNumber && formatPhoneNumber(item.userDto.phoneNumber)}</td>
+                                                <td>{formatPhoneNumber(item.phoneNumber)}</td>
                                                 <td>
                                                     <Button className={"table-info"}
                                                             onClick={() => openToActive(item)}>
@@ -282,6 +299,7 @@ class Teacher extends Component {
                             </div>
                         </TabPane>
                     </TabContent>
+
                     <Modal isOpen={archiveModal} toggle={() => openToArchive("")} className={""}>
                         <ModalHeader isOpen={archiveModal} toggle={() => openToArchive("")}
                                      charCode="X">O'chirish</ModalHeader>
@@ -314,12 +332,12 @@ class Teacher extends Component {
                             <ModalBody>
                                 <div className={"w-100 modal-form"}>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.fullName : ""}
+                                        defaultValue={currentObject ? currentObject.teacherName : ""}
                                         type={"text"}
-                                        label={"FISH"} name={"fullName"} className={"form-control"}
+                                        label={"FISH"} name={"teacherName"} className={"form-control"}
                                         placeholer={"nomi"} required/>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.phoneNumber : ""}
+                                        defaultValue={currentObject ? currentObject.phoneNumber : ""}
                                         type={"text"}
                                         label={"Telefon raqam"} name={"phoneNumber"} className={"form-control"}
                                         validate={{
@@ -331,29 +349,36 @@ class Teacher extends Component {
                                         placeholer={"nomi"} required/>
                                     <AvField
                                         type={"date"}
-                                        defaultValue={currentObject.userDto && currentObject.userDto.birthDate ? moment(currentObject.userDto.birthDate).format('DD-MM-YYYY')
+                                        defaultValue={currentObject ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                        />
+                                    />
                                     <AvField className={'form-control'} label={'Hudud:'} type="select"
                                              name="regionId"
-                                             defaultValue={currentObject && currentObject.userDto && currentObject.userDto.region ? currentObject.userDto.region.id : "0"}>
+                                             defaultValue={currentObject ? currentObject.regionName : "0"}>
                                         <option key={0} value={"0"}>Ota hududni tanlang</option>
                                         {regions ? regions.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
                                         ) : ""}
                                     </AvField>
                                     <AvRadioGroup name="gender"
-                                                  defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.gender : ""}
+                                                  defaultValue={currentObject ? currentObject.gender : ""}
                                                   label="Jins" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Erkak" value="MALE"/>
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                     <AvField
-                                        defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
+                                        defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
-                                        label={"Izoh"} name={"description"} className={"form-control"}/>
+                                        label={"Izoh"} name={"description"} className={"form-control"}
+                                    />
+
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.password : ""}
+                                        type={"password"} placeholder={"abc_123!*"}
+                                        label={"Parol"} name={"password"} className={"form-control"}
+                                    />
                                 </div>
                             </ModalBody>
                             <ModalFooter>
@@ -362,6 +387,7 @@ class Teacher extends Component {
                             </ModalFooter>
                         </AvForm>
                     </Modal>
+
                     <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                         <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                      charCode="X">O'chirish</ModalHeader>
@@ -406,6 +432,9 @@ export default connect((
             archiveModal,
             activeModal,
         },
+        auth: {
+            isSuperAdmin
+        }
     }) => ({
         page,
         size,
@@ -426,6 +455,6 @@ export default connect((
         teachers,
         teacherDto,
         archiveModal,
-        activeModal,
+        activeModal, isSuperAdmin
     })
 )(Teacher);

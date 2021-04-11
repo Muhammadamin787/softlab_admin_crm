@@ -74,6 +74,7 @@ class Staff extends Component {
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
+                password :v.password,
                 roleName: v.roleName
             }
             dispatch(saveEmployeeAction(employeeDto))
@@ -180,7 +181,13 @@ class Staff extends Component {
                                     <AvField
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
                                         type={"textarea"}
-                                        label={"Izoh"} name={"description"} className={"form-control"}/>
+                                        label={"Izoh"} name={"description"} className={"form-control"}
+                                    />
+                                    <AvField
+                                        defaultValue={currentObject ? currentObject.password : ""}
+                                        type={"text"} placeholder={"abc_123!*"}
+                                        label={"Parol"} name={"password"} className={"form-control"}
+                                    />
                                 </div>
                             </ModalBody>
                             <ModalFooter>

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
-import {DayPilotScheduler} from "daypilot-pro-react";
 import {Input, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getDailySchedule,
@@ -11,15 +10,27 @@ import {
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
+import {Funnel} from 'funnel-react';
+import Donut from "../../component/dashboard/Donut";
+import BarColumn from "../../component/dashboard/BarColumn";
+import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
 class Dashboard extends Component {
     componentDidMount() {
-        this.props.dispatch(getRoomListAction())
-        this.props.dispatch(getDashboardStatAction())
-        this.props.dispatch(getWeeklySchedule())
-        this.props.dispatch(getDailySchedule('TUESDAY'))
-        this.props.dispatch(getDashboardStudentStatAction())
-        const {startHour, endHour} = this.state;
+        // this.props.dispatch(getRoomListAction())
+        // this.props.dispatch(getDashboardStatAction())
+        // this.props.dispatch(getWeeklySchedule())
+        // this.props.dispatch(getDailySchedule('TUESDAY'))
+        // this.props.dispatch(getDashboardStudentStatAction())
+        // const {startHour, endHour} = this.state;
+        if (this.props.isSuperAdmin) {
+            console.log(this.props.isSuperAdmin);
+            this.props.dispatch(getRoomListAction())
+            this.props.dispatch(getDashboardStatAction())
+            this.props.dispatch(getWeeklySchedule())
+            this.props.dispatch(getDailySchedule('MONDAY'))
+            this.props.dispatch(getDashboardStudentStatAction())
+            const {startHour, endHour} = this.state;
 
         /*kunlik*/
         let arr = []
@@ -39,6 +50,7 @@ class Dashboard extends Component {
                     }
                 }
             }
+        }
         }
         /*set-state*/
         this.setState({
@@ -73,8 +85,9 @@ class Dashboard extends Component {
             rooms,
             dailySchedule,
             dashboardStat,
+            showSchedule,
             weeklySchedule,
-            showSchedule
+            isSuperAdmin
         } = this.props;
 
 
@@ -239,22 +252,22 @@ class Dashboard extends Component {
                                 {/*            ]}/>*/}
                                 {/*    </div>*/}
                                 {/*</div>*/}
-                                {/*<div className="col-md-12 my-2 row">*/}
-                                {/*    <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">*/}
-                                {/*        <h5>Talabalar statistikasi</h5>*/}
-                                {/*        <BarColumn/>*/}
-                                {/*    </div>*/}
-                                {/*    /!*<div className="col-md-7 bg-white border-right">*!/*/}
-                                {/*    /!*    <MultiLine/>*!/*/}
-                                {/*    /!*</div>*!/*/}
-                                {/*    <div className="ml-auto col-md-5 bg-white py-3 shadow-sm">*/}
-                                {/*        <h5>Yosh taqsimoti</h5>*/}
-                                {/*        <Donut*/}
-                                {/*            labels={sortAges ? sortAges.labels : []}*/}
-                                {/*            series={sortAges ? sortAges.series : []}*/}
-                                {/*        />*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
+                                <div className="col-md-12 my-2 row">
+                                    <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">
+                                        <h5>Talabalar statistikasi</h5>
+                                        <BarColumn/>
+                                    </div>
+                                    {/*<div className="col-md-7 bg-white border-right">*/}
+                                    {/*    <MultiLine/>*/}
+                                    {/*</div>*/}
+                                    <div className="ml-auto col-md-5 bg-white py-3 shadow-sm">
+                                        <h5>Yosh taqsimoti</h5>
+                                        <Donut
+                                            labels={sortAges ? sortAges.labels : []}
+                                            series={sortAges ? sortAges.series : []}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             : ""}
                     </div>
@@ -479,6 +492,7 @@ export default connect(({
                                 weeklySchedule,
                                 showSchedule
                             },
+    auth: {isSuperAdmin}
                         }) => ({
         sortAges,
         studentStat,
@@ -504,7 +518,8 @@ export default connect(({
         dailySchedule,
         dashboardStat,
         weeklySchedule,
-        showSchedule
+        showSchedule,
+    isSuperAdmin
     })
 )(Dashboard);
 

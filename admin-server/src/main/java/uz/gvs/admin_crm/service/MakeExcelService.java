@@ -3,24 +3,18 @@ package uz.gvs.admin_crm.service;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import uz.gvs.admin_crm.entity.Student;
 import uz.gvs.admin_crm.entity.StudentGroup;
 import uz.gvs.admin_crm.entity.Teacher;
+import uz.gvs.admin_crm.payload.ApiResponse;
+import uz.gvs.admin_crm.payload.StudentDto;
 import uz.gvs.admin_crm.payload.excelDtos.PaymentExcelDtos;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -46,7 +40,6 @@ public class MakeExcelService {
         headerCellStyle.setAlignment(HorizontalAlignment.RIGHT);
 
 
-
         // Creating header
 
         sheet.setColumnWidth(0, 6000);
@@ -55,8 +48,7 @@ public class MakeExcelService {
         sheet.setColumnWidth(3, 8000);
         sheet.setColumnWidth(4, 4000);
         sheet.setColumnWidth(5, 4000);
-        sheet.setColumnWidth(6, 4000);
-        sheet.setColumnWidth(7, 8000);
+        sheet.setColumnWidth(6, 8000);
 
 
         Cell cell = row.createCell(0);
@@ -81,14 +73,10 @@ public class MakeExcelService {
         cell.setCellStyle(headerCellStyle);
 
         cell = row.createCell(5);
-        cell.setCellValue("Balas");
+        cell.setCellValue("Balans");
         cell.setCellStyle(headerCellStyle);
 
         cell = row.createCell(6);
-        cell.setCellValue("Qachon kelgani");
-        cell.setCellStyle(headerCellStyle);
-
-        cell = row.createCell(7);
         cell.setCellValue("Ota-onasi telefon raqami");
         cell.setCellStyle(headerCellStyle);
 
@@ -107,9 +95,8 @@ public class MakeExcelService {
                 int i2 = Integer.parseInt(split2[0]);
                 age = i2 - i1;
 
-                String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
-                String[] a = s2[0].split("-");
-                studentStartDate = Integer.parseInt(a[0]);
+//                String[] s2 = students.get(i).getCreatedAt().toString().split(" ");
+//                studentStartDate = Integer.parseInt(s2[0]);
             }
 
             String getGropuName = "";
@@ -131,8 +118,7 @@ public class MakeExcelService {
                     students.get(i).getUser().getRegion().getId() != 0 ?
                     students.get(i).getUser().getRegion().getName() : null);
             dataRow.createCell(5).setCellValue(students.get(i).getBalans());
-            dataRow.createCell(6).setCellValue(studentStartDate);
-            dataRow.createCell(7).setCellValue(students.get(i).getParentPhone());
+            dataRow.createCell(6).setCellValue(students.get(i).getParentPhone());
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -163,6 +149,7 @@ public class MakeExcelService {
         headerCellStyle.setBorderLeft(BorderStyle.MEDIUM);
         headerCellStyle.setBorderRight(BorderStyle.MEDIUM);
         headerCellStyle.setBorderTop(BorderStyle.MEDIUM);
+        headerCellStyle.setAlignment(HorizontalAlignment.RIGHT);
 
         // Creating header
 
@@ -170,7 +157,7 @@ public class MakeExcelService {
         sheet.setColumnWidth(1, 4000);
         sheet.setColumnWidth(2, 4000);
         sheet.setColumnWidth(3, 4000);
-        sheet.setColumnWidth(4, 4000);
+        sheet.setColumnWidth(4, 6000);
         sheet.setColumnWidth(5, 4000);
         sheet.setColumnWidth(6, 4000);
         sheet.setColumnWidth(7, 8000);
@@ -193,7 +180,7 @@ public class MakeExcelService {
         cell.setCellStyle(headerCellStyle);
 
         cell = row.createCell(4);
-        cell.setCellValue("Oylik");
+        cell.setCellValue("1 dars uchun ish haqqi");
         cell.setCellStyle(headerCellStyle);
 
         cell = row.createCell(5);
@@ -216,14 +203,13 @@ public class MakeExcelService {
             String[] split2 = s1[0].split("-");
             int i2 = Integer.parseInt(split2[0]);
             int age = i2 - i1;
-
             Row dataRow = sheet.createRow(i + 1);
             dataRow.createCell(0).setCellValue(teachers.get(i).getUser().getFullName());
             dataRow.createCell(1).setCellValue(age);
             dataRow.createCell(2).setCellValue(teachers.get(i).getUser().getPhoneNumber());
             dataRow.createCell(3).setCellValue(teachers.get(i).getUser().getRegion().getId() != 0 ?
                     teachers.get(i).getUser().getRegion().getName() : null);
-            dataRow.createCell(4).setCellValue(teachers.get(i).getSalary() != null ? teachers.get(i).getSalary() : 0);
+            dataRow.createCell(4).setCellValue(teachers.get(i).getSalary() != null ? teachers.get(i).getSalary() + (teachers.get(i).getIsPercent() ? "%" : " UZS") : "");
             dataRow.createCell(5).setCellValue(teachers.get(i).getUser().getGender().toString());
             dataRow.createCell(6).setCellValue(s[0]);
         }
@@ -251,6 +237,25 @@ public class MakeExcelService {
         sellStyle.setBorderRight(BorderStyle.MEDIUM);
         sellStyle.setBorderTop(BorderStyle.MEDIUM);
 
+        CellStyle sellStyle2 = workbook.createCellStyle();
+        sellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        sellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        sellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        sellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        sellStyle.setBorderRight(BorderStyle.MEDIUM);
+        sellStyle.setBorderTop(BorderStyle.MEDIUM);
+        sellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+        CellStyle sellStyle3 = workbook.createCellStyle();
+        sellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        sellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        sellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        sellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        sellStyle.setBorderRight(BorderStyle.MEDIUM);
+        sellStyle.setBorderTop(BorderStyle.MEDIUM);
+        sellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+
         Cell cell = null;
         Map<String, Double> allAmount = new HashMap<>();
 
@@ -269,8 +274,8 @@ public class MakeExcelService {
                 sheet.setColumnWidth(3, 4500);
                 sheet.setColumnWidth(4, 3000);
                 sheet.setColumnWidth(5, 3500);
-                sheet.setColumnWidth(6, 4950);
-                sheet.setColumnWidth(7, 2650);
+                sheet.setColumnWidth(6, 5100);
+                sheet.setColumnWidth(7, 3000);
 
                 cell = row.createCell(0);
                 cell.setCellValue("№");
@@ -329,11 +334,11 @@ public class MakeExcelService {
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(1);
-            cell1.setCellValue(paymentExcelDto.getPaymentDtos().size());
+            cell1.setCellValue("O`quvchi: " + paymentExcelDto.getPaymentDtos().size());
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(2);
-            cell1.setCellValue(paymentExcelDto.getPaymentDtos().size());
+            cell1.setCellValue("Guruh: " + paymentExcelDto.getPaymentDtos().size());
             cell1.setCellStyle(sellStyle);
 
             cell1 = newRow1.createCell(3);
@@ -418,6 +423,61 @@ public class MakeExcelService {
         } else {
             return String.format("%10.2f", number); // dj_segfault
         }
+    }
+
+    public byte[] listToQarzdorlar(List<Student> students) {
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet();
+            Row row = sheet.createRow(0);
+
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+            cellStyle.setBorderRight(BorderStyle.MEDIUM);
+            cellStyle.setBorderTop(BorderStyle.MEDIUM_DASHED);
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+            sheet.setColumnWidth(0, 5000);
+            sheet.setColumnWidth(1, 5000);
+            sheet.setColumnWidth(2, 8000);
+            sheet.setColumnWidth(3, 5000);
+            sheet.setColumnWidth(4, 5000);
+            sheet.setColumnWidth(5, 5000);
+            sheet.setColumnWidth(6, 5000);
+
+            Cell cell = row.createCell(0);
+            cell.setCellValue("FISh");
+            cell.setCellStyle(cellStyle);
+
+            cell = row.createCell(1);
+            cell.setCellValue("Telefon raqami");
+            cell.setCellStyle(cellStyle);
+
+            cell = row.createCell(2);
+            cell.setCellValue("Guruhi");
+            cell.setCellStyle(cellStyle);
+
+            cell = row.createCell(3);
+            cell.setCellValue("Qarzi");
+            cell.setCellStyle(cellStyle);
+
+            for (int i = 0; i < students.size(); i++) {
+                Row row1 = sheet.createRow(i + 1);
+                if (students.get(i).getBalans() < 0) {
+                    row1.createCell(0).setCellValue(students.get(i).getUser().getFullName());
+                    row1.createCell(1).setCellValue(students.get(i).getUser().getPhoneNumber());
+                    row1.createCell(2).setCellValue(String.valueOf(students.get(i).getStudentGroup()));
+                    row1.createCell(3).setCellValue(students.get(i).getBalans());
+                }
+            }
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        try {
+            workbook.write(arrayOutputStream);
+            arrayOutputStream.close();
+        } catch (Exception a) {
+            a.printStackTrace();
+        }
+        return arrayOutputStream.toByteArray();
     }
 
 

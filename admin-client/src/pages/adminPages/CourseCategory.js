@@ -27,7 +27,8 @@ class CourseCategory extends Component {
 
     render() {
         const {currentObject} = this.state;
-        const {dispatch, showModal, deleteModal, courseCategories} = this.props;
+        const {dispatch, showModal, deleteModal, courseCategories,
+            isSuperAdmin,isTeacher,isFinancier,isAdmin} = this.props;
         const openModal = (item) => {
             this.setState({currentObject: item})
             dispatch({
@@ -62,11 +63,13 @@ class CourseCategory extends Component {
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h4>Kurs kategoriyalar</h4>
+                    {isSuperAdmin || isAdmin ?
                     <div align={"right"}>
                         <Button onClick={openModal} color={"success"} className={"mb-3 add-button px-4"}>Yangisini
                             qo'shish
                         </Button>
                     </div>
+                        :""}
                     <div className={"row border-top py-3"}>
                         {
                             courseCategories ? courseCategories.map((item, i) =>
@@ -131,10 +134,10 @@ export default connect(
     ({
          app: {loading, courseCategories, showModal, deleteModal}
          ,
-     }
-    ) =>
+        auth:{isSuperAdmin,isTeacher,isFinancier,isAdmin}
+     }) =>
         ({
-            loading, courseCategories, showModal, deleteModal
+            loading, courseCategories, showModal, deleteModal,isSuperAdmin,isTeacher,isFinancier,isAdmin
         })
 )
 (CourseCategory);

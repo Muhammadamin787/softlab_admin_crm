@@ -5,6 +5,7 @@ import * as authActions from "../../redux/actions/AuthActions";
 import {AvField, AvForm} from 'availity-reactstrap-validation';
 import {Label} from "reactstrap";
 import {connect} from "react-redux";
+import {TOKEN} from "../../utils/constants";
 
 class Login extends Component {
     state = {
@@ -52,11 +53,12 @@ class Login extends Component {
 export default connect(
     ({
          app: {showModal},
-         auth: {isAdmin, isSuperAdmin, currentUser}
+         auth: {isAdmin, isSuperAdmin,isFinancier, currentUser}
      }) => ({
         showModal,
         isAdmin,
         isSuperAdmin,
+        isFinancier,
         currentUser
     })
 )(Login);

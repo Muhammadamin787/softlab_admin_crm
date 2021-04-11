@@ -59,7 +59,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getStudent(@PathVariable UUID id) {
+    public HttpEntity<?> getTeacher(@PathVariable UUID id) {
         ApiResponse apiResponse = teacherService.getTeacher(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
@@ -79,6 +79,12 @@ public class TeacherController {
     @GetMapping("/search")
     public HttpEntity<?> searchTeacher(@RequestParam(value = "name") String name){
         ApiResponse apiResponse = teacherService.searchTeacher(name);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @GetMapping("/searchAll")
+    public HttpEntity<?> searchAllStudent(@RequestParam(value = "name") String name) {
+        ApiResponse apiResponse = teacherService.searchAllTeacher(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }

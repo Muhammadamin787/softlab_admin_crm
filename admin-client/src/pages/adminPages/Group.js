@@ -32,6 +32,12 @@ import {Link} from "react-router-dom";
 class Group extends Component {
 
     componentDidMount() {
+        this.props.dispatch({
+            type: "updateState",
+            payload: {
+                groups: []
+            }
+        })
         this.props.dispatch(getGroupsAction({page: 0, size: this.props.size, type: "ACTIVE"}))
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getCoursesAction())
@@ -53,7 +59,7 @@ class Group extends Component {
         this.props.dispatch(getGroupsAction({page: (pageNumber - 1), size: this.props.size, type: this.state.type}))
     }
 
-    render() {
+    render(value1, value2) {
         const {currentObject, activeTab,} = this.state;
         const {
             page,
@@ -67,7 +73,7 @@ class Group extends Component {
             getItems,
             archiveGroupModal,
             activeGroupModal,
-            rooms,
+            rooms, history, isSuperAdmin,isAdmin
         } = this.props;
 
         const openModal = (item) => {
@@ -91,13 +97,13 @@ class Group extends Component {
         }
 
         const deleteItem = (item) => {
-            dispatch(deleteGroupAction({...item}))
+            dispatch(deleteGroupAction({...item, history: history}))
         }
 
         const saveItem = (e, v) => {
 
-            v.finishDate = moment(v.finishDate).format('DD/MM/YYYY hh:mm:ss').toString()
-            v.startDate = moment(v.startDate).format('DD/MM/YYYY hh:mm:ss').toString()
+            v.finishDate = moment(v.finishDate).format('DD-MM-YYYY hh:mm:ss').toString()
+            v.startDate = moment(v.startDate).format('DD-MM-YYYY hh:mm:ss').toString()
             dispatch(saveGroupAction(v))
         }
 
@@ -141,11 +147,14 @@ class Group extends Component {
             <AdminLayout pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
                     <h1>Guruhlar</h1>
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
+                    { isSuperAdmin || isAdmin ?
+                        <div align={"right"}>
+                            <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                                qo'shish
+                            </Button>
+                        </div>
+                        :""
+                    }
                     <Nav tabs>
                         <NavItem
                             className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -179,7 +188,9 @@ class Group extends Component {
                                     <td>O'qituvchi</td>
                                     <td>Kunlari</td>
                                     <td>Dars sanalari</td>
-                                    <td>Amal</td>
+                                    {isSuperAdmin ?
+                                        <td>Amal</td>
+                                        : ""}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -195,24 +206,30 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
-                                                    <span>{week}, </span>) : ""}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week, i) =>
+                                                    <span
+                                                        key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
-                                                moment(item.startDate).format("DD-MM-yyyy") + " -- " +
-                                                moment(item.finishDate).format("DD-MM-yyyy")
+                                                moment(item.startDate).format("DD-MM-YYYY") + " -- " +
+                                                moment(item.finishDate).format("DD-MM-YYYY")
                                             }</td>
-                                            <td>
-                                                <Button className={"table-info"}
-                                                        onClick={() => openToArchive(item)}>
-                                                    <GlobusIcon/>
-                                                </Button>
-                                            </td>
-                                            <td>
-                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </td>
+                                            {isSuperAdmin ?
+                                                <>
+                                                    <td>
+                                                        <Button className={"table-info"}
+                                                                onClick={() => openToArchive(item)}>
+                                                            <GlobusIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    <td>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                </>
+                                                : ""}
                                         </tr>
                                         :
                                         ''
@@ -229,7 +246,7 @@ class Group extends Component {
                             />
                         </TabPane>
                         <TabPane tabId="ARCHIVE">
-                            <Table className={"table-style"}>
+                            <table className={"table-style"}>
                                 <thead className={""}>
                                 <tr className={""}>
                                     <td>T/r</td>
@@ -238,7 +255,9 @@ class Group extends Component {
                                     <td>O'qituvchi</td>
                                     <td>Kunlari</td>
                                     <td>Dars sanalari</td>
-                                    <td>Amal</td>
+                                    {isSuperAdmin ?
+                                        <td>Amal</td>
+                                        : ""}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -255,28 +274,35 @@ class Group extends Component {
                                             <td>{item.courseName}</td>
                                             <td>{item.teacherName}</td>
                                             <td>
-                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week) =>
-                                                    <span>{week}, </span>) : ""}
+                                                {item.weekdays && item.weekdays.length > 0 ? item.weekdays.map((week, i) =>
+                                                    <span
+                                                        key={i}>{typeof week === 'object' ? week.weekdayName : week}, </span>) : ""}
+                                                {/*<span>{week}, </span>) : ""}*/}
                                                 <br/>{item.startTime + " - " + item.finishTime}</td>
                                             <td>{
                                                 moment(item.startDate).format("DD-MM-yyyy") + " -- " +
                                                 moment(item.finishDate).format("DD-MM-yyyy")
                                             }</td>
-                                            <td>
-                                                <Button className={"table-info"}
-                                                        onClick={() => openToActive(item)}>
-                                                    <GlobusIcon/>
-                                                </Button>
-                                            </td>
-                                            <td>
-                                                <Button className="table-icon" onClick={() => openDeleteModal(item)}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </td>
+                                            {isSuperAdmin ?
+                                                <>
+                                                    <td>
+                                                        <Button className={"table-info"}
+                                                                onClick={() => openToActive(item)}>
+                                                            <GlobusIcon/>
+                                                        </Button>
+                                                    </td>
+                                                    <td>
+                                                        <Button className="table-icon"
+                                                                onClick={() => openDeleteModal(item)}>
+                                                            <DeleteIcon/>
+                                                        </Button>
+                                                    </td>
+                                                </>
+                                                : ""}
                                         </tr>
                                 ) : "Guruhlar mavjud emas"}
                                 </tbody>
-                            </Table>
+                            </table>
                             <Pagination
                                 activePage={page + 1}
                                 itemsCountPerPage={size}
@@ -313,7 +339,6 @@ class Group extends Component {
                     </Modal>
 
                     <Modal id={"allModalStyle"} isOpen={showModal} toggle={openModal} className={""}>
-                        {console.log(currentObject)}
                         <AvForm className={""} onValidSubmit={saveItem}>
                             <ModalHeader isOpen={showModal} toggle={openModal} charCode="X">
                                 {currentObject && currentObject.id ? "Tahrirlash" : "Qo'shish"}
@@ -325,7 +350,9 @@ class Group extends Component {
                                              placeholer={"nomi"} required/>
                                     <AvField className={'form-control'} label={'Kurs:'} type="select"
                                              name="courseId"
-                                             defaultValue={currentObject && currentObject.courseId ? currentObject.courseId : "0"}>
+                                             defaultValue={currentObject &&
+                                             currentObject.courseId ?
+                                                 currentObject.courseId : "0"}>
                                         <option key={0} value={"0"}>Kursni tanlang</option>
                                         {getItems ? getItems.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -333,7 +360,8 @@ class Group extends Component {
                                     </AvField>
                                     <AvField className={'form-control'} label={"O'qituvchi:"} type="select"
                                              name="teacherId"
-                                             defaultValue={currentObject && currentObject.teacherId ? currentObject.teacherId : "0"}>
+                                             defaultValue={currentObject
+                                             && currentObject.teacherId ? currentObject.teacherId : "0"}>
                                         <option key={0} value={"0"}>O'qituvchini tanlang</option>
                                         {teachers && teachers.length > 0 ? teachers.map((item, i) =>
                                             <option key={i} value={item.id}>{item.name}</option>
@@ -425,6 +453,9 @@ export default connect(({
                                 archiveGroupModal,
                                 activeGroupModal,
                             },
+                            auth: {
+                                isSuperAdmin,isAdmin
+                            }
                         }) => ({
         page,
         size,
@@ -433,6 +464,7 @@ export default connect(({
         groups, rooms,
         loading, regions, showModal, deleteModal, selectItems, archiveGroupModal,
         activeGroupModal,
+        isSuperAdmin,isAdmin
     })
 )(Group);
-//
+

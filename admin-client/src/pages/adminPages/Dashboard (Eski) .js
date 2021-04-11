@@ -22,39 +22,44 @@ import ReklamaChart from "../../component/dashboard/ReklamaChart";
 class DashboardEski extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getRoomListAction())
-        this.props.dispatch(getDashboardStatAction())
-        this.props.dispatch(getWeeklySchedule())
-        console.clear()
+        if (this.props.isSuperAdmin) {
+            console.log(this.props.isSuperAdmin);
+            this.props.dispatch(getRoomListAction())
+            this.props.dispatch(getDashboardStatAction())
+            this.props.dispatch(getWeeklySchedule())
+            console.clear()
 
-        this.props.dispatch(getDashboardStudentStatAction())
-        const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
+            this.props.dispatch(getDashboardStudentStatAction())
+            const {currentObject, activeTab, startHour, endHour, minute, list} = this.state;
 
 
-        /*kunlik*/
-        let arr = []
-        for (let i = startHour; i < endHour; i++) {
-            for (let g = 0; g < 2; g++) {
-                if (g === 0) {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "00")
+            /*kunlik*/
+            let arr = []
+            for (let i = startHour; i < endHour; i++) {
+                for (let g = 0; g < 2; g++) {
+                    if (g === 0) {
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "00")
+                        } else {
+                            arr.push(i + ":" + "00")
+                        }
                     } else {
-                        arr.push(i + ":" + "00")
-                    }
-                } else {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "30")
-                    } else {
-                        arr.push(i + ":" + "30")
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "30")
+                        } else {
+                            arr.push(i + ":" + "30")
+                        }
                     }
                 }
             }
-        }
 
-        /*set-state*/
-        this.setState({
-            list: arr,
-        })
+            /*set-state*/
+            this.setState({
+                list: arr,
+            })
+        } else {
+            this.props.history.push("/admin/card")
+        }
     }
 
     state = {
@@ -456,6 +461,9 @@ export default connect(({
                                 dashboardStat,
                                 weeklySchedule
                             },
+                            auth: {
+                                isSuperAdmin
+                            }
                         }) => ({
         sortAges,
         studentStat,
@@ -480,6 +488,6 @@ export default connect(({
         rooms,
         dailySchedule,
         dashboardStat,
-        weeklySchedule
+        weeklySchedule, isSuperAdmin
     })
 )(DashboardEski);

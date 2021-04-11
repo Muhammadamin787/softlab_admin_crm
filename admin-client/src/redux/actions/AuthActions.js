@@ -13,7 +13,10 @@ export const login = (payload) => async (dispatch) => {
     try {
         const res = await dispatch({
             api: loginUser,
-            types: [types.REQUEST_AUTH_START, "", types.REQUEST_API_ERROR],
+            types:
+                [types.REQUEST_AUTH_START,
+                "",
+                types.REQUEST_API_ERROR],
             data: payload.v,
         });
         if (res.success) {
@@ -30,7 +33,6 @@ export const login = (payload) => async (dispatch) => {
         return true;
     } catch (err) {
         if (err.response) toast.error(err.response.data.message);
-
         return false;
     }
 };
@@ -64,7 +66,7 @@ export const userMe = (payload) => async (dispatch, getState) => {
             });
             if (payload) {
                 dispatch({
-                    type: "updateStateOrder",
+                    type: "updateState",
                     payload: {currentUser: response.payload},
                 });
             }
@@ -100,9 +102,9 @@ const setStateRole = (roles, dispatch) => {
         } else if (item.roleName === "ADMIN") {
             dispatch({type: "updateState", payload: {isAdmin: true}});
             roleStatus = 'admin'
-        } else if (item.roleName === "AGENT") {
-            dispatch({type: "updateState", payload: {isAgent: true}});
-            roleStatus = 'agent'
+        } else if (item.roleName === "TEACHER") {
+            dispatch({type: "updateState", payload: {isTeacher: true}});
+            roleStatus = 'teacher'
         } else if (item.roleName === "SUPPLIER") {
             dispatch({type: "updateState", payload: {isSupplier: true}});
             roleStatus = 'supplier'
@@ -112,6 +114,12 @@ const setStateRole = (roles, dispatch) => {
         } else if (item.roleName === "CLIENT") {
             dispatch({type: "updateState", payload: {isClient: true}});
             roleStatus = 'client'
+        } else if (item.roleName === "FINANCIER") {
+            dispatch({type: "updateState", payload: {isFinancier: true}});
+            roleStatus = 'financier'
+        }else if (item.roleName === "RECEPTION") {
+            dispatch({type: "updateState", payload: {isReception: true}});
+            roleStatus = 'reception'
         }
         localStorage.setItem('role', roleStatus);
     });
@@ -122,8 +130,12 @@ const pushHisPage = (roles, history) => {
     roles.forEach(({roleName}) => {
         if (roleName === "SUPER_ADMIN") {
             push("/admin");
-        } else if (roleName === "ADMIN") {
-            push("/agent");
+        } else if (roleName === "TEACHER") {
+            push("/admin/groups");
+        } else if (roleName === "FINANCIER") {
+            push("/admin/StudentFinance");
+        }else if (roleName === "RECEPTION") {
+            push("/admin/card");
         }
     });
 };

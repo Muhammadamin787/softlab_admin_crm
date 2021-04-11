@@ -22,22 +22,24 @@ public class UserDto {
     private UUID id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String fullName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String phoneNumber;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String description;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int age;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Region region;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer regionId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String gender;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Attachment avatar;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String birthDate;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private String password;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Role> roles;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -50,6 +52,17 @@ public class UserDto {
         this.regionId = regionId;
         this.gender = gender;
         this.birthDate = birthDate;
+    }
+
+    ///for teacher make user
+    public UserDto(String fullName, String phoneNumber, String description, Integer regionId, String gender, String birthDate, String password) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
+        this.regionId = regionId;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.password = password;
     }
 
     public UserDto(UUID id, String fullName, String phoneNumber, String description, Region region, String gender, String birthDate, Set<Role> roles) {

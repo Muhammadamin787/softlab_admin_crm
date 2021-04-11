@@ -247,7 +247,6 @@ public class AppealService {
         }
     }
 
-
     public ApiResponse getOneAppeal(UUID id) {
         try {
             Optional<Client> byId = clientRepository.findById(id);
@@ -331,15 +330,22 @@ public class AppealService {
 
     public ApiResponse deleteAppeal(UUID id) {
         try {
-            clientAppealRepository.deleteAllByClient_id(id);
-            clientStatusConnectRepository.deleteByClient_id(id);
-            clientRepository.deleteById(id);
-            return apiResponseService.deleteResponse();
+            Optional<Client> byId = clientRepository.findById(id);
+            if (byId.isPresent()) {
+                Client client = byId.get();
+                client.setClientEnum(ClientEnum.DELETE);
+                clientRepository.save(client);
+                return apiResponseService.deleteResponse();
+            } else {
+                return apiResponseService.notFoundResponse();
+            }
+//            clientAppealRepository.deleteAllByClient_id(id);
+//            clientStatusConnectRepository.deleteByClient_id(id);
+//            clientRepository.deleteById(id);
         } catch (Exception e) {
             return apiResponseService.tryErrorResponse();
         }
     }
-
 
     public ApiResponse getAppealListAll(Integer typeId, int page, int size) {
         try {
@@ -487,6 +493,4 @@ public class AppealService {
             return apiResponseService.tryErrorResponse();
         }
     }
-
-
 }

@@ -73,6 +73,7 @@ const initState = {
     employees: [],
     // Written by Muhammadamin
     studentsOption: [],
+    checkboxes: [],
 };
 
 const reducers = {
@@ -197,7 +198,7 @@ const reducers = {
         let groupsForSelect = payload.payload.object
         let ketmon = []
         for (let i = 0; i < groupsForSelect.length; i++) {
-            ketmon.push({value: groupsForSelect[i].uuid, label: groupsForSelect[i].name})
+            ketmon.push({value: groupsForSelect[i].id, label: groupsForSelect[i].name})
         }
         state.getItems = ketmon
     },
@@ -294,14 +295,11 @@ const reducers = {
             state.getItems = payload.payload.object.sort((a, b) =>
                 a.id > b.id ? 1 : b.id > a.id ? -1 : 0
             );
-        } else {
-            state.getItems = ""
         }
 
 
     },
     [types.REQUEST_GET_COURSE_SUCCESS](state, payload) {
-        console.log(payload)
         if (payload && payload.payload && payload.payload.object) {
             state.currentItem = payload.payload.object
         }
@@ -364,12 +362,44 @@ const reducers = {
             state.totalPages = payload.payload.object.totalPages
         }
     },
+    [types.REQUEST_GET_TEACHERS_BY_SEARCH_SUCCESS](state, payload) {
+        state.teachers = [];
+        // console.log(payload.payload.object);
+        if (payload && payload.payload && payload.payload.object) {
+            let data = payload.payload.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            data.map(item => {
+                let obj = {
+                    id: 0,
+                    teacherName: '',
+                    phoneNumber: ''
+                };
+                obj.id = item.teacherId;
+                obj.teacherName = item.teacherName;
+                obj.phoneNumber = item.phoneNumber ? item.phoneNumber : "notFound";
+                state.teachers.push(obj)
+            })
+        }
+    },
+
     // START STUDENTS REDUCERS
     [types.REQUEST_SAVE_STUDENT_SUCCESS](state, payload) {
         state.showModal = false
     },
     [types.REQUEST_GET_STUDENT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
+    },
+    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
+        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
+            state.students = payload.payload.object.object.sort((a, b) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+            );
+            state.page = payload.payload.object.number
+            state.size = payload.payload.object.size
+            state.totalElements = payload.payload.object.totalElements
+            state.totalPages = payload.payload.object.totalPages
+        }
     },
     [types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS](state, payload) {
         state.students = [];
@@ -390,18 +420,6 @@ const reducers = {
                 state.students.push(obj)
             })
         }
-    },
-    [types.REQUEST_GET_STUDENTS_SUCCESS](state, payload) {
-        if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {
-            state.students = payload.payload.object.object.sort((a, b) =>
-                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-            );
-            state.page = payload.payload.object.number
-            state.size = payload.payload.object.size
-            state.totalElements = payload.payload.object.totalElements
-            state.totalPages = payload.payload.object.totalPages
-        }
-        console.clear()
     },
     /// StudentPayment
     [types.REQUEST_GET_STUDENT_PAYMENT_SUCCESS](state, payload) {
@@ -460,7 +478,6 @@ const reducers = {
     [types.REQUEST_GET_APPEAL_FOR_EDIT_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
         state.showModal = true
-        console.log(payload.payload.object, 243);
     },
     [types.REQUEST_GET_APPEAL_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object) {
@@ -475,6 +492,7 @@ const reducers = {
     },
     [types.REQUEST_GET_TOPLAM_SUCCESS](state, payload) {
         state.currentItem = payload.payload.object
+        state.checkboxes = payload.payload.object.weekdays
     },
     [types.REQUEST_GET_TOPLAM_LIST_SUCCESS](state, payload) {
         if (payload && payload.payload && payload.payload.object && payload.payload.object.object) {

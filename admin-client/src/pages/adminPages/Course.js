@@ -17,6 +17,12 @@ class Course extends Component {
         let id = 0
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             id = this.props.match.params.id;
+            this.props.dispatch({
+                type: "updateState",
+                payload: {
+                    getItems: [],
+                }
+            })
             this.props.dispatch(getCoursesAction({id: id}))
             this.props.dispatch(getCourseCategoriesAction())
             this.props.dispatch(getCourseCategoryAction({id: id}))
@@ -32,6 +38,7 @@ class Course extends Component {
     render() {
         const {currentObject} = this.state;
         const {
+            isSuperAdmin, isFinancier, isReception, isAdmin,
             currentItem,
             dispatch,
             showModal,
@@ -44,7 +51,7 @@ class Course extends Component {
             dispatch({
                 type: "updateState",
                 payload: {
-                    showModal: !showModal
+                    showModal: !showModal,
                 }
             })
         }
@@ -86,12 +93,13 @@ class Course extends Component {
                         </Link>
                     </hgroup>
 
-                    <div align={"right"}>
-                        <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
-                            qo'shish
-                        </Button>
-                    </div>
-
+                    {isAdmin || isSuperAdmin ?
+                        <div align={"right"}>
+                            <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
+                                qo'shish
+                            </Button>
+                        </div>
+                        : ""}
                     <div className={"row border-top py-3"}>
                         <div className={"col-md-4"}>
                             {currentItem && currentItem.id ?
@@ -129,7 +137,8 @@ class Course extends Component {
                             <div className="row">
                                 {
                                     getItems && getItems.length > 0 ? getItems.map((item, i) =>
-                                            <div key={i} className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
+                                            <div key={i}
+                                                 className={"m-2 p-3 bg-white rounded courses-style category-courses"}>
                                                 <Link to={"/admin/course/select/" + item.id}
                                                       className={"w-100 text-decoration-none "}>
                                                     <h5>{item.name}</h5>
@@ -220,8 +229,10 @@ export default connect(({
                                 getItems,
                                 readModal
                             },
+                            auth: {isSuperAdmin, isFinancier, isReception, isAdmin}
                         }) => ({
         currentItem,
-        loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, getItems, readModal
+        loading, durationTypes, showModal, deleteModal, parentItems, courseCategories, getItems, readModal,
+        isSuperAdmin, isFinancier, isReception, isAdmin
     })
 )(Course);

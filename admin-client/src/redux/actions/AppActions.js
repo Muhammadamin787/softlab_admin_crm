@@ -153,7 +153,12 @@ import {
     getEmployeeApi,
     getExcelListApp,
     getStudentOnSearchApi,
-    saveStudentToGroupApi, getStudentsBySearchApi,
+    saveStudentToGroupApi,
+    getStudentsBySearchApi,
+    deleteOneAppealApi,
+    deleteCArdApi,
+    makeGroupByToplamApi,
+    getTeachersBySearchApi,
 } from "../../api/AppApi";
 import {toast} from "react-toastify";
 import {config} from "../../utils/config";
@@ -243,6 +248,13 @@ export const downloadAccountantFileAction = (v) => () => {
     let link = document.createElement("a")
     link.href = (config.BASE_URL + "/excel/download/accountant?startDate=" + v.startDate.toString() + "&finishDate=" + v.finishDate.toString())
     link.setAttribute("download", "accountant.xlsx")
+    document.body.appendChild(link)
+    link.click();
+}
+export const downloadQarzdorlarFileAction = (v) => () => {
+    let link = document.createElement("a")
+    link.href = (config.BASE_URL + "/excel/download/qarzdor")
+    link.setAttribute("download", "qarzdorlar.xlsx")
     document.body.appendChild(link)
     link.click();
 }
@@ -839,9 +851,10 @@ export const deleteGroupAction = (data) => (dispatch) => {
             }
         })
         toast.success("Ma'lumot o'chirildi!")
-        if (data && data.id) {
-            data.history.go(-1)
+        if (data && data.id && data.history) {
+            data.history.push("/admin/groups")
         }
+
         dispatch(getGroupsAction({page: 0, size: 20}))
         dispatch(getRoomListAction())
         dispatch(getCoursesAction())
@@ -1208,6 +1221,18 @@ export const getStudentsBySearchAction = (data) => (dispatch) => {
         types: [
             types.REQUEST_START,
             types.REQUEST_GET_STUDENTS_BY_SEARCH_SUCCESS,
+            types.REQUEST_ERROR,
+        ],
+        data
+    })
+}
+/// get Teachers Search
+export const getTeachersBySearchAction  = (data) => (dispatch) => {
+    dispatch({
+        api: getTeachersBySearchApi,
+        types: [
+            types.REQUEST_START,
+            types.REQUEST_GET_TEACHERS_BY_SEARCH_SUCCESS,
             types.REQUEST_ERROR,
         ],
         data
@@ -1693,6 +1718,25 @@ export const getAppealListByStatusTypeAction = (data) => (dispatch) => {
         data
     })
 }
+export const deleteOneAppealAction = (data) => (dispatch) => {
+    dispatch({
+        api: deleteOneAppealApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            types.REQUEST_ERROR,
+        ],
+        data
+    }).then(res => {
+        dispatch(getAppealListAllAction());
+        dispatch({
+            type: "updateState",
+            payload: {
+                deleteModal: false
+            }
+        })
+    })
+}
 // FINISH APPEAL ACTIONS
 
 // START TOPLAM ACTIONS
@@ -1716,6 +1760,13 @@ export const getOneToplamAction = (data) => (dispatch) => {
             types.REQUEST_ERROR
         ],
         data
+    }).then(() => {
+        dispatch({
+            type: "updateState",
+            payload: {
+                secondPage: true
+            }
+        })
     })
 }
 export const saveToplamAction = (data) => (dispatch) => {
@@ -1731,6 +1782,34 @@ export const saveToplamAction = (data) => (dispatch) => {
         if (res && res.payload && res.payload.message)
             toast.success(res.payload.message)
         dispatch(getToplamListAction({page: 0, size: 20}));
+    })
+}
+export const makeGroupByToplamAction = (data) => (dispatch) => {
+    dispatch({
+        api: makeGroupByToplamApi,
+        types: [
+            types.REQUEST_START,
+            "",
+            // types.REQUEST_SAVE_TOPLAM_SUCCESS,
+            types.REQUEST_ERROR
+        ],
+        data: data.data
+    }).then(res => {
+        if (res && res.payload && res.payload.message)
+            toast.success(res.payload.message)
+        dispatch({
+            type: "updateState",
+            payload: {
+                secondPage: false
+            }
+        })
+        if (data && data.history) {
+            data.history.push("/admin/group/" + res.payload.object)
+        } else {
+            dispatch(getAppealListAllAction())
+        }
+    }).catch(() => {
+        toast.error("Xatolik!");
     })
 }
 export const deleteToplamAction = (data) => (dispatch) => {
@@ -2012,7 +2091,7 @@ export const deleteEmployeeAction = (data) => (dispatch) => {
         })
         toast.success("Ma'lumot o'chirildi!")
         if (data && data.history) {
-            data.history.go(-1)
+            data.history.go("admin/staffs")
         }
         dispatch(getEmployeeListAction())
         dispatch(getRegionsAction())
@@ -2051,7 +2130,7 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
             types.REQUEST_GET_STUDENT_TO_GROUP_SUCCESS,
             types.REQUEST_ERROR
         ],
-        data: data
+        data: data.obj
     }).then((res) => {
         dispatch({
             type: "updateState",
@@ -2059,6 +2138,7 @@ export const saveStudentToGroupAction = (data) => (dispatch) => {
                 addStudentInGroupModal: false
             }
         })
+        dispatch(getGroupStudentsAction({id: data.id}))
         toast.success(res.payload.message)
     }).catch((err) => {
         toast.error("Xatolik")

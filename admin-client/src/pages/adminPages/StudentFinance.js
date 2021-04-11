@@ -33,7 +33,6 @@ class StudentFinance extends Component {
     }
 
     componentDidMount() {
-        console.clear()
         this.props.dispatch(getFinanceAction({page: 0, size: this.props.size, type: "all"}))
 
     }
@@ -79,8 +78,9 @@ class StudentFinance extends Component {
             dispatch(getStudentPaymentListByDateAction({
                 page: 0,
                 size: this.props.size,
-                date1: v.date1,
-                date2: v.date2,
+                date1: moment(v.date1).format('DD-MM-YYYY').toString(),
+                date2: moment(v.date2).format('DD-MM-YYYY').toString(),
+
                 type: this.state.type
             }))
         }
@@ -110,18 +110,25 @@ class StudentFinance extends Component {
                     <h5 className="mb-3" onClick={showHide}>Filtr</h5>
                     <br/>
                     <Button onClick={openAccountantModal} color={"danger"}>Accountant</Button>
+                    <br/>
+                    <br/>
                     <div id="filtrMenu">
                         <div className="row mb-4">
-                            <Col>
-                                <AvForm onValidSubmit={filtrByDate}>
-                                    <AvField type="date" className="form-control" name={"date1"}/>
-
-                                    <AvField type="date" className="form-control" name={"date2"}/>
-
-                                    <Button type={"submit"}>Saqlash</Button>
-
-                                </AvForm>
-                            </Col>
+                            <AvForm onValidSubmit={filtrByDate}>
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-4">
+                                            <AvField type="date" className="form-control" name={"date1"}/>
+                                        </div>
+                                        <div className="col-4">
+                                            <AvField type="date" className="form-control" name={"date2"}/>
+                                        </div>
+                                        <div className="col-4">
+                                            <Button type={"submit"}>Saqlash</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </AvForm>
                         </div>
                     </div>
                     <Nav tabs>
@@ -176,14 +183,13 @@ class StudentFinance extends Component {
                                             <tr key={i + 1}>
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/" + (item && item.student
-                                                        ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
+                                                    <Link to={"/admin/student/" + (item && item.studentId)}>
+                                                        {item && item.studentName}
                                                     </Link>
                                                 </td>
                                                 <td>{item.sum + " / " + item.cashSum}</td>
-                                                <td>{item && item.cashback ? item.cashback.percent + " %" : "0%"}</td>
-                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item  ? item.cashPercent + " %" : "0%"}</td>
+                                                <td>{item.payTypeName}</td>
                                                 <td>{item.comment}</td>
                                                 <td>{moment(item.payDate).format('LLL').toString()}</td>
                                             </tr>
@@ -221,14 +227,13 @@ class StudentFinance extends Component {
                                             <tr key={i + 1}>
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
-                                                    <Link to={"/admin/student/" + (item && item.student
-                                                        ? item.student.id : '')}>
-                                                        {item && item.student && item.student.user ? item.student.user.fullName + " / " + item.student.user.phoneNumber : ''}
+                                                    <Link to={"/admin/student/" + (item & item.studentId)}>
+                                                        {item && item.studentName}
                                                     </Link>
                                                 </td>
                                                 <td>{item.sum + " / " + item.cashSum}</td>
-                                                <td>{item && item.cashback ? item.cashback.percent + " %" : ''}</td>
-                                                <td>{item.payType ? item.payType.name : ''}</td>
+                                                <td>{item  ? item.cashPercent + " %" : ''}</td>
+                                                <td>{item.payTypeName}</td>
                                                 <td>{item.comment}</td>
                                                 <td>{moment(item.payDate).format('LLL').toString()}</td>
                                             </tr>
@@ -260,19 +265,19 @@ class StudentFinance extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {console.log(studentPaymentFinance)}
                                         {studentPaymentFinance ? studentPaymentFinance.map((item, i) =>
                                             <tr key={i + 1}>
                                                 <td>{page > 0 ? (size * page) + i + 1 : i + 1}</td>
                                                 <td>
                                                     <Link
-                                                        to={"/admin/student/" + (item && item.attendance && item.attendance.student
-                                                            ? item.attendance.student.id : '')}>
-                                                        {item && item.attendance && item.attendance.student && item.attendance.student.user ? item.attendance.student.user.fullName + " / " + item.attendance.student.user.phoneNumber : ''}
+                                                        to={"/admin/student/" + (item && item.studentId)}>
+                                                        {item ? item.studentName : ''}
                                                     </Link>
                                                 </td>
                                                 <td>{item.amount}</td>
-                                                <td>{moment(item && item.attendance ? item.attendance.attendDate : "").format('LLL').toString()}</td>
-                                                <td>{item && item.attendance && item.attendance.group ? item.attendance.group.name : ""}</td>
+                                                <td>{moment(item && item.createdAt).format('LLL').toString()}</td>
+                                                <td>{item && item.groupName}</td>
                                             </tr>
                                         ) : 'Malumot topilmadi'}
                                         </tbody>

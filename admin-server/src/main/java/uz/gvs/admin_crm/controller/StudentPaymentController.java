@@ -67,7 +67,7 @@ public class StudentPaymentController {
                                                  @RequestParam(value = "date1", defaultValue = "") String data1,
                                                  @RequestParam(value = "date2", defaultValue = "") String data2,
                                                  @RequestParam(value = "type", defaultValue = "all")String type) {
-        ApiResponse apiResponse = studentService.getStudentPaymentByDate(page, size, data1, data2,type);
+        ApiResponse apiResponse = studentService.getStudentPaymentByDate(size, page, data1, data2,type);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
@@ -82,4 +82,5 @@ public class StudentPaymentController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }
+
 

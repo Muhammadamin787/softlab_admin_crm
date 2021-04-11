@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
-    deleteStudentAction, downloadStudentFileAction, getDebtorsAction,
+    deleteStudentAction, downloadQarzdorlarFileAction, downloadStudentFileAction, getDebtorsAction,
     getRegionsAction, getStudentsAction, getStudentsBySearchAction,
     saveStudentAction, toChangeStatusAction,
     uploadFileAction
@@ -59,6 +59,7 @@ class Student extends Component {
     render() {
         const {currentObject, activeTab} = this.state;
         const {
+            isSuperAdmin,isAdmin,isReception,isFinancier,
             page,
             size,
             totalElements,
@@ -121,6 +122,9 @@ class Student extends Component {
         const downloadExcel = (e, v) => {
             dispatch(downloadStudentFileAction(v))
         }
+        const downloadQarzdorlar = (e, v) => {
+            dispatch(downloadQarzdorlarFileAction(v))
+        }
         //
 
         const toggle = (tab) => {
@@ -167,9 +171,12 @@ class Student extends Component {
                 {this.state.secondPage ?
                     <div className={"flex-column container"}>
                         <h1>Talablar</h1>
-                        <div align={"right"}><Button color={"success"} onClick={openModal}
-                                                     className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
-                        </div>
+                        {isSuperAdmin || isAdmin || isReception ?
+                            <div align={"right"}><Button color={"success"} onClick={openModal}
+                                                         className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
+                            </div>
+                            :""
+                        }
                         <Nav tabs>
                             <NavItem
                                 className={activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default"}>
@@ -216,7 +223,10 @@ class Student extends Component {
                                                 <th>No</th>
                                                 <th>Ism</th>
                                                 <th>Telefon</th>
-                                                <th colSpan="2">Amal</th>
+                                                {isSuperAdmin || isAdmin ?
+                                                    <th colSpan="2">Amal</th>
+                                                    : ""
+                                                }
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -230,16 +240,19 @@ class Student extends Component {
                                                         <td>
                                                             {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                                         </td>
-                                                        <td>
-                                                            <Button className={"table-icon"}
-                                                                    onClick={() => openToArchive(item)}>
-                                                                <GlobusIcon/>
-                                                            </Button>
-                                                            <Button className="table-icon"
-                                                                    onClick={() => openDeleteModal(item)}>
-                                                                <DeleteIcon/>
-                                                            </Button>
-                                                        </td>
+                                                        {isSuperAdmin || isAdmin ?
+                                                            <td>
+                                                                <Button className={"table-icon"}
+                                                                        onClick={() => openToArchive(item)}>
+                                                                    <GlobusIcon/>
+                                                                </Button>
+                                                                <Button className="table-icon"
+                                                                        onClick={() => openDeleteModal(item)}>
+                                                                    <DeleteIcon/>
+                                                                </Button>
+                                                            </td>
+                                                            :""
+                                                        }
                                                     </tr>
                                                 ) : ''
                                             }
@@ -313,8 +326,16 @@ class Student extends Component {
                     </div>
                     :
                     <div className={"flex-column container"}>
-                        <h1>Qazdorlar</h1>
-                        <Button color={"primary mt-5"} onClick={openFiltrDebtors}>Talabalar</Button>
+                        <h1>Qazdorlar</h1><br/>
+                        <div align={"left"} className={"mb-1"}>
+                            <Button color={"btn btn-outline-info"} size={"sm"}
+                                    className={"rounded"}
+                                    onClick={openFiltrDebtors}>Talabalar</Button>
+                            <Button color={"btn btn-outline-info rounded"} size={"sm"}
+                                    className={"btn mx-2 border-none rounded"}
+                                    onClick={downloadQarzdorlar}>
+                                <span className={"icon icon-download"}></span></Button>
+                        </div>
                         <Table className={"table-style w-75"}>
                             <thead className={""}>
                             <tr className={""}>
@@ -419,7 +440,7 @@ class Student extends Component {
                                     defaultValue={currentObject && currentObject.birthDate ? moment(currentObject.birthDate).format('DD-MM-YYYY')
                                         : ""}
                                     label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
-                                    required/>
+                                />
                                 <AvField className={'form-control'} label={'Hudud:'} type="select"
                                          name="regionId"
                                          defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
@@ -447,6 +468,7 @@ class Student extends Component {
                         </ModalFooter>
                     </AvForm>
                 </Modal>
+
                 <Modal isOpen={deleteModal} toggle={() => openDeleteModal("")} className={""}>
                     <ModalHeader isOpen={deleteModal} toggle={() => openDeleteModal("")}
                                  charCode="X">O'chirish</ModalHeader>
@@ -490,11 +512,11 @@ export default connect((
             teacherDto,
             toArchiveModal,
             toActiveModal,
-        }
-        ,
-    }
-    ) => (
+        },
+        auth:{isSuperAdmin,isAdmin,isReception,isFinancier}
+    }) => (
         {
+            isSuperAdmin,isAdmin,isReception,isFinancier,
             page,
             size,
             selectDebtors,

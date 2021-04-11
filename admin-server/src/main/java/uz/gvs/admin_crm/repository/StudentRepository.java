@@ -17,6 +17,9 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     @Query(nativeQuery = true, value = "select * from student where balans < 0 " )
     Page<Student> getDebtorStudents(Pageable pageable);
 
+    @Query(nativeQuery = true, value = "select * from student where balans < 0 " )
+    List<Student> getByBalansDebt();
+
     List<Student> findAllByStudentGroup_Group_id(Integer studentGroup_group_id);
 
     Page<Student> findAllByUser_status(UserStatusEnum user_status, Pageable pageable);
@@ -35,4 +38,8 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     @Query(nativeQuery = true, value = "select cast(st.id as varchar), ur.full_name, ur.phone_number from student st inner join users ur on st.user_id = ur.id" +
             " where LOWER(ur.full_name) like concat('%', :objName, '%') or ur.phone_number like concat('%', :objName, '%') limit 20")
     List<Object> searchAllStudent(String objName);
+
+//    boolean findStudentByBalansIsLessThanEqual(double balans);
+    boolean existsStudentByBalansIsLessThanEqual(double balans);
+
 }

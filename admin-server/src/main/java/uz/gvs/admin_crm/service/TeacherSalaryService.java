@@ -10,6 +10,7 @@ import uz.gvs.admin_crm.payload.ApiResponse;
 import uz.gvs.admin_crm.payload.PageableDto;
 import uz.gvs.admin_crm.payload.PaymentDto;
 import uz.gvs.admin_crm.payload.TeacherSalaryDto;
+import uz.gvs.admin_crm.payload.financeDTO.ResTeacher;
 import uz.gvs.admin_crm.repository.PayTypeRepository;
 import uz.gvs.admin_crm.repository.PaymentRepository;
 import uz.gvs.admin_crm.repository.TeacherRepository;
@@ -153,6 +154,17 @@ public class TeacherSalaryService {
         );
     }
 
+    public ResTeacher makeSalaryRes(TeacherSalary teacherSalary) {
+        return new ResTeacher(
+                teacherSalary.getTeacher().getUser().getFullName() + " / " + teacherSalary.getTeacher().getUser().getPhoneNumber(),
+                teacherSalary.getTeacher().getId(),
+                teacherSalary.getAmount(),
+                teacherSalary.getAmountDate().toString(),
+                teacherSalary.getPayType().getName(),
+                teacherSalary.getDescription()
+        );
+    }
+
     public PaymentDto getAllPrices(Payment payment) {
         return new PaymentDto(
                 payment.getId(),
@@ -161,8 +173,19 @@ public class TeacherSalaryService {
                 payment.getAmountTeacher()
         );
     }
+    public ResTeacher getAllPayments(Payment payment) {
+        return new ResTeacher(
+                payment.getAttendance().getTeacher().getUser().getFullName() + " / " + payment.getAttendance().getTeacher().getUser().getPhoneNumber(),
+                payment.getAttendance().getTeacher().getId(),
+                payment.getAttendance().getStudent().getUser().getFullName() + " / " + payment.getAttendance().getStudent().getUser().getPhoneNumber(),
+                payment.getAttendance().getStudent().getId(),
+                payment.getAmountTeacher(),
+                payment.getCreatedAt().toString(),
+                payment.getAttendance().getGroup().getName() + "  [" + payment.getAttendance().getGroup().getCourse().getName() + "  ]"
+        );
+    }
 
-    public ApiResponse getFinance(int page, int size, String type) {
+    public ApiResponse  getFinance(int page, int size, String type) {
         try {
             switch (type) {
                 case "minusSalary":
@@ -173,7 +196,7 @@ public class TeacherSalaryService {
                                     optional.getTotalElements(),
                                     optional.getNumber(),
                                     optional.getSize(),
-                                    optional.get().map(this::makeSalaryList).collect(Collectors.toList())
+                                    optional.get().map(this::makeSalaryRes).collect(Collectors.toList())
                             )
                     );
                 case "plusSalary":
@@ -184,7 +207,7 @@ public class TeacherSalaryService {
                                     all.getTotalElements(),
                                     all.getNumber(),
                                     all.getSize(),
-                                    all.get().map(this::getAllPrices).collect(Collectors.toList())
+                                    all.get().map(this::getAllPayments).collect(Collectors.toList())
                             )
                     );
                 default:
@@ -195,29 +218,27 @@ public class TeacherSalaryService {
         }
     }
 
-    public ApiResponse getTeacherPaymentByDate(int page, int size, String data1, String data2, String type) {
+    public ApiResponse getTeacherPaymentByDate(int size, int page, String data1, String data2, String type) {
         try {
-            java.util.Date firstDate = new SimpleDateFormat("yyyy-MM-dd").parse(data1);
-            Date secondDate = new SimpleDateFormat("yyyy-MM-dd").parse(data2);
             switch (type) {
                 case "minusSalary":
-                    List<TeacherSalary> all = teacherSalaryRepository.getByDate(firstDate, secondDate, page, size);
+                    List<TeacherSalary> all = teacherSalaryRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(teacherSalaryRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(teacherSalaryRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    all.stream().map(this::makeSalaryList).collect(Collectors.toList())
+                                    all.stream().map(this::makeSalaryRes).collect(Collectors.toList())
                             )
                     );
                 case "plusSalary":
-                    List<Payment> getPrice = paymentRepository.getByDate(firstDate, secondDate, page, size);
+                    List<Payment> getPrice = paymentRepository.getByDate(data1, data2, size, page);
                     return apiResponseService.getResponse(
                             new PageableDto(
-                                    Long.valueOf(paymentRepository.getByDateCount(firstDate, secondDate)),
+                                    Long.valueOf(paymentRepository.getByDateCount(data1, data2)),
                                     page,
                                     size,
-                                    getPrice.stream().map(this::getAllPrices).collect(Collectors.toList())
+                                    getPrice.stream().map(this::getAllPayments).collect(Collectors.toList())
                             )
                     );
                 default:
