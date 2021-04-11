@@ -8,7 +8,6 @@ import {TOKEN} from "./constants";
 const PrivateRoute = ({dispatch, auth, path, history, location, component: Component, ...rest}) => {
     dispatch(userMe())
 
-
     const filterRole = (props) => {
         const role = localStorage.getItem('role');
         if (role === 'admin' || role === 'superAdmin') {
