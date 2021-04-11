@@ -17,13 +17,7 @@ import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
 class Dashboard extends Component {
     componentDidMount() {
-        // this.props.dispatch(getRoomListAction())
-        // this.props.dispatch(getDashboardStatAction())
-        // this.props.dispatch(getWeeklySchedule())
-        // this.props.dispatch(getDailySchedule('TUESDAY'))
-        // this.props.dispatch(getDashboardStudentStatAction())
-        // const {startHour, endHour} = this.state;
-        if (this.props.isSuperAdmin) {
+        if (this.props.isSuperAdmin || this.props.isAdmin) {
             console.log(this.props.isSuperAdmin);
             console.log(this.props.list);
             this.props.dispatch(getRoomListAction())
@@ -493,7 +487,7 @@ export default connect(({
                                 weeklySchedule,
                                 showSchedule
                             },
-    auth: {isSuperAdmin}
+    auth: {isSuperAdmin,isAdmin}
                         }) => ({
         sortAges,
         studentStat,
@@ -520,7 +514,8 @@ export default connect(({
         dashboardStat,
         weeklySchedule,
         showSchedule,
-    isSuperAdmin
+    isSuperAdmin,
+    isAdmin
     })
 )(Dashboard);
 

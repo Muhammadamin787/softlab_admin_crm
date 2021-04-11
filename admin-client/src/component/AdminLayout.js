@@ -18,7 +18,7 @@ class AdminLayout extends Component {
     }
 
     render() {
-        const {currentUser, menuHidden, dispatch, isSuperAdmin, isFinancier} = this.props;
+        const {currentUser, menuHidden, dispatch, isSuperAdmin,isAdmin,isFinancier,isReception} = this.props;
         const {addMenu, addMenu1} = this.state
 
         const changeMenu = () => {
@@ -56,7 +56,7 @@ class AdminLayout extends Component {
                     <div
                         className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
                         <div className="main-link-div">
-                            {isSuperAdmin ?
+                            {isSuperAdmin || isAdmin ?
                                 <Link to="/admin" className={
                                     this.props.pathname === "/admin" ?
                                         "active-link" : "default-link"
@@ -66,8 +66,8 @@ class AdminLayout extends Component {
                                         Dashboard
                                     </div>
                                 </Link>
-                                : ""}
-                            {isSuperAdmin ?
+                            :""}
+                            {isSuperAdmin  || isReception || isAdmin ?
                                 <Link to="/admin/card" className={
                                     this.props.pathname === "/admin/card" ?
                                         "active-link" : "default-link"
@@ -77,8 +77,7 @@ class AdminLayout extends Component {
                                         Murojaatlar
                                     </div>
                                 </Link>
-                                : ""}
-
+                            :""}
                             <Link to="/admin/students" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/student") ?
                                     "active-link" : "default-link"
@@ -88,7 +87,7 @@ class AdminLayout extends Component {
                                     Talabalar
                                 </div>
                             </Link>
-                            {isSuperAdmin || isFinancier ?
+                            {isSuperAdmin || isReception || isFinancier || isAdmin ?
                                 <Link to="/admin/courses/list" className={
                                     this.props.pathname && this.props.pathname.startsWith("/admin/course") ?
                                         "active-link" : "default-link"
@@ -98,7 +97,7 @@ class AdminLayout extends Component {
                                         Kurslar
                                     </div>
                                 </Link>
-                                : ""}
+                            :""}
                             <Link to="/admin/groups" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/group") ?
                                     "active-link" : "default-link"
@@ -108,7 +107,7 @@ class AdminLayout extends Component {
                                     Guruhlar
                                 </div>
                             </Link>
-
+                            {isSuperAdmin || isAdmin ?
                                 <Link to="/admin/teachers" className={
                                     this.props.pathname && this.props.pathname.startsWith("/admin/teacher") ?
                                         "active-link" : "default-link"
@@ -118,20 +117,19 @@ class AdminLayout extends Component {
                                         O'qituvchilar
                                     </div>
                                 </Link>
-
-
-                            <Link to="#" onClick={thirdMenu} className={
-                                this.props.pathname === "/admin/finance" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <div className="main-link">
-                                    Moliya
-                                </div>
-                            </Link>
-
-
-                            {isSuperAdmin ?
+                                :""}
+                            {isSuperAdmin || isFinancier || isAdmin ?
+                                <Link to="#" onClick={thirdMenu} className={
+                                    this.props.pathname === "/admin/finance" ?
+                                        "active-link" : "default-link"
+                                }>
+                                    <span className="icon icon-teacher"/>
+                                    <div className="main-link">
+                                        Moliya
+                                    </div>
+                                </Link>
+                            :""}
+                            {isSuperAdmin || isAdmin ?
                                 <Link to="#" onClick={secondMenu} className={
                                     this.props.pathname === "/admin/room" ||
                                     this.props.pathname === "/admin/payType" ||
@@ -144,7 +142,7 @@ class AdminLayout extends Component {
                                         Sozlamalar
                                     </div>
                                 </Link>
-                                : ""}
+                            :""}
                         </div>
                     </div>
                     <div
@@ -215,16 +213,18 @@ class AdminLayout extends Component {
                                     Hududlar
                                 </Link>
                             </Link>
-                            <Link to="/admin/staffs" className={
-                                this.props.pathname === "/admin/staffs" ?
-                                    "active-link" : "default-link"
-                            }>
-                                <span className="icon icon-teacher"/>
-                                <Link to="/admin/staffs"
-                                      className="main-link">
-                                    Xodimlar
+                            {isSuperAdmin || isFinancier ?
+                                <Link to="/admin/staffs" className={
+                                    this.props.pathname === "/admin/staffs" ?
+                                        "active-link" : "default-link"
+                                }>
+                                    <span className="icon icon-teacher"/>
+                                    <Link to="/admin/staffs"
+                                          className="main-link">
+                                        Xodimlar
+                                    </Link>
                                 </Link>
-                            </Link>
+                            :""}
 
                         </div>
                     </div>
@@ -311,7 +311,7 @@ export default withRouter(connect(
              search,
              notifications
          },
-         auth: {addMenu, addMenu1, menuHidden, isAdmin, isSuperAdmin, currentUser, isFinancier}
+         auth: {addMenu, addMenu1, menuHidden, isAdmin, isSuperAdmin, currentUser, isFinancier,isReception}
      }) =>
         ({
             addMenu,
@@ -330,7 +330,8 @@ export default withRouter(connect(
             filters,
             search,
             notifications,
-            isFinancier
+            isFinancier,
+            isReception
         })
 )
 (AdminLayout));
