@@ -59,6 +59,7 @@ class DashboardEski extends Component {
 
     state = {
         weekDays: ['Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan', 'Yak'],
+        сolors: ['#CF2233', '#F26946', '#FAE80B', '#0C8142', '#2D63AF', '#4D3292', '#F9CDE0', '#81592F', '#808282', '#555555', '#00FFFF', '#00FF00', '#FFC300'],
         activeTab: "1",
         startHour: 7,
         endHour: 22,
@@ -284,58 +285,60 @@ class DashboardEski extends Component {
                                             list ? list.map((item, i) =>
                                                 <tr key={i}>
                                                     <td className={"border-style-table-dashboard"}>{item}</td>
-                                                    {rooms ? rooms.map((item2, i) =>
-                                                        dailySchedule ? dailySchedule.map((item3, i) =>
-                                                            item === item3.startTime ?
-                                                                item3 && item3.room && item3.room.id === item2.id ?
-                                                                    <>
-                                                                        {d(item3.room.id)}
-                                                                        <td rowSpan={c(item3.startTime, item3.finishTime) + 1}
-                                                                            className={"table-group-style"}>
-                                                                            <div style={{backgroundColor: setBg()}}
-                                                                                 className={"inside-td-block container"}>
-                                                                                <div className={"row"}>
+                                                    {
+                                                        rooms ? rooms.map((item2, i) =>
+                                                            dailySchedule ? dailySchedule.map((item3, i) =>
+                                                                item === item3.startTime ?
+                                                                    item3 && item3.room && item3.room.id === item2.id ?
+                                                                        <>
+                                                                            {d(item3.room.id)}
+                                                                            <td
+                                                                                className={"table-group-styles"}>
+                                                                                <div style={{backgroundColor: "#888"}}
+                                                                                     className={"inside-td-block container"}>
+                                                                                    <div className={"row"}>
                                                                                    <span
                                                                                        className={"group-name-style-dash"}>
                                                                                        #{item3.name}
                                                                                    </span>
-                                                                                    &nbsp;&nbsp;
-                                                                                    <span>
-                                                                                       {item3.courseName}
-                                                                                   </span>
-                                                                                    &nbsp;&nbsp;
-                                                                                    <span>
-                                                                                       {item3.teacherName}
-                                                                                   </span>
+                                                                                        &nbsp;&nbsp;
+                                                                                   {/*     <span>*/}
+                                                                                   {/*    {item3.courseName}*/}
+                                                                                   {/*</span>*/}
+                                                                                   {/*     &nbsp;&nbsp;*/}
+                                                                                   {/*     <span>*/}
+                                                                                   {/*    {item3.teacherName}*/}
+                                                                                   {/*</span>*/}
+                                                                                   {/* </div>*/}
+                                                                                   {/* <div className={"row"}>*/}
+                                                                                   {/*<span>*/}
+                                                                                   {/*    {item3.startTime}*/}
+                                                                                   {/*</span>--*/}
+                                                                                   {/*     <span>*/}
+                                                                                   {/*    {item3.finishTime}*/}
+                                                                                   {/*</span>*/}
+                                                                                   {/*     <span*/}
+                                                                                   {/*         className={"ml-auto group-name-style-dash"}>*/}
+                                                                                   {/*    ST:{item3.countStudent}*/}
+                                                                                   {/*</span>*/}
+                                                                                   {/* </div>*/}
+                                                                                   {/* <div className={"row"}>*/}
+                                                                                   {/*<span>*/}
+                                                                                   {/*    {item3.startDates.substring(0, 10)}*/}
+                                                                                   {/*</span>*/}
+                                                                                   {/*     --*/}
+                                                                                   {/*     <span>*/}
+                                                                                   {/*    {item3.finishDates.substring(0, 10)}*/}
+                                                                                   {/*</span>*/}
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className={"row"}>
-                                                                                   <span>
-                                                                                       {item3.startTime}
-                                                                                   </span>--
-                                                                                    <span>
-                                                                                       {item3.finishTime}
-                                                                                   </span>
-                                                                                    <span
-                                                                                        className={"ml-auto group-name-style-dash"}>
-                                                                                       ST:{item3.countStudent}
-                                                                                   </span>
-                                                                                </div>
-                                                                                <div className={"row"}>
-                                                                                   <span>
-                                                                                       {item3.startDates.substring(0, 10)}
-                                                                                   </span>
-                                                                                    --
-                                                                                    <span>
-                                                                                       {item3.finishDates.substring(0, 10)}
-                                                                                   </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </>
-                                                                    : ''
-                                                                : ''
+                                                                            </td>
+                                                                        </>
+                                                                        : <td>a</td>
+                                                                    : <td>b</td>
+                                                            ) : ''
                                                         ) : ''
-                                                    ) : ''}
+                                                    }
 
                                                 </tr>
                                             ) : ''
@@ -372,7 +375,7 @@ class DashboardEski extends Component {
                                                                     item4 === item2 ?
                                                                         item === item3.startTime ?
                                                                             <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
-                                                                                <div style={{backgroundColor: setBg()}}
+                                                                                <div style={{backgroundColor: "#888"}}
                                                                                      className={"inside-td-block container"}>
                                                                                     <div className={"row"}>
                                                                                    <span

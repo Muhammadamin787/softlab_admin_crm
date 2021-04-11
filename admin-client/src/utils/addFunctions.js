@@ -80,10 +80,6 @@ export function normalizeInput(value, previousValue) {
     }
 }
 
-export function setBg() {
-    let ketmon = '0'
-    while (ketmon.substring(0, 1) < 5 && ketmon.substring(0, 1) < 9) {
-        ketmon = Math.floor(Math.random() * 16777215).toString(16);
-    }
-    return "#" + ketmon;
+export function setBg(colors) {
+    return colors[Math.floor(Math.random()*10)];
 }

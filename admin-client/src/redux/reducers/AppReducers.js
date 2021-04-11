@@ -6,6 +6,7 @@ const initState = {
     loading: false,
     durationTypes: [],
     secondPage: false,
+    showSchedule: true,
     showModal: false,
     showModal1: false,
     showChangeModal: false,

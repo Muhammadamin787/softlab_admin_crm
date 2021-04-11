@@ -10,10 +10,38 @@
 }
 
 .section {
-    background: #ffde5d;
-    border-radius: 10px;
+    background: rgba(200,200,200,.8);
+    border-radius: 3px;
     padding: 5%;
     width: 100%;
+    color: #111;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+.appeal-section {
+    border: 1px solid #eee;
+    /*padding: 6px;*/
+    transition: .2s;
+    border-radius: 3px;
+}
+.appeal-section:hover {
+    /*color: #04A6FB;*/
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(200,200,200,1);
+}
+.appeal-section:hover > button {
+    background-color: #3dadec;
+    color: #fff;
+}
+.appeal-section > button {
+    height: 100%;
+    padding: 8px 0 10px 0;
+    border-radius: 0;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-left: 1px solid rgba(200,200,200,0.3);
+}
+.appeal-section > button:focus {
+    box-shadow: none;
+    outline: none;
 }

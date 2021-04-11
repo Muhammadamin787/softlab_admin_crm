@@ -73,16 +73,54 @@ body {
   border-radius: 3px;
   background-color: #F9FAFB;
   color: #007BFF;
+  margin-right: 3%;
 }
 
 .inside-td-block {
-  padding: 2rem !important;
+  padding: .2rem .3rem !important;
+  margin-bottom: 4px;
   box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px, rgba(0, 0, 0, 0.04) 0px 1px 6px 0px, 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04);
   color: #000;
   border-radius: 5px;
 }
 
+.schedule {
+  overflow-x: auto;
+  //box-shadow: 0 0 4px 1px #ccc;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  transform: rotateX(180deg);
+}
+
+.schedule-table {
+  transform: rotateX(180deg);
+  //box-shadow: 0 1px 5px 1px rgba(110, 110, 110, .4);
+}
+
+/* width */
+.schedule::-webkit-scrollbar {
+  height: 12px;
+}
+
+/* Track */
+.schedule::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px 0 #bbb;
+  border-radius: 8px;
+}
+
+/* Handle */
+.schedule::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.schedule::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
 //  Written By Muhammadmin this is a for responsibility of the group page!
+
 
 .tab-item-style-active1,
 .tab-item-style-default1 {
@@ -155,6 +193,12 @@ body {
 .awesome {
   background-color: red;
 }
-.awesome2 {
-  background-color: green;
+
+.group_card {
+  box-shadow: 1px 1px 5px 0 rgba(140, 140, 140, 0.7);
+  background-color: dodgerblue;
+  color: #fff;
+  border-radius: 3px;
+  padding: 10px;
+
 }

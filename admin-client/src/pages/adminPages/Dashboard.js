@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import AdminLayout from "../../component/AdminLayout";
 import './adminPages.scss';
+import {DayPilotScheduler} from "daypilot-pro-react";
 import {Input, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getDailySchedule,
@@ -10,18 +11,13 @@ import {
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
 import {setBg} from "../../utils/addFunctions";
-import {Funnel} from 'funnel-react';
-import Donut from "../../component/dashboard/Donut";
-import BarColumn from "../../component/dashboard/BarColumn";
-import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
 class Dashboard extends Component {
-
     componentDidMount() {
         this.props.dispatch(getRoomListAction())
         this.props.dispatch(getDashboardStatAction())
         this.props.dispatch(getWeeklySchedule())
-        this.props.dispatch(getDailySchedule('MONDAY'))
+        this.props.dispatch(getDailySchedule('TUESDAY'))
         this.props.dispatch(getDashboardStudentStatAction())
         const {startHour, endHour} = this.state;
 
@@ -44,7 +40,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
         /*set-state*/
         this.setState({
             list: arr,
@@ -53,14 +48,20 @@ class Dashboard extends Component {
 
     state = {
         weekDays: ['Dush', 'Sesh', 'Chor', 'Pay', 'Ju', 'Shan', 'Yak'],
+        cardColors: ['#CF2233', '#F26946', '#FAE80B', '#0C8142', '#2D63AF', '#4D3292', '#F9CDE0', '#81592F', '#808282', '#555555', '#00FFFF', '#00FF00', '#FFC300'],
         activeTab: "1",
         startHour: 7,
         endHour: 22,
         minute: 0,
+        // child: '',
         list: "",
+        ketmon: '',
+        removeTd: true,
+        numberTd: 0,
     }
 
     render() {
+
         const {
             activeTab,
             list
@@ -72,7 +73,8 @@ class Dashboard extends Component {
             rooms,
             dailySchedule,
             dashboardStat,
-            weeklySchedule
+            weeklySchedule,
+            showSchedule
         } = this.props;
 
 
@@ -89,7 +91,6 @@ class Dashboard extends Component {
                 }
             }
         }
-
         const c = (startTime, finishTime) => {
             let start = list.findIndex(start => start === startTime)
             let finish = list.findIndex(finish => finish === finishTime)
@@ -107,44 +108,50 @@ class Dashboard extends Component {
             return arr;
         }
         const selectDailySchedule = (e) => {
+            // dispatch({
+            //     type: "updateState",
+            //     payload: {
+            //         dailySchedule: null
+            //     }
+            // });
             this.props.dispatch(getDailySchedule(e.target.value))
+            // console.log(dailySchedule)
         }
-        // console.log(dailySchedule)
-        const dd = () => {
-            dailySchedule && dailySchedule.map(item => {
-                list && list.map((item2, i) => {
-                    let lastCell = true;
-                    if (item.finishTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                console.log(("cell" + i + k));
-                                lastCell = document.getElementById("cell" + i + k);
-                            }
-                        })
-                    }
-                    if (item.startTime === item2) {
-                        rooms && rooms.map((item3, k) => {
-                            if (item.room.name === item3.name) {
-                                for (let j = 0; j < 30 - i; j++) {
-                                    let el = document.getElementById("cell" + (i + j) + k);
-                                    if (lastCell !== undefined) {
-                                        console.log((el.innerText + " **** " + lastCell && lastCell.innerText));
-                                        // console.log("cell" + (i + j) + k + " = " + lastCell.innerText);
-                                        if (el.innerText && (el.innerText !== lastCell.innerText)) {
-                                            el.classList && el.classList.add("awesome");
-                                        } else {
-                                            el.classList && el.classList.add("awesome2");
-                                        }
-                                    }
-                                }
-                                // console.log("cell" + i + k);
-                            }
-                        })
-                    }
-                });
-            });
+
+        function removeTd() {
+            let elements = document.querySelectorAll('td[id^="td"]');
+            let newVar;
+            console.log(elements[0])
+            for (let i = 0; i < elements.length; i++) {
+                let el = elements[i];
+                newVar = el && el.rowSpan;
+                for (let i = 0; i < newVar - 1; i++) {
+                    el && el.parentElement && el.parentElement.nextSibling.childNodes && el.parentElement.nextSibling.childNodes[el.parentElement.nextSibling.childNodes.length - 1] && el.parentElement.nextSibling.childNodes[el.parentElement.nextSibling.childNodes.length - 1].remove();
+                    el = el.parentElement.nextSibling.childNodes[el.parentElement.nextSibling.childNodes.length - 1];
+                }
+            }
         }
-        dd()
+
+        const removeEmptyTds = (bool, i) => {
+            console.log(bool, i)
+            if (bool) {
+                let isEmpty = true;
+                for (let j = 0; j <= i; j++) {
+                    let elem = document.getElementById("td" + j);
+                    // elem && elem.parentElement.setAttribute("class","bg-primary");
+
+                    console.log(elem && elem)
+                    // elem.textContent = "the text"
+                    if (elem && elem.innerText !== "") {
+                        // isEmpty = false;
+                    }
+                }
+                if (isEmpty) {
+                    let elem = document.getElementById("td" + i);
+                }
+            }
+        }
+
         return (
             <AdminLayout pathname={this.props.location.pathname}>
                 <div>
@@ -232,22 +239,22 @@ class Dashboard extends Component {
                                 {/*            ]}/>*/}
                                 {/*    </div>*/}
                                 {/*</div>*/}
-                                <div className="col-md-12 my-2 row">
-                                    <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">
-                                        <h5>Talabalar statistikasi</h5>
-                                        <BarColumn/>
-                                    </div>
-                                    {/*<div className="col-md-7 bg-white border-right">*/}
-                                    {/*    <MultiLine/>*/}
-                                    {/*</div>*/}
-                                    <div className="ml-auto col-md-5 bg-white py-3 shadow-sm">
-                                        <h5>Yosh taqsimoti</h5>
-                                        <Donut
-                                            labels={sortAges ? sortAges.labels : []}
-                                            series={sortAges ? sortAges.series : []}
-                                        />
-                                    </div>
-                                </div>
+                                {/*<div className="col-md-12 my-2 row">*/}
+                                {/*    <div className="col-md-6 bg-white border-right py-3 mr-1 shadow-sm">*/}
+                                {/*        <h5>Talabalar statistikasi</h5>*/}
+                                {/*        <BarColumn/>*/}
+                                {/*    </div>*/}
+                                {/*    /!*<div className="col-md-7 bg-white border-right">*!/*/}
+                                {/*    /!*    <MultiLine/>*!/*/}
+                                {/*    /!*</div>*!/*/}
+                                {/*    <div className="ml-auto col-md-5 bg-white py-3 shadow-sm">*/}
+                                {/*        <h5>Yosh taqsimoti</h5>*/}
+                                {/*        <Donut*/}
+                                {/*            labels={sortAges ? sortAges.labels : []}*/}
+                                {/*            series={sortAges ? sortAges.series : []}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                             </div>
                             : ""}
                     </div>
@@ -280,23 +287,26 @@ class Dashboard extends Component {
                             </Nav>
                             <TabContent activeTab={activeTab}>
                                 <br/>
-                                <TabPane tabId="1">
-                                    <Input type={"select"} onChange={selectDailySchedule}>
-                                        <option value={"MONDAY"}>Dushanba</option>
-                                        <option value={"TUESDAY"}>Seshanba</option>
-                                        <option value={"WEDNESDAY"}>Chorshanba</option>
-                                        <option value={"THURSDAY"}>Payshanba</option>
-                                        <option value={"FRIDAY"}>Juma</option>
-                                        <option value={"SATURDAY"}>Shanba</option>
-                                        <option value={"SUNDAY"}>Yakshanba</option>
-                                    </Input>
-                                    <br/>
-                                    <Table bordered>
+                                <Input type={"select"} onChange={selectDailySchedule}
+                                       className={activeTab === '1' ? "d-block" : "d-none"}>
+                                    <option value={"MONDAY"}>Dushanba</option>
+                                    <option value={"TUESDAY"}>Seshanba</option>
+                                    <option value={"WEDNESDAY"}>Chorshanba</option>
+                                    <option value={"THURSDAY"}>Payshanba</option>
+                                    <option value={"FRIDAY"}>Juma</option>
+                                    <option value={"SATURDAY"}>Shanba</option>
+                                    <option value={"SUNDAY"}>Yakshanba</option>
+                                </Input>
+                                <br/>
+                                <br/>
+                                <TabPane tabId="1" className={"schedule"}>
+                                    <Table bordered className={"schedule-table"}>
                                         <thead>
-                                        <tr id={"ketmon"}>
-                                            <td className={"text-center"}>Time</td>
+                                        <tr>
+                                            <td style={{backgroundColor: "#ddd", borderRightColor: "#fff"}}>Time</td>
                                             {rooms ? rooms.map((item, i) =>
-                                                <td className={"text-center"}>
+                                                <td className={"text-center"}
+                                                    style={{backgroundColor: "#ddd", borderRightColor: "#fff"}}>
                                                     {item.name}
                                                 </td>
                                             ) : ''}
@@ -305,13 +315,75 @@ class Dashboard extends Component {
                                         <tbody>
                                         {
                                             list ? list.map((item, i) =>
-                                                <tr key={i}>
-                                                    <td className={"text-center"}>{item}</td>
+                                                <tr id={"tr" + i} key={i}>
+                                                    <td className={"border-style-table-dashboard"}>{item}</td>
                                                     {
-                                                        rooms ? rooms.map((item2, k) =>
-                                                            <td id={"cell" + i + k}>{"cell" + i + k}</td>
+                                                        rooms ? rooms.map((item2, j) =>
+                                                            <td id={"td" + i} key={j + j}>
+                                                                {
+                                                                    dailySchedule.map(item3 => {
+                                                                            if (item === item3.startTime && item3.room.name === item2.name) {
+                                                                                return <div
+                                                                                    style={{
+                                                                                        backgroundColor: "#b57",
+                                                                                        color: "#fff",
+                                                                                        fontSize: ".85em"
+                                                                                    }}
+                                                                                    className={"inside-td-block"}>
+                                                                                    <div>
+                                                                                        Guruh:
+                                                                                        &nbsp;
+                                                                                        <span
+                                                                                            className={"group-name-style-dash px-1"}>
+                                                                                       #{item3.name}
+                                                                                   </span>
+                                                                                        <span>
+                                                                                            ({item3.courseName})
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                    <span>
+                                                                                        O'qituvchi:
+                                                                                        &nbsp;
+                                                                                        {item3.teacherName}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        Vaqti:
+                                                                                        &nbsp;
+                                                                                        <span>
+                                                                                            {item3.startTime}
+                                                                                        </span>
+                                                                                        &nbsp;-&nbsp;
+                                                                                        <span>
+                                                                                             {item3.finishTime}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <span>
+                                                                                            {item3.startDates.substring(0, 10)}
+                                                                                        </span>
+                                                                                        &nbsp;-&nbsp;
+                                                                                        <span>
+                                                                                            {item3.finishDates.substring(0, 10)}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        className={"group-name-style-dash m-0 px-1"}>
+                                                                                        studentlar: {item3.countStudent} ta
+                                                                                    </div>
+                                                                                </div>;
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                }
+                                                            </td>
                                                         ) : ''
                                                     }
+                                                    {
+                                                        removeEmptyTds(true, rooms.length - 1)
+                                                    }
+
                                                 </tr>
                                             ) : ''
                                         }
@@ -319,66 +391,44 @@ class Dashboard extends Component {
                                     </Table>
                                 </TabPane>
 
-                                <TabPane tabId="2" className={"teacher-salary-block"}>
+                                <TabPane tabId="2" className={"schedule"}>
                                     <br/>
-                                    <Table bordered>
+                                    <Table bordered className={"schedule-table"}>
                                         <thead>
                                         <tr>
-                                            <td>Time</td>
+                                            <td style={{backgroundColor: "#ddd", borderRightColor: "#fff"}}>Time</td>
                                             {
                                                 this.state.weekDays.map(item =>
-                                                    <td>{item}</td>
+                                                    <td style={{
+                                                        backgroundColor: "#ddd",
+                                                        borderRightColor: "#fff"
+                                                    }}>{item}</td>
                                                 )
                                             }
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {/*{*/}
-                                        {/*    console.log(weeklySchedule)*/}
-                                        {/*}*/}
                                         {
-
                                             list ? list.map((item, i) =>
                                                 <tr key={i}>
                                                     <td className={"border-style-table-dashboard"}>{item}</td>
                                                     {
                                                         this.state.weekDays.map((item2, i) =>
                                                             weeklySchedule ? weeklySchedule.map((item3, i) =>
-                                                                item3.weekdays ? item3.weekdays.map((item4, i) =>
-                                                                    item4 === item2 ?
-                                                                        item === item3.startTime ?
-                                                                            <td rowSpan={c(item3.startTime, item3.finishTime) + 1}>
-                                                                                <div style={{backgroundColor: setBg()}}
-                                                                                     className={"inside-td-block container"}>
-                                                                                    <div className={"row"}>
-                                                                                   <span
-                                                                                       className={"group-name-style-dash"}>
-                                                                                       #{item3.name}
-                                                                                   </span>
-                                                                                        &nbsp;&nbsp;
-                                                                                        <span>
-                                                                                       {item3.courseName}
-                                                                                   </span>
-                                                                                        &nbsp;&nbsp;
-                                                                                        <span>
-                                                                                       {item3.teacherName}
-                                                                                   </span>
-                                                                                    </div>
-                                                                                    <div className={"row"}>
-                                                                                   <span>
-                                                                                       {item3.startTime}
-                                                                                   </span>--
-                                                                                        <span>
-                                                                                       {item3.finishTime}
-                                                                                   </span>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                            </td>
-                                                                            : ''
-                                                                        : ''
-                                                                ) : ''
-                                                            ) : ''
+                                                                item3.weekdays ? item3.weekdays.map((item4, i) => {
+                                                                    if (item4 === item2) {
+                                                                        if (item === item3.startTime) {
+                                                                            return <td>{item3.courseName}</td>
+                                                                        }
+                                                                        // else {
+                                                                        //     return <td>2</td>
+                                                                        // }
+                                                                    }
+                                                                    // else {
+                                                                    //     return <td>1</td>
+                                                                    // }
+                                                                }) : <td>a</td>
+                                                        ) : <td>b</td>
                                                         )
                                                     }
                                                 </tr>
@@ -388,7 +438,6 @@ class Dashboard extends Component {
                                     </Table>
                                 </TabPane>
                                 {/*  END TAB PANE  */}
-
                             </TabContent>
                             <br/>
                         </div>
@@ -427,7 +476,8 @@ export default connect(({
                                 rooms,
                                 dailySchedule,
                                 dashboardStat,
-                                weeklySchedule
+                                weeklySchedule,
+                                showSchedule
                             },
                         }) => ({
         sortAges,
@@ -453,6 +503,35 @@ export default connect(({
         rooms,
         dailySchedule,
         dashboardStat,
-        weeklySchedule
+        weeklySchedule,
+        showSchedule
     })
 )(Dashboard);
+
+
+// <td>
+//     <div // setBg(this.state.cardColors)
+//         style={{backgroundColor: "#999"}}
+//         className={"inside-td-block container"}>
+//         <div>
+//                                                         <span className={"group-name-style-dash"}>
+//                                                         #{item3.name}
+//                                                         </span> &nbsp;&nbsp;
+//             <span>
+//                                                     {item3.courseName}
+//                                                         </span>&nbsp;&nbsp;
+//             <span>
+//                                                     {item3.teacherName}
+//                                                         </span>
+//         </div>
+//         <div className={"row"}>
+//                                                         <span>
+//                                                     {item3.startTime}
+//                                                         </span>--
+//             <span>
+//                                                     {item3.finishTime}
+//                                                         </span>
+//         </div>
+//
+//     </div>
+// </td>

@@ -188,12 +188,15 @@ class Card extends Component {
                         <Row id={""}>
                             {appealList && !loading && appealList.length > 0 ? appealList.map(item =>
                                 <Col id={item.title}>
-                                    <h4>
+                                    <h5 className={"appeal-section mt-2"} onClick={() => openModal(item.title)}>
+                                        <span className={"p-2 d-inline-block"}>
                                         {item.title === "COLLECTION" ? "To'plamlar" : item.title === "WAITING" ? "Kutish" : "So'rovlar"}
-                                    </h4>
-                                    <button className={"btn btn-default btn-sm rounded-circle border-secondary"}
+                                        </span>
+                                        <button
+                                            className={"float-right px-5 d-inline-block btn btn-default btn-sm"}
                                             onClick={() => openModal(item.title)}>+
-                                    </button>
+                                        </button>
+                                    </h5>
                                     <hr/>
                                     {item.sectionDtos && item.sectionDtos.length > 0 ? sortList(item.sectionDtos).map(section =>
                                         <div className={"section"} onDrop={(e) => drop(e, item.id)}
