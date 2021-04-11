@@ -7,6 +7,7 @@ import {LogoIcon, LogoMiniIcon, ToggleIcon} from "./Icons";
 import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
 import {config} from "../utils/config";
+import {TOKEN} from "../utils/constants";
 
 
 class AdminLayout extends Component {
@@ -42,6 +43,12 @@ class AdminLayout extends Component {
 
         const thirdMenu = () => {
             this.setState({addMenu1: !addMenu1})
+        }
+
+        const signOut = () => {
+            localStorage.removeItem('role');
+            localStorage.removeItem(TOKEN);
+            // this.props.history.push("/login")
         }
 
         return (
@@ -267,6 +274,7 @@ class AdminLayout extends Component {
                                 <div className="name-title my-auto">
                                     {currentUser ? currentUser.fullName : ""}
                                 </div>
+                                <button className={"btn btn-secondary"} onClick={signOut}>Chiqish</button>
                             </div>
                         </Col>
                     </Row>
@@ -276,7 +284,8 @@ class AdminLayout extends Component {
     }
 }
 
-export default connect(
+
+export default withRouter(connect(
     ({
          app: {
              isOpenGeneral,
@@ -313,4 +322,4 @@ export default connect(
             notifications
         })
 )
-(AdminLayout);
+(AdminLayout));
