@@ -5,10 +5,10 @@
   mask-repeat: no-repeat;
   mask-size: 100%;
   mask-position: center;
-  -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 100%;
   -webkit-mask-position: center;
   vertical-align: middle;
+  -webkit-mask-repeat: no-repeat;
   background-color: #313E47;
 
 
@@ -198,6 +198,7 @@
 
     .top-menu-left-visible {
       width: 250px;
+      //transition: all 1s ease-in;
     }
 
     .top-menu-left {
@@ -228,7 +229,8 @@
     }
 
     .top-menu-right {
-      padding-right: 50px;
+      //padding-right: 50px;
+
 
       .about-user {
         height: 100%;
@@ -238,6 +240,7 @@
         justify-content: flex-end;
 
         .avatar {
+          min-width: 40px;
           width: 40px;
           height: 40px;
           border-radius: 100%;
@@ -248,12 +251,11 @@
         }
 
         .name-title {
-          margin-left: 15px;
-
+          //margin-left: 15px;
           color: #313E47;
           font-size: 16px;
+          margin: 0 10px;
           font-weight: 600;
-
         }
       }
 
@@ -269,7 +271,7 @@
     height: 100vh;
     background-color: white;
     box-shadow: 4px 1px 3px 2px rgba(0, 0, 0, 0.1);
-    transition: all .3s ease;
+    transition: all .1s ease;
     z-index: 3;
 
     .main-link-div {
@@ -335,6 +337,7 @@
 
         .main-link {
           color: white;
+          transition: all .2s ease-in;
         }
       }
 
@@ -469,10 +472,10 @@
     position: relative;
     width: 130px;
     min-width: 130px;
-    background-color: white;
     height: 100vh;
     padding-bottom: 20px;
     overflow-y: scroll;
+    background-color: #FFFFFF;
     overflow-x: hidden;
     transition: all .3s ease;
     box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.3);
@@ -566,21 +569,35 @@
 
   }
 
-  //.main-layout-left-hidden {
-  //  width: 100px;
-  //  min-width: 100px;
-  //
-  //  .main-link-div {
-  //    .active-link, .default-link {
-  //      .icon {
-  //        margin-left: 30px;
-  //      }
-  //    }
-  //    .main-link {
-  //      //display: none;
-  //    }
-  //  }
-  //}
+  .main-layout-left-hidden {
+    width: 100px;
+    min-width: 100px;
+    transition: all .1s linear;
+
+    .main-link-div {
+      display: none;
+      transition: all .1s linear;
+
+      .active-link, .default-link {
+        .icon {
+          margin-left: 30px;
+
+        }
+      }
+
+      .main-link {
+        display: none;
+      }
+    }
+  }
+
+  .top-menu-left-visible {
+
+  }
+
+  .top-menu-left-hidden {
+    //transition: all .2s linear !important;
+  }
 
   .main-layout-right {
     width: 100%;
@@ -897,13 +914,17 @@
       }
     }
 
-    .main-layout-left {
+
+    .main-layout-left-layout-left {
       z-index: 9;
       background-color: #FFFFFF;
       width: 100%;
       position: absolute;
+      visibility: visible;
       top: -100vh;
-      transition: all ease 0.3s;
+      //transition: all ease 1s;
+      //transition: visibility 0s linear 0.33s, opacity 0.33s linear;
+      transition: all .3s;
 
       .main-link-div {
         .default-link, .active-link {
@@ -912,6 +933,9 @@
 
         padding: 0;
       }
+    }
+
+    .main-layout-left-hidden {
     }
 
     .left-mobile {
@@ -935,6 +959,43 @@
     flex-direction: column;
     overflow-x: hidden !important;
 
+    .main-layout-left {
+      transition: all .2s ease-in;
+      position: absolute;
+    }
+
+
+    .top-menu-right {
+      padding: 0;
+    }
+
+    .about-user {
+      height: 100%;
+      align-items: normal;
+      justify-content: space-between !important;
+    }
+
+    .name-title {
+      overflow: hidden;
+      height: 2em;
+      max-width: 164px;
+      //margin: 0 4px;
+      line-height: 2em;
+    }
+
+    .name-title + div > button {
+      width: 4em;
+      margin-top: 6px;
+      line-height: .8em;
+      text-indent: -5px;
+      height: 1.7em;
+    }
+
+    .top-menu-left {
+      width: 0 !important;
+      display: none;
+    }
+
     .main-layout-right {
       width: 100%;
 
@@ -956,18 +1017,31 @@
       }
     }
 
-    .main-layout-left {
-      background-color: #FFFFFF;
-      width: 100%;
-      position: absolute;
-      top: -100vh;
-      transition: all ease 0.3s;
-    }
-
     .left-mobile {
       top: 0;
     }
   }
+
+  .top-menu-left {
+    //padding-left: 3.2em;
+  }
+  .main-layout-left {
+    min-width: 330px;
+    width: 430px;
+    padding: 0 !important;
+    top: 0 !important;
+    height: auto !important;
+    overflow-y: scroll;
+    margin-top: 0;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    font-family: Nunito, sans-serif;
+    transition: all .4s ease-in;
+
+  }
+
 
 }
 

@@ -13,6 +13,9 @@ class Login extends Component {
     }
 
     handleSignIn = async (e, v) => {
+        if(v.password === ""){
+            v.password = "default"
+        }
         this.props.dispatch(authActions.login({v, history: this.props.history}))
     };
 
@@ -39,7 +42,7 @@ class Login extends Component {
                             <div className={"form-group"}>
                                 <Label for="pwd" className="mr-sm-2">Parol</Label>
                                 <AvField type="password" className="form-control thirdInput" name="password"
-                                         placeholder="Parol" id={"pwd"} required/>
+                                         placeholder="Parol" id={"pwd"}/>
                             </div>
                             <button className={"btn py-2 btn-block btn-primary"}>Kirish</button>
                         </AvForm>

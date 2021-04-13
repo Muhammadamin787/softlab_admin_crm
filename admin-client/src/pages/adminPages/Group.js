@@ -145,8 +145,8 @@ class Group extends Component {
 
         return (
             <AdminLayout pathname={this.props.location.pathname}>
-                <div className={"flex-column container"}>
-                    <h1>Guruhlar</h1>
+                <div className={"groups flex-column container"}>
+                    <h1 className={"groups-title"}>Guruhlar</h1>
                     { isSuperAdmin || isAdmin ?
                         <div align={"right"}>
                             <Button color={"success"} onClick={openModal} className={"mb-2 add-button px-4"}>Yangisini
@@ -157,7 +157,7 @@ class Group extends Component {
                     }
                     <Nav tabs>
                         <NavItem
-                            className={activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            className={"nav-item" + (activeTab === 'ACTIVE' ? "tab-item-style-active" : "tab-item-style-default")}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ACTIVE');
@@ -167,7 +167,7 @@ class Group extends Component {
                             </NavLink>
                         </NavItem>
                         <NavItem
-                            className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                            className={"nav-item" + (activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default")}>
                             <NavLink
                                 onClick={() => {
                                     toggle('ARCHIVE');
