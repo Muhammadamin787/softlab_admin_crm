@@ -76,9 +76,10 @@ class Staff extends Component {
                 regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
-                password: v.password === "" ? "default" : v.password,
+                password: v.password === "" ? "default" : "root",
                 roleName: v.roleName
             }
+            console.log(employeeDto)
             dispatch(saveEmployeeAction(employeeDto))
         }
 
