@@ -169,17 +169,17 @@ class Student extends Component {
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 {this.state.secondPage ?
-                    <div className={"flex-column container"}>
-                        <h1>Talablar</h1>
+                    <div className={"students flex-column container"}>
+                        <h1 className={"students-title"}>Talabalar</h1>
                         {isSuperAdmin || isAdmin || isReception ?
                             <div align={"right"}><Button color={"success"} onClick={openModal}
                                                          className={"mb-2 add-button px-4"}>Yangisini qo'shish</Button>
                             </div>
                             :""
                         }
-                        <Nav tabs>
+                        <Nav tabs className={"navigation"}>
                             <NavItem
-                                className={activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                className={(activeTab === 'DEFAULT' ? "tab-item-style-active" : "tab-item-style-default")}>
                                 <NavLink
                                     onClick={() => {
                                         toggle('DEFAULT');
@@ -189,7 +189,7 @@ class Student extends Component {
                                 </NavLink>
                             </NavItem>
                             <NavItem
-                                className={activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default"}>
+                                className={(activeTab === 'ARCHIVE' ? "tab-item-style-active" : "tab-item-style-default")}>
                                 <NavLink
                                     onClick={() => {
                                         toggle('ARCHIVE');
@@ -198,7 +198,7 @@ class Student extends Component {
                                     Arxiv talabalar
                                 </NavLink>
                             </NavItem>
-                            <NavItem align={"right"}>
+                            <NavItem align={"right"} className={"studentSearch"}>
                                 <input type={"search"} name={"studentSearch"} id={"searchStudent"}
                                        className={"form-control"} placeholder={"Qidirish..."}
                                        onChange={searchStudent}/>
@@ -207,14 +207,15 @@ class Student extends Component {
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId="DEFAULT">
                                 <div className={"w-100"}>
-                                    <div className="w-75">
-                                        <div align={"right"} className={"mb-1"}>
+                                    <div className="w-75 debtors-tab">
+                                        <div align={"right"} className={"my-1 debtors-tab-body"}>
                                             <Button color={"btn btn-outline-info"} size={"sm"}
                                                     className={"rounded"}
                                                     onClick={openFiltrDebtors}>Qarzdorlar</Button>
                                             <Button color={"btn btn-outline-info rounded"} size={"sm"}
-                                                    className={"btn mx-2 border-none rounded"}
+                                                    className={"btn mx-2 border-none rounded download-excell-btn"}
                                                     onClick={downloadExcel}>
+                                                Yuklash &nbsp;
                                                 <span className={"icon icon-download"}/></Button>
                                         </div>
                                         <Table className={"table-style w-100"}>
@@ -237,7 +238,7 @@ class Student extends Component {
                                                         <td><Link className={"text-dark"}
                                                                   to={"/admin/student/" + (item.id)}>{item.fullName}</Link>
                                                         </td>
-                                                        <td>
+                                                        <td className={"phone-number-td"}>
                                                             {item.phoneNumber && item.phoneNumber.length === 9 ? formatPhoneNumber(item.phoneNumber) : item.phoneNumber}
                                                         </td>
                                                         {isSuperAdmin || isAdmin ?

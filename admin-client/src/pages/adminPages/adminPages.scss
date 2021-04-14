@@ -6,8 +6,8 @@ body {
 /*START DASHBOARD*/
 
 .schedule-block {
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 15px 0px,
-  rgba(0, 0, 0, 0.04) 0px 1px 6px 0px,
+  box-shadow: rgba(0, 0, 0, 0.04) 0 1px 15px 0,
+  rgba(0, 0, 0, 0.04) 0 1px 6px 0,
   0 1px 15px rgba(0, 0, 0, .04),
   0 1px 6px rgba(0, 0, 0, .04);
 
@@ -212,4 +212,63 @@ body {
   border-radius: 3px;
   padding: 10px;
 
+}
+
+// Group ni stillari
+
+.tab-item-style-active {
+  //background-color: red;
+}
+
+.nav-item {
+  cursor: pointer;
+  //margin-bottom: -1px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .groups {
+    .tab-item-style-active {
+      border-bottom: 8px solid #1C89FF;
+      background-color: red;
+    }
+  }
+
+  .groups-title, .students-title {
+    text-align: center;
+    font-size: 2em;
+    padding-right: 15px;
+  }
+  .navigation {
+    border: 1px solid transparent;
+    //border: none !important;
+  }
+  .studentSearch {
+    margin: 10px 0;
+    margin-right: 17px;
+    width: 100%;
+    text-align: center !important;
+  }
+
+
+  .debtors-tab {
+    width: 93% !important;
+
+    .table-style {
+      padding-top: 10px;
+      .phone-number-td {
+        font-size: .85em;
+      }
+    }
+
+    .debtors-tab-body {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+    }
+
+    .download-excell-btn {
+
+    }
+  }
 }

@@ -56,7 +56,7 @@ public class EmployeeDto {
         this.roleName = roleName;
     }
 
-    public EmployeeDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, String roleName) {
+    public EmployeeDto(UUID id, UUID userId, String fullName, String phoneNumber, String description, Region region, Integer regionId, String gender, String birthDate, Set<Role> roles) {
         this.id = id;
         this.userId = userId;
         this.fullName = fullName;
@@ -66,6 +66,6 @@ public class EmployeeDto {
         this.regionId = regionId;
         this.gender = gender;
         this.birthDate = birthDate;
-        this.roleName = roleName;
+        this.roles = roles;
     }
 }

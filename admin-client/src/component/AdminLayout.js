@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Link, withRouter} from "react-router-dom";
 import './adminLayout.scss'
 import '../pages/universal.scss'
@@ -18,7 +17,7 @@ class AdminLayout extends Component {
     }
 
     render() {
-        const {currentUser, menuHidden, dispatch, isSuperAdmin,isAdmin,isFinancier,isReception} = this.props;
+        const {currentUser, menuHidden, dispatch, isSuperAdmin, isAdmin, isFinancier, isReception} = this.props;
         const {addMenu, addMenu1} = this.state
 
         const changeMenu = () => {
@@ -54,7 +53,7 @@ class AdminLayout extends Component {
             <div className={"admin-layout-page"} onClick={closeFun}>
                 <div className={"main-layout"}>
                     <div
-                        className={menuHidden ? "main-layout-left main-layout-left-hidden" : "main-layout-left"}>
+                        className={menuHidden ? "main-layout-left" : "main-layout-left-hidden"}>
                         <div className="main-link-div">
                             {isSuperAdmin || isAdmin ?
                                 <Link to="/admin" className={
@@ -66,8 +65,8 @@ class AdminLayout extends Component {
                                         Dashboard
                                     </div>
                                 </Link>
-                            :""}
-                            {isSuperAdmin  || isReception || isAdmin ?
+                                : ""}
+                            {isSuperAdmin || isReception || isAdmin ?
                                 <Link to="/admin/card" className={
                                     this.props.pathname === "/admin/card" ?
                                         "active-link" : "default-link"
@@ -77,7 +76,7 @@ class AdminLayout extends Component {
                                         Murojaatlar
                                     </div>
                                 </Link>
-                            :""}
+                                : ""}
                             <Link to="/admin/students" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/student") ?
                                     "active-link" : "default-link"
@@ -97,7 +96,7 @@ class AdminLayout extends Component {
                                         Kurslar
                                     </div>
                                 </Link>
-                            :""}
+                                : ""}
                             <Link to="/admin/groups" className={
                                 this.props.pathname && this.props.pathname.startsWith("/admin/group") ?
                                     "active-link" : "default-link"
@@ -117,7 +116,7 @@ class AdminLayout extends Component {
                                         O'qituvchilar
                                     </div>
                                 </Link>
-                                :""}
+                                : ""}
                             {isSuperAdmin || isFinancier || isAdmin ?
                                 <Link to="#" onClick={thirdMenu} className={
                                     this.props.pathname === "/admin/finance" ?
@@ -128,7 +127,7 @@ class AdminLayout extends Component {
                                         Moliya
                                     </div>
                                 </Link>
-                            :""}
+                                : ""}
                             {isSuperAdmin || isAdmin ?
                                 <Link to="#" onClick={secondMenu} className={
                                     this.props.pathname === "/admin/room" ||
@@ -142,7 +141,7 @@ class AdminLayout extends Component {
                                         Sozlamalar
                                     </div>
                                 </Link>
-                            :""}
+                                : ""}
                         </div>
                     </div>
                     <div
@@ -224,7 +223,7 @@ class AdminLayout extends Component {
                                         Xodimlar
                                     </Link>
                                 </Link>
-                            :""}
+                                : ""}
 
                         </div>
                     </div>
@@ -266,20 +265,22 @@ class AdminLayout extends Component {
                     </div>
                     <Row className={"top-menu mx-0 my-auto"}>
                         <div
-                            className={"top-menu-left mx-auto" + (menuHidden ? " top-menu-left-hidden" : " top-menu-left-visible")}>
+                            className={"top-menu-left mx-auto" + (menuHidden ? "top-menu-left-hidden" : "top-menu-left-visible")}>
                             {menuHidden ?
-                                <LogoMiniIcon/>
+                                <LogoIcon/>
                                 :
-                                <LogoIcon/>}
+                                <LogoMiniIcon/>
+                            }
                         </div>
                         <div className={"top-menu-toggle text-left"}>
                             <Button className={"toggle-button"} onClick={changeMenu}>
                                 <ToggleIcon/>
                             </Button>
                         </div>
-                        <Col className={"top-menu-right ml-auto text-right my-auto"}>
-                            <div className="about-user my-auto">
-                                <div className={"avatar" + (currentUser && currentUser.photoId ? "" : " no-avatar")}>
+                        <Col className={"top-menu-right text-right my-auto"}>
+                            <div className="about-user">
+                                <div
+                                    className={"col-sm-auto avatar" + (currentUser && currentUser.photoId ? "" : " no-avatar")}>
                                     <img
                                         src={currentUser.photoId ? config.BASE_URL + "/attachment/" + currentUser.photoId : "/assets/img/avatar.png"}
                                         alt=""/>
@@ -287,7 +288,9 @@ class AdminLayout extends Component {
                                 <div className="name-title my-auto">
                                     {currentUser ? currentUser.fullName : ""}
                                 </div>
-                                <button className={"btn btn-secondary"} onClick={signOut}>Chiqish</button>
+                                <div>
+                                    <button className={"btn btn-secondary"} onClick={signOut}>Chiqish</button>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -311,7 +314,7 @@ export default withRouter(connect(
              search,
              notifications
          },
-         auth: {addMenu, addMenu1, menuHidden, isAdmin, isSuperAdmin, currentUser, isFinancier,isReception}
+         auth: {addMenu, addMenu1, menuHidden, isAdmin, isSuperAdmin, currentUser, isFinancier, isReception}
      }) =>
         ({
             addMenu,

@@ -14,7 +14,7 @@ import {
 import {AvForm, AvField, AvRadioGroup, AvRadio} from "availity-reactstrap-validation";
 import {
     deleteTeacherAction, downloadTeacherFileAction,
-    getRegionsAction, getStudentsAction, getStudentsBySearchAction,
+    getRegionsAction,
     getTeachersAction, getTeachersBySearchAction,
     saveTeacherAction, toChangeTeacherStatusAction,
 } from "../../redux/actions/AppActions";
@@ -29,8 +29,8 @@ import {formatPhoneNumber} from "../../utils/addFunctions";
 
 class Teacher extends Component {
     componentDidMount() {
-        console.log(this.props.isFinancier)
-        console.log(this.props.isSup)
+        alert(this.props.isSuperAdmin)
+        // console.log(this.props.isSup)
         if (this.props.isSuperAdmin || this.props.isFinancier) {
             this.props.dispatch(getRegionsAction())
             this.props.dispatch(getTeachersAction({page: 0, size: this.props.size, type: "ACTIVE"}))

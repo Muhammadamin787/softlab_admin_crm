@@ -494,3 +494,26 @@
 .selectedOptions {
   background-color: red;
 }
+
+// Written By Muhammadamin for style of Staff
+
+
+.set-password h6{
+  cursor: pointer;
+  transition: .1s;
+  padding-bottom: 5px;
+  border-bottom: 1px solid transparent;
+}
+.set-password h6:hover {
+  color: #1C89FF;
+  border-bottom: 1px solid #1C89FF;
+}
+.openSetPassword {
+  display: block;
+  transition: .3s;
+}
+.closeSetPassword {
+  display: none;
+  transition: .3s;
+  background-color: red;
+}

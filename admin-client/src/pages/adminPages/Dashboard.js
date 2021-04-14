@@ -4,52 +4,53 @@ import './adminPages.scss';
 import {Input, Nav, NavItem, NavLink, TabContent, Table, TabPane} from "reactstrap";
 import {
     getDailySchedule,
-    getDashboardStatAction, getDashboardStudentStatAction,
+    getDashboardStatAction,
+    getDashboardStudentStatAction,
     getRoomListAction,
-    getTeacherSalaryListAction, getWeeklySchedule
+    getTeacherSalaryListAction,
+    getWeeklySchedule
 } from "../../redux/actions/AppActions";
 import {connect} from "react-redux";
-import {setBg} from "../../utils/addFunctions";
-import {Funnel} from 'funnel-react';
 import Donut from "../../component/dashboard/Donut";
 import BarColumn from "../../component/dashboard/BarColumn";
-import ReklamaChart from "../../component/dashboard/ReklamaChart";
 
 class Dashboard extends Component {
     componentDidMount() {
+        alert(this.props.isSuperAdmin)
         if (this.props.isSuperAdmin || this.props.isAdmin) {
+            console.clear();
             console.log(this.props.isSuperAdmin);
             console.log(this.props.list);
+            this.props.dispatch(getDailySchedule('MONDAY'))
             this.props.dispatch(getRoomListAction())
             this.props.dispatch(getDashboardStatAction())
             this.props.dispatch(getWeeklySchedule())
-            this.props.dispatch(getDailySchedule('MONDAY'))
             this.props.dispatch(getDashboardStudentStatAction())
             const {startHour, endHour} = this.state;
 
-        /*kunlik*/
-        let arr = [];
-        for (let i = startHour; i < endHour; i++) {
-            for (let g = 0; g < 2; g++) {
-                if (g === 0) {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "00")
+            /*kunlik*/
+            let arr = [];
+            for (let i = startHour; i < endHour; i++) {
+                for (let g = 0; g < 2; g++) {
+                    if (g === 0) {
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "00")
+                        } else {
+                            arr.push(i + ":" + "00")
+                        }
                     } else {
-                        arr.push(i + ":" + "00")
-                    }
-                } else {
-                    if (i < 10) {
-                        arr.push("0" + i + ":" + "30")
-                    } else {
-                        arr.push(i + ":" + "30")
+                        if (i < 10) {
+                            arr.push("0" + i + ":" + "30")
+                        } else {
+                            arr.push(i + ":" + "30")
+                        }
                     }
                 }
             }
-        }
-        /*set-state*/
-        this.setState({
-            list: arr
-        })
+            /*set-state*/
+            this.setState({
+                list: arr
+            })
         }
     }
 
@@ -436,7 +437,7 @@ class Dashboard extends Component {
                                                                     //     return <td>1</td>
                                                                     // }
                                                                 }) : <td>a</td>
-                                                        ) : <td>b</td>
+                                                            ) : <td>b</td>
                                                         )
                                                     }
                                                 </tr>
@@ -487,7 +488,7 @@ export default connect(({
                                 weeklySchedule,
                                 showSchedule
                             },
-    auth: {isSuperAdmin,isAdmin}
+                            auth: {isSuperAdmin, isAdmin}
                         }) => ({
         sortAges,
         studentStat,
@@ -514,8 +515,8 @@ export default connect(({
         dashboardStat,
         weeklySchedule,
         showSchedule,
-    isSuperAdmin,
-    isAdmin
+        isSuperAdmin,
+        isAdmin
     })
 )(Dashboard);
 

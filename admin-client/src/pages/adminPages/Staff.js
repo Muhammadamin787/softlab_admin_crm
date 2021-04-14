@@ -11,6 +11,7 @@ import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactst
 import {AvField, AvForm, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import AdminLayout from "../../component/AdminLayout";
 import moment from "moment";
+import "../universal.scss";
 import {Link} from "react-router-dom";
 import {formatPhoneNumber} from "../../utils/addFunctions";
 import Pagination from "react-js-pagination";
@@ -24,6 +25,7 @@ class Staff extends Component {
 
     state = {
         showModal: false,
+        showSetPassword: false,
         showDeleteModal: false,
         currentObject: ''
     }
@@ -71,15 +73,19 @@ class Staff extends Component {
                 phoneNumber: v.phoneNumber,
                 parentPhone: v.parentPhone,
                 avatarId: v.attachmentId,
-                // regionId: v.regionId,
+                regionId: v.regionId,
                 description: v.description,
                 birthDate: moment(v.birthDate).format('DD-MM-YYYY').toString(),
-                password: v.password,
+                password: v.password === "" ? "default" : "root",
                 roleName: v.roleName
             }
+            console.log(employeeDto)
             dispatch(saveEmployeeAction(employeeDto))
         }
 
+        const showSetPassword = () => {
+            this.setState(prevState => ({showSetPassword: !prevState.showSetPassword}));
+        }
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -155,14 +161,14 @@ class Staff extends Component {
                                             : ""}
                                         label={"Tug'ilgan sana"} name={"birthDate"} className={"form-control"}
                                     />
-                                    {/*<AvField className={'form-control'} label={'Hudud:'} type="select"*/}
-                                    {/*         name="regionId"*/}
-                                    {/*         defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>*/}
-                                    {/*    <option key={0} value={"0"}>Ota hududni tanlang</option>*/}
-                                    {/*    {regions ? regions.map((item, i) =>*/}
-                                    {/*        <option key={i} value={item.id}>{item.name}</option>*/}
-                                    {/*    ) : ""}*/}
-                                    {/*</AvField>*/}
+                                    <AvField className={'form-control'} label={'Hudud:'} type="select"
+                                             name="regionId"
+                                             defaultValue={currentObject && currentObject.region ? currentObject.region.id : "0"}>
+                                        <option key={0} value={"0"}>Ota hududni tanlang</option>
+                                        {regions ? regions.map((item, i) =>
+                                            <option key={i} value={item.id}>{item.name}</option>
+                                        ) : ""}
+                                    </AvField>
                                     <AvRadioGroup name="roleName"
                                                   defaultValue={currentObject ? currentObject.roleName : ""}
                                                   label="Kasbi" required
@@ -178,16 +184,21 @@ class Staff extends Component {
                                         <AvRadio label="Erkak" value="MALE"/>
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
+                                    <div className={"mx-3 set-password"} onClick={showSetPassword}>
+                                        <h6>{this.state.showSetPassword ? "Bekor qilish" : "Parol qo'shish"}</h6>
+                                    </div>
+
+                                    <AvField
+                                        type={"text"} placeholder={"abc_123!*"} label={this.state.showSetPassword ? "Parol" : ""} name={"password"}
+                                        className={"form-control " + (this.state.showSetPassword ? "openSetPassword" : "closeSetPassword")}
+                                    />
+
                                     <AvField
                                         defaultValue={currentObject && currentObject.userDto ? currentObject.userDto.description : ""}
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}
                                     />
-                                    <AvField
-                                        defaultValue={currentObject ? currentObject.password : ""}
-                                        type={"text"} placeholder={"abc_123!*"}
-                                        label={"Parol"} name={"password"} className={"form-control"}
-                                    />
+
                                 </div>
                             </ModalBody>
                             <ModalFooter>

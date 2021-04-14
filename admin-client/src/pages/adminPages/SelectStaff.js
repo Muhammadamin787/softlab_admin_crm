@@ -24,6 +24,7 @@ class SelectStaff extends Component {
             this.props.dispatch(getEmployeeAction({id: id}))
             this.props.dispatch(getRegionsAction())
         }
+
     }
 
     state = {
@@ -61,10 +62,10 @@ class SelectStaff extends Component {
 
         const saveItem = (e, v) => {
             v.id = currentObject.id
+            console.log(v);
             v.birthDate = moment(v.birthDate).format('DD-MM-YYYY').toString()
             dispatch(saveEmployeeAction(v))
         }
-
         return (
             <AdminLayout className="" pathname={this.props.location.pathname}>
                 <div className={"flex-column container"}>
@@ -158,7 +159,10 @@ class SelectStaff extends Component {
                                         ) : ""}
                                     </AvField>
                                     <AvRadioGroup name="roleName"
-                                                  defaultValue={currentObject ? currentObject.roleName : ""}
+                                                  defaultValue={
+                                                      currentObject && currentObject.roles && currentObject.roles[0] && currentObject.roles[0].roleName === "ADMIN" ? "ADMIN" :
+                                                          currentObject && currentObject.roles && currentObject.roles[0] && currentObject.roles[0].roleName === "RECEPTION" ? "RECEPTION" :
+                                                              currentObject && currentObject.roles && currentObject.roles[0] && currentObject.roles[0].roleName === "FINANCIER" ? "FINANCIER" : ""}
                                                   label="Kasbi" required
                                                   errorMessage="Birini tanlang!">
                                         <AvRadio label="Adminstrator" value="RECEPTION"/>
@@ -173,7 +177,7 @@ class SelectStaff extends Component {
                                         <AvRadio label="Ayol" value="FEMALE"/>
                                     </AvRadioGroup>
                                     <AvField
-                                        defaultValue={currentObject? currentObject.description : ""}
+                                        defaultValue={currentObject ? currentObject.description : ""}
                                         type={"textarea"}
                                         label={"Izoh"} name={"description"} className={"form-control"}/>
                                     <AvField

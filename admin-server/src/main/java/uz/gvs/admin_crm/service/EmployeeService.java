@@ -13,6 +13,7 @@ import uz.gvs.admin_crm.entity.enums.UserStatusEnum;
 import uz.gvs.admin_crm.payload.*;
 import uz.gvs.admin_crm.repository.EmployeeRepository;
 import uz.gvs.admin_crm.repository.RegionRepository;
+import uz.gvs.admin_crm.repository.RoleRepository;
 import uz.gvs.admin_crm.repository.UserRepository;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +32,8 @@ public class EmployeeService {
     UserRepository userRepository;
     @Autowired
     RegionRepository regionRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -77,6 +80,9 @@ public class EmployeeService {
                 user.setDescription(employeeDto.getDescription());
                 user.setBirthDate(user.getBirthDate() != null ? formatter1.parse(employeeDto.getBirthDate()) : null);
                 user.setGender(Gender.valueOf(employeeDto.getGender()));
+                Set<Role> set = new HashSet<>();
+                set.add(roleRepository.findByRoleName(RoleName.valueOf(employeeDto.getRoleName())));
+                user.setRoles(set);
                 user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
                 user.setRegion(employeeDto.getRegionId() != null && employeeDto.getRegionId() > 0 ? regionRepository.findById(employeeDto.getRegionId()).get() : null);
                 employee.setUser(userRepository.save(user));
@@ -119,7 +125,7 @@ public class EmployeeService {
                 employee.getUser().getRegion() != null ? employee.getUser().getRegion().getId() : null,
                 employee.getUser().getGender().toString(),
                 employee.getUser().getBirthDate() != null ? employee.getUser().getBirthDate().toString() : "",
-                employee.getUser().getRoles().toString()
+                employee.getUser().getRoles()
         );
     }
 
